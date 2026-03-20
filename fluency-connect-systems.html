@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluency Connect — Sistema Completo de Conteúdo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1DB994;
+    --green-subtle: rgba(29,185,148,0.08);
+    --green-border: rgba(29,185,148,0.3);
+    --bg: #1A1A1A;
+    --bg2: #242424;
+    --bg3: #2d2d2d;
+    --bg4: #333;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f0f0;
+    --muted: #999;
+    --muted2: #666;
+    --red: #e05555;
+    --yellow: #f0b429;
+    --blue: #5b8dee;
+    --purple: #9b59d0;
+    --orange: #e07830;
+
+    /* Content job colors */
+    --attract: #1DB994;
+    --nurture: #9b59d0;
+    --position: #5b8dee;
+    --convert: #e07830;
+    --series: #e05555;
+    --carousel: #f0b429;
+    --story: #20b2aa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; font-size: 14px; line-height: 1.65; }
+
+  /* HEADER */
+  .header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--green-border);
+    padding: 22px 28px 0;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .logo { font-size: 16px; font-weight: 900; color: var(--green); }
+  .logo span { color: var(--text); }
+  .header-sub { font-size: 12px; color: var(--muted); }
+  .nav { display: flex; gap: 0; overflow-x: auto; }
+  .nb {
+    padding: 11px 16px; font-size: 11px; font-weight: 800;
+    color: var(--muted); cursor: pointer; border: none; background: none;
+    font-family: 'Nunito', sans-serif; text-transform: uppercase;
+    letter-spacing: 0.8px; border-bottom: 2px solid transparent;
+    white-space: nowrap; transition: all 0.15s;
+  }
+  .nb:hover { color: var(--text); }
+  .nb.active { color: var(--green); border-bottom-color: var(--green); }
+
+  /* SECTIONS */
+  .sec { display: none; padding: 28px 28px; max-width: 960px; }
+  .sec.active { display: block; }
+
+  /* TYPE COMPONENTS */
+  .eyebrow { font-size: 10px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+  .h2 { font-size: 23px; font-weight: 900; margin-bottom: 5px; }
+  .desc { color: var(--muted); font-size: 13px; margin-bottom: 26px; max-width: 600px; }
+
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 12px; }
+  .ch { font-size: 14px; font-weight: 900; margin-bottom: 7px; display: flex; align-items: center; gap: 8px; }
+  .cb { color: var(--muted); font-size: 13px; line-height: 1.75; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 100px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
+  .tg { background: rgba(29,185,148,0.1); color: var(--attract); border: 1px solid rgba(29,185,148,0.3); }
+  .tp { background: rgba(155,89,208,0.1); color: var(--nurture); border: 1px solid rgba(155,89,208,0.25); }
+  .tb { background: rgba(91,141,238,0.1); color: var(--position); border: 1px solid rgba(91,141,238,0.25); }
+  .to { background: rgba(224,120,48,0.1); color: var(--convert); border: 1px solid rgba(224,120,48,0.25); }
+  .tr { background: rgba(224,85,85,0.1); color: var(--series); border: 1px solid rgba(224,85,85,0.25); }
+  .ty { background: rgba(240,180,41,0.1); color: var(--carousel); border: 1px solid rgba(240,180,41,0.25); }
+  .ts { background: rgba(32,178,170,0.1); color: var(--story); border: 1px solid rgba(32,178,170,0.25); }
+
+  .hl { background: var(--green-subtle); border: 1px solid var(--green-border); border-radius: 9px; padding: 14px 18px; margin-bottom: 14px; }
+  .hl .ll { font-size: 10px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .hl p { color: var(--text); font-size: 13px; line-height: 1.7; }
+  .warn { background: rgba(224,85,85,0.07); border: 1px solid rgba(224,85,85,0.2); border-radius: 9px; padding: 14px 18px; margin-bottom: 14px; }
+  .warn .wl { font-size: 10px; font-weight: 800; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .warn p { color: #dda0a0; font-size: 13px; line-height: 1.7; }
+  .info { background: rgba(91,141,238,0.07); border: 1px solid rgba(91,141,238,0.2); border-radius: 9px; padding: 14px 18px; margin-bottom: 14px; }
+  .info .il { font-size: 10px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .info p { color: #a0b5e0; font-size: 13px; line-height: 1.7; }
+
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+
+  ul.sl { list-style: none; padding: 0; }
+  ul.sl li { padding: 6px 0 6px 16px; position: relative; color: var(--muted); font-size: 13px; border-bottom: 1px solid var(--border); }
+  ul.sl li:last-child { border-bottom: none; }
+  ul.sl li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-size: 11px; top: 8px; }
+  ul.sl li strong { color: var(--text); }
+
+  /* JOB COLOR BARS */
+  .job-bar { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 12px; }
+  .job-color { width: 5px; flex-shrink: 0; }
+  .job-body { flex: 1; padding: 14px 16px; background: var(--bg2); }
+  .job-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .job-name { font-size: 14px; font-weight: 900; margin-bottom: 5px; }
+  .job-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .job-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+
+  /* TOPIC MATRIX */
+  .topic-matrix {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .tm-header {
+    display: grid;
+    grid-template-columns: 160px repeat(6, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .tm-h {
+    padding: 10px 10px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .tm-h:last-child { border-right: none; }
+  .tm-row {
+    display: grid;
+    grid-template-columns: 160px repeat(6, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .tm-row:last-child { border-bottom: none; }
+  .tm-cell {
+    padding: 10px 10px;
+    font-size: 11px;
+    border-right: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .tm-cell:last-child { border-right: none; }
+  .tm-topic { font-weight: 800; font-size: 12px; color: var(--text); }
+  .tm-hook { color: var(--muted); font-style: italic; margin-top: 3px; font-size: 11px; }
+
+  /* STORY GRID */
+  .story-day {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .story-day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .story-day-name { font-size: 14px; font-weight: 900; }
+  .story-frames { display: flex; gap: 8px; flex-wrap: wrap; }
+  .story-frame {
+    background: var(--bg3);
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--muted);
+    border-left: 3px solid var(--story);
+    min-width: 120px;
+    max-width: 180px;
+  }
+  .story-frame .sf-type { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--story); margin-bottom: 3px; }
+  .story-frame .sf-text { color: var(--text); font-weight: 700; font-size: 11px; margin-bottom: 3px; }
+  .story-frame .sf-desc { color: var(--muted); font-size: 10px; }
+
+  /* CAROUSEL STRUCTURE */
+  .carousel-slide {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .slide {
+    min-width: 140px;
+    max-width: 160px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 13px;
+    flex-shrink: 0;
+  }
+  .slide-num {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--carousel);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .slide-title { font-size: 12px; font-weight: 800; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+  .slide-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* WORKFLOW PIPELINE */
+  .pipeline {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .pipe-step {
+    flex: 1;
+    min-width: 120px;
+    padding: 16px 14px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-right: none;
+    position: relative;
+    text-align: center;
+  }
+  .pipe-step:first-child { border-radius: 10px 0 0 10px; }
+  .pipe-step:last-child { border-right: 1px solid var(--border); border-radius: 0 10px 10px 0; }
+  .pipe-step::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--green);
+    font-weight: 900;
+    font-size: 14px;
+    z-index: 1;
+    background: var(--bg);
+    padding: 0 2px;
+  }
+  .pipe-step:last-child::after { display: none; }
+  .pipe-icon { font-size: 20px; margin-bottom: 6px; }
+  .pipe-name { font-size: 11px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+  .pipe-tool { font-size: 10px; color: var(--green); font-weight: 700; }
+  .pipe-time { font-size: 10px; color: var(--muted2); margin-top: 3px; }
+
+  /* TOOL WORKFLOW */
+  .tool-step {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .ts-num {
+    min-width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #111;
+    font-size: 12px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .ts-body .ts-title { font-size: 13px; font-weight: 900; margin-bottom: 4px; }
+  .ts-body .ts-tool { font-size: 11px; font-weight: 800; color: var(--green); margin-bottom: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .ts-body .ts-desc { font-size: 12px; color: var(--muted); line-height: 1.65; }
+  .ts-body .ts-tip { font-size: 11px; color: var(--yellow); margin-top: 5px; font-weight: 700; }
+
+  /* WEEK SCHEDULE */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .day-col { background: var(--bg2); border: 1px solid var(--border); border-radius: 9px; padding: 12px 10px; }
+  .day-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted2); margin-bottom: 10px; text-align: center; }
+  .day-post {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    font-size: 10px;
+  }
+  .dp-type { font-weight: 800; margin-bottom: 2px; }
+  .dp-format { color: var(--muted); font-size: 10px; }
+  .day-col.recording { border-color: var(--green); }
+  .day-col.editing { border-color: var(--yellow); }
+  .day-col.recording .day-name { color: var(--green); }
+  .day-col.editing .day-name { color: var(--yellow); }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+
+  @media (max-width: 700px) {
+    .sec { padding: 18px 14px; }
+    .grid2, .grid3 { grid-template-columns: 1fr; }
+    .tm-header, .tm-row { grid-template-columns: 120px repeat(3, 1fr); }
+    .tm-h:nth-child(n+5), .tm-cell:nth-child(n+5) { display: none; }
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+    .header { padding: 16px 14px 0; }
+    .pipeline { flex-direction: column; }
+    .pipe-step { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
+    .pipe-step:first-child { border-radius: 10px 10px 0 0; }
+    .pipe-step:last-child { border-radius: 0 0 10px 10px; border-bottom: 1px solid var(--border); }
+    .pipe-step::after { content: '↓'; right: auto; left: 50%; bottom: -12px; top: auto; transform: translateX(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div class="logo">Fluency<span>Connect</span></div>
+    <div class="header-sub">Sistema Completo — Reels + Stories + Carousels</div>
+  </div>
+  <div class="nav">
+    <button class="nb active" onclick="show('avaliacao')">⚡ Avaliação</button>
+    <button class="nb" onclick="show('sistema')">🧩 O Sistema</button>
+    <button class="nb" onclick="show('topicos')">📋 Tópicos × Formatos</button>
+    <button class="nb" onclick="show('stories')">📲 Stories</button>
+    <button class="nb" onclick="show('carousel')">🎠 Carousels</button>
+    <button class="nb" onclick="show('workflow')">⚙️ Ferramentas Workflow</button>
+    <button class="nb" onclick="show('semana')">📅 Semana Tipo</button>
+  </div>
+</div>
+
+<!-- ════════════ AVALIAÇÃO ════════════ -->
+<div class="sec active" id="sec-avaliacao">
+  <div class="eyebrow">Análise Honesta</div>
+  <h2 class="h2">Essa Estratégia Funciona para Vocês?</h2>
+  <p class="desc">A estratégia do PDF + Stories + Carousel é excelente. Mas precisa de ajuste de realidade antes de virar protocolo.</p>
+
+  <div class="hl">
+    <div class="ll">✅ O que está certo na estratégia do PDF</div>
+    <p>O modelo "Fast Growth" (1 Reel + 1 Story + 1 Carousel por dia) é comprovado e faz sentido para vocês. A diferença entre Slow e Fast growth no PDF é exatamente isso: Stories e Carousels adicionados aos Reels. Vocês têm a matéria-prima para esse volume — 112 roteiros prontos, 28 tópicos, histórias reais. <strong>A lógica é sólida.</strong></p>
+  </div>
+
+  <div class="hl">
+    <div class="ll">✅ O calendário de Stories (imagem) é exatamente o modelo certo</div>
+    <p>O que você viu na imagem — Q&A numa segunda, Day in Life na terça, Série assinatura na quarta, Transformação na quinta, BTS na sexta, Poll no sábado — é um sistema inteligente de <strong>Stories com job definido por dia, não por impulso.</strong> Cada story tem propósito. Isso é o que vocês precisam implementar. Adaptarei esse calendário para o contexto de vocês abaixo.</p>
+  </div>
+
+  <div class="warn">
+    <div class="wl">⚠ O Problema Real: Matemática de Tempo</div>
+    <p>1 tópico → 4 Reels (ATRAIR/NUTRIR/POSICIONAR/CONVERTER) + 1 Série + 1 Carousel = <strong>6 peças de conteúdo por tópico.</strong> Com 3 posts/dia durante o mês de teste, vocês precisam de <strong>90 peças de Reel sozinho</strong>, mais Stories diários e Carousels. Isso é volume de agência, não de criador solo com 7h semanais.<br><br>
+    <strong>A solução: não faz todos os 6 formatos para cada tópico ao mesmo tempo.</strong> O sistema funciona em ciclos — o mesmo tópico vira formatos diferentes ao longo das semanas, não no mesmo dia.</p>
+  </div>
+
+  <div class="hl">
+    <div class="ll">💡 A Versão Adaptada Para Vocês</div>
+    <p>Em vez de "1 tópico → 6 formatos simultâneos", o sistema é: <strong>1 tópico → 1 Reel por semana → 1 Carousel no mesmo tema naquela semana → Stories conectados ao tópico do dia.</strong> O mesmo tópico tem 4 versões (pelos jobs), mas você posta uma versão por semana, não quatro ao mesmo tempo. Isso é sustentável e ainda cria o efeito de cobertura total.</p>
+  </div>
+
+  <hr class="div">
+
+  <h3 style="font-size:15px;font-weight:900;margin-bottom:14px;">O Modelo Fast Growth Adaptado para Vocês</h3>
+
+  <div class="grid3">
+    <div class="card" style="border-top: 3px solid var(--attract); text-align:center; padding:16px;">
+      <div style="font-size:24px;margin-bottom:8px;">🎬</div>
+      <div style="font-weight:900;font-size:15px;margin-bottom:4px;">1 Reel/dia</div>
+      <span class="tag tg" style="margin-bottom:8px;display:inline-block;">Sempre</span>
+      <p style="font-size:12px;margin-top:8px;">O conteúdo principal. Roteiros já prontos. Gravado na sexta, editado no sábado, agendado para a semana.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--story); text-align:center; padding:16px;">
+      <div style="font-size:24px;margin-bottom:8px;">📲</div>
+      <div style="font-weight:900;font-size:15px;margin-bottom:4px;">3–5 Stories/dia</div>
+      <span class="tag ts" style="margin-bottom:8px;display:inline-block;">Sempre</span>
+      <p style="font-size:12px;margin-top:8px;">Conectados ao Reel do dia. Rápidos, informais. A maioria gravada no momento — não exige edição pesada.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--carousel); text-align:center; padding:16px;">
+      <div style="font-size:24px;margin-bottom:8px;">🎠</div>
+      <div style="font-weight:900;font-size:15px;margin-bottom:4px;">2–3 Carousels/semana</div>
+      <span class="tag ty" style="margin-bottom:8px;display:inline-block;">No sábado</span>
+      <p style="font-size:12px;margin-top:8px;">Criados no Canva no sábado. Sempre do mesmo tópico do Reel. Alta taxa de save. Fácil de criar com template.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SISTEMA ════════════ -->
+<div class="sec" id="sec-sistema">
+  <div class="eyebrow">Arquitetura</div>
+  <h2 class="h2">O Sistema Completo</h2>
+  <p class="desc">Como os 7 formatos se conectam dentro de cada tópico e como distribuí-los ao longo da semana.</p>
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;">Os 7 Formatos por Tópico</h3>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--attract);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--attract);">Reel 1 — ATRAIR</div>
+      <div class="job-name">Versão shareable, sem pitch, alcance puro</div>
+      <div class="job-desc">Foco em share e comentários. Hook de contradição ou dor. Curto (25–40s). Não menciona nada para vender.</div>
+      <div class="job-tags"><span class="tag tg">Reel</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Share-first</span></div>
+    </div>
+  </div>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--nurture);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--nurture);">Reel 2 — NUTRIR</div>
+      <div class="job-name">Versão educacional, explica o porquê</div>
+      <div class="job-desc">Mesmo tópico, mais profundidade. Hook de valor. Termina com "salva esse vídeo". Foco em saves.</div>
+      <div class="job-tags"><span class="tag tp">Reel</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Save-first</span></div>
+    </div>
+  </div>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--position);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--position);">Reel 3 — POSICIONAR</div>
+      <div class="job-name">Versão de autoridade, conecta ao método</div>
+      <div class="job-desc">Mesmo tópico pelo ângulo de "depois de ensinar X pessoas". Cita o Fluency Connect. Constrói confiança.</div>
+      <div class="job-tags"><span class="tag tb">Reel</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Trust-first</span></div>
+    </div>
+  </div>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--convert);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--convert);">Reel 4 — CONVERTER</div>
+      <div class="job-name">Versão com CTA direto</div>
+      <div class="job-desc">Mesmo tópico com call-to-action explícito. Manda para WhatsApp, ebook, ou link do app. Mais curto (30–35s).</div>
+      <div class="job-tags"><span class="tag to">Reel</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">CTA-first</span></div>
+    </div>
+  </div>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--series);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--series);">Reel 5 — SÉRIE</div>
+      <div class="job-name">Episódio numerado, força o follow</div>
+      <div class="job-desc">Versão episódica do tópico. "Stop Saying This #3", "Culture Shock #2". Sempre termina com preview do próximo.</div>
+      <div class="job-tags"><span class="tag tr">Reel Série</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Follow-first</span></div>
+    </div>
+  </div>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--carousel);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--carousel);">CAROUSEL — Mesmo tópico, formato visual</div>
+      <div class="job-name">Slides swipeable, alta taxa de save e reach</div>
+      <div class="job-desc">O mesmo ensinamento do Reel vira slides. Pessoa salva para consultar depois. O Instagram distribui carousels para não-seguidores. 6–10 slides. Criado no Canva.</div>
+      <div class="job-tags"><span class="tag ty">Carousel</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Save+Reach</span></div>
+    </div>
+  </div>
+
+  <div class="job-bar">
+    <div class="job-color" style="background:var(--story);"></div>
+    <div class="job-body">
+      <div class="job-label" style="color:var(--story);">STORIES — Conectados ao tópico do dia</div>
+      <div class="job-name">3–5 frames por dia, job definido por dia da semana</div>
+      <div class="job-desc">Stories não são aleatórios. Cada dia da semana tem um job (Q&A, BTS, Poll, Ensino, Transformação). Conectam ao Reel postado, mas são rápidos e informais. A maioria não precisa de edição.</div>
+      <div class="job-tags"><span class="tag ts">Stories</span><span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Conexão diária</span></div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;">Como os 7 Formatos se Distribuem — Por Semana</h3>
+
+  <div class="info">
+    <div class="il">🗓 Regra de Distribuição</div>
+    <p>Você não posta os 4 Reels do mesmo tópico na mesma semana. Você posta <strong>1 Reel por tópico, com o job rotacionando a cada semana.</strong> O Carousel do tópico vai no mesmo dia ou no dia seguinte ao Reel. Os Stories são diários e conectam ao que foi postado.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--attract);">
+      <div class="ch">Semana 1 do tópico "Netflix não te deixa fluente"</div>
+      <ul class="sl">
+        <li><strong>Reel:</strong> Versão ATRAIR (contradição forte, share-bait)</li>
+        <li><strong>Carousel:</strong> "5 razões por que imersão passiva não é suficiente"</li>
+        <li><strong>Stories:</strong> Poll — "Você assiste Netflix em inglês? Com ou sem legenda?"</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--nurture);">
+      <div class="ch">Semana 2 — mesmo tópico</div>
+      <ul class="sl">
+        <li><strong>Reel:</strong> Versão NUTRIR (explicação de como combinar os dois)</li>
+        <li><strong>Carousel:</strong> "Imersão passiva vs ativa — diferença visual"</li>
+        <li><strong>Stories:</strong> Q&A — "Pergunta: qual série você usa pra estudar?"</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--position);">
+      <div class="ch">Semana 3 — mesmo tópico</div>
+      <ul class="sl">
+        <li><strong>Reel:</strong> Versão POSICIONAR (padrão dos alunos do FC)</li>
+        <li><strong>Carousel:</strong> (outro tópico essa semana — não repete carousel)</li>
+        <li><strong>Stories:</strong> BTS — gravando o vídeo + bastidor do ensino</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--convert);">
+      <div class="ch">Semana 4 — mesmo tópico</div>
+      <ul class="sl">
+        <li><strong>Reel:</strong> Versão CONVERTER (ebook de estratégias)</li>
+        <li><strong>Carousel:</strong> "Checklist de imersão em casa" (save alto)</li>
+        <li><strong>Stories:</strong> CTA direto — swipe up / link na bio / WhatsApp</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ TÓPICOS × FORMATOS ════════════ -->
+<div class="sec" id="sec-topicos">
+  <div class="eyebrow">Matriz de Conteúdo</div>
+  <h2 class="h2">Tópicos × Todos os Formatos</h2>
+  <p class="desc">Como os seus tópicos existentes se traduzem em cada um dos 7 formatos. Use como referência para planejar a semana.</p>
+
+  <div class="info">
+    <div class="il">📌 Como usar esta tabela</div>
+    <p>Escolha 1 tópico por linha para a semana. O Reel já tem roteiro na Central de Conteúdo — selecione o job da semana. O Carousel é sempre a versão visual/lista do mesmo tópico. Os Stories conectam ao tópico com interação.</p>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <div class="topic-matrix">
+      <div class="tm-header">
+        <div class="tm-h" style="text-align:left; color:var(--muted);">Tópico</div>
+        <div class="tm-h" style="color:var(--attract);">Atrair</div>
+        <div class="tm-h" style="color:var(--nurture);">Nutrir</div>
+        <div class="tm-h" style="color:var(--position);">Posicionar</div>
+        <div class="tm-h" style="color:var(--convert);">Converter</div>
+        <div class="tm-h" style="color:var(--carousel);">Carousel</div>
+        <div class="tm-h" style="color:var(--story);">Story</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Netflix não deixa fluente</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Todo mundo fala que Netflix te deixa fluente. Mentira."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"Imersão passiva vs ativa — a diferença que ninguém explica"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"Nossos alunos que crescem mais rápido combinam os dois"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"Quer o que realmente funciona? ESTRATÉGIA no WhatsApp"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">Passiva vs Ativa: 5 exemplos de cada lado</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">Poll: "Com ou sem legenda no Netflix?"</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Sabrina travou nos EUA</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Estudei inglês por anos. Cheguei nos EUA. Não saiu nada."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"Por que anos de estudo não garantem fluência"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"É por isso que ensinamos fala desde o dia 1 no FC"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"O guia que eu precisava naquele dia — grátis no WA"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">A jornada da Sabrina: 6 marcos do zero à fluência</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">Caixa de perguntas: "Você já travou em inglês?"</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Stop Saying This</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Para de dizer 'I have 20 years.' Nenhum americano entende."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"Por que esse erro persiste e como sair dele de vez"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"Os erros que corrijo primeiro em todos os alunos"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"47 erros no ebook grátis. VOCABULÁRIO no WhatsApp."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">10 erros que todo brasileiro comete (slides)</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">Quiz: "Você saberia o correto?" (interativo)</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Ritmo vs Sons</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Uma mudança de pronúncia que te faz soar nativo imediatamente"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"Inglês é stress-timed. Português é syllable-timed. Isso muda tudo."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"Como nativo americano, o que mais noto é o ritmo, não o sotaque"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"Técnicas de ritmo no guia de estratégias. ESTRATÉGIA no WA."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">Stress-timed vs Syllable-timed: exemplos visuais</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">Close na boca: Michael demonstrando o ritmo ao vivo</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Real English vs Textbook</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Textbook: 'How are you?' Real: 'What's up?' São mundos diferentes."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"Por que o gap entre inglês estudado e inglês falado existe"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"Como nativo, quando ouço brasileiro imitando Hollywood — percebo imediatamente"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"Frases reais no ebook de vocabulário. VOCABULÁRIO no WA."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">20 frases: Textbook ← → Real (comparação visual)</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">Poll: "Qual você diria?" A ou B — interativo</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Choques Culturais EUA</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Americanos não são rudes. Você não conhece a cultura deles."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"Direto vs indireto: como cultura molda comunicação"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"Dois lados: Michael (americano) e Sabrina (que viveu lá)"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"Mais contexto cultural no guia grátis. ESTRATÉGIA no WA."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">Brasil vs EUA: 8 diferenças culturais em slides</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">"Você sabia disso?" — caixa de perguntas após o reel</div>
+      </div>
+
+      <div class="tm-row">
+        <div class="tm-cell"><div class="tm-topic">Bloqueio psicológico</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--attract);"><div class="tm-hook">"Seu inglês não está travado. Sua confiança que está."</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--nurture);"><div class="tm-hook">"A diferença entre saber inglês e conseguir usar — é psicológica"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--position);"><div class="tm-hook">"O bloqueio que vejo em 80% dos alunos que chegam ao FC"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--convert);"><div class="tm-hook">"Técnicas para quebrar o bloqueio no guia grátis"</div></div>
+        <div class="tm-cell" style="border-left:2px solid var(--carousel);">5 técnicas para quebrar o bloqueio de fala (slides)</div>
+        <div class="tm-cell" style="border-left:2px solid var(--story);">"Você trava? Conta pra mim" — caixa de respostas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ STORIES ════════════ -->
+<div class="sec" id="sec-stories">
+  <div class="eyebrow">Stories</div>
+  <h2 class="h2">Calendário de Stories — Sistema por Dia</h2>
+  <p class="desc">Cada dia da semana tem um job fixo de Story. Você sabe antes de acordar o que vai postar. Conecta ao Reel do dia.</p>
+
+  <div class="hl">
+    <div class="ll">🗓 O Princípio do Calendário que Você Enviou</div>
+    <p>O calendário da imagem tem exatamente essa lógica: <strong>job por dia, não por impulso.</strong> Segunda = Q&A/Nutrir. Terça = Day in Life/Posicionar. Quarta = Série Assinatura. Quinta = Transformação/Converter. Sexta = BTS. Sábado = Poll. Adaptamos isso para o contexto de vocês abaixo.</p>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">🟢</span>
+      <div class="story-day-name">Segunda — NUTRIR (Q&A + Extensão do Reel)</div>
+      <span class="tag ts">Conexão</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Frame 1 — Abertura</div>
+        <div class="sf-text">Swipe no Reel postado hoje</div>
+        <div class="sf-desc">"Postamos um vídeo hoje — você viu?" + sticker de enquete Sim/Não</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 2 — Q&A</div>
+        <div class="sf-text">Caixa de perguntas</div>
+        <div class="sf-desc">"Me conta: você já passou por isso?" ou pergunta relacionada ao tópico do Reel</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 3 — Resposta</div>
+        <div class="sf-text">Responde 1 pergunta da semana passada</div>
+        <div class="sf-desc">Pega uma DM ou resposta do Q&A anterior e responde em vídeo de 15s</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 4 — Bastidor leve</div>
+        <div class="sf-text">Momento natural do dia</div>
+        <div class="sf-desc">Bebês, café, ou Michael fazendo algo — casual, sem roteiro</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">🔵</span>
+      <div class="story-day-name">Terça — POSICIONAR (Day in Life + Autoridade)</div>
+      <span class="tag tb">Autoridade</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Frame 1 — Rotina</div>
+        <div class="sf-text">Trecho da rotina</div>
+        <div class="sf-desc">Gravando, tomando café, trabalhando — "dia de criação de conteúdo"</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 2 — Fato de autoridade</div>
+        <div class="sf-text">Um dado ou insight rápido</div>
+        <div class="sf-desc">Slide de texto: "Sabia que aprender inglês em imersão total reduz o tempo em 40%?" + fonte</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 3 — Bastidor do método</div>
+        <div class="sf-text">Parte do processo de vocês</div>
+        <div class="sf-desc">Michael preparando roteiro, Sabrina revisando scripts, ou os dois discutindo um tópico</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 4 — CTA suave</div>
+        <div class="sf-text">Link ou menção do produto</div>
+        <div class="sf-desc">"Quer aprender mais? O link está na bio" — sem pressão</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">🟣</span>
+      <div class="story-day-name">Quarta — SÉRIE ASSINATURA (Micro-Ensino)</div>
+      <span class="tag tr">Série</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Frame 1 — Ensino rápido</div>
+        <div class="sf-text">1 frase real vs textbook</div>
+        <div class="sf-desc">Slide visual: "Textbook: X → Real: Y" — muito fácil de criar no Canva</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 2 — Exemplo</div>
+        <div class="sf-text">Michael demonstra ao vivo</div>
+        <div class="sf-desc">Vídeo de 10s: Michael dizendo a versão errada e a certa. Simples e eficaz.</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 3 — Teste</div>
+        <div class="sf-text">Enquete de conhecimento</div>
+        <div class="sf-desc">"Como se diz correto?" A ou B — as pessoas adoram testar o próprio inglês</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 4 — Preview</div>
+        <div class="sf-text">Próxima parte da série</div>
+        <div class="sf-desc">"Na semana que vem: mais um erro que todo brasileiro comete" — cria antecipação</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">🟠</span>
+      <div class="story-day-name">Quinta — CONVERTER (Transformação + CTA)</div>
+      <span class="tag to">Converter</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Frame 1 — Antes/depois</div>
+        <div class="sf-text">Resultado de aluno ou da Sabrina</div>
+        <div class="sf-desc">"Uma aluna nossa chegou sem conseguir falar. 3 meses depois..." — depoimento ou screenshot</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 2 — Storytelling curto</div>
+        <div class="sf-text">Trecho da transformação</div>
+        <div class="sf-desc">Sabrina conta um detalhe da jornada dela em 15s — emocional, pessoal</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 3 — Produto</div>
+        <div class="sf-text">Menção natural do produto</div>
+        <div class="sf-desc">"É exatamente isso que ensinamos no Fluency Connect. O link está na bio."</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 4 — CTA direto</div>
+        <div class="sf-text">Ação específica</div>
+        <div class="sf-desc">"Manda ESTRATÉGIA no WhatsApp e receba o guia grátis agora" — com link clicável</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">🟡</span>
+      <div class="story-day-name">Sexta — BTS (Bastidores de Gravação)</div>
+      <span class="tag ty">Bastidores</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Frame 1 — Setup</div>
+        <div class="sf-text">Gravando os vídeos da semana</div>
+        <div class="sf-desc">Stories mostrando o setup, os gêmeos por perto, Michael com o teleprompter — humaniza o processo</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 2 — Bloopers</div>
+        <div class="sf-text">Take que deu errado</div>
+        <div class="sf-desc">Um erro de gravação engraçado — altíssimo engajamento, mostra que são humanos</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 3 — Processo</div>
+        <div class="sf-text">Editando no CapCut</div>
+        <div class="sf-desc">Screen recording rápido de como fica o vídeo editado — gera curiosidade e autoridade técnica</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">⚪</span>
+      <div class="story-day-name">Sábado — ATRAIR (Poll + Conteúdo de Engajamento)</div>
+      <span class="tag tg">Alcance</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Frame 1 — Poll</div>
+        <div class="sf-text">Pergunta de alto engajamento</div>
+        <div class="sf-desc">"Qual é sua maior dificuldade em inglês?" A: Falar B: Vocabulário C: Gramática D: Consistência</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 2 — Resultado do Poll</div>
+        <div class="sf-text">Resultado da semana passada</div>
+        <div class="sf-desc">"Vocês responderam X. Aqui está o que achamos disso..." — cria continuidade</div>
+      </div>
+      <div class="story-frame">
+        <div class="sf-type">Frame 3 — Preview da semana</div>
+        <div class="sf-text">O que vem na semana</div>
+        <div class="sf-desc">"Semana que vem tem: [tópico]. Ativa as notificações para não perder." — cria antecipação</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-day">
+    <div class="story-day-header">
+      <span style="font-size:20px;">🔴</span>
+      <div class="story-day-name">Domingo — DESCANSO ou Conteúdo Leve</div>
+      <span class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);">Opcional</span>
+    </div>
+    <div class="story-frames">
+      <div class="story-frame">
+        <div class="sf-type">Opcional</div>
+        <div class="sf-text">Momento de vida real</div>
+        <div class="sf-desc">Se aconteceu algo bonito com os bebês, um passeio, ou Michael e Sabrina juntos — posta naturalmente. Se não, descansa. Domingo não é obrigatório.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CAROUSEL ════════════ -->
+<div class="sec" id="sec-carousel">
+  <div class="eyebrow">Carousels</div>
+  <h2 class="h2">Como Criar Carousels Eficientes</h2>
+  <p class="desc">Carousels têm o maior reach orgânico no Instagram depois dos Reels. O algoritmo distribui para não-seguidores. Alta taxa de save = sinal positivo forte.</p>
+
+  <div class="hl">
+    <div class="ll">💡 Por que Carousel funciona para vocês</div>
+    <p>O conteúdo de vocês é intrinsecamente listável: "10 erros que brasileiros cometem", "Real English vs Textbook", "5 passos de imersão". Isso vira carousel naturalmente — cada slide é um item da lista. <strong>E o mesmo roteiro do Reel vira o carousel sem esforço extra.</strong></p>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;">Estrutura Universal do Carousel — 8 Slides</h3>
+
+  <div class="carousel-slide">
+    <div class="slide">
+      <div class="slide-num">Slide 1 — Cover</div>
+      <div class="slide-title">Título forte com número</div>
+      <div class="slide-desc">"10 erros que todo brasileiro comete em inglês" — Texto grande, fundo escuro/verde, foto de vocês pequena</div>
+    </div>
+    <div class="slide">
+      <div class="slide-num">Slide 2 — Problema</div>
+      <div class="slide-title">Por que isso importa</div>
+      <div class="slide-desc">"Se você comete esses erros, os americanos percebem imediatamente. Vamos resolver isso."</div>
+    </div>
+    <div class="slide" style="border-color:var(--carousel);">
+      <div class="slide-num">Slides 3–7 — Conteúdo</div>
+      <div class="slide-title">Um item por slide</div>
+      <div class="slide-desc">Errado ❌ → Certo ✅. Simples. Uma ideia por slide. Fonte grande. Ícone ou emoji para visual.</div>
+    </div>
+    <div class="slide">
+      <div class="slide-num">Slide 8 — CTA</div>
+      <div class="slide-title">Salva + Ação</div>
+      <div class="slide-desc">"Salva esse carousel para não errar mais. Quer os outros 40? VOCABULÁRIO no WhatsApp."</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;margin-top:4px;">5 Tipos de Carousel para @fluencyconnect</h3>
+
+  <div class="card" style="border-left:3px solid var(--carousel);">
+    <div class="ch">🏆 Tipo 1 — Lista de Erros (maior potencial de save)</div>
+    <div class="cb">
+      "10 erros que todo brasileiro comete em inglês" · "5 coisas que você nunca deve dizer para um americano" · "7 erros de pronúncia clássicos"<br><br>
+      <strong style="color:var(--text);">Formato por slide:</strong> Errado ❌ → Certo ✅ → Exemplo de uso ✍️
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--carousel);">
+    <div class="ch">📊 Tipo 2 — Comparação Visual (alto share)</div>
+    <div class="cb">
+      "Real English vs Textbook English" · "Imersão passiva vs Imersão ativa" · "Brasil vs EUA: diferenças culturais"<br><br>
+      <strong style="color:var(--text);">Formato por slide:</strong> Lado A | Lado B — visual dividido, fácil de entender de relance
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--carousel);">
+    <div class="ch">📋 Tipo 3 — Guia/Checklist (save altíssimo)</div>
+    <div class="cb">
+      "Rotina de 20 min que cria fluência" · "Checklist de imersão em casa" · "Os 4 passos para sair do false beginner"<br><br>
+      <strong style="color:var(--text);">Formato por slide:</strong> Passo numerado + emoji + instrução clara
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--carousel);">
+    <div class="ch">🎤 Tipo 4 — Frases Reais (muito compartilhável)</div>
+    <div class="cb">
+      "10 reações naturais que nativos usam" · "Como discordar em inglês sem soar agressivo" · "3 padrões de small talk"<br><br>
+      <strong style="color:var(--text);">Formato por slide:</strong> Situação + frase em inglês + tradução + quando usar
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--carousel);">
+    <div class="ch">📖 Tipo 5 — Jornada/Storytelling Visual</div>
+    <div class="cb">
+      "A jornada da Sabrina: do zero à fluência nos EUA" · "Como o Michael aprendeu português em 3 tentativas" · "Nosso método em 6 passos"<br><br>
+      <strong style="color:var(--text);">Formato por slide:</strong> Cronológico. Foto/ícone + texto curto por fase.
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;">Criação no Canva — Rápida e Replicável</h3>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="ch">✅ Setup do Template Canva (uma vez)</div>
+      <ul class="sl">
+        <li><strong>Formato:</strong> 1080×1080 (quadrado) ou 1080×1350 (retrato)</li>
+        <li><strong>Fundo:</strong> #1A1A1A (escuro) ou branco limpo — alternar</li>
+        <li><strong>Fonte título:</strong> Nunito Black ou ExtraBold</li>
+        <li><strong>Cor accent:</strong> #1DB994 (verde Fluency Connect)</li>
+        <li><strong>Logo:</strong> @fluencyconnect no canto inferior de todos os slides</li>
+        <li><strong>Salva como "Template Carousel FC"</strong> no Canva — duplica sempre</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="ch">⏱ Tempo por Carousel</div>
+      <ul class="sl">
+        <li><strong>Com template pronto:</strong> 15–20 min por carousel</li>
+        <li><strong>Copiar slides:</strong> Canva permite duplicar slides dentro do projeto</li>
+        <li><strong>Texto já existe:</strong> os roteiros da Central de Conteúdo têm o conteúdo — é só formatar</li>
+        <li><strong>Exportar:</strong> PNG de cada slide → upload no IG como carousel</li>
+        <li><strong>Meta semanal:</strong> 2–3 carousels por semana no sábado</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ WORKFLOW FERRAMENTAS ════════════ -->
+<div class="sec" id="sec-workflow">
+  <div class="eyebrow">Workflow Completo</div>
+  <h2 class="h2">Ferramentas — Do Roteiro ao Post Agendado</h2>
+  <p class="desc">O fluxo completo de cada ferramenta, em ordem, para que nenhum passo fique na cabeça de ninguém.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-icon">📋</div>
+      <div class="pipe-name">Selecionar</div>
+      <div class="pipe-tool">Fluency Connect HTML</div>
+      <div class="pipe-time">Quinta · 10min</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">📱</div>
+      <div class="pipe-name">Teleprompter</div>
+      <div class="pipe-tool">Teleprompter app</div>
+      <div class="pipe-time">Sexta setup · 5min</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">🎬</div>
+      <div class="pipe-name">Gravar</div>
+      <div class="pipe-tool">Câmera nativa</div>
+      <div class="pipe-time">Sexta · 2–3h</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">☁️</div>
+      <div class="pipe-name">Backup</div>
+      <div class="pipe-tool">Google Drive</div>
+      <div class="pipe-time">Sexta fim · 15min</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">✂️</div>
+      <div class="pipe-name">Editar Reels</div>
+      <div class="pipe-tool">CapCut</div>
+      <div class="pipe-time">Sábado · 2h</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">🎠</div>
+      <div class="pipe-name">Criar Carousels</div>
+      <div class="pipe-tool">Canva</div>
+      <div class="pipe-time">Sábado · 45min</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">📅</div>
+      <div class="pipe-name">Agendar</div>
+      <div class="pipe-tool">Meta Suite + TikTok</div>
+      <div class="pipe-time">Sábado · 30min</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-icon">📲</div>
+      <div class="pipe-name">Stories diários</div>
+      <div class="pipe-tool">IG nativo + Canva</div>
+      <div class="pipe-time">Diário · 10min</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;">Cada Ferramenta — O Que Faz e Como</h3>
+
+  <div class="tool-step">
+    <div class="ts-num">1</div>
+    <div class="ts-body">
+      <div class="ts-title">Central de Conteúdo HTML → Selecionar tópicos</div>
+      <div class="ts-tool"><span class="tag tg">fluency-connect-sm-v2.html</span></div>
+      <div class="ts-desc">Na quinta-feira: abra o arquivo HTML → use os filtros (pillar, formato, job) → selecione 7 tópicos para a semana (ou 21 para o mês de 3 posts/dia) → copie os roteiros para o app de teleprompter.<br><br>
+      <strong>Dica de eficiência:</strong> Filtre por "Atrair" e selecione os 7 melhores para a semana. Depois filtre por "Série" para ver qual série está na vez. Nunca decida improvisando.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">2</div>
+    <div class="ts-body">
+      <div class="ts-title">Teleprompter app → Ler roteiro enquanto grava</div>
+      <div class="ts-tool"><span class="tag tg">Bigvu (grátis) ou Teleprompter Premium</span></div>
+      <div class="ts-desc">Cole o roteiro no app → ajuste a velocidade de rolagem (começa lento, aumenta conforme prática) → posicione o celular atrás/acima da câmera para manter contato visual.<br><br>
+      <strong>No iPhone:</strong> Use Bigvu — tem câmera integrada ao teleprompter, não precisa de dois dispositivos.<br>
+      <strong>No Android:</strong> Teleprompter Premium tem versão grátis suficiente. Coloque em outro celular ou tablet se possível.</div>
+      <div class="ts-tip">⚡ Isso elimina decorar roteiro e reduz o número de takes de 5 para 1–2 por vídeo.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">3</div>
+    <div class="ts-body">
+      <div class="ts-title">Câmera nativa + Google Drive → Gravar e fazer backup</div>
+      <div class="ts-tool"><span class="tag tg">Câmera traseira do celular</span><span class="tag tg">Google Drive / Google Fotos</span></div>
+      <div class="ts-desc">Grave na câmera nativa (traseira, 1080p, 30fps) → ao final de cada bloco, mova os takes para o Google Drive → crie pastas por semana: "Semana 01 / Semana 02".<br><br>
+      <strong>Google Fotos backup automático:</strong> Ative o backup automático do Google Fotos. Isso garante que nada se perde mesmo se o celular estiver cheio. Qualidade "Alta" (comprimida) é suficiente para social media.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">4</div>
+    <div class="ts-body">
+      <div class="ts-title">CapCut → Editar Reels com template</div>
+      <div class="ts-tool"><span class="tag tg">CapCut (grátis)</span></div>
+      <div class="ts-desc">
+        <strong>Fluxo por vídeo (12–15 min cada):</strong><br>
+        1. Duplicar template base → renomear com título do vídeo<br>
+        2. Importar take escolhido → cortar silêncios do início e fim<br>
+        3. Auto Captions → revisar erros de transcrição (2–3 min)<br>
+        4. Texto de hook nos primeiros 3s → usar estilo salvo<br>
+        5. B-roll (se tiver) → sobrepor nos momentos relevantes<br>
+        6. Checar @fluencyconnect no final → exportar 1080p<br><br>
+        <strong>Para o mês de 3 posts/dia:</strong> Edite em sessões de 3–4 vídeos. Não tente editar todos de uma vez — a atenção cai e a qualidade piora.
+      </div>
+      <div class="ts-tip">⚡ CapCut permite exportar enquanto você edita o próximo. Deixa exportar em paralelo para economizar tempo.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">5</div>
+    <div class="ts-body">
+      <div class="ts-title">Canva → Criar Carousels com template</div>
+      <div class="ts-tool"><span class="tag tg">Canva (grátis)</span></div>
+      <div class="ts-desc">
+        <strong>Fluxo por carousel (15–20 min cada):</strong><br>
+        1. Abrir "Template Carousel FC" salvo → duplicar projeto<br>
+        2. Slide 1: atualizar título (número + tema da semana)<br>
+        3. Slides 2–7: copiar o conteúdo do roteiro → uma ideia por slide<br>
+        4. Slide final: CTA (WhatsApp / ebook / app)<br>
+        5. Download → PNG de todos os slides → guardar na pasta da semana<br><br>
+        <strong>Stories que precisam de design:</strong> Use o Canva Stories templates (formato 9:16) para slides de texto elegantes. Para vídeo-stories, use direto o IG.
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">6</div>
+    <div class="ts-body">
+      <div class="ts-title">Meta Business Suite → Agendar IG para a semana toda</div>
+      <div class="ts-tool"><span class="tag tg">Meta Business Suite (grátis)</span></div>
+      <div class="ts-desc">
+        <strong>No sábado, em um bloco único (30–40 min):</strong><br>
+        Abra o Meta Business Suite (web ou app) → Creator Studio → Reels → Agendar<br>
+        Para cada Reel: upload do vídeo → adicionar caption (curta, PT-BR, termina com pergunta) → 5–8 hashtags → horário (9h / 13h / 19h) → Agendar.<br><br>
+        Para Carousels: mesmo processo, upload dos slides PNG.<br><br>
+        <strong>Resultado:</strong> Toda a semana está agendada. Você não abre o IG para postar — só para responder comentários.
+      </div>
+      <div class="ts-tip">⚡ Tip: Escreva todas as 7 captions de uma vez em um bloco de notas antes de abrir o Meta Suite. Copiar e colar é muito mais rápido do que escrever dentro da plataforma.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">7</div>
+    <div class="ts-body">
+      <div class="ts-title">TikTok Creator Tools → Agendar TikTok</div>
+      <div class="ts-tool"><span class="tag tg">TikTok Studio (grátis)</span></div>
+      <div class="ts-desc">Acesse studio.tiktok.com no computador → Content → Schedule → faça o upload dos mesmos vídeos do IG → mesmos horários → Schedule.<br><br>
+      <strong>Diferença importante:</strong> No TikTok, a caption pode ser ligeiramente diferente — mais casual, pode ter emojis a mais. O mesmo vídeo funciona, mas a legenda pode ser ajustada para o tom do TikTok.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">8</div>
+    <div class="ts-body">
+      <div class="ts-title">Stories — Diário via IG nativo (não precisa de agendamento)</div>
+      <div class="ts-tool"><span class="tag ts">Instagram Stories (grátis)</span><span class="tag tg">Canva para slides</span></div>
+      <div class="ts-desc">
+        Stories não são agendados — são postados no momento ou com até 1h de antecedência.<br><br>
+        <strong>O que preparar no sábado para a semana:</strong><br>
+        → 7 slides de texto do tipo "enquete", "quiz de inglês", "comparação" → criados no Canva em lote (30 min) → salvos no celular por dia da semana → postados na hora certa.<br><br>
+        <strong>O que é postado na hora:</strong><br>
+        → Momentos naturais do dia (bebês, bastidores, café) → repost do Reel para os Stories → respostas ao Q&A → reações em tempo real.<br><br>
+        <strong>Proporção:</strong> 60% no momento + 40% preparado no sábado.
+      </div>
+      <div class="ts-tip">⚡ Salve os slides preparados em uma pasta no celular chamada "Stories Semana X" — Segunda, Terça, etc. Você abre, posta, fecha.</div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">9</div>
+    <div class="ts-body">
+      <div class="ts-title">WhatsApp Business → Gerenciar leads que chegam dos posts</div>
+      <div class="ts-tool"><span class="tag tg">WhatsApp Business (grátis)</span></div>
+      <div class="ts-desc">
+        Leads chegam via CTA dos Reels, Stories e Carousels. O WhatsApp Business precisa estar configurado com:<br><br>
+        → <strong>Mensagem de boas-vindas automática:</strong> enviada para quem manda mensagem pela primeira vez<br>
+        → <strong>Respostas rápidas:</strong> configure as palavras VOCABULÁRIO e ESTRATÉGIA como gatilho automático para envio dos ebooks<br>
+        → <strong>Etiquetas:</strong> "Lead Novo", "Ebook enviado", "Em conversa", "Convertido" — toda semana, processe os leads pelas etiquetas<br><br>
+        <strong>Tempo diário de WhatsApp:</strong> 15–20 min no final do dia. Não fica com o app aberto o dia todo.
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-step">
+    <div class="ts-num">10</div>
+    <div class="ts-body">
+      <div class="ts-title">Metricool ou Instagram Insights → Métricas semanais</div>
+      <div class="ts-tool"><span class="tag tg">Metricool (grátis) ou Instagram Insights</span></div>
+      <div class="ts-desc">
+        Todo domingo (15 min): abra o Metricool ou Instagram Insights → anote em uma tabela simples:<br><br>
+        → Vídeo com mais shares da semana<br>
+        → Vídeo com mais saves<br>
+        → Vídeo com mais comentários<br>
+        → Total de novos seguidores<br>
+        → Total de WhatsApps recebidos (conta manualmente)<br><br>
+        <strong>Essa tabela é o seu mapa.</strong> Sem ela, você grava conteúdo no escuro. Com ela, você dobra o que funciona na semana seguinte.
+      </div>
+      <div class="ts-tip">⚡ Crie uma tabela simples no Notion ou Google Sheets com as colunas: Data | Top Vídeo | Shares | Saves | Comentários | WAs | Nota. 5 minutos de registro por semana.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SEMANA TIPO ════════════ -->
+<div class="sec" id="sec-semana">
+  <div class="eyebrow">Visão Semanal</div>
+  <h2 class="h2">A Semana Tipo — Tudo em Um Lugar</h2>
+  <p class="desc">O que acontece em cada dia, com qual ferramenta, e quanto tempo leva. Para o mês de teste de 3 posts/dia e para depois.</p>
+
+  <div class="warn">
+    <div class="wl">⚠ Mês de Teste vs Ritmo Sustentável</div>
+    <p>Durante o mês de 3 posts/dia: o sábado de edição vai ser mais longo (3–4h em vez de 2h) e a sexta de gravação precisa de mais takes. É viável por 30 dias. Depois que identificar o vídeo assinatura, volta para 1 Reel/dia com qualidade mais alta — e o tempo liberado vai para Stories e Carousels.</p>
+  </div>
+
+  <div class="week-grid">
+    <div class="day-col">
+      <div class="day-name">Segunda</div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Atrair / Série</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (13h)</div>
+        <div class="dp-format">Nutrir</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (19h)</div>
+        <div class="dp-format">Converter</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--story);">
+        <div class="dp-type" style="color:var(--story);">📲 Stories</div>
+        <div class="dp-format">Q&A + extensão do Reel</div>
+      </div>
+    </div>
+
+    <div class="day-col">
+      <div class="day-name">Terça</div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Atrair</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--carousel);">🎠 Carousel (13h)</div>
+        <div class="dp-format">Lista/Guia</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (19h)</div>
+        <div class="dp-format">Posicionar</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--story);">
+        <div class="dp-type" style="color:var(--story);">📲 Stories</div>
+        <div class="dp-format">Day in Life + Autoridade</div>
+      </div>
+    </div>
+
+    <div class="day-col">
+      <div class="day-name">Quarta</div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Série Assinatura</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (13h)</div>
+        <div class="dp-format">Nutrir</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--carousel);">🎠 Carousel (19h)</div>
+        <div class="dp-format">Comparação visual</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--story);">
+        <div class="dp-type" style="color:var(--story);">📲 Stories</div>
+        <div class="dp-format">Micro-ensino + Quiz</div>
+      </div>
+    </div>
+
+    <div class="day-col">
+      <div class="day-name">Quinta</div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Atrair</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (13h)</div>
+        <div class="dp-format">Storytelling</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (19h)</div>
+        <div class="dp-format">Converter</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--story);">
+        <div class="dp-type" style="color:var(--story);">📲 Stories</div>
+        <div class="dp-format">Transformação + CTA</div>
+      </div>
+      <div class="day-post" style="border-top:2px solid var(--green);">
+        <div class="dp-type" style="color:var(--green);">📋 Prep</div>
+        <div class="dp-format">Selecionar tópicos (10min)</div>
+      </div>
+    </div>
+
+    <div class="day-col recording">
+      <div class="day-name">🎬 Sexta</div>
+      <div class="day-post" style="border-left:2px solid var(--green);">
+        <div class="dp-type" style="color:var(--green);">GRAVAÇÃO</div>
+        <div class="dp-format">Todos os takes da semana · 2–3h</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Agendado anterior</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (13h)</div>
+        <div class="dp-format">Agendado anterior</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--story);">
+        <div class="dp-type" style="color:var(--story);">📲 Stories</div>
+        <div class="dp-format">BTS de gravação (ao vivo)</div>
+      </div>
+    </div>
+
+    <div class="day-col editing">
+      <div class="day-name">✂️ Sábado</div>
+      <div class="day-post" style="border-left:2px solid var(--yellow);">
+        <div class="dp-type" style="color:var(--yellow);">EDIÇÃO + AGENDA</div>
+        <div class="dp-format">CapCut + Canva + Meta Suite · 3–4h</div>
+      </div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Agendado anterior</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--story);">
+        <div class="dp-type" style="color:var(--story);">📲 Stories</div>
+        <div class="dp-format">Poll + Preview da semana</div>
+      </div>
+    </div>
+
+    <div class="day-col">
+      <div class="day-name">Domingo</div>
+      <div class="day-post">
+        <div class="dp-type" style="color:var(--attract);">🎬 Reel (9h)</div>
+        <div class="dp-format">Agendado (Converter)</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--muted2);">
+        <div class="dp-type" style="color:var(--muted);">📊 Métricas</div>
+        <div class="dp-format">Review de performance · 15min</div>
+      </div>
+      <div class="day-post" style="border-left:2px solid var(--muted2);">
+        <div class="dp-type" style="color:var(--muted);">😴 Descanso</div>
+        <div class="dp-format">Stories só se acontecer algo natural</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <h3 style="font-size:14px;font-weight:900;margin-bottom:14px;">Perguntas que Ainda Preciso de Vocês</h3>
+
+  <div class="card" style="border-color:var(--green-border); background: var(--green-subtle);">
+    <div class="ch" style="color:var(--green);">❓ Para finalizar a estratégia com precisão</div>
+    <ul class="sl" style="margin-top:4px;">
+      <li><strong>Vocês têm um microfone de lapela?</strong> Se não, isso precisa ser a primeira compra — R$40–60, impacto enorme no áudio</li>
+      <li><strong>Têm tripé ou suporte de celular?</strong> Para gravação com teleprompter em outro dispositivo funcionar</li>
+      <li><strong>Têm um tablet ou segundo celular?</strong> Facilita muito o setup do teleprompter separado da câmera</li>
+      <li><strong>O Michael tem disponibilidade garantida na sexta?</strong> Se não, precisamos estruturar quais takes podem ser gravados sem ele</li>
+      <li><strong>Já têm fotos dos EUA / fotos antigas?</strong> Para usar como B-roll nos carousels e vídeos de storytelling</li>
+      <li><strong>Qual o celular que vocês usam?</strong> iPhone ou Android — isso afeta qual teleprompter e quais recursos do CapCut estão disponíveis</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.header').offsetHeight - 4, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

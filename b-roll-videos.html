@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B-Roll Master List — 3 Contas</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111;
+  --bg2: #1a1a1a;
+  --bg3: #222;
+  --bg4: #2a2a2a;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0f0f0;
+  --muted: #888;
+  --muted2: #555;
+  --fc: #1DB994;
+  --fc-bg: rgba(29,185,148,0.08);
+  --fc-border: rgba(29,185,148,0.25);
+  --sab: #c084fc;
+  --sab-bg: rgba(192,132,252,0.08);
+  --sab-border: rgba(192,132,252,0.25);
+  --mic: #60a5fa;
+  --mic-bg: rgba(96,165,250,0.08);
+  --mic-border: rgba(96,165,250,0.25);
+  --yellow: #fbbf24;
+  --red: #f87171;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; font-size: 13px; line-height: 1.6; }
+
+/* HEADER */
+.hdr {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(17,17,17,0.97); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+}
+.hdr-top { display: flex; align-items: center; gap: 12px; padding: 12px 0 0; }
+.logo { font-size: 15px; font-weight: 900; color: var(--fc); }
+.logo span { color: var(--text); font-weight: 400; }
+.hdr-meta { font-size: 11px; color: var(--muted); }
+.progress-pill {
+  margin-left: auto;
+  background: var(--bg3); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+}
+.progress-pill span { color: var(--fc); }
+
+/* TABS */
+.tabs { display: flex; gap: 0; overflow-x: auto; margin-top: 10px; }
+.tab-btn {
+  padding: 10px 18px; font-size: 11px; font-weight: 800;
+  color: var(--muted); cursor: pointer; border: none; background: none;
+  font-family: 'Nunito', sans-serif; text-transform: uppercase;
+  letter-spacing: 0.8px; border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active-fc { color: var(--fc); border-bottom-color: var(--fc); }
+.tab-btn.active-sab { color: var(--sab); border-bottom-color: var(--sab); }
+.tab-btn.active-mic { color: var(--mic); border-bottom-color: var(--mic); }
+.tab-btn.active-shared { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+/* SECTIONS */
+.section { display: none; padding: 22px 20px; max-width: 900px; }
+.section.active { display: block; }
+
+/* ACCOUNT HERO */
+.acc-hero {
+  border-radius: 12px; padding: 20px 22px; margin-bottom: 20px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+}
+.ah-name { font-size: 22px; font-weight: 900; margin-bottom: 3px; }
+.ah-handle { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.ah-desc { font-size: 12px; line-height: 1.65; max-width: 520px; }
+.ah-stat { text-align: right; flex-shrink: 0; }
+.ah-num { font-size: 28px; font-weight: 900; display: block; }
+.ah-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
+
+/* CATEGORY */
+.category { margin-bottom: 24px; }
+.cat-header {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 10px; margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.cat-icon { font-size: 18px; }
+.cat-title { font-size: 14px; font-weight: 900; }
+.cat-count { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 100px; background: var(--bg3); color: var(--muted); border: 1px solid var(--border); }
+.cat-note { font-size: 11px; color: var(--muted); margin-left: auto; font-style: italic; }
+
+/* CLIP CARD */
+.clips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.clip {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px 14px;
+  display: flex; gap: 10px; align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.clip:hover { background: var(--bg3); }
+.clip.done { opacity: 0.4; }
+.clip.done .clip-check { background: var(--fc); color: #111; }
+.clip-check {
+  width: 20px; height: 20px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; flex-shrink: 0; margin-top: 1px;
+  transition: all 0.15s;
+}
+.clip-body { flex: 1; }
+.clip-title { font-size: 12px; font-weight: 800; color: var(--text); margin-bottom: 3px; line-height: 1.35; }
+.clip-desc { font-size: 11px; color: var(--muted); line-height: 1.5; margin-bottom: 5px; }
+.clip-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.ctag {
+  font-size: 9px; font-weight: 800; padding: 1px 6px;
+  border-radius: 100px; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.ct-uses { background: rgba(251,191,36,0.1); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+.ct-angles { background: rgba(96,165,250,0.1); color: var(--mic); border: 1px solid rgba(96,165,250,0.2); }
+.ct-easy { background: rgba(29,185,148,0.1); color: var(--fc); border: 1px solid rgba(29,185,148,0.2); }
+.ct-hard { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+.ct-shared { background: rgba(192,132,252,0.1); color: var(--sab); border: 1px solid rgba(192,132,252,0.2); }
+.ct-priority { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+
+/* USAGE BADGE */
+.uses-badge {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 9px; font-weight: 900; padding: 1px 5px;
+  border-radius: 4px; background: var(--bg4); color: var(--muted2);
+}
+
+/* TIPS BOX */
+.tip-box {
+  background: var(--fc-bg); border: 1px solid var(--fc-border);
+  border-radius: 9px; padding: 12px 16px; margin-bottom: 16px;
+}
+.tip-box .tl { font-size: 9px; font-weight: 800; color: var(--fc); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.tip-box p { font-size: 12px; color: var(--text); line-height: 1.65; }
+
+.warn-box {
+  background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2);
+  border-radius: 9px; padding: 12px 16px; margin-bottom: 16px;
+}
+.warn-box .wl { font-size: 9px; font-weight: 800; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.warn-box p { font-size: 12px; color: #ffb0b0; line-height: 1.65; }
+
+hr.div { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+.session-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 14px; color: var(--muted2);
+  display: flex; align-items: center; gap: 8px;
+}
+.session-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+
+@media (max-width: 640px) {
+  .section { padding: 16px 12px; }
+  .clips-grid { grid-template-columns: 1fr; }
+  .acc-hero { flex-direction: column; }
+  .ah-stat { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">Fluency<span>Connect</span></div>
+    <div class="hdr-meta">B-Roll Master List — 3 Contas</div>
+    <div class="progress-pill">Gravados: <span id="total-done">0</span> / <span id="total-clips">0</span></div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn" onclick="showSection('fc')" id="tab-fc">🟢 @fluencyconnect</button>
+    <button class="tab-btn" onclick="showSection('sab')" id="tab-sab">🟣 @sabrina</button>
+    <button class="tab-btn" onclick="showSection('mic')" id="tab-mic">🔵 @michael</button>
+    <button class="tab-btn" onclick="showSection('shared')" id="tab-shared">⭐ Compartilhados</button>
+    <button class="tab-btn" onclick="showSection('guide')" id="tab-guide">📐 Como Filmar</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     @fluencyconnect
+═══════════════════════════════ -->
+<div class="section" id="section-fc">
+
+  <div class="acc-hero" style="background:var(--fc-bg);border:1px solid var(--fc-border);">
+    <div>
+      <div class="ah-name" style="color:var(--fc);">@fluencyconnect</div>
+      <div class="ah-handle" style="color:var(--fc);">B-Roll de Inglês, Método e Casal</div>
+      <div class="ah-desc" style="color:var(--text);">Todo B-roll do FC deve reforçar a autoridade e autenticidade do casal. O objetivo é que o espectador sinta que está dentro do processo de ensino — não assistindo a um anúncio. Priorize tomadas dos dois juntos, close de boca para pronúncia, e contexto de "professores vivendo o que ensinam".</div>
+    </div>
+    <div class="ah-stat">
+      <span class="ah-num" style="color:var(--fc);">62</span>
+      <span class="ah-lbl" style="color:var(--fc);">clips</span>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tl">🎯 Prioridade de Gravação</div>
+    <p>Grave primeiro as tomadas de <strong>close na boca</strong> (pronúncia) e <strong>casal conversando</strong> — são as mais usadas e as mais difíceis de regravar se o setup mudou. Tomadas de celular e tela podem ser gravadas em qualquer momento.</p>
+  </div>
+
+  <!-- CATEGORIA 1: PRONÚNCIA -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">👄</span>
+      <span class="cat-title">Pronúncia & Sons</span>
+      <span class="cat-count">8 clips</span>
+      <span class="cat-note">Usados nos vídeos de pronúncia — filma com câmera TRASEIRA</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — TH vozeado</div>
+          <div class="clip-desc">Língua entre os dentes, vibra. Fala: "the, this, that, there". Fundo neutro. Câmera traseira.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 33 · Pronounce Native</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">6 vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — TH não-vozeado</div>
+          <div class="clip-desc">Mesma posição, sem vibrar. Fala: "think, through, three, thank". Câmera traseira, luz frontal.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 33</span></div>
+        </div>
+        <div class="uses-badge">4 vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — W inicial</div>
+          <div class="clip-desc">Boca arredondada. Fala: "water, work, world, want". Contraste com V (errado) → W (certo).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 33</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — H aspirado</div>
+          <div class="clip-desc">Michael: "house, happy, hello, help" com H forte. Depois Sabrina sem H (errado) para comparação.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 22 · Brazilian Mistakes</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">5 vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — R suave inicial</div>
+          <div class="clip-desc">Michael: "right, rain, road, ready" com R suave. Comparar com R forte do português.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 22</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — vogal final cortada</div>
+          <div class="clip-desc">Michael: "finish" (certo) vs Sabrina imitando "finishi" (errado). Close que mostra a diferença.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 22</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — stress de frase</div>
+          <div class="clip-desc">Michael fala: "I LOVE that movie / I love THAT movie / I love that MOVIE" com ênfase visível.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 19 · Pronúncia ritmo</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Close na boca — reduções (gonna/wanna)</div>
+          <div class="clip-desc">Michael: "gonna, wanna, lemme, kinda". Fala naturalmente, depois exagera para mostrar o padrão.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 19 · ID 28</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CATEGORIA 2: CASAL ENSINANDO -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">💑</span>
+      <span class="cat-title">Casal Ensinando / Conversando</span>
+      <span class="cat-count">10 clips</span>
+      <span class="cat-note">O diferencial incopiável — filmado junto</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Os dois conversando em inglês — lateral</div>
+          <div class="clip-desc">Câmera de lado, sem áudio claro, os dois falando inglês entre si. Para usar como overlay em vídeos de método.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Qualquer vídeo de método</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">20+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael reage com choque/surpresa</div>
+          <div class="clip-desc">Michael faz expressão de "não acredito" sem áudio. Perfeito para Double Downs e comparações.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">CO · Double Down</span></div>
+        </div>
+        <div class="uses-badge">10+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina reage com choque/embaraço</div>
+          <div class="clip-desc">Sabrina faz expressão de "que vergonha" — para os storytellings de quando travou nos EUA.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ST · Storytelling</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina ri da pronúncia do Michael</div>
+          <div class="clip-desc">Michael fala uma palavra em português com sotaque, Sabrina ri. Natural, não forçado. Casal real.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 2 · ID 16</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael corrigi Sabrina em inglês — gentil</div>
+          <div class="clip-desc">Sabrina fala algo, Michael corrige com sorriso. Mostra a dinâmica real de casal bilíngue.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stop Saying This</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Split-screen preparação</div>
+          <div class="clip-desc">Cada um em um canto do frame, olhando para câmeras separadas. Edita depois como split. Grave separado.</div>
+          <div class="clip-tags"><span class="ctag ct-angles">Perspectiva brasileira vs americana</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Os dois olhando para o celular juntos</div>
+          <div class="clip-desc">Sentados, olhando para a tela do celular. Over-the-shoulder shot mostrando o app ou um vídeo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">App launch</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Os dois escrevendo/trabalhando juntos</div>
+          <div class="clip-desc">Mesa, notebook, café. Over-the-shoulder. Sem foco no rosto — foco nas mãos e tela.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Método · Autoridade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Os dois olhando um ao outro — sorrindo</div>
+          <div class="clip-desc">Câmera frontal captura o momento. Não forçado. Para finais de storytelling e momentos positivos.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 1 · ID 20</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael gesticulando enquanto explica</div>
+          <div class="clip-desc">Mãos se movendo enquanto ele fala (sem áudio claro). Para vídeos de método e autoridade.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">AT · Autoridade</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CATEGORIA 3: INGLÊS NA PRÁTICA -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">📚</span>
+      <span class="cat-title">Inglês na Prática / Estudo</span>
+      <span class="cat-count">10 clips</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Celular com app Fluency Connect aberto</div>
+          <div class="clip-desc">Screen recording: tela do app com o Mikey em conversa. Flashcards sendo usados. XP subindo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">App launch</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">15+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Mãos digitando no celular — inglês</div>
+          <div class="clip-desc">Close nas mãos digitando uma mensagem em inglês. Sem mostrar o rosto. Para vídeos de vocabulário.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Vocabulário · Real English</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Livro de inglês sendo folheado</div>
+          <div class="clip-desc">Close nas mãos folheando livro didático. Usa para "textbook English" (o errado). Boa justaposição.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 15 · Real vs Textbook</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Fones de ouvido sendo colocados</div>
+          <div class="clip-desc">Close nas mãos colocando fones. Para vídeos de listening, imersão passiva, podcasts.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 25 · Imersão</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Celular mudando idioma para inglês</div>
+          <div class="clip-desc">Screen recording das configurações mudando de português para inglês. Simples e direto.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 27 · Celular em inglês</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina falando inglês no telefone</div>
+          <div class="clip-desc">Câmera de lado, Sabrina fala inglês ao celular — não importa o conteúdo, só a cena.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Real English · Small Talk</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">WhatsApp aberto com conversa em inglês</div>
+          <div class="clip-desc">Tela do WhatsApp com mensagem em inglês visível (pode ser mock). Para CTA de ebook.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Todos os CTAs de ebook</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">Todos os converts</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Anotações em inglês sendo escritas</div>
+          <div class="clip-desc">Close no caderno ou folha com palavras em inglês sendo escritas à mão.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Vocabulário · Rotina de estudo</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Netflix / série em inglês na tela</div>
+          <div class="clip-desc">TV ou celular com cena de série americana em inglês (sem legenda). Para vídeo do Netflix.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 3 · Netflix</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina olhando para câmera com confiança — após falar inglês</div>
+          <div class="clip-desc">Cena de transformação. Olhar direto, sorriso sutil. Para finais de storytelling de resultado.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 20 · Colega achava americana</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CATEGORIA 4: SETUP E PRODUÇÃO -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">🎬</span>
+      <span class="cat-title">Bastidores de Produção</span>
+      <span class="cat-count">8 clips</span>
+      <span class="cat-note">Grava nos próprios dias de gravação — zero esforço extra</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Setup de gravação — visão geral</div>
+          <div class="clip-desc">Celular no tripé, ring light ligado, fundo limpo. Mostra o setup sem mostrar o rosto.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories de BTS</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina olhando o Bigvu no celular</div>
+          <div class="clip-desc">Câmera de lado captura ela lendo o teleprompter. Bastidor autêntico.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories de BTS</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Take dando errado + rindo</div>
+          <div class="clip-desc">Blooper intencional: errar uma palavra, rir, reiniciar. Humaniza e gera engajamento alto.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories sexta</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">CapCut aberto na tela — editando</div>
+          <div class="clip-desc">Screen recording de 10–15s editando um vídeo no CapCut. Mostra processo, gera autoridade.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories sábado</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Microfone de lapela sendo conectado</div>
+          <div class="clip-desc">Close no lapela sendo preso na roupa. Detalhe de produção que gera credibilidade.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">BTS · Setup</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Canva aberto com carousel sendo criado</div>
+          <div class="clip-desc">Screen recording 15s criando slides no Canva. Para stories de "como fazemos o conteúdo".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories processo</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Central de Conteúdo no celular</div>
+          <div class="clip-desc">Screen recording do HTML abrindo, filtrando tópicos. Mostra o sistema de organização.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories BTS processo</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Meta Business Suite agendando posts</div>
+          <div class="clip-desc">Screen recording de agendar um post para a semana. Para conteúdo de "como postamos".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Stories sábado</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CATEGORIA 5: AMBIENTE -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">🏠</span>
+      <span class="cat-title">Ambiente & Atmosfera</span>
+      <span class="cat-count">8 clips</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Café sendo preparado — close</div>
+          <div class="clip-desc">Close no café caindo na xícara, vapor, mãos segurando. Qualquer "abertura de dia" de vídeo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Qualquer vídeo</span></div>
+        </div>
+        <div class="uses-badge">Universal</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Janela com luz natural — desfocada</div>
+          <div class="clip-desc">Câmera focada no primeiro plano, janela desfocada. Cria atmosfera limpa para transições.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Transições</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Mesa de trabalho — vista geral</div>
+          <div class="clip-desc">Mesa com notebook, caderno, celular. Sem mostrar rosto. Para contexto de "trabalho/ensino".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Método · Autoridade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Livros em inglês na prateleira</div>
+          <div class="clip-desc">Estante com livros em inglês visíveis — ambiente que comunica imersão sem uma palavra.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Autoridade · Imersão</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">São Bernardo — rua ou parque</div>
+          <div class="clip-desc">Vista externa da cidade. Para contexto "aprenda inglês sem sair do Brasil — até aqui dá".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 25 · Imersão em casa</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Fones no ouvido — andando</div>
+          <div class="clip-desc">Câmera de trás acompanhando alguém caminhando com fones. Para imersão passiva / podcast.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 25 · Imersão</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Celular na mão mostrando tela em inglês</div>
+          <div class="clip-desc">Hold the phone, screen showing English — Instagram, settings, etc. Para celular em inglês.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 27</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Notebook aberto — digitando</div>
+          <div class="clip-desc">Over-the-shoulder shot, tela visível com texto em inglês, mãos no teclado.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Trabalho · Carreira</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CATEGORIA 6: FOTOS HISTÓRICAS (EUA) -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">📸</span>
+      <span class="cat-title">Fotos & Vídeos do Passado (EUA)</span>
+      <span class="cat-count">8 clips</span>
+      <span class="cat-note">Precisam ser garimpados — NÃO gravados agora</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto/vídeo da Sabrina chegando nos EUA</div>
+          <div class="clip-desc">Qualquer registro da época — aeroporto, apartamento, rua. Para storytelling "fui sozinha".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 1 · Sabrina travou</span><span class="ctag ct-priority">🔴 Garimpe agora</span></div>
+        </div>
+        <div class="uses-badge">10+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto/vídeo da Sabrina no trabalho nos EUA</div>
+          <div class="clip-desc">Escritório, colega, qualquer momento de trabalho americano. Para ID 20 (colega não sabia que era brasileira).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 20 · ID 18</span><span class="ctag ct-priority">🔴 Garimpe agora</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto do casamento Michael + Sabrina</div>
+          <div class="clip-desc">Qualquer foto do casamento. Para storytelling "nossa história", "casal bilíngue".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Storytelling casal</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto de restaurante nos EUA</div>
+          <div class="clip-desc">Qualquer restaurante americano, pode ser genérica. Para ID 9 (Sabrina pediu comida e entrou em pânico).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 9</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto/vídeo do Michael chegando ao Brasil</div>
+          <div class="clip-desc">Qualquer registro. Para ID 2 (Michael aprendendo português) e ID 12 (entrevista de trabalho).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 2 · ID 12</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto de cidade americana</div>
+          <div class="clip-desc">Rua, shopping, parque americano. Contexto visual para qualquer história nos EUA.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Choque cultural</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Screenshot de conversa em inglês (época EUA)</div>
+          <div class="clip-desc">Mensagem ou email antigo em inglês — blura o nome da outra pessoa. Prova de imersão real.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Storytelling autenticidade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="fc">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto de apresentação em inglês da Sabrina</div>
+          <div class="clip-desc">Slide, público, qualquer registro. Para ID 18 (primeira apresentação tremendo).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">ID 18</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     @sabrina
+═══════════════════════════════ -->
+<div class="section" id="section-sab">
+
+  <div class="acc-hero" style="background:var(--sab-bg);border:1px solid var(--sab-border);">
+    <div>
+      <div class="ah-name" style="color:var(--sab);">@sabrina</div>
+      <div class="ah-handle" style="color:var(--sab);">B-Roll de Vida, Maternidade e Jornada Pessoal</div>
+      <div class="ah-desc" style="color:var(--text);">O B-roll da Sabrina precisa transmitir <em>vida real</em> — não perfeita, autêntica. Maternidade sem filtro, rotina com gêmeas, empreendedorismo caótico e bonito ao mesmo tempo. A audiência deve sentir: "eu quero essa vida" ou "eu me identifico com essa vida". Nada staged.</div>
+    </div>
+    <div class="ah-stat">
+      <span class="ah-num" style="color:var(--sab);">48</span>
+      <span class="ah-lbl" style="color:var(--sab);">clips</span>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <div class="wl">⚠ Sobre os bebês</div>
+    <p>Não force cenas com as gêmeas — se elas aparecerem naturalmente enquanto você grava outra coisa, capture. Não exponha rostos em close se você não se sentir confortável. Pés, mãos, costas, e risadas funcionam muito bem e são menos invasivos.</p>
+  </div>
+
+  <!-- MATERNIDADE -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">👶</span>
+      <span class="cat-title">Maternidade Bilíngue</span>
+      <span class="cat-count">14 clips</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina falando inglês com as bebês no berço</div>
+          <div class="clip-desc">Natural, espontâneo. "Good morning, baby. Did you sleep well?" Não precisa ser perfeito.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Gêmeas bilíngues</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">20+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael falando inglês com as bebês</div>
+          <div class="clip-desc">Pai americano interagindo em inglês naturalmente. "Come here, little one." Espontâneo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Família bilíngue</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Pezinhos das bebês — close</div>
+          <div class="clip-desc">Mãos da mãe segurando os pés das bebês. Sem mostrar rosto. Emocional, viral.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Maternidade · Twin mom</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">As duas no mesmo carrinho/berço</div>
+          <div class="clip-desc">Vista de cima das duas juntas. O símbolo visual das gêmeas — imediato e reconhecível.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Twin mom content</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina trabalhando com bebê no colo</div>
+          <div class="clip-desc">Laptop aberto, uma bebê no colo, Sabrina digitando ou lendo. Mãe empreendedora real.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Rotina mãe empreendedora</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Hora do banho das bebês — lateral</div>
+          <div class="clip-desc">Câmera de lado, sem mostrar as bebês diretamente. Cena de rotina que toda mãe reconhece.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Rotina real</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">As bebês rindo ou reagindo a algo</div>
+          <div class="clip-desc">Capturar momentos espontâneos de alegria. Para "twin mom" — o contexto feliz.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Twin mom · Família</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael e Sabrina com as duas bebês — família</div>
+          <div class="clip-desc">Os quatro juntos. Foto/vídeo de família real. Não precisa ser arrumado.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Nossa história · Família bilíngue</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina exausta — cansaço real de mãe</div>
+          <div class="clip-desc">Olhos fechados no sofá, café frio, expressão de cansaço. Para "twin mom sem filtro".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Twin mom realidade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Livro infantil bilíngue sendo lido</div>
+          <div class="clip-desc">Sabrina ou Michael lendo livro bilíngue (inglês/português) para as bebês.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Gêmeas bilíngues</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Produto bilíngue da casa — brinquedo com inglês</div>
+          <div class="clip-desc">Qualquer brinquedo ou objeto da casa em inglês. Detalhe de ambiente bilíngue.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Imersão bilíngue</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Rotina noturna — acalmando as bebês</div>
+          <div class="clip-desc">Luz baixa, colo, balançando. Para "realidade de mãe" e "noite com gêmeas".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Twin mom real</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael trocando fralda — close mãos</div>
+          <div class="clip-desc">Pai americano participativo. Close nas mãos, sem mostrar bebê explicitamente.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Casamento intercultural · Pai bilíngue</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina e bebê — olhares</div>
+          <div class="clip-desc">Sabrina e uma bebê se olhando. Câmera de lado. Momento emocional e silencioso.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Identidade · Maternidade</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROTINA PESSOAL -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">🌅</span>
+      <span class="cat-title">Rotina & Lifestyle da Sabrina</span>
+      <span class="cat-count">14 clips</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Manhã da Sabrina — primeiros minutos do dia</div>
+          <div class="clip-desc">Acordando, café, primeiro olhar no celular. Rotina matinal real. Luz natural se possível.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Rotina mãe empreendedora</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina num café ou espaço de trabalho</div>
+          <div class="clip-desc">Laptop, café, foco. Se não tiver espaço fora, pode ser uma mesa da casa arrumada de forma diferente.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Empreendedorismo · Produtividade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina lendo — livro físico</div>
+          <div class="clip-desc">Livro na mão, óculos se usar, ambiente calmo. Para "o que estou lendo" e produtividade.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Lifestyle · Autodesenv.</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina andando — vista de costas</div>
+          <div class="clip-desc">Andando pelo bairro ou parque, câmera de trás. Para "construindo o caminho" — simbólico.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Jornada · Sonhos</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina no celular — respondendo leads</div>
+          <div class="clip-desc">Digitando no WhatsApp, close nas mãos. Para empreendedorismo e "construindo audiência".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Empreendedorismo</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina com fone de ouvido — em inglês</div>
+          <div class="clip-desc">Usando fone, sorrindo levemente. Para imersão em inglês e "minha rotina bilíngue".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Rotina bilíngue</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Mesa de trabalho com caderno + caneta</div>
+          <div class="clip-desc">Caderno aberto, planner, close nas mãos escrevendo. Para produtividade e planejamento.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Produtividade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina olhando pela janela — pensativa</div>
+          <div class="clip-desc">Câmera de lado ou atrás. Para momentos de identidade, volta ao Brasil, e reflexão.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Identidade dois países · Volta ao Brasil</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael e Sabrina tomando café juntos</div>
+          <div class="clip-desc">Mesa, dois cafés, conversa casual. Câmera de lado, sem foco no rosto. Casal no dia a dia.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Casamento intercultural</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina estudando francês</div>
+          <div class="clip-desc">App de francês ou livro aberto. Para "aprendendo francês" — mostra identidade de polígota.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Estudando francês</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Mãos contando dinheiro / abrindo boleto</div>
+          <div class="clip-desc">Para "minha relação com dinheiro". Não precisa mostrar valor — só a ação é suficiente.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Educação financeira</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina no espelho — se arrumando</div>
+          <div class="clip-desc">Cena natural de se preparar para o dia. Para lifestyle feminino e rotina de mãe.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Lifestyle feminino</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Pôr do sol ou paisagem do bairro</div>
+          <div class="clip-desc">Vista de onde vivem. Para "voltei ao Brasil" e contexto geográfico.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Volta ao Brasil</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Sabrina gravando um vídeo — câmera de lado</div>
+          <div class="clip-desc">Câmera de lado captura ela gravando outro vídeo. Bastidor de criadora de conteúdo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Construindo audiência</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JORNADA EUA -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">✈️</span>
+      <span class="cat-title">Jornada nos EUA (arquivo histórico)</span>
+      <span class="cat-count">10 clips</span>
+      <span class="cat-note">Garimpe fotos e vídeos antigos — não precisa regravar</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto da Sabrina jovem chegando nos EUA</div>
+          <div class="clip-desc">Aeroporto, primeiro apartamento, qualquer registro da chegada. Ouro para storytelling.</div>
+          <div class="clip-tags"><span class="ctag ct-priority">🔴 Garimpe agora</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto/vídeo de cidade americana</div>
+          <div class="clip-desc">Rua, shopping center, college, parque americano. Qualquer contexto "EUA".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Volta ao Brasil · Identidade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto de restaurante americano (época do pânico)</div>
+          <div class="clip-desc">Qualquer restaurante — American diner, fast food, qualquer coisa. Para a história do pedido de comida.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Storytelling EUA</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto no trabalho americano</div>
+          <div class="clip-desc">Escritório, crachá, qualquer momento de trabalho nos EUA. Para ID 20 (colega não sabia).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Transformação EUA</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto Sabrina sozinha no começo</div>
+          <div class="clip-desc">Jovem, sozinha, antes de conhecer Michael. Para a narrativa "fui sozinha e construí tudo".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Nossa história</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto Sabrina + Michael no começo do relacionamento</div>
+          <div class="clip-desc">Antes de casar, quando ainda namoravam. Para a história do casal intercultural.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Casamento intercultural</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto ecografia/ultrassom das gêmeas</div>
+          <div class="clip-desc">O dia que descobriram que eram duas. Para "a nossa história" e conteúdo do Michael.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Nossa história · Michael descoberta</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto da maternidade / nascimento</div>
+          <div class="clip-desc">Qualquer registro do nascimento que você se sinta confortável em compartilhar.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Twin mom</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto Sabrina no Brasil antes de ir para os EUA</div>
+          <div class="clip-desc">"Antes" visual para storytelling de transformação. Qualquer foto jovem aqui.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Jornada pessoal</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="sab">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Foto de formatura ou conquista profissional</div>
+          <div class="clip-desc">Qualquer certificado, diploma, evento profissional. Para "inglês mudou minha carreira".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Transformação profissional</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     @michael
+═══════════════════════════════ -->
+<div class="section" id="section-mic">
+
+  <div class="acc-hero" style="background:var(--mic-bg);border:1px solid var(--mic-border);">
+    <div>
+      <div class="ah-name" style="color:var(--mic);">@michael</div>
+      <div class="ah-handle" style="color:var(--mic);">B-Roll de Americano no Brasil & Vida Pessoal</div>
+      <div class="ah-desc" style="color:var(--text);">O B-roll do Michael deve capturar o contraste Brasil/EUA. O objetivo é que o espectador sinta "como esse americano vê o meu Brasil" — com estranheza carinhosa, surpresa genuína, e admiração real. Muito B-roll dele descobrindo coisas brasileiras é ouro.</div>
+    </div>
+    <div class="ah-stat">
+      <span class="ah-num" style="color:var(--mic);">44</span>
+      <span class="ah-lbl" style="color:var(--mic);">clips</span>
+    </div>
+  </div>
+
+  <!-- BRASIL DESCOBERTO -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">🇧🇷</span>
+      <span class="cat-title">Americano Descobrindo o Brasil</span>
+      <span class="cat-count">14 clips</span>
+      <span class="cat-note">Alta viralidade — grava sempre que algo "diferente" acontecer</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael no mercado brasileiro — confuso</div>
+          <div class="clip-desc">Câmera de lado ou câmera frontal. Michael olhando para produtos com expressão de "o que é isso". Não precisa ser atorado — genuíno.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Manual secreto do Brasil</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael num churrasco — participando</div>
+          <div class="clip-desc">Segurando espeto, aprendendo a cortar, reagindo ao sabor. "Esse ritual americano nunca entendeu."</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Coisas que amo no Brasil</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael chamando garçom de "moço" — primeira vez</div>
+          <div class="clip-desc">Encenação da cena — ou reencenação cômica. Para ID 4 (Coisas que só aprendi no Brasil).</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Coisas só aprendi BR</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael no trânsito de SP — reagindo</div>
+          <div class="clip-desc">Câmera do banco de passageiro, Michael com expressão de espanto no trânsito. Real e engraçado.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Vida de americano BR</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael comendo comida brasileira — primeira vez</div>
+          <div class="clip-desc">Coxinha, pão de queijo, açaí, qualquer coisa. Reação genuína de provar algo novo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Coisas que amo no Brasil</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael em fila — paciente/impaciente</div>
+          <div class="clip-desc">Fila de banco, mercado, qualquer serviço. "In the US this would take 5 minutes." Contexto cultural.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Manual secreto BR · Burocracia</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael com Duolingo aberto</div>
+          <div class="clip-desc">Screen recording do Duolingo. "Tentativa 1 de aprender português — fracasso completo."</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Como aprendi português</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael praticando português com brasileiro</div>
+          <div class="clip-desc">Conversa curta com alguém (pode ser Sabrina), Michael errando palavras em português e corrigindo.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Como aprendi português</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Vista aérea ou paisagem de SP/SBC</div>
+          <div class="clip-desc">Cidade brasileira de baixo para cima ou de cima para baixo. Para contexto geográfico.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Vida de americano no BR</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael observando gestos brasileiros</div>
+          <div class="clip-desc">Sabrina faz algum gesto ("tudo certo", "ó"), Michael imita errado, eles riem.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Gestos brasileiros</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael chegando a São Bernardo de carro</div>
+          <div class="clip-desc">Câmera pelo carro, chegando no bairro. Para "minha vida aqui no Brasil".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Vida de americano BR</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael no chuveiro elétrico (encenação)</div>
+          <div class="clip-desc">Sorrindo e apontando pro chuveiro. "O dia que tomei choque aqui no Brasil." Clássico.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Manual secreto BR</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Comparação direta — produto americano vs brasileiro</div>
+          <div class="clip-desc">Segura produto americano de um lado, produto brasileiro do outro. Comparação visual imediata.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">BR vs EUA</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael num parque / praça brasileira</div>
+          <div class="clip-desc">Ambiente aberto, casual. Para qualquer conteúdo de "vida aqui no Brasil".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Ambiente geral BR</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MICHAEL PESSOAL -->
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">👨‍💻</span>
+      <span class="cat-title">Vida Pessoal do Michael</span>
+      <span class="cat-count">10 clips</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael com notebook programando</div>
+          <div class="clip-desc">Código na tela, Michael focado. Para "minha jornada em programação". Não precisa mostrar o código claramente.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Programação</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Tabuleiro de xadrez — close nas peças</div>
+          <div class="clip-desc">Mão movendo peça de xadrez. Para "xadrez como ferramenta mental". Sem precisar mostrar o rosto.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Xadrez e mentalidade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael treinando em casa — exercício</div>
+          <div class="clip-desc">Flexão, agachamento, qualquer exercício. Para "voltei a treinar com rotina cheia".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Treino com rotina cheia</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael e as bebês — brincando</div>
+          <div class="clip-desc">Pai americano no chão brincando com as filhas. Sem mostrar rosto das bebês se preferir.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Criando gêmeas bilíngues</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael abrindo o ultrassom das gêmeas</div>
+          <div class="clip-desc">Encenação da reação ou foto real do dia. Para "descoberta de que seriam gêmeas".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Descoberta gêmeas</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael lendo livro em inglês</div>
+          <div class="clip-desc">Livro em inglês na mão. Para conteúdo de aprendizado e lifestyle intelectual.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Lifestyle geral</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael na frente do computador — cursinho online</div>
+          <div class="clip-desc">Tela de curso online ou tutorial. Para "minha jornada estudando programação".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Programação · Aprendizado</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael fazendo café americano (drip coffee)</div>
+          <div class="clip-desc">Método americano de café. Comparação com cafezinho brasileiro. Detalhe cultural engraçado.</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Coisas que amo BR · Contraste BR/EUA</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael escrevendo em português — notebook</div>
+          <div class="clip-desc">Anotações em português, erros visíveis às vezes. Para "como aprendi português".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Como aprendi PT</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="mic">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Fotos do Michael nos EUA (arquivo)</div>
+          <div class="clip-desc">Garimpe fotos dele nos EUA antes de vir ao Brasil. Para contexto de "de onde vim".</div>
+          <div class="clip-tags"><span class="ctag ct-uses">Background americano</span><span class="ctag ct-priority">🔴 Garimpe</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     COMPARTILHADOS
+═══════════════════════════════ -->
+<div class="section" id="section-shared">
+
+  <div class="acc-hero" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);">
+    <div>
+      <div class="ah-name" style="color:var(--yellow);">⭐ B-Roll Compartilhado</div>
+      <div class="ah-handle" style="color:var(--yellow);">Clips que servem para 2 ou 3 contas</div>
+      <div class="ah-desc" style="color:var(--text);">Grave esses uma vez e use em múltiplas contas sem modificação. São os clips com maior ROI de tempo. Priorize esses quando o tempo de gravação for curto.</div>
+    </div>
+    <div class="ah-stat">
+      <span class="ah-num" style="color:var(--yellow);">18</span>
+      <span class="ah-lbl" style="color:var(--yellow);">clips universais</span>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">👨‍👩‍👧‍👧</span>
+      <span class="cat-title">Família Bilíngue — Os Quatro Juntos</span>
+      <span class="cat-count">6 clips · serve para FC + Sabrina + Michael</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Os quatro — família completa — vista geral</div>
+          <div class="clip-desc">Michael, Sabrina e as duas bebês. Câmera de lado ou frontal. Não precisa ser arrumado.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+        <div class="uses-badge">30+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael + Sabrina se olhando — sorrindo</div>
+          <div class="clip-desc">Câmera de lado, momento genuíno entre os dois. Para finais de storytelling de qualquer conta.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span></div>
+        </div>
+        <div class="uses-badge">15+ vídeos</div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Jantar da família com inglês e português</div>
+          <div class="clip-desc">Mesa de jantar, os dois conversando, bebês presentes. Som de mesa, nenhuma fala importa.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Passeio em família — andando na rua</div>
+          <div class="clip-desc">Os quatro (ou dois com bebês) andando. Câmera de trás ou de lado. Lifestyle real.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Michael falando português com Sabrina — natural</div>
+          <div class="clip-desc">Câmera de lado, conversa em português, sotaque americano do Michael audível. Autêntico.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Michael</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Casa deles — ambiente bilíngue</div>
+          <div class="clip-desc">Detalhes da casa com inglês e português — post-it, livros, objetos. Ambiente que comunica.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">📱</span>
+      <span class="cat-title">Tecnologia & Criação de Conteúdo</span>
+      <span class="cat-count">6 clips · serve para as 3 contas</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Celular mostrando feed do Instagram — scrollando</div>
+          <div class="clip-desc">Screen recording de alguém scrollando o feed. Para qualquer conteúdo sobre social media.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">Todas as contas</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Notificação de like/comentário chegando</div>
+          <div class="clip-desc">Screen recording de notificação do Instagram aparecendo. Para conteúdo de engajamento.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">Todas as contas</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">App Fluency Connect aberto — tela de boas-vindas</div>
+          <div class="clip-desc">Screen recording do app abrindo pela primeira vez. Para qualquer conteúdo de lançamento.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span><span class="ctag ct-priority">🔴 Alta prioridade</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Laptop aberto com site do Fluency Connect</div>
+          <div class="clip-desc">Over-the-shoulder. Para qualquer conteúdo que fale da escola ou do app.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Setup de gravação dos dois — foto de bastidor</div>
+          <div class="clip-desc">Câmera de terceira pessoa capturando o setup de filmagem dos dois. Autenticidade máxima.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">WhatsApp com mensagem de lead chegando</div>
+          <div class="clip-desc">Screen recording de mensagem chegando no WhatsApp Business (mostre só a notificação, não o número).</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="cat-header">
+      <span class="cat-icon">🌅</span>
+      <span class="cat-title">Lifestyle Universal</span>
+      <span class="cat-count">6 clips · serve para as 3 contas</span>
+    </div>
+    <div class="clips-grid">
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Pôr do sol / amanhecer de São Bernardo</div>
+          <div class="clip-desc">Qualquer vista bonita da cidade. Universal, sem esforço, serve como transição em qualquer vídeo.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">Todas as contas</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Mesa com dois cafés — os dois começando o dia</div>
+          <div class="clip-desc">Duas xícaras, dois celulares, dois cadernos. Para qualquer abertura de vídeo de casal.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Calendário/planner com o mês de abril</div>
+          <div class="clip-desc">Planner físico ou digital aberto. Para qualquer conteúdo de planejamento e consistência.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">Todas as contas</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Mãos dadas — Michael + Sabrina (close)</div>
+          <div class="clip-desc">Close nas mãos entrelaçadas. Símbolo visual do casal, sem precisar mostrar rostos.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">FC + Sabrina + Michael</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Vista do bairro — carro se movendo</div>
+          <div class="clip-desc">Câmera apontando para frente pelo para-brisa. Para "vida aqui no Brasil" e contexto local.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">Sabrina + Michael</span></div>
+        </div>
+      </div>
+
+      <div class="clip" onclick="toggleClip(this)" data-account="shared">
+        <div class="clip-check">✓</div>
+        <div class="clip-body">
+          <div class="clip-title">Prato de comida brasileira — foto/vídeo</div>
+          <div class="clip-desc">Feijoada, coxinha, pão de queijo, qualquer coisa tipicamente brasileira. Para Michael no Brasil.</div>
+          <div class="clip-tags"><span class="ctag ct-shared">Michael + FC</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     GUIA DE FILMAGEM
+═══════════════════════════════ -->
+<div class="section" id="section-guide">
+
+  <div style="margin-bottom:22px;">
+    <div style="font-size:10px;font-weight:800;color:var(--fc);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;">Referência Rápida</div>
+    <h2 style="font-size:22px;font-weight:900;margin-bottom:5px;">Como Filmar B-Roll de Qualidade</h2>
+    <p style="font-size:12px;color:var(--muted);max-width:560px;">Regras simples que fazem a diferença entre B-roll que parece profissional e B-roll que parece descuidado.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;">
+      <div style="font-size:13px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:8px;">📐 Enquadramento</div>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Regra dos 3 terços:</strong> não centralize tudo — coloque o rosto no terço superior
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Câmera na altura dos olhos</strong> para talking head. Nunca de baixo para cima.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Close na boca:</strong> câmera TRASEIRA, na altura da boca, luz frontal
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Over-the-shoulder:</strong> câmera sobre o ombro, foco no que a pessoa está vendo
+        </li>
+      </ul>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;">
+      <div style="font-size:13px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:8px;">💡 Iluminação</div>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Luz natural pela janela lateral</strong> = resultado melhor. Nunca luz direta de frente.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Manhã ou final de tarde</strong> tem luz mais bonita do que meio-dia.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Ring light</strong> só se a luz natural não for boa — prefira natural sempre.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">B-roll com desfoque</strong> (bokeh): foco no objeto perto, fundo desfocado = mais profissional.
+        </li>
+      </ul>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;">
+      <div style="font-size:13px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:8px;">⏱ Duração e Movimento</div>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Grave 5–10 segundos</strong> por clip, mesmo que vá usar 2–3. Dá margem na edição.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Movimento lento</strong> (câmera se movendo devagar) parece mais profissional do que parado.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Não mova a câmera bruscamente</strong> — se mover, que seja intencional e suave.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Grave 3 ângulos do mesmo clip:</strong> wide (geral), medium (meio), close (detalhe).
+        </li>
+      </ul>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;">
+      <div style="font-size:13px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:8px;">📁 Organização</div>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Pasta no Google Fotos/Drive:</strong> "B-Roll FC", "B-Roll Sabrina", "B-Roll Michael", "B-Roll Compartilhado"
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Nome do arquivo:</strong> "broll_boca_TH_vozeado.mp4" — você vai achar rápido no dia de edição.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Reuse sem culpa:</strong> o mesmo clip de "café" pode aparecer em 10 vídeos diferentes.
+        </li>
+        <li style="padding:6px 0;padding-left:16px;position:relative;font-size:12px;color:var(--muted);">
+          <span style="position:absolute;left:0;color:var(--fc);">→</span>
+          <strong style="color:var(--text);">Banco de fotos antigas:</strong> Junte AGORA fotos dos EUA em uma pasta separada. São ouro.
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="tip-box">
+    <div class="tl">🎯 Prioridade desta semana</div>
+    <p>Antes de gravar qualquer B-roll novo, faça isso primeiro: <strong>abra o Google Fotos e o telefone da Sabrina</strong> e coloque em pastas separadas: "EUA — Sabrina jovem", "Casamento", "Bebês — primeiros meses", "Michael no Brasil". Esse arquivo histórico vale mais do que qualquer B-roll novo e você já tem ele — só precisa organizar.</p>
+  </div>
+
+</div>
+
+<script>
+// Load state from localStorage
+const STATE_KEY = 'broll_state_v1';
+let state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+
+function saveState() {
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+}
+
+function toggleClip(el) {
+  const id = getClipId(el);
+  state[id] = !state[id];
+  el.classList.toggle('done', !!state[id]);
+  saveState();
+  updateCount();
+}
+
+function getClipId(el) {
+  const title = el.querySelector('.clip-title').textContent.trim();
+  const account = el.dataset.account;
+  return `${account}_${title.slice(0, 30)}`;
+}
+
+function restoreState() {
+  document.querySelectorAll('.clip').forEach(el => {
+    const id = getClipId(el);
+    if (state[id]) el.classList.add('done');
+  });
+  updateCount();
+}
+
+function updateCount() {
+  const all = document.querySelectorAll('.clip').length;
+  const done = document.querySelectorAll('.clip.done').length;
+  document.getElementById('total-clips').textContent = all;
+  document.getElementById('total-done').textContent = done;
+}
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active-fc','active-sab','active-mic','active-shared','active-guide');
+  });
+  document.getElementById('section-' + id).classList.add('active');
+  const tabMap = { fc: 'active-fc', sab: 'active-sab', mic: 'active-mic', shared: 'active-shared', guide: 'active-guide' };
+  document.getElementById('tab-' + id).classList.add(tabMap[id] || 'active-fc');
+  window.scrollTo({ top: document.querySelector('.hdr').offsetHeight, behavior: 'smooth' });
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  restoreState();
+  showSection('fc');
+  document.getElementById('tab-fc').classList.add('active-fc');
+});
+
+restoreState();
+showSection('fc');
+document.getElementById('tab-fc').classList.add('active-fc');
+</script>
+</body>
+</html>

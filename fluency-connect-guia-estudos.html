@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluency Connect — Guia de Estudos A1→C1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1820;--paper:#faf8f5;--cream:#f0eadf;--red:#c8201a;--red-soft:#f5e8e8;--navy:#1a2e5a;--navy-soft:#e8ecf5;--gold:#b8860b;--muted:#7a7285;--border:#d8d0c4;--card:#fff;--a1:#e8f5ee;--a1b:#1a7a44;--a2:#fef3e6;--a2b:#c87a1a;--b1:#e8ecf5;--b1b:#1a2e5a;--b2:#f5e8f5;--b2b:#7a1a7a;--c1:#fef0e8;--c1b:#c8401a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.7;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35}
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px;background:var(--navy);overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 15% 50%,rgba(200,32,26,.22) 0%,transparent 60%),radial-gradient(ellipse 60% 70% at 85% 30%,rgba(200,32,26,.15) 0%,transparent 60%)}
+.hero-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:6px 18px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:36px}
+.hero-badge span{color:var(--red);font-size:18px}
+.hero-title{position:relative;z-index:1;font-family:"Playfair Display",serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:900;color:#fff;line-height:1;margin-bottom:12px}
+.hero-title em{font-style:italic;color:var(--red)}
+.hero-subtitle{position:relative;z-index:1;font-size:clamp(1rem,2vw,1.25rem);color:rgba(255,255,255,.65);max-width:560px;margin:0 auto 44px;font-weight:300;line-height:1.6}
+.hero-levels{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:52px}
+.level-pill{padding:8px 22px;border-radius:100px;font-size:13px;font-weight:600;letter-spacing:.06em;border:1.5px solid;transition:transform .2s;cursor:default}
+.level-pill:hover{transform:translateY(-2px)}
+.level-pill.a1{background:rgba(26,122,68,.2);border-color:rgba(26,122,68,.5);color:#7ae8aa}
+.level-pill.a2{background:rgba(200,122,26,.2);border-color:rgba(200,122,26,.5);color:#e8c47a}
+.level-pill.b1{background:rgba(26,46,90,.5);border-color:rgba(120,160,255,.4);color:#a0c0ff}
+.level-pill.b2{background:rgba(122,26,122,.2);border-color:rgba(122,26,122,.5);color:#e0a0e0}
+.level-pill.c1{background:rgba(200,64,26,.2);border-color:rgba(200,64,26,.5);color:#f0a090}
+.hero-progress-wrap{position:relative;z-index:1;width:min(560px,90vw);margin:0 auto}
+.hero-progress-label{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;letter-spacing:.04em}
+.hero-progress-track{height:6px;background:rgba(255,255,255,.12);border-radius:100px;overflow:hidden}
+.hero-progress-fill{height:100%;background:linear-gradient(90deg,#1a7a44,#c87a1a,var(--red));border-radius:100px;width:0%;transition:width 1s ease}
+.hero-cta{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;padding:14px 32px;border-radius:100px;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;margin-top:36px;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px rgba(200,32,26,.35)}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,32,26,.45)}
+.scroll-down{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.1em}
+.scroll-arrow{animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+/* SECTIONS */
+.section{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:80px 24px}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:18px}
+.section-label::before{content:"";display:block;width:24px;height:1.5px;background:var(--red)}
+.section-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;color:var(--ink);margin-bottom:16px}
+.section-intro{font-size:16px;color:var(--muted);max-width:640px;line-height:1.75;margin-bottom:48px}
+.divider{border:none;border-top:1.5px solid var(--border);margin:0}
+/* ROADMAP STATS */
+.roadmap-intro{background:var(--navy);border-radius:20px;padding:36px 40px;color:#fff;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px}
+@media(max-width:640px){.roadmap-intro{grid-template-columns:1fr;padding:28px}}
+.roadmap-stat{text-align:center}
+.roadmap-stat-num{font-family:"Playfair Display",serif;font-size:3rem;font-weight:900;color:var(--red);line-height:1}
+.roadmap-stat-label{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;letter-spacing:.04em}
+/* MONTH ACCORDION */
+.month-list{display:flex;flex-direction:column;gap:12px}
+.month-item{background:var(--card);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;transition:box-shadow .2s}
+.month-item.open{box-shadow:0 8px 32px rgba(0,0,0,.08)}
+.month-header{display:flex;align-items:center;gap:16px;padding:22px 28px;cursor:pointer;user-select:none;transition:background .15s}
+.month-header:hover{background:var(--cream)}
+.month-num{font-family:"DM Mono",monospace;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.08em;min-width:52px}
+.month-level-tag{padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tag-a1{background:var(--a1);color:var(--a1b)}
+.tag-a2{background:var(--a2);color:var(--a2b)}
+.tag-b1{background:var(--b1);color:var(--b1b)}
+.tag-b2{background:var(--b2);color:var(--b2b)}
+.tag-c1{background:var(--c1);color:var(--c1b)}
+.month-title{font-family:"Playfair Display",serif;font-size:18px;font-weight:700;color:var(--ink);flex:1}
+.month-caret{color:var(--muted);font-size:18px;transition:transform .3s}
+.month-item.open .month-caret{transform:rotate(180deg)}
+.month-check{width:22px;height:22px;border:2px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.month-check.done{background:#1a7a44;border-color:#1a7a44;color:#fff}
+.month-check-inner{font-size:12px;display:none}
+.month-check.done .month-check-inner{display:block}
+.month-body{display:none;padding:0 28px 28px;border-top:1.5px solid var(--border)}
+.month-item.open .month-body{display:block}
+/* TABS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:18px 0 14px}
+.tab-btn{padding:7px 16px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:.06em;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all .15s}
+.tab-btn.active,.tab-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* CHAPTERS */
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:14px 0}
+.chapter-item{background:var(--cream);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--ink);display:flex;align-items:flex-start;gap:8px;line-height:1.45}
+.chapter-num{font-family:"DM Mono",monospace;font-size:11px;color:var(--muted);flex-shrink:0;margin-top:2px}
+.book-ref{font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic}
+/* SCHEDULE */
+.schedule-block{background:var(--cream);border-radius:14px;padding:20px;margin-top:8px}
+.schedule-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.schedule-row:last-child{border-bottom:none}
+.schedule-time{font-family:"DM Mono",monospace;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;min-width:48px;padding-top:2px;text-align:right}
+.schedule-icon{font-size:16px;flex-shrink:0}
+.schedule-text strong{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.schedule-text span{font-size:12px;color:var(--muted)}
+/* MILESTONE BANNER */
+.milestone-banner{background:linear-gradient(135deg,var(--navy) 0%,#2a4070 100%);border-radius:14px;padding:18px 22px;margin-top:18px;display:flex;align-items:center;gap:14px;color:#fff}
+.milestone-banner-icon{font-size:28px}
+.milestone-banner-text strong{display:block;font-size:14px;font-weight:700;margin-bottom:3px}
+.milestone-banner-text span{font-size:12px;color:rgba(255,255,255,.65)}
+/* RESOURCES */
+.resources-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.resource-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:24px;transition:transform .2s,box-shadow .2s}
+.resource-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.07)}
+.resource-category{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.resource-name{font-family:"Playfair Display",serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.resource-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:12px}
+.resource-badge{display:inline-block;background:var(--navy-soft);color:var(--navy);font-size:11px;font-weight:600;letter-spacing:.06em;padding:3px 10px;border-radius:100px}
+/* MILESTONES */
+.progress-section{background:var(--cream)}
+.progress-inner{max-width:980px;margin:0 auto;padding:80px 24px}
+.milestone-list{display:flex;flex-direction:column;gap:0}
+.milestone-item{display:flex;gap:20px;align-items:flex-start;padding:20px 0;border-bottom:1px solid var(--border);position:relative}
+.milestone-item:last-child{border-bottom:none}
+.milestone-dot{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--border);background:var(--card);flex-shrink:0;margin-top:4px;cursor:pointer;transition:all .2s;position:relative;z-index:1}
+.milestone-dot:hover{border-color:var(--navy)}
+.milestone-item.done .milestone-dot{background:var(--a1b);border-color:var(--a1b)}
+.milestone-content{}
+.milestone-month{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.milestone-goal{font-family:"Playfair Display",serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.milestone-detail{font-size:13px;color:var(--muted)}
+/* FOOTER */
+footer{background:var(--navy);color:#fff;text-align:center;padding:60px 24px}
+.footer-logo{font-family:"Playfair Display",serif;font-size:2rem;font-weight:900;margin-bottom:12px}
+.footer-logo span{color:var(--red)}
+.footer-links{display:flex;gap:24px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.footer-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;transition:color .15s}
+.footer-links a:hover{color:#fff}
+.footer-note{font-size:12px;color:rgba(255,255,255,.35);margin-top:20px}
+/* ADVANTAGE */
+.advantage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.advantage-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:28px;transition:transform .2s,box-shadow .2s}
+.advantage-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.07)}
+.advantage-card.pro{border-left:4px solid #1a7a44}
+.advantage-card.watch{border-left:4px solid #c8401a}
+.advantage-icon{font-size:28px;margin-bottom:12px}
+.advantage-card h4{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.advantage-card p{font-size:14px;color:var(--muted);line-height:1.65}
+.advantage-list{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.advantage-list li{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+.advantage-list li::before{flex-shrink:0;margin-top:3px;font-size:11px}
+.advantage-card.pro .advantage-list li::before{content:"✓";color:#1a7a44;font-weight:700}
+.advantage-card.watch .advantage-list li::before{content:"!";color:#c8401a;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge"><span>★</span> Fluency Connect · Guia Oficial</div>
+  <h1 class="hero-title">Do <em>Zero</em><br>ao C1</h1>
+  <p class="hero-subtitle">Guia completo de 12 meses para alcançar o nível Advanced — com conteúdo dos livros oficiais Fluency Connect, cronogramas diários e marcos de progresso.</p>
+  <div class="hero-levels">
+    <span class="level-pill a1">A1 · Iniciante</span>
+    <span class="level-pill a2">A2 · Básico</span>
+    <span class="level-pill b1">B1 · Intermediário</span>
+    <span class="level-pill b2">B2 · Avançado</span>
+    <span class="level-pill c1">C1 · Proficiente</span>
+  </div>
+  <div class="hero-progress-wrap">
+    <div class="hero-progress-label">
+      <span>Progresso da jornada</span>
+      <span id="progressPct">0 de 12 meses concluídos</span>
+    </div>
+    <div class="hero-progress-track">
+      <div class="hero-progress-fill" id="heroBar"></div>
+    </div>
+  </div>
+  <a href="#roadmap" class="hero-cta">Começar Agora →</a>
+  <div class="scroll-down">
+    <span>rolar para ver</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- ══════════ COMO USAR ══════════ -->
+<hr class="divider">
+<section class="section">
+  <div class="section-label">Como usar este guia</div>
+  <h2 class="section-title">Seu mapa para o inglês avançado</h2>
+  <p class="section-intro">Cada mês tem conteúdo específico dos livros Fluency Connect, três opções de cronograma diário (15min, 30min ou 1h) e um marco claro de progresso. Escolha o tempo que você tem hoje — e avance no seu ritmo.</p>
+  <div class="advantage-grid">
+    <div class="advantage-card pro">
+      <div class="advantage-icon">📚</div>
+      <h4>Conteúdo dos livros oficiais</h4>
+      <p>Cada capítulo mapeado mês a mês, dos livros A1, A2, B1, B2 e C1 da série Fluency Connect. Sem dúvida sobre o que estudar.</p>
+      <ul class="advantage-list">
+        <li>Capítulos organizados em ordem pedagógica</li>
+        <li>Vocabulário, gramática e conversação integrados</li>
+        <li>Referência ao livro e ao módulo da plataforma</li>
+      </ul>
+    </div>
+    <div class="advantage-card pro">
+      <div class="advantage-icon">⏱️</div>
+      <h4>3 cronogramas: 15min, 30min ou 1h</h4>
+      <p>Escolha o tempo disponível no seu dia. Cada mês tem três versões do cronograma semanal (segunda a sexta) mais dicas para o fim de semana.</p>
+      <ul class="advantage-list">
+        <li>15 min/dia · foco máximo, progresso garantido</li>
+        <li>30 min/dia · ritmo equilibrado e eficiente</li>
+        <li>1h/dia · imersão e avanço acelerado</li>
+      </ul>
+    </div>
+    <div class="advantage-card pro">
+      <div class="advantage-icon">🏁</div>
+      <h4>Marcos e checkpoints mensais</h4>
+      <p>Ao final de cada mês, um objetivo concreto e mensurável. Você saberá exatamente o que deve conseguir fazer em inglês.</p>
+      <ul class="advantage-list">
+        <li>Marco claro e prático para cada mês</li>
+        <li>Rastreador de progresso interativo</li>
+        <li>12 conquistas da jornada A1 → C1</li>
+      </ul>
+    </div>
+    <div class="advantage-card watch">
+      <div class="advantage-icon">⚠️</div>
+      <h4>Pontos de atenção</h4>
+      <p>Armadilhas comuns de falantes de português aprendendo inglês — especialmente false cognates e interferências do português.</p>
+      <ul class="advantage-list">
+        <li>False cognates sinalizados ao longo do guia</li>
+        <li>Erros frequentes de brasileiros identificados</li>
+        <li>Dicas de pronúncia para o sotaque americano</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ROADMAP ══════════ -->
+<hr class="divider">
+<section class="section" id="roadmap">
+  <div class="section-label">Roteiro Completo</div>
+  <h2 class="section-title">12 meses · 5 níveis · 1 objetivo</h2>
+  <p class="section-intro">Clique em cada mês para ver o conteúdo do livro, o cronograma diário e o marco de progresso. Marque o ✓ ao concluir cada fase.</p>
+
+  <div class="roadmap-intro">
+    <div class="roadmap-stat"><div class="roadmap-stat-num">12</div><div class="roadmap-stat-label">Meses de jornada</div></div>
+    <div class="roadmap-stat"><div class="roadmap-stat-num">5</div><div class="roadmap-stat-label">Níveis do CEFR</div></div>
+    <div class="roadmap-stat"><div class="roadmap-stat-num">5×</div><div class="roadmap-stat-label">Livros Fluency Connect</div></div>
+  </div>
+
+  <div class="month-list">
+
+    <!-- MÊS 01 -->
+    <div class="month-item" data-month="1">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 01</span>
+        <span class="month-level-tag tag-a1">A1</span>
+        <span class="month-title">Fundamentos — Apresentações e Primeiras Frases</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro A1 — English Grammar (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 1</span>Introdução: saudações, despedidas e frases de cortesia</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 2</span>Pronomes pessoais (Subject & Object) e estrutura SVO</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 3</span>Verbo "To Be" — Present Simple & Past Simple</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 4</span>Present Simple — afirmativo, negativo e interrogativo</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 5</span>Números, datas e horas</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 6</span>Possessivos 1 — adjetivos possessivos e apóstrofo</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 1</strong>
+              <span>Apresentar-se em inglês, dizer de onde é, sua idade e responder perguntas básicas com o verbo "to be"</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo do capítulo</strong><span>Assista ao vídeo de saudações e "to be" no Fluency Connect (10–12 min)</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário</strong><span>Anote 8 frases de apresentação e leia em voz alta 3×</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão rápida</strong><span>Releia as frases do dia anterior sem consultar. Corrija o que errou.</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Próximo vídeo</strong><span>Present Simple — assista ao vídeo no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Mini-escrita</strong><span>Escreva 5 frases sobre você usando "I am / My name is / I like"</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo da aula</strong><span>Capítulo do dia no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Exercícios do livro A1 e liste 10 palavras novas</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Leitura + Áudio</strong><span>Leia as frases do capítulo em voz alta imitando a pronúncia do vídeo</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão do dia anterior</strong><span>Releia anotações e corrija erros do homework</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–30'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo + Vocabulário</strong><span>Aula completa no Fluency Connect — anote tudo</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">30–50'</span><span class="schedule-icon">✏️</span><div class="schedule-text"><strong>Homework + Activity</strong><span>Complete os exercícios e a atividade do capítulo</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">50–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking em voz alta</strong><span>Apresente-se em inglês por 1 minuto sem parar</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão da semana</strong><span>Releia todos os capítulos da semana. Refaça os exercícios que errou.</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Escrita livre</strong><span>Escreva uma apresentação sua em inglês (5–8 frases). Não use tradutor.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 02 -->
+    <div class="month-item" data-month="2">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 02</span>
+        <span class="month-level-tag tag-a1">A1</span>
+        <span class="month-title">Rotina e Vida Diária — A1 Completo</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro A1 — English Grammar (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 7</span>Asking Questions 1 — WH questions (What, Who, Where, When, Why, How)</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 8</span>Ability — Modal "Can / Could / Will be able to"</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 9</span>There is / There are — presente, passado e futuro</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 10</span>Comparativos e Superlativos — intro (Good/Better/Best, Bad/Worse/Worst)</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 11</span>Direções e vocabulário de navegação</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 12</span>Restaurantes — como pedir, vocabulário de cortesia, gorjeta americana</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 13</span>Preposições 1 — in/on/at e preposições de lugar</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 14</span>Imperativos e sugestões com "Let's"</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 15</span>Adverbs of Frequency — always/usually/sometimes/never</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 2</strong>
+              <span>Falar sobre a própria rotina, perguntar e dar direções, e usar "can" para habilidades e pedidos</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo do capítulo</strong><span>Assistir ao vídeo de WH questions no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Prática de "Can"</strong><span>Escreva 5 frases com "can" sobre suas habilidades</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: There is/There are</strong><span>Módulo no Fluency Connect + anote 3 exemplos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão + Adverbs</strong><span>Releia e crie frases com always/sometimes/never</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Mini-speaking</strong><span>Descreva sua rotina em inglês por 1 minuto</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo da aula</strong><span>Fluency Connect — capítulo do dia</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Foque nas WH questions e frequência adverbial</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading + Áudio</strong><span>Leia diálogos do livro A1 em voz alta</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão</strong><span>Quiz mental: conjugue "to be" e "can" em todos os sujeitos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–30'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula completa</strong><span>Vídeo + vocabulário + atividade no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">30–50'</span><span class="schedule-icon">✏️</span><div class="schedule-text"><strong>Homework + Escrita</strong><span>Complete os exercícios e escreva sobre a sua rotina (8 frases)</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">50–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>Descreva direções do seu bairro em inglês</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📖</span><div class="schedule-text"><strong>Revisão do livro A1</strong><span>Releia todos os capítulos do A1. Grife o que ainda tem dúvida.</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Desafio final do A1</strong><span>Escreva 10 frases descrevendo a sua semana usando Present Simple e "can"</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 03 -->
+    <div class="month-item" data-month="3">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 03</span>
+        <span class="month-level-tag tag-a2">A2</span>
+        <span class="month-title">Passado e Futuro — Entrando no A2</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro A1 (Cap 3–4) + Início do Livro A2 — Fluency Connect</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">A1·Cap 3</span>Past Simple — verbos regulares e irregulares (-ed, formas irregulares)</div>
+            <div class="chapter-item"><span class="chapter-num">A1·Cap 4</span>Future Simple "Will" — afirmativo, negativo, interrogativo e contrações</div>
+            <div class="chapter-item"><span class="chapter-num">A2·Cap 1</span>Future Simple "Be Going To" — planos e intenções</div>
+            <div class="chapter-item"><span class="chapter-num">A2·Cap 2</span>Present Continuous — ações em progresso e eventos futuros agendados</div>
+            <div class="chapter-item"><span class="chapter-num">Glossário</span>Revisão dos verbos irregulares do livro A1 (lista completa)</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 3</strong>
+              <span>Contar o que fez no fim de semana (Past Simple) e falar sobre planos futuros com "going to" e "will"</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Past Simple</strong><span>Verbos regulares — assista e anote a regra do -ed</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>5 irregulares por dia</strong><span>Memorize 5 verbos irregulares. Escreva: base → passado</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Will + Going To</strong><span>Assista ao módulo de futuro no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão dos irregulares</strong><span>Quiz mental com os 10 verbos dos dias Seg e Ter</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Mini-escrita</strong><span>3 frases no passado + 3 frases sobre planos futuros</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão de verbos irregulares</strong><span>5 verbos novos por dia — diga em voz alta go→went, see→saw…</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo + Vocabulário</strong><span>Módulo de Past ou Future no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading com Áudio</strong><span>Leia a atividade e anote os verbos no passado encontrados</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão de irregulares</strong><span>10 verbos — base, passado e particípio (prepare para o B1)</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–30'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo + Vocabulário</strong><span>Fluency Connect — Past Simple completo</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">30–50'</span><span class="schedule-icon">✏️</span><div class="schedule-text"><strong>Homework + Activity</strong><span>Exercícios de conjugação e tradução contextual</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">50–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking: meu fim de semana</strong><span>Fale por 2 minutos sobre o que fez usando Past Simple</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Quiz de verbos irregulares</strong><span>Escreva de cabeça os 25 principais irregulares vistos na semana</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Escrita: meu fim de semana</strong><span>8–10 frases sobre o que fez usando Simple Past e Going To</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 04 -->
+    <div class="month-item" data-month="4">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 04</span>
+        <span class="month-level-tag tag-a2">A2</span>
+        <span class="month-title">Expandindo a Comunicação — A2 Avançado</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro A2 — English Grammar (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 3</span>Past Continuous — was/were + -ing; ações interrompidas</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 4</span>Future Continuous — will be + -ing; ações em progresso no futuro</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 5</span>Gerunds & Infinitives — verbos seguidos de -ing ou to + verbo</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 6</span>Modal Verbs 1 — would, should, may, might, must</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 7</span>Asking Questions 2 — object vs. subject questions</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 8</span>Adjectives — tipos, ordem e modificadores</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 9–10</span>Comparative Adjectives 1 e 2 — -er/more, as…as, repetição de comparativos</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 4</strong>
+              <span>Pedir informações, dar opiniões simples e lidar com situações cotidianas usando modais e comparativos</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Past Continuous</strong><span>Assista e anote a diferença entre Past Simple e Continuous</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Gerunds & Infinitives</strong><span>Memorize 6 verbos que usam -ing e 6 que usam to + verbo</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Modal Verbs 1</strong><span>Fluency Connect — should/must/might em frases reais</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Comparativos</strong><span>Crie 5 frases comparando coisas do cotidiano (-er/more)</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>Compare dois filmes, cidades ou comidas por 1 minuto</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo da aula</strong><span>Fluency Connect — módulos de A2 avançado</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Foco em modais e expressões práticas</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Áudio + Leitura</strong><span>Acompanhe o áudio e tente entender sem traduzir</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão + novos modais</strong><span>Pratique frases com should/must/might em contextos reais</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula completa</strong><span>Vídeo + vocabulário + homework no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading + Activity + shadowing</strong><span>Complete a atividade e repita o áudio imitando a entonação</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📺</span><div class="schedule-text"><strong>Seriado/filme com legenda em inglês</strong><span>30 minutos — anote 5 expressões que não conhecia</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Diálogo simulado</strong><span>Escreva um diálogo curto usando modais e comparativos</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 05 -->
+    <div class="month-item" data-month="5">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 05</span>
+        <span class="month-level-tag tag-a2">A2</span>
+        <span class="month-title">Artigos, Possessivos e Conjunções — Fechar o A2</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro A2 — English Grammar (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 11</span>Articles — a/an/the/some/any · quando não usar artigo</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 11</span>This/That/These/Those · Each/Every · Irregular Plural Nouns</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 12</span>Possessives 2 — possessive pronouns (mine/yours/his/hers/ours/theirs)</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 13</span>Prepositions 2 — preposições de tempo (in/on/at) e de propósito (to/for/by)</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 14</span>Conjunctions 1 — FANBOYS (for/and/nor/but/or/yet/so)</div>
+            <div class="chapter-item"><span class="chapter-num">Revisão</span>Revisão completa do A2 — consolidar tudo antes do B1</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 5</strong>
+              <span>Construir frases complexas com conjunções, usar artigos corretamente e dominar os possessivos</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Articles</strong><span>Assista ao módulo de artigos — foque nos casos de ausência de artigo</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Possessive Pronouns</strong><span>Escreva uma frase para cada pronome: mine, yours, his, hers, ours, theirs</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Prepositions 2</strong><span>In/on/at de tempo — crie 3 frases com cada</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Conjunções FANBOYS</strong><span>Una pares de frases curtas com and/but/so/because</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Revisão A2</strong><span>Escreva 5 frases usando artigos, conjunções e possessivos</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo da aula</strong><span>Fluency Connect A2 — módulo do dia</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Homework</strong><span>Exercícios de artigos e preposições do livro A2</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Oral</strong><span>Fale sobre seus planos do fim de semana usando conjunções</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão A2 completa</strong><span>Releia anotações dos meses 3–5 e identifique pontos fracos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula completa A2</strong><span>Fluency Connect — artigos, possessivos e conjunções</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">✏️</span><div class="schedule-text"><strong>Redação A2</strong><span>Escreva um parágrafo de 100 palavras sobre você usando tudo do A2</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📺</span><div class="schedule-text"><strong>Série com legenda inglês</strong><span>Anote toda vez que ouvir "the" vs sem artigo — explique para si mesmo por quê</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Desafio A2 concluído</strong><span>Escreva uma carta informal para um amigo imaginário em inglês (10 frases)</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 06 -->
+    <div class="month-item" data-month="6">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 06</span>
+        <span class="month-level-tag tag-b1">B1</span>
+        <span class="month-title">Present Perfect & Past Habits — Experiências de Vida</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro B1 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 1</span>Present Perfect Simple — have/has + particípio; experiências e resultados presentes</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 2</span>Past Perfect Simple — had + particípio; sequência de eventos no passado</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 3</span>Future Perfect Simple — will have + particípio</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 4</span>Perfect Phrases — ever/never/just/already/yet/still</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 5</span>Past Habits — used to / would / be used to / get used to</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 6</strong>
+              <span>Usar "Have you ever…?" com naturalidade e narrar sequências de eventos no passado com Past Perfect</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Present Perfect</strong><span>Fluency Connect B1 — Cap 1. Anote a diferença com o Simple Past.</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Perfect Phrases</strong><span>Crie 1 frase com: ever, never, just, already, yet, still</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Past Perfect</strong><span>Cap 2 — anote 3 exemplos de ação antes de outra ação no passado</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Past Habits</strong><span>Escreva 3 coisas que você "used to" fazer na infância</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>Responda em voz alta: "Have you ever…?" — 5 perguntas</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo B1</strong><span>Capítulos 1–5 do livro B1 no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Pratique as Perfect Phrases em frases próprias</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading com Áudio</strong><span>Atente ao uso do Present Perfect no texto da aula</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão: PP vs Simple Past</strong><span>O contraste entre Present Perfect e Simple Past é crucial no B1</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–35'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo + Vocabulário</strong><span>Aula do livro B1 — Caps 1 a 5</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">35–55'</span><span class="schedule-icon">✏️</span><div class="schedule-text"><strong>Homework + Activity</strong><span>Exercícios com Ever/Never/Already/Yet — livro B1</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">55–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking mini-prática</strong><span>5 perguntas "Have you ever…?" respondidas em voz alta</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📺</span><div class="schedule-text"><strong>Listening com foco em Perfect</strong><span>Podcast ou seriado — anote usos do Present Perfect que ouvir</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Escrita: minha vida até agora</strong><span>10 frases usando Present Perfect e Past Perfect</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 07 -->
+    <div class="month-item" data-month="7">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 07</span>
+        <span class="month-level-tag tag-b1">B1</span>
+        <span class="month-title">Condicionais, Passiva e Modais Avançados</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro B1 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 6</span>Conditionals 1 — Zero, First, Second Conditional</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 7</span>Conditionals 2 — Third Conditional + Mixed Conditional</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 8</span>Modal Verbs 2 — could have / should have / would have / might have / must have / can't have</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 9</span>Passive English 1 — Present/Past/Future Simple + Get Passive</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 10</span>Countable & Uncountable Nouns — artigos, much/many/some/any</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 7</strong>
+              <span>Usar condicionais para hipóteses reais e imaginárias, e formular frases passivas com confiança</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Conditionals 1</strong><span>Zero e First — "If it rains, I will stay home" — anote 3 exemplos de cada</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Second Conditional</strong><span>Crie 4 frases: "If I had…, I would…" — situações hipotéticas</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Third Conditional</strong><span>Fluency Connect B1 Cap 7 — arrependimentos no passado</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Voz Passiva</strong><span>Transforme 3 frases ativas em passivas (Present e Past)</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>"If I could change one thing in my life, I would…" — fale por 1 min</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo B1</strong><span>Caps 6–10 — condicionais e passiva no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Exercícios com frases condicionais reais</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading com Áudio</strong><span>Anote todos os condicionais e frases passivas do texto</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão dos 4 condicionais</strong><span>Produza 2 frases de cada tipo (0, 1st, 2nd, 3rd)</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo + Vocabulário</strong><span>Fluency Connect B1 — Caps 6–10 completos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">✏️</span><div class="schedule-text"><strong>Homework + Activity</strong><span>Transforme frases ativas em passivas e vice-versa</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Debate simulado</strong><span>"If I could live anywhere…" — pratique condicionais em voz alta por 5 min</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">📺</span><div class="schedule-text"><strong>Listening avançado</strong><span>Podcast em inglês — anote 3 frases passivas que ouvir</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 08 -->
+    <div class="month-item" data-month="8">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 08</span>
+        <span class="month-level-tag tag-b1">B1</span>
+        <span class="month-title">Pronomes, Wishes, Phrasal Verbs — Fechar o B1</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro B1 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 11</span>Quantifying Determiners — much/little/several/a few/plenty of/none</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 12</span>Indefinite Pronouns — anyone/someone/everyone/nothing/everything</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 12</span>Reflexive Pronouns — myself/yourself/himself/herself/themselves</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 13</span>Conjunctions 2 — no/none · either/neither/both · either…or/neither…nor</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 14</span>Future Possibilities — what if/suppose/imagine/in case</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 15</span>Wishes & Regrets — wish + Past Simple/Perfect/Modal Verbs · if only</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 16</span>Phrasal Verbs 1 — separáveis, não-separáveis e dois partículas</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 8</strong>
+              <span>Usar phrasal verbs naturalmente em conversas e expressar desejos, arrependimentos e possibilidades</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Indefinite Pronouns</strong><span>anyone/someone/no one — anote regra de uso em negativos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Wishes & Regrets</strong><span>Escreva: "I wish I had studied…" / "I wish I could…" — 4 frases</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Phrasal Verbs</strong><span>5 phrasal verbs do Cap 16 — use cada um em uma frase</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão + Either/Neither</strong><span>Pratique "Neither of them…" / "Both of us…" em 3 frases</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>"I wish I had studied English sooner…" — fale por 1 minuto</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo B1</strong><span>Capítulos 11–16 — phrasal verbs e wishes no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>5 phrasal verbs novos por aula — use em frases reais</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading com Áudio</strong><span>Identifique phrasal verbs no texto da atividade</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão phrasal verbs</strong><span>Quiz rápido com os phrasal verbs da semana anterior</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula completa B1</strong><span>Fluency Connect — Caps 11 a 16 completos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">💡</span><div class="schedule-text"><strong>Activity + Speaking</strong><span>"I wish I had studied more…" — 5 frases de wish em voz alta sem preparação</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📖</span><div class="schedule-text"><strong>Leitura extensiva</strong><span>Artigo em inglês (nível B1) — sublinhe todos os phrasal verbs encontrados</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Revisão geral do B1</strong><span>Releia todos os capítulos do livro B1 com suas anotações</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 09 -->
+    <div class="month-item" data-month="9">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 09</span>
+        <span class="month-level-tag tag-b2">B2</span>
+        <span class="month-title">Upper Intermediate — Fluência Começa Aqui</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro B2 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 1</span>Present Perfect Continuous — have/has been + -ing</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 2</span>Past Perfect Continuous — had been + -ing</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 3</span>Future Perfect Continuous — will have been + -ing</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 4</span>Types of Verbs — revisão completa dos 12 tempos verbais</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 4</span>Verb Patterns — infinitivo vs. gerúndio com objetos</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 5</span>Passive English 2 — Present/Past Continuous, Perfect, Modais na passiva</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 9</strong>
+              <span>Usar os perfect continuous tenses corretamente e transformar qualquer frase ativa em passiva com segurança</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Present Perfect Continuous</strong><span>"I have been studying for 3 hours" — anote a diferença com Present Perfect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Passive English 2</strong><span>Transforme 3 frases ativas em passivas usando modais: "should be done"</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Tipos de Verbo</strong><span>Releia a tabela dos 12 tempos — identifique qual usa em situações cotidianas</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Verb Patterns</strong><span>5 verbos que mudam de significado com gerúndio vs. infinitivo</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>"I have been learning English for…" — fale sobre sua jornada por 1 min</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo B2</strong><span>Novos módulos de Perfect Continuous no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Transforme frases diretas em passivas com modais</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Leitura + Áudio B2</strong><span>Artigo em inglês — anote frases passivas e perfect continuous</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão B1 → B2</strong><span>Consolide os pontos mais difíceis do B1 antes de avançar</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula B2 completa</strong><span>Fluency Connect — Caps 1–5 do livro B2</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">📺</span><div class="schedule-text"><strong>Input autêntico</strong><span>Notícia em inglês (BBC/CNN) sem legenda — teste sua compreensão</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Conversa livre</strong><span>Resuma um filme ou série em inglês em voz alta por 3 minutos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Escrita B2</strong><span>Email formal ou redação de 150 palavras usando passive voice</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 10 -->
+    <div class="month-item" data-month="10">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 10</span>
+        <span class="month-level-tag tag-b2">B2</span>
+        <span class="month-title">Adverbs, Conjunções e Vocabulário Rico — B2 Avançado</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro B2 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 6</span>Gradable/Non-gradable Adjectives — very/absolutely/completely/totally</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 7</span>Adverbs 1 — adjective vs. adverb; comparativos de advérbios</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 8</span>Adverbs 2 — grading/non-grading; so/such; enough/too; just/already/yet/still</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 9</span>Subordinating Conjunctions — so that/because/when/as soon as/while/although/even though</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 10</span>Prefixes and Suffixes — im-/un-/re-/mis-/-able/-ful/-less/-tion/-ment</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 11</span>Sequencing/Organizing — first of all/moreover/furthermore/in conclusion</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 12–13</span>Dependent Prepositions — verbos, adjetivos e substantivos + preposição</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 14–15</span>Special Adjectives (-ed/-ing) · Tag Questions · Indirect Questions</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 10</strong>
+              <span>Usar conectores de discurso avançados, prefixos/sufixos produtivamente e formular tag questions sem pensar</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Adverbs 1 e 2</strong><span>Fluency Connect B2 — foque em "so/such" e "enough/too"</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Prefixes & Suffixes</strong><span>Crie 10 palavras novas usando prefixos e sufixos do Cap 10</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Subordinating Conjunctions</strong><span>Anote 1 frase real com: although/even though/as soon as/while</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Tag Questions</strong><span>Pratique: "It's cold today, isn't it?" — 5 frases com tag questions</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking</strong><span>Dê uma opinião usando "Although…" e "In conclusion…" em 1 minuto</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo B2</strong><span>Módulos de Adverbs e Conjunctions no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>10 dependent prepositions por semana — use em contexto</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Leitura B2 com foco</strong><span>Texto de nível B2 — sublinhe todos os conectores e advérbios</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Revisão prefixos/sufixos</strong><span>Flashcards com significados — faça 20 em 10 minutos</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula B2 completa</strong><span>Fluency Connect — Caps 6–15 do livro B2</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking avançado</strong><span>Debate um tema em voz alta por 5 minutos usando conectores formais</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📰</span><div class="schedule-text"><strong>Leitura de artigo</strong><span>BBC, The Guardian ou CNN — anote 5 expressões novas e identifique conectores</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Redação B2</strong><span>Texto de opinião — 200 palavras com conectores, prefixos e tag questions</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 11 -->
+    <div class="month-item" data-month="11">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 11</span>
+        <span class="month-level-tag tag-c1">C1</span>
+        <span class="month-title">Advanced English — Precisão, Nuance e Discurso</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro C1 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 1</span>Reported Speech 1 — "said/told" + backshift de tempos verbais</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 2</span>Reported Speech 2 — verbos alternativos (admitted/explained/encouraged) + negativas e perguntas indiretas</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 3</span>Participle Clauses — present/past/perfect participle em textos formais</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 4</span>Relative Clauses — defining/non-defining; who/which/that/whose/where/when/whereby</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 5</span>Confusing Phrases — get used to / be used to; false cognates inglês/português (Apêndice A)</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 6</span>Advanced Conversation — organizing words, backchanneling, stalling, opinions, agreement/disagreement, interruption</div>
+          </div>
+          <div class="milestone-banner">
+            <div class="milestone-banner-icon">🏁</div>
+            <div class="milestone-banner-text">
+              <strong>Marco do Mês 11</strong>
+              <span>Relatar conversas com Reported Speech, construir relative clauses complexas e conduzir conversas avançadas com naturalidade</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Reported Speech 1</strong><span>Assista e anote o backshift de cada tempo verbal</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Relative Clauses</strong><span>Crie 3 frases defining e 3 non-defining com who/which/whose</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Advanced Conversation</strong><span>Backchanneling e stalling — pratique em voz alta: "Well, good question…"</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>False Cognates</strong><span>Estude 10 false cognates do Apêndice A — crie 1 frase com cada</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Conversa simulada</strong><span>Relate para si mesmo uma conversa que teve hoje, em inglês</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo C1</strong><span>Capítulos 1–6 do livro C1 no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário + Homework</strong><span>Pratique reported speech transformando frases diretas em indiretas</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Leitura C1 com Áudio</strong><span>Texto autêntico nível C1 — atente à estrutura das orações</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">📰</span><div class="schedule-text"><strong>Leitura autêntica</strong><span>Artigo de revista/jornal internacional — 10 minutos de leitura</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–35'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula C1 completa</strong><span>Fluency Connect — todos os passos dos módulos C1</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">35–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking C1</strong><span>Apresentação de 5 minutos sobre um tema que domina — use relative clauses e participle clauses</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Sáb</span><span class="schedule-icon">📺</span><div class="schedule-text"><strong>Documentário ou podcast avançado</strong><span>Sem legenda — anote dúvidas de vocabulário para pesquisar depois</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Dom</span><span class="schedule-icon">✍️</span><div class="schedule-text"><strong>Escrita C1</strong><span>Ensaio ou análise crítica de 250 palavras com participle clauses e relative clauses</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÊS 12 -->
+    <div class="month-item" data-month="12">
+      <div class="month-header" onclick="toggleMonth(this)">
+        <span class="month-num">MÊS 12</span>
+        <span class="month-level-tag tag-c1">C1</span>
+        <span class="month-title">Fluência Total — Ellipsis, Inversion e C1 Completo 🎓</span>
+        <div class="month-check" onclick="toggleCheck(event,this)" title="Marcar como concluído"><span class="month-check-inner">✓</span></div>
+        <span class="month-caret">▾</span>
+      </div>
+      <div class="month-body">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'content')">📚 Conteúdo</button>
+          <button class="tab-btn" onclick="switchTab(this,'s15')">⚡ 15 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s30')">⏱ 30 min/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'s60')">🔥 1h/dia</button>
+          <button class="tab-btn" onclick="switchTab(this,'weekend')">🗓 Fim de semana</button>
+        </div>
+        <div class="tab-content active" data-tab="content">
+          <p class="book-ref">📖 Livro C1 — English Fluency (Fluency Connect)</p>
+          <div class="chapter-grid">
+            <div class="chapter-item"><span class="chapter-num">Cap 7</span>Ellipsis — omitir palavras sem perder significado em conversas nativas</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 8</span>Shortening Infinitives — contrações naturais com "to"</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 9</span>Substitution — one/ones/some/do/did/so/not em lugar de repetir</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 10</span>Colloquial Speech — omitir auxiliares, contrações avançadas, modal + have</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 11</span>Opinions — actually/well/I'm afraid · conceding/hedging · deciding</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 12</span>Shifting Focus and Inversion — "It was…that"; "What I love is…"; inversão dramática com "Not only/Never before/No sooner"</div>
+            <div class="chapter-item"><span class="chapter-num">Cap 13</span>Contrasting Ideas — in spite of/despite/although/even though/even if/as much as/while/whereas/unlike</div>
+            <div class="chapter-item"><span class="chapter-num">Apêndice B</span>Advanced Conversation — 60+ frases para opinião, concordância, discordância e interrupção</div>
+          </div>
+          <div class="milestone-banner" style="background:linear-gradient(135deg,#1a7a44 0%,#2a6e54 100%)">
+            <div class="milestone-banner-icon">🎓</div>
+            <div class="milestone-banner-text">
+              <strong>Marco Final — C1 Concluído!</strong>
+              <span>Você completou 12 meses e atingiu o nível Advanced. Parabéns pela sua dedicação!</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s15">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Seg</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo: Ellipsis + Substitution</strong><span>Aprenda a falar como nativo omitindo o que é óbvio</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Ter</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Inversion dramática</strong><span>Escreva 3 frases com "Not only…but also" e "Never before…"</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qua</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Contrasting Ideas</strong><span>Fluency Connect C1 Cap 13 — "despite/although/whereas" em frases reais</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Qui</span><span class="schedule-icon">🔁</span><div class="schedule-text"><strong>Apêndice B</strong><span>Estude 10 frases de opinião e concordância — pratique em voz alta</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">Sex</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking livre</strong><span>Converse sobre qualquer tema por 2 minutos — sem preparar nada</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s30">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–10'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Vídeo C1 avançado</strong><span>Módulos finais do livro C1 no Fluency Connect</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">10–20'</span><span class="schedule-icon">📝</span><div class="schedule-text"><strong>Vocabulário temático</strong><span>Frases do Apêndice B — memorize 5 por dia</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">20–30'</span><span class="schedule-icon">🎧</span><div class="schedule-text"><strong>Reading + Shadowing C1</strong><span>Imite prosódia e entonação do falante nativo</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="s60">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">0–15'</span><span class="schedule-icon">📰</span><div class="schedule-text"><strong>Leitura rica</strong><span>Artigo longo ou capítulo de livro em inglês sem traduzir</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">15–40'</span><span class="schedule-icon">🎬</span><div class="schedule-text"><strong>Aula C1 completa</strong><span>Fluency Connect — módulos finais: Ellipsis, Inversion, Contrasting Ideas</span></div></div>
+            <div class="schedule-row"><span class="schedule-time">40–60'</span><span class="schedule-icon">🗣</span><div class="schedule-text"><strong>Speaking espontâneo</strong><span>Converse por 20 minutos sobre qualquer assunto — não prepare nada</span></div></div>
+          </div>
+        </div>
+        <div class="tab-content" data-tab="weekend">
+          <div class="schedule-block">
+            <div class="schedule-row"><span class="schedule-time">Fim de sem.</span><span class="schedule-icon">🎉</span><div class="schedule-text"><strong>Celebre e planeje!</strong><span>Faça um teste de proficiência online gratuito, celebre seu progresso e monte seu plano de manutenção C1 para os próximos meses</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /month-list -->
+</section>
+
+<!-- ══════════ RECURSOS ══════════ -->
+<hr class="divider">
+<section class="section">
+  <div class="section-label">Recursos Complementares</div>
+  <h2 class="section-title">Ferramentas gratuitas<br>para acelerar o aprendizado</h2>
+  <p class="section-intro">Use estes recursos ao lado do Fluency Connect para maximizar o input e a prática fora das aulas.</p>
+  <div class="resources-grid">
+    <div class="resource-card"><div class="resource-category">Listening & Speaking</div><div class="resource-name">BBC Learning English</div><div class="resource-desc">Podcasts, vídeos e exercícios por nível. Excelente para desenvolver o ouvido para o inglês britânico.</div><span class="resource-badge">A2 → C1</span></div>
+    <div class="resource-card"><div class="resource-category">Vocabulário</div><div class="resource-name">Anki (flashcards)</div><div class="resource-desc">Sistema de repetição espaçada para memorizar vocabulário novo. Crie decks com as palavras do Fluency Connect.</div><span class="resource-badge">Todos os níveis</span></div>
+    <div class="resource-card"><div class="resource-category">Leitura</div><div class="resource-name">Newsela</div><div class="resource-desc">Artigos de notícias reais ajustados para diferentes níveis de leitura — ótimo para B1 em diante.</div><span class="resource-badge">B1 → C1</span></div>
+    <div class="resource-card"><div class="resource-category">Listening</div><div class="resource-name">TED Talks</div><div class="resource-desc">Apresentações com transcrição completa. Comece com legendas em inglês, depois sem. Escolha temas que você ama.</div><span class="resource-badge">B1 → C1</span></div>
+    <div class="resource-card"><div class="resource-category">Speaking & Escrita</div><div class="resource-name">italki (aulas grátis)</div><div class="resource-desc">Encontre language partners nativos de inglês gratuitamente para prática de conversação.</div><span class="resource-badge">A2 → C1</span></div>
+    <div class="resource-card"><div class="resource-category">Escrita</div><div class="resource-name">Grammarly (versão grátis)</div><div class="resource-desc">Corrija erros gramaticais nos seus textos escritos. Ótimo para aprender com os próprios erros.</div><span class="resource-badge">B1 → C1</span></div>
+  </div>
+</section>
+
+<!-- ══════════ MILESTONES ══════════ -->
+<section class="progress-section">
+  <div class="progress-inner">
+    <div class="section-label">Seu Progresso</div>
+    <h2 class="section-title">12 marcos da sua jornada</h2>
+    <p class="section-intro" style="margin-bottom:40px">Marque cada marco à medida que avança. Seu progresso é salvo automaticamente.</p>
+    <div class="milestone-list" id="milestoneList">
+      <div class="milestone-item" data-m="1"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 1 · A1</div><div class="milestone-goal">Apresentar-me em inglês</div><div class="milestone-detail">Conseguir se apresentar, responder perguntas básicas e usar o verbo "to be" com confiança.</div></div></div>
+      <div class="milestone-item" data-m="2"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 2 · A1</div><div class="milestone-goal">Descrever minha rotina e habilidades</div><div class="milestone-detail">Usar o Present Simple, "can" e adverbs of frequency para falar sobre hábitos e o que sabe fazer.</div></div></div>
+      <div class="milestone-item" data-m="3"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 3 · A2</div><div class="milestone-goal">Falar sobre o passado e o futuro</div><div class="milestone-detail">Contar o que fiz usando Simple Past e fazer planos com "going to" e "will".</div></div></div>
+      <div class="milestone-item" data-m="4"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 4 · A2</div><div class="milestone-goal">Comunicar em situações cotidianas</div><div class="milestone-detail">Usar modais (should/must/might), comparativos e expressar opiniões simples.</div></div></div>
+      <div class="milestone-item" data-m="5"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 5 · A2</div><div class="milestone-goal">Construir frases complexas</div><div class="milestone-detail">Usar artigos corretamente, conjunções FANBOYS e possessivos em textos coesos.</div></div></div>
+      <div class="milestone-item" data-m="6"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 6 · B1</div><div class="milestone-goal">Falar sobre experiências de vida</div><div class="milestone-detail">Usar Present Perfect e Perfect Phrases (ever/never/just/already/yet) com naturalidade.</div></div></div>
+      <div class="milestone-item" data-m="7"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 7 · B1</div><div class="milestone-goal">Hipóteses e voz passiva</div><div class="milestone-detail">Formular condicionais de todos os tipos e usar a voz passiva com segurança.</div></div></div>
+      <div class="milestone-item" data-m="8"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 8 · B1</div><div class="milestone-goal">Phrasal verbs e expressividade</div><div class="milestone-detail">Usar phrasal verbs com naturalidade e expressar desejos e arrependimentos.</div></div></div>
+      <div class="milestone-item" data-m="9"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 9 · B2</div><div class="milestone-goal">Perfect Continuous e passiva avançada</div><div class="milestone-detail">Usar os 12 tempos verbais com precisão e transformar qualquer frase em passiva.</div></div></div>
+      <div class="milestone-item" data-m="10"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 10 · B2</div><div class="milestone-goal">Adverbs, conjunções e vocabulário rico</div><div class="milestone-detail">Usar conectores formais, prefixos/sufixos e tag questions automaticamente.</div></div></div>
+      <div class="milestone-item" data-m="11"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 11 · C1</div><div class="milestone-goal">Reported Speech e conversas avançadas</div><div class="milestone-detail">Relatar conversas, construir relative clauses complexas e conduzir debates em inglês.</div></div></div>
+      <div class="milestone-item" data-m="12"><div class="milestone-dot" onclick="toggleMilestone(this)"></div><div class="milestone-content"><div class="milestone-month">MÊS 12 · C1 🎓</div><div class="milestone-goal">C1 Concluído — Parabéns!</div><div class="milestone-detail">Você completou a jornada completa A1 → C1 do Fluency Connect. Uma conquista incrível!</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-logo">Fluency<span>Connect</span></div>
+  <p style="font-size:14px;color:rgba(255,255,255,.5);max-width:440px;margin:0 auto">Do iniciante ao avançado — com método, consistência e o suporte do melhor curso de inglês online.</p>
+  <div class="footer-links">
+    <a href="https://fluencyconnect.com" target="_blank">fluencyconnect.com</a>
+  </div>
+  <div class="footer-note">Este guia é um material de apoio educacional para alunos do Fluency Connect.</div>
+</footer>
+
+<script>
+function toggleMonth(header){
+  const item=header.closest(".month-item");
+  const isOpen=item.classList.contains("open");
+  document.querySelectorAll(".month-item.open").forEach(i=>i.classList.remove("open"));
+  if(!isOpen)item.classList.add("open");
+}
+function switchTab(btn,tab){
+  const body=btn.closest(".month-body");
+  body.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  body.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+  btn.classList.add("active");
+  body.querySelector(`.tab-content[data-tab="${tab}"]`).classList.add("active");
+}
+function toggleCheck(e,el){
+  e.stopPropagation();
+  el.classList.toggle("done");
+  updateProgress();
+}
+function toggleMilestone(dot){
+  dot.closest(".milestone-item").classList.toggle("done");
+  const m=parseInt(dot.closest(".milestone-item").dataset.m);
+  const monthItem=document.querySelector(`.month-item[data-month="${m}"]`);
+  if(monthItem){
+    const check=monthItem.querySelector(".month-check");
+    const isDone=dot.closest(".milestone-item").classList.contains("done");
+    if(isDone)check.classList.add("done");
+    else check.classList.remove("done");
+  }
+  updateProgress();
+}
+function updateProgress(){
+  const total=12;
+  const done=document.querySelectorAll(".month-check.done").length;
+  const pct=Math.round((done/total)*100);
+  document.getElementById("heroBar").style.width=pct+"%";
+  document.getElementById("progressPct").textContent=`${done} de ${total} meses concluídos`;
+}
+window.addEventListener("load",()=>{setTimeout(()=>updateProgress(),300)});
+</script>
+</body>
+</html>

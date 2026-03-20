@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michael — Central de Conteúdo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#1DB994; --green-dim:#17a07f;
+  --bg:#1A1A1A; --bg2:#242424; --bg3:#2d2d2d; --bg4:#333;
+  --border:#3a3a3a; --text:#f0f0f0; --muted:#888; --muted2:#aaa;
+  --p1:#1DB994; --p2:#e05252; --p3:#f39c12;
+  --attract:#1DB994; --nurture:#9b59b6; --position:#3498db; --convert:#e67e22;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+
+/* ── HEADER ── */
+.app-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:28px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+.logo{color:var(--green);font-weight:900;font-size:18px;letter-spacing:-.5px;padding:16px 0;white-space:nowrap;}
+.logo span{color:var(--text);}
+.nav-tabs{display:flex;gap:4px;}
+.nav-tab{padding:14px 16px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.add-topic-btn{background:var(--green);border:none;color:#000;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;padding:7px 16px;border-radius:6px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.add-topic-btn:hover{background:var(--green-dim);}
+.hdr-count{font-size:11px;color:var(--muted);white-space:nowrap;}
+.hdr-count strong{color:var(--green);}
+
+/* ── PAGES ── */
+.page{display:none;padding:28px 24px;max-width:1400px;margin:0 auto;}
+.page.active{display:block;}
+.section-title{font-size:20px;font-weight:900;margin-bottom:6px;}
+.section-desc{font-size:13px;color:var(--muted);margin-bottom:24px;}
+
+/* ── PILLAR CARDS ── */
+.pillar-header{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.pillar-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.pillar-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.pillar-card.all::before{background:linear-gradient(90deg,var(--p1),var(--p2),var(--p3));}
+.pillar-card.p1::before{background:var(--p1);}
+.pillar-card.p2::before{background:var(--p2);}
+.pillar-card.p3::before{background:var(--p3);}
+.pillar-card:hover{border-color:var(--green);transform:translateY(-1px);}
+.pillar-num{font-size:26px;font-weight:900;color:var(--bg4);line-height:1;}
+.pillar-name{font-size:13px;font-weight:800;margin-top:4px;}
+.pillar-card.all .pillar-name{color:var(--green);}
+.pillar-card.p1 .pillar-name{color:var(--p1);}
+.pillar-card.p2 .pillar-name{color:var(--p2);}
+.pillar-card.p3 .pillar-name{color:var(--p3);}
+.pillar-count{font-size:11px;color:var(--muted);margin-top:4px;}
+.pillar-progress{margin-top:10px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.pillar-progress-bar{height:100%;background:var(--green);border-radius:2px;transition:width .3s;}
+
+/* ── FILTERS ── */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center;}
+.filter-btn{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--muted2);transition:all .2s;}
+.filter-btn:hover{border-color:var(--green);color:var(--text);}
+.filter-btn.active{background:var(--green);border-color:var(--green);color:#000;}
+.filter-btn.p1.active{background:var(--p1);border-color:var(--p1);color:#000;}
+.filter-btn.p2.active{background:var(--p2);border-color:var(--p2);color:#fff;}
+.filter-btn.p3.active{background:var(--p3);border-color:var(--p3);color:#000;}
+.filter-btn.attract.active{background:var(--attract);border-color:var(--attract);color:#000;}
+.filter-btn.nurture.active{background:var(--nurture);border-color:var(--nurture);color:#fff;}
+.filter-btn.position.active{background:var(--position);border-color:var(--position);color:#fff;}
+.filter-btn.convert.active{background:var(--convert);border-color:var(--convert);color:#fff;}
+.filter-sep{width:1px;height:20px;background:var(--border);}
+
+/* ── STATS ── */
+.stats-bar{display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap;}
+.stat-item{font-size:12px;color:var(--muted);}
+.stat-item strong{color:var(--green);font-size:16px;font-weight:800;margin-right:4px;}
+
+/* ── VIDEO GRID ── */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
+.video-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;position:relative;}
+.video-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 4px 20px rgba(29,185,148,.1);}
+.video-card.done{opacity:.6;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;}
+.card-num{font-size:22px;font-weight:900;color:var(--bg4);line-height:1;flex-shrink:0;}
+.card-badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
+.badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;letter-spacing:.3px;}
+.badge-reel{background:rgba(29,185,148,.15);color:var(--green);border:1px solid rgba(29,185,148,.3);}
+.badge-carousel{background:rgba(224,160,48,.15);color:#e0a030;border:1px solid rgba(224,160,48,.3);}
+.badge-story{background:rgba(91,141,238,.15);color:#5b8dee;border:1px solid rgba(91,141,238,.3);}
+.badge-attract{background:rgba(29,185,148,.12);color:var(--attract);}
+.badge-nurture{background:rgba(155,89,182,.12);color:#b57fe0;}
+.badge-position{background:rgba(52,152,219,.12);color:#6aade0;}
+.badge-convert{background:rgba(230,126,34,.12);color:#e8a060;}
+.badge-fmt{background:rgba(255,255,255,.06);color:var(--muted2);}
+.card-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:4px;}
+.card-sub{font-size:11px;color:var(--muted);line-height:1.4;}
+.card-rec-label{font-size:10px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:4px;}
+.card-dates-row{margin-top:7px;display:flex;gap:8px;flex-wrap:wrap;}
+.card-date-tag{font-size:10px;color:var(--muted);background:var(--bg3);padding:2px 7px;border-radius:8px;}
+.done-check{position:absolute;top:12px;right:12px;width:18px;height:18px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#000;font-weight:900;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:780px;overflow:hidden;transform:translateY(20px);transition:transform .2s;margin:auto;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.modal-header-left{flex:1;min-width:0;}
+.modal-title{font-size:16px;font-weight:800;}
+.modal-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.modal-header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.modal-close{background:var(--bg3);border:none;color:var(--muted2);cursor:pointer;width:30px;height:30px;border-radius:6px;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{color:var(--text);background:var(--bg4);}
+.edit-toggle{background:var(--bg3);border:1px solid var(--border);color:var(--muted2);cursor:pointer;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;transition:all .2s;}
+.edit-toggle:hover{border-color:var(--green);color:var(--green);}
+.edit-toggle.active{background:rgba(29,185,148,.1);border-color:var(--green);color:var(--green);}
+.del-topic-btn{background:var(--bg3);border:1px solid var(--border);color:#e05252;cursor:pointer;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;transition:all .2s;}
+.del-topic-btn:hover{background:rgba(224,82,82,.1);}
+
+/* ── JOB TABS ── */
+.modal-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;}
+.modal-tab{padding:11px 14px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;}
+.modal-tab:hover{color:var(--text);}
+.modal-tab.active{color:var(--green);border-bottom-color:var(--green);}
+
+/* ── FORMAT TABS (Reel/Carousel/Story) ── */
+.modal-format-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;}
+.modal-fmt-tab{padding:9px 14px;font-size:11px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;letter-spacing:.4px;}
+.modal-fmt-tab:hover{color:var(--text);}
+.modal-fmt-tab.fmt-reel.active{color:var(--green);border-bottom-color:var(--green);}
+.modal-fmt-tab.fmt-carousel.active{color:#e0a030;border-bottom-color:#e0a030;}
+.modal-fmt-tab.fmt-story.active{color:#5b8dee;border-bottom-color:#5b8dee;}
+
+/* ── MODAL BODY ── */
+.modal-body{padding:22px 24px;max-height:62vh;overflow-y:auto;}
+.modal-body::-webkit-scrollbar{width:4px;}
+.modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.script-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.hook-box{background:var(--bg3);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:16px;font-size:13px;font-style:italic;color:var(--muted2);}
+.hook-label{font-size:10px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-style:normal;}
+.script-section{margin-bottom:18px;}
+.script-section-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.script-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.script-line{background:var(--bg3);border-radius:8px;padding:11px 13px;margin-bottom:7px;}
+.line-speaker{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;color:#5b8dee;}
+.line-pt{font-size:14px;font-weight:600;color:var(--text);line-height:1.5;}
+.cta-box{background:rgba(29,185,148,.08);border:1px solid rgba(29,185,148,.2);border-radius:8px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--green);}
+.cta-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.record-btn{width:100%;margin-top:18px;padding:11px;background:var(--green);border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer;transition:all .2s;}
+.record-btn:hover{background:var(--green-dim);}
+.record-btn.recorded{background:var(--bg3);color:var(--muted2);border:1px solid var(--border);}
+
+/* ── EDIT FIELDS ── */
+.edit-field-group{margin-bottom:12px;}
+.edit-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.editable-field{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);width:100%;resize:vertical;transition:border-color .2s;}
+.editable-field:focus{outline:none;border-color:var(--green);}
+.editable-field.title-field{font-size:15px;font-weight:700;}
+.edit-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.save-edits-btn{width:100%;padding:10px;background:var(--green);border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer;transition:all .2s;margin-top:14px;}
+.save-edits-btn:hover{background:var(--green-dim);}
+.reset-edits-btn{width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;margin-top:6px;}
+.reset-edits-btn:hover{border-color:#e05252;color:#e05252;}
+.edited-badge{background:rgba(230,126,34,.15);color:#e8a060;border:1px solid rgba(230,126,34,.25);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;}
+
+/* ── DATES BAR ── */
+.modal-dates-bar{padding:12px 24px;border-top:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;align-items:center;background:var(--bg3);}
+.date-group{display:flex;align-items:center;gap:8px;}
+.date-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);white-space:nowrap;}
+.date-inp{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;cursor:pointer;transition:border .2s;}
+.date-inp:focus{border-color:var(--green);}
+.date-inp::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer;}
+.push-cal-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted2);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s;margin-left:auto;white-space:nowrap;}
+.push-cal-btn:hover{border-color:var(--green);color:var(--green);}
+.push-cal-btn.pushed{background:rgba(29,185,148,.1);border-color:var(--green);color:var(--green);}
+
+/* ── NOTES BAR ── */
+.modal-notes-bar{padding:10px 24px;border-top:1px solid var(--border);}
+.notes-inp{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'Nunito',sans-serif;font-size:12px;color:var(--text);width:100%;resize:vertical;outline:none;transition:border .2s;min-height:40px;}
+.notes-inp:focus{border-color:var(--green);}
+.notes-lbl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+
+/* ── ADD TOPIC MODAL ── */
+.addtopic-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1100;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s;}
+.addtopic-ov.open{opacity:1;pointer-events:all;}
+.addtopic-modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:640px;overflow:hidden;transform:translateY(20px);transition:transform .2s;margin:auto;}
+.addtopic-ov.open .addtopic-modal{transform:translateY(0);}
+.at-hdr{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.at-title{font-size:16px;font-weight:800;}
+.at-body{padding:22px;display:flex;flex-direction:column;gap:14px;max-height:75vh;overflow-y:auto;}
+.at-field{display:flex;flex-direction:column;gap:5px;}
+.at-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.at-inp{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:9px 11px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s;}
+.at-inp:focus{border-color:var(--green);}
+textarea.at-inp{resize:vertical;min-height:70px;}
+select.at-inp{cursor:pointer;}
+.at-ftr{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+.at-save{background:var(--green);border:none;color:#000;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:9px 24px;border-radius:8px;cursor:pointer;transition:all .2s;}
+.at-save:hover{background:var(--green-dim);}
+.at-cancel{background:var(--bg3);border:1px solid var(--border);color:var(--muted2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px;cursor:pointer;transition:all .2s;}
+.at-cancel:hover{color:var(--text);}
+.at-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* ── GUIDE PAGE ── */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.guide-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative;overflow:hidden;}
+.guide-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;}
+.gc-ST::before{background:var(--green);}
+.gc-CO::before{background:#e0a030;}
+.gc-AT::before{background:var(--position);}
+.gc-ED::before{background:var(--nurture);}
+.gc-SE::before{background:var(--convert);}
+.gc-CA::before{background:#e09840;}
+.gc-SO::before{background:var(--p2);}
+.gc-key{font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:3px;}
+.gc-name{font-size:18px;font-weight:800;margin-bottom:2px;}
+.gc-goal{font-size:10px;color:var(--muted);margin-bottom:12px;}
+.gc-steps{display:flex;flex-direction:column;gap:6px;}
+.gc-step{display:flex;gap:8px;align-items:flex-start;}
+.gc-stepnum{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#000;margin-top:1px;}
+.gc-steptext{font-size:12px;color:var(--muted2);line-height:1.5;}
+.gc-steptext strong{color:var(--text);}
+.gc-example{margin-top:12px;background:var(--bg3);border-radius:8px;padding:10px 12px;}
+.gc-ex-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;}
+.gc-ex-line{font-size:11px;color:var(--muted2);line-height:1.6;}
+.gc-ex-line strong{color:var(--muted2);font-weight:700;}
+
+/* ── CALENDAR PAGE ── */
+.cal-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.cal-nav{background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.cal-nav:hover{background:var(--bg3);}
+.cal-month-title{font-size:18px;font-weight:900;min-width:200px;}
+.cal-today-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted2);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.cal-today-btn:hover{border-color:var(--green);color:var(--green);}
+.cal-grid-wrap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-dow{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);text-align:center;padding:6px 0;}
+.cal-cell{background:var(--bg2);border:1px solid var(--border);border-radius:8px;min-height:88px;padding:6px;cursor:pointer;transition:all .15s;position:relative;}
+.cal-cell:hover{border-color:var(--green);}
+.cal-cell.other-month{opacity:.25;}
+.cal-cell.today{border-color:var(--green);box-shadow:0 0 0 1px var(--green);}
+.cal-day-num{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;}
+.cal-cell.today .cal-day-num{color:var(--green);}
+.cal-post{padding:2px 5px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+.cal-post.fmt-reel{background:rgba(29,185,148,.15);color:var(--green);}
+.cal-post.fmt-carousel{background:rgba(224,160,48,.15);color:#e0a030;}
+.cal-post.fmt-story{background:rgba(91,141,238,.15);color:#5b8dee;}
+.cal-more{font-size:9px;color:var(--muted);font-weight:700;}
+.post-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.post-modal-ov.open{opacity:1;pointer-events:all;}
+.post-modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:460px;overflow:hidden;}
+.pm-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.pm-title{font-size:14px;font-weight:800;}
+.pm-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
+.pm-field{display:flex;flex-direction:column;gap:4px;}
+.pm-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.pm-inp{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s;}
+.pm-inp:focus{border-color:var(--green);}
+.pm-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);outline:none;cursor:pointer;}
+.pm-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pm-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+.pm-save-btn{background:var(--green);border:none;color:#000;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:8px 20px;border-radius:7px;cursor:pointer;transition:all .2s;}
+.pm-del-btn{background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.25);color:#e05252;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:8px 14px;border-radius:7px;cursor:pointer;transition:all .2s;}
+
+/* ── SCHEDULE PAGE ── */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.week-day{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.week-day-header{padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border);}
+.week-slot{padding:8px 10px;border-bottom:1px solid var(--border);}
+.week-slot:last-child{border-bottom:none;}
+.slot-time{font-size:10px;font-weight:800;color:var(--green);margin-bottom:3px;}
+.slot-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;}
+.slot-attract{background:rgba(29,185,148,.15);color:var(--attract);}
+.slot-nutrir{background:rgba(155,89,182,.15);color:#b57fe0;}
+.slot-posicionar{background:rgba(52,152,219,.15);color:#6aade0;}
+.slot-converter{background:rgba(230,126,34,.15);color:#e8a060;}
+.time-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.time-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.time-card-hour{font-size:32px;font-weight:900;color:var(--green);}
+.time-card-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;}
+.time-card-format{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.time-card-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* ── PILLARS PAGE ── */
+.pillar-block-full{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:14px;position:relative;overflow:hidden;}
+.pillar-block-full::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;}
+.pb-full-1::before{background:var(--p1);}
+.pb-full-2::before{background:var(--p2);}
+.pb-full-3::before{background:var(--p3);}
+.pb-num-big{font-size:36px;font-weight:900;color:var(--bg4);line-height:1;margin-bottom:4px;}
+.pb-title-big{font-size:20px;font-weight:800;margin-bottom:3px;}
+.pb-full-1 .pb-title-big{color:var(--p1);}
+.pb-full-2 .pb-title-big{color:var(--p2);}
+.pb-full-3 .pb-title-big{color:var(--p3);}
+.pb-sub-tag{font-size:12px;color:var(--muted);margin-bottom:14px;letter-spacing:.02em;}
+.pb-divider{height:1px;background:rgba(255,255,255,.06);margin-bottom:14px;}
+.pb-description{font-size:13px;color:var(--muted2);line-height:1.75;margin-bottom:12px;}
+.pb-tags-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;}
+.pb-tag-pill{padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid;}
+.pb-full-1 .pb-tag-pill{background:rgba(29,185,148,.1);border-color:rgba(29,185,148,.25);color:var(--p1);}
+.pb-full-2 .pb-tag-pill{background:rgba(224,82,82,.1);border-color:rgba(224,82,82,.25);color:var(--p2);}
+.pb-full-3 .pb-tag-pill{background:rgba(243,156,18,.1);border-color:rgba(243,156,18,.25);color:var(--p3);}
+.pb-insight-box{background:var(--bg3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted2);line-height:1.6;}
+.pb-insight-box strong{color:var(--text);}
+
+/* ── METRICS PAGE ── */
+.metrics-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px;}
+.metric-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.metric-kpi-value{font-size:26px;font-weight:900;color:var(--green);}
+.metric-kpi-label{font-size:11px;color:var(--muted);margin-top:4px;}
+.metric-kpi-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.metrics-section-title{font-size:14px;font-weight:800;margin-bottom:12px;margin-top:20px;}
+.checkpoint-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.checkpoint-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.ck-title{font-size:14px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.ck-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;}
+.ck-badge.pending{background:rgba(230,126,34,.15);color:#e8a060;}
+.ck-badge.ready{background:rgba(29,185,148,.15);color:var(--green);}
+.ck-desc{font-size:12px;color:var(--muted2);line-height:1.6;}
+.ck-desc strong{color:var(--text);}
+.insight-strip{background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.2);border-radius:8px;padding:14px 16px;font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:18px;}
+.insight-strip strong{color:var(--green);}
+.metrics-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;align-items:center;}
+.metrics-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+.metrics-table{width:100%;border-collapse:collapse;font-size:12px;}
+.metrics-table th{background:var(--bg3);padding:9px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.metrics-table th.num{text-align:right;}
+.metrics-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:middle;}
+.metrics-table td.num{text-align:right;font-weight:700;color:var(--text);}
+.metrics-table tr:last-child td{border-bottom:none;}
+.metrics-table tr:hover td{background:rgba(255,255,255,.02);}
+.perf-bar-wrap{display:flex;align-items:center;gap:8px;}
+.perf-bar{height:4px;background:var(--green);border-radius:2px;}
+.perf-label{font-size:10px;color:var(--muted);white-space:nowrap;}
+.metric-num-input{background:transparent;border:1px solid transparent;border-radius:4px;padding:2px 6px;font-size:12px;color:var(--text);font-family:'Nunito',sans-serif;font-weight:700;width:70px;text-align:right;cursor:pointer;transition:all .15s;-moz-appearance:textfield;}
+.metric-num-input::-webkit-outer-spin-button,.metric-num-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.metric-num-input:hover{border-color:var(--border);background:var(--bg3);}
+.metric-num-input:focus{border-color:var(--green);background:var(--bg3);outline:none;cursor:text;}
+.metric-num-input.dirty{border-color:rgba(29,185,148,.5);background:rgba(29,185,148,.06);}
+.bulk-save-bar{display:none;align-items:center;gap:12px;padding:10px 14px;background:rgba(29,185,148,.08);border:1px solid rgba(29,185,148,.25);border-radius:8px;margin-bottom:12px;}
+.bulk-save-bar.visible{display:flex;}
+.bulk-save-btn{padding:6px 16px;background:var(--green);border:none;border-radius:6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:#000;cursor:pointer;}
+.bulk-discard-btn{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;}
+.log-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.log-modal-ov.open{opacity:1;pointer-events:all;}
+.log-modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:480px;overflow:hidden;}
+.log-modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;}
+.log-modal-hdr-title{font-size:15px;font-weight:800;}
+.log-modal-hdr-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.log-modal-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px;max-height:70vh;overflow-y:auto;}
+.log-field{display:flex;flex-direction:column;gap:4px;}
+.log-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.log-inp{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s;}
+.log-inp:focus{border-color:var(--green);}
+.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.log-modal-ftr{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+.log-save-btn{background:var(--green);border:none;color:#000;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:8px 22px;border-radius:8px;cursor:pointer;}
+.log-del-btn{background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.25);color:#e05252;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer;}
+.analysis-note{background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.2);border-radius:8px;padding:14px 16px;margin-top:20px;font-size:12px;color:var(--muted2);line-height:1.6;}
+.analysis-note strong{color:var(--green);}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--green);border-radius:30px;padding:10px 22px;font-size:13px;font-weight:700;color:var(--green);z-index:9999;transition:transform .3s ease;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.toast-wrap.show{transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+@media(max-width:900px){
+  .pillar-header{grid-template-columns:repeat(2,1fr);}
+  .week-grid{grid-template-columns:repeat(4,1fr);}
+  .time-legend{grid-template-columns:1fr;}
+  .metrics-summary{grid-template-columns:repeat(3,1fr);}
+  .checkpoint-row{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .pillar-header{grid-template-columns:1fr 1fr;}
+  .week-grid{grid-template-columns:repeat(2,1fr);}
+  .app-header{flex-wrap:wrap;gap:8px;}
+  .nav-tabs{overflow-x:auto;}
+  .page{padding:16px 14px;}
+  .cal-grid-wrap{grid-template-columns:repeat(7,1fr);}
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">Michael<span> Social</span></div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('videos',this)">📹 Vídeos</button>
+    <button class="nav-tab" onclick="showPage('calendar',this)">📅 Calendário</button>
+    <button class="nav-tab" onclick="showPage('schedule',this)">🕐 Horários</button>
+    <button class="nav-tab" onclick="showPage('guide',this)">📖 Guia de Formatos</button>
+    <button class="nav-tab" onclick="showPage('pillars',this)">⭐ Pilares</button>
+    <button class="nav-tab" onclick="showPage('metrics',this)">📊 Métricas</button>
+  </nav>
+  <div class="header-right">
+    <span class="hdr-count">Gravados: <strong id="hdr-rec-count">0</strong></span>
+    <button class="add-topic-btn" onclick="openAddTopic()">+ Novo Tópico</button>
+  </div>
+</header>
+
+<!-- ═══════ VÍDEOS PAGE ═══════ -->
+<div class="page active" id="page-videos">
+  <div class="section-title">Central de Conteúdo — Michael</div>
+  <div class="section-desc">Cada tópico gera 3 formatos: Reel · Carrossel · Story. Clique num card para ver o script completo.</div>
+
+  <div class="pillar-header">
+    <div class="pillar-card all" onclick="setFilter('pillar','all')">
+      <div class="pillar-num">⚡</div>
+      <div class="pillar-name">Todos os tópicos</div>
+      <div class="pillar-count" id="count-all">— tópicos</div>
+    </div>
+    <div class="pillar-card p1" onclick="setFilter('pillar','p1')">
+      <div class="pillar-num">1</div>
+      <div class="pillar-name">🌎 Americano no Brasil</div>
+      <div class="pillar-count" id="count-p1">— tópicos</div>
+      <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p1" style="width:0%"></div></div>
+    </div>
+    <div class="pillar-card p2" onclick="setFilter('pillar','p2')">
+      <div class="pillar-num">2</div>
+      <div class="pillar-name">🎙️ Idiomas & Aprendizado</div>
+      <div class="pillar-count" id="count-p2">— tópicos</div>
+      <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p2" style="width:0%"></div></div>
+    </div>
+    <div class="pillar-card p3" onclick="setFilter('pillar','p3')">
+      <div class="pillar-num">3</div>
+      <div class="pillar-name">⚡ Tech · Lógica · Disciplina</div>
+      <div class="pillar-count" id="count-p3">— tópicos</div>
+      <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p3" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" onclick="setFilter('pillar','all')">Todos</button>
+    <button class="filter-btn p1" onclick="setFilter('pillar','p1')">🌎 Americano</button>
+    <button class="filter-btn p2" onclick="setFilter('pillar','p2')">🎙️ Idiomas</button>
+    <button class="filter-btn p3" onclick="setFilter('pillar','p3')">⚡ Tech</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn attract" onclick="setFilter('type','attract')">Atrair</button>
+    <button class="filter-btn nurture" onclick="setFilter('type','nurture')">Nutrir</button>
+    <button class="filter-btn position" onclick="setFilter('type','position')">Posicionar</button>
+    <button class="filter-btn convert" onclick="setFilter('type','convert')">Converter</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setFilter('fmt','reel')">🎬 Reel</button>
+    <button class="filter-btn" onclick="setFilter('fmt','carousel')">🖼 Carrossel</button>
+    <button class="filter-btn" onclick="setFilter('fmt','story')">⭕ Story</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setFilter('status','pending')">📋 Pendentes</button>
+    <button class="filter-btn" onclick="setFilter('status','done')">✅ Gravados</button>
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="video-grid" id="video-grid"></div>
+</div>
+
+<!-- ═══════ CALENDAR PAGE ═══════ -->
+<div class="page" id="page-calendar">
+  <div class="section-title">Calendário de Conteúdo</div>
+  <div class="section-desc">Posts agendados por dia — clique numa célula para adicionar ou editar um post.</div>
+  <div class="cal-toolbar">
+    <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+    <div class="cal-month-title" id="cal-month-title"></div>
+    <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    <button class="cal-today-btn" onclick="goToday()">Hoje</button>
+    <select id="cal-month-jump" onchange="jumpMonth(this.value)" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;cursor:pointer;margin-left:8px;"></select>
+  </div>
+  <div class="cal-grid-wrap" id="cal-grid"></div>
+</div>
+
+<!-- ═══════ SCHEDULE PAGE ═══════ -->
+<div class="page" id="page-schedule">
+  <div class="section-title">3 Posts por Dia</div>
+  <div class="section-desc">Distribuição semanal otimizada — Reel + Carrossel + Story todos os dias.</div>
+  <div class="time-legend">
+    <div class="time-card">
+      <div class="time-card-label">Manhã</div>
+      <div class="time-card-hour">9h</div>
+      <div class="time-card-format">🎬 Reel — Atrair ou Educar</div>
+      <div class="time-card-desc">Pessoa abrindo o feed no café. Quer entretenimento rápido. Conteúdo leve, engraçado, compartilhável ou dica rápida de inglês/tech.</div>
+    </div>
+    <div class="time-card">
+      <div class="time-card-label">Almoço</div>
+      <div class="time-card-hour">13h</div>
+      <div class="time-card-format">🖼 Carrossel — Nutrir / Salvar</div>
+      <div class="time-card-desc">Pausa do trabalho. Mais tempo para consumir. Carrossel educativo com valor denso — alto índice de salvamento.</div>
+    </div>
+    <div class="time-card">
+      <div class="time-card-label">Noite</div>
+      <div class="time-card-hour">19h–21h</div>
+      <div class="time-card-format">⭕ Story — Engajar / Converter</div>
+      <div class="time-card-desc">Em casa, relaxando. Melhor horário para stories pessoais, CTAs e engajamento direto com a audiência.</div>
+    </div>
+  </div>
+  <div class="section-title" style="font-size:14px;margin-bottom:14px;">Distribuição Semanal</div>
+  <div class="week-grid">
+    <div class="week-day"><div class="week-day-header">DOM</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-nutrir">NUTRIR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-converter">CONVERTER</div></div></div>
+    <div class="week-day"><div class="week-day-header">SEG</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-posicionar">POSICIONAR</div></div></div>
+    <div class="week-day"><div class="week-day-header">TER</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-nutrir">NUTRIR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-converter">CONVERTER</div></div></div>
+    <div class="week-day"><div class="week-day-header">QUA</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-nutrir">NUTRIR</div></div></div>
+    <div class="week-day"><div class="week-day-header">QUI</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-posicionar">POSICIONAR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-converter">CONVERTER</div></div></div>
+    <div class="week-day"><div class="week-day-header">SEX</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-nutrir">NUTRIR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-nutrir">NUTRIR</div></div></div>
+    <div class="week-day"><div class="week-day-header">SÁB</div><div class="week-slot"><div class="slot-time">9h</div><div class="slot-type slot-attract">ATRAIR</div></div><div class="week-slot"><div class="slot-time">13h</div><div class="slot-type slot-posicionar">POSICIONAR</div></div><div class="week-slot"><div class="slot-time">19h</div><div class="slot-type slot-converter">CONVERTER</div></div></div>
+  </div>
+  <div class="analysis-note" style="margin-top:20px"><strong>Como analisar após 14 dias (42 posts):</strong> Veja qual formato tem mais saves e compartilhamentos — não views. Salvar = intenção de voltar. No Dia 14, filtre os 5 melhores posts. <strong>Dias 14 e 30 são checkpoints obrigatórios.</strong></div>
+</div>
+
+<!-- ═══════ GUIDE PAGE ═══════ -->
+<div class="page" id="page-guide">
+  <div class="section-title">Guia de Formatos</div>
+  <div class="section-desc">Estrutura e lógica de cada formato — use como referência na hora de escrever e gravar.</div>
+  <div class="guide-grid" id="guide-grid"></div>
+</div>
+
+<!-- ═══════ PILLARS PAGE ═══════ -->
+<div class="page" id="page-pillars">
+  <div class="section-title">Pilares de Conteúdo do Michael</div>
+  <div class="section-desc">3 pilares que organizam todo o conteúdo — cada um com propósito, audiência e formatos ideais.</div>
+
+  <div class="pillar-block-full pb-full-1">
+    <div class="pb-num-big">1</div>
+    <div class="pb-title-big">🌎 Americano no Brasil</div>
+    <div class="pb-sub-tag">Lifestyle · Cultura · Família · Paternidade twin · Brasil × EUA</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">O pilar mais único do Michael. Nenhum outro criador tem essa perspectiva: americano nativo, casado com brasileira, pai de gêmeas, vivendo no Brasil. Isso cobre vida cultural, choque de costumes, família bilíngue, paternidade, casamento intercultural e comparações reais entre os dois países.</div>
+    <div class="pb-description">Cobre tópicos de: choques culturais, vida no Brasil, coisas que ama no Brasil, gêmeas bilíngues, casamento intercultural, descoberta das gêmeas, paternidade jovem, rotina familiar bilíngue. É o pilar de maior identificação e viral­idade — conteúdo que ninguém mais pode replicar.</div>
+    <div class="pb-tags-row"><span class="pb-tag-pill">Storytelling</span><span class="pb-tag-pill">Double Down</span><span class="pb-tag-pill">Série</span><span class="pb-tag-pill">Atrair</span><span class="pb-tag-pill">Nutrir</span></div>
+    <div class="pb-insight-box"><strong>Diferencial:</strong> Conteúdo que gera reação emocional forte — surpresa, identificação, orgulho. Reações, comparações, momentos com as gêmeas. Conecta diretamente com a audiência da Sabrina.</div>
+  </div>
+
+  <div class="pillar-block-full pb-full-2">
+    <div class="pb-num-big">2</div>
+    <div class="pb-title-big">🎙️ Idiomas & Aprendizado</div>
+    <div class="pb-sub-tag">Inglês · Português · Bilinguismo · Método · Fluência</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">Conteúdo de idiomas com o ângulo exclusivo de nativo americano que aprendeu português. Michael ensina inglês de um lugar que nenhuma professora brasileira pode ocupar: ele é o nativo. Ao mesmo tempo documenta sua própria jornada com o português, criando espelhamento com a audiência.</div>
+    <div class="pb-description">Tópicos incluem: como aprendeu português, hacks de inglês, maior erro dos brasileiros no speaking, como pensar em inglês, pronúncia e ritmo, rotina de idiomas, o método que funciona, inglês para situações reais.</div>
+    <div class="pb-tags-row"><span class="pb-tag-pill">Educational</span><span class="pb-tag-pill">Authority</span><span class="pb-tag-pill">Double Down</span><span class="pb-tag-pill">Posicionar</span><span class="pb-tag-pill">Nutrir</span></div>
+    <div class="pb-insight-box"><strong>Diferença Michael vs Sabrina:</strong> Ela ensina como aluna que virou professora. Ele ensina como nativo. São ângulos complementares, não competidores. Usa para enviar audiência ao @FluencyConnect.</div>
+  </div>
+
+  <div class="pillar-block-full pb-full-3">
+    <div class="pb-num-big">3</div>
+    <div class="pb-title-big">⚡ Tech · Lógica · Disciplina</div>
+    <div class="pb-sub-tag">Programação · Xadrez · Fitness · Produtividade · Mentalidade</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">O pilar que diferencia Michael de ser "só um gringo no Brasil". Mostra profundidade intelectual e disciplina pessoal: estudante de dev nos EUA, jogador de xadrez, atleta mantendo rotina como pai. Esse pilar atrai audiência masculina mais ampla e o posiciona como modelo de equilíbrio.</div>
+    <div class="pb-description">Tópicos incluem: jornada em programação, inglês para devs, xadrez como ferramenta mental, voltar a treinar com rotina cheia, disciplina com gêmeas, produtividade e hábitos, linguagens de programação, vida de dev nos EUA.</div>
+    <div class="pb-tags-row"><span class="pb-tag-pill">Storytelling</span><span class="pb-tag-pill">Educational</span><span class="pb-tag-pill">Authority</span><span class="pb-tag-pill">Atrair</span><span class="pb-tag-pill">Converter</span></div>
+    <div class="pb-insight-box"><strong>Estratégia:</strong> Atrai audiência de devs, entusiastas de produtividade e fitness. Xadrez e fitness funcionam como "proof of character" — alguém que pratica o que prega sobre disciplina.</div>
+  </div>
+</div>
+
+<!-- ═══════ METRICS PAGE ═══════ -->
+<div class="page" id="page-metrics">
+  <div class="section-title">Métricas de Performance</div>
+  <div class="section-desc">Logue os dados reais de cada post publicado. Aos 14 e 30 dias, os insights aparecem automaticamente.</div>
+
+  <div class="metrics-summary">
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-posts">0</div><div class="metric-kpi-label">Posts logados</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-views">—</div><div class="metric-kpi-label">Total de views</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-saves">—</div><div class="metric-kpi-label">Total de saves</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-shares">—</div><div class="metric-kpi-label">Total de shares</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-eng">—</div><div class="metric-kpi-label">Eng. médio</div><div class="metric-kpi-sub">(saves+shares)/views</div></div>
+  </div>
+
+  <div class="metrics-section-title">Checkpoints</div>
+  <div class="checkpoint-row">
+    <div class="checkpoint-card"><div class="ck-title">📍 Dia 14 <span class="ck-badge pending" id="ck14-badge">Pendente</span></div><div class="ck-desc" id="ck14-desc">Precisa de pelo menos 5 posts logados. <strong>O que analisar:</strong> Qual formato tem mais saves? Qual pilar tem mais shares? Qual horário gerou mais alcance?</div></div>
+    <div class="checkpoint-card"><div class="ck-title">🏁 Dia 30 <span class="ck-badge pending" id="ck30-badge">Pendente</span></div><div class="ck-desc" id="ck30-desc">Precisa de pelo menos 10 posts logados. <strong>O que decidir:</strong> Qual formato dobrar? Qual pilar pausar? Qual horário cortar?</div></div>
+  </div>
+
+  <div class="insight-strip" id="metrics-insight" style="display:none"></div>
+
+  <div class="metrics-section-title">Posts</div>
+  <div class="metrics-filters">
+    <button class="filter-btn active" onclick="setMetricFilter('all',this)">Todos</button>
+    <button class="filter-btn attract" onclick="setMetricFilter('attract',this)">Atrair</button>
+    <button class="filter-btn nurture" onclick="setMetricFilter('nurture',this)">Nutrir</button>
+    <button class="filter-btn position" onclick="setMetricFilter('position',this)">Posicionar</button>
+    <button class="filter-btn convert" onclick="setMetricFilter('convert',this)">Converter</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn p1" onclick="setMetricFilter('p1',this)">P1</button>
+    <button class="filter-btn p2" onclick="setMetricFilter('p2',this)">P2</button>
+    <button class="filter-btn p3" onclick="setMetricFilter('p3',this)">P3</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setMetricFilter('top',this)">⭐ Top performers</button>
+    <div style="margin-left:auto">
+      <button class="filter-btn" style="border-color:var(--green);color:var(--green)" onclick="openLogModal(null)">＋ Logar post</button>
+    </div>
+  </div>
+
+  <div class="bulk-save-bar" id="bulk-save-bar">
+    <span style="font-size:12px;color:var(--green);font-weight:700">💾 Alterações não salvas</span>
+    <button class="bulk-save-btn" onclick="commitInlineEdits()">Salvar tudo</button>
+    <button class="bulk-discard-btn" onclick="discardInlineEdits()">Descartar</button>
+  </div>
+
+  <div class="metrics-table-wrap">
+    <table class="metrics-table">
+      <thead><tr>
+        <th>Post / Tópico</th><th>Formato</th><th>Pilar</th><th>Data</th>
+        <th class="num">Views</th><th class="num">Saves</th><th class="num">Shares</th><th class="num">Coments.</th><th class="num">Eng%</th><th>Performance</th><th></th>
+      </tr></thead>
+      <tbody id="metrics-tbody"></tbody>
+    </table>
+  </div>
+  <div class="metrics-section-title">Performance por formato</div>
+  <div id="format-breakdown" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:24px"></div>
+  <div class="metrics-section-title">Performance por pilar</div>
+  <div id="pillar-breakdown" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px"></div>
+</div>
+
+<!-- ═══════ MODAL ═══════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-header-left">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="modal-title" id="modal-title"></div>
+        <span class="edited-badge" id="edited-badge" style="display:none">✏️ Editado</span>
+      </div>
+      <div class="modal-sub" id="modal-sub"></div>
+    </div>
+    <div class="modal-header-actions">
+      <button class="edit-toggle" id="edit-toggle-btn" onclick="toggleEditMode()">✏️ Editar</button>
+      <button class="del-topic-btn" onclick="deleteActiveTopic()">🗑</button>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+  </div>
+  <div class="modal-tabs" id="modal-tabs"></div>
+  <div class="modal-format-tabs" id="modal-format-tabs"></div>
+  <div class="modal-body" id="modal-body"></div>
+  <div class="modal-notes-bar" id="modal-notes-bar">
+    <div class="notes-lbl">🗒️ Notas de produção — locação, figurino, observações</div>
+    <textarea class="notes-inp" id="modal-notes" rows="2" placeholder="Ex: Gravar no quintal de manhã · Camisa preta · Usar subtítulos em PT..." onblur="saveNotes()"></textarea>
+  </div>
+  <div class="modal-dates-bar" id="modal-dates-bar">
+    <div class="date-group">
+      <span class="date-lbl">🎬 Gravação</span>
+      <input type="date" class="date-inp" id="date-rec" onchange="saveDateField('rec',this.value)">
+    </div>
+    <div class="date-group">
+      <span class="date-lbl">📅 Publicação</span>
+      <input type="date" class="date-inp" id="date-post" onchange="saveDateField('post',this.value)">
+    </div>
+    <button class="push-cal-btn" id="push-cal-btn" onclick="pushToCalendar()">📅 Enviar pro Calendário</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ ADD TOPIC MODAL ═══════ -->
+<div class="addtopic-ov" id="addtopic-ov" onclick="closeAddTopicOut(event)">
+<div class="addtopic-modal">
+  <div class="at-hdr">
+    <div class="at-title" id="at-hdr-title">+ Novo Tópico</div>
+    <button class="modal-close" onclick="closeAddTopic()">✕</button>
+  </div>
+  <div class="at-body">
+    <div class="at-row">
+      <div class="at-field"><div class="at-lbl">Pilar</div>
+        <select class="at-inp" id="at-pillar">
+          <option value="p1">🌎 P1 — Americano no Brasil</option>
+          <option value="p2">🎙️ P2 — Idiomas & Aprendizado</option>
+          <option value="p3">⚡ P3 — Tech · Lógica · Disciplina</option>
+        </select>
+      </div>
+      <div class="at-field"><div class="at-lbl">Tipo</div>
+        <select class="at-inp" id="at-tipo">
+          <option value="regular">Regular</option>
+          <option value="serie">Série</option>
+        </select>
+      </div>
+    </div>
+    <div class="at-field"><div class="at-lbl">Título do tópico</div><input type="text" class="at-inp" id="at-title" placeholder="Ex: Choques Culturais Inesperados"></div>
+    <div class="at-field"><div class="at-lbl">Subtítulo</div><input type="text" class="at-inp" id="at-sub" placeholder="Ex: O dia que descobri que o Brasil funciona com regras invisíveis"></div>
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">📝 Script — Reel (Storytelling)</div>
+    <div class="at-field"><div class="at-lbl">Hook</div><textarea class="at-inp" id="at-hook" rows="2" placeholder="Frase de abertura que para o scroll..."></textarea></div>
+    <div class="at-field"><div class="at-lbl">Script (linhas do roteiro)</div><textarea class="at-inp" id="at-script" rows="4" placeholder="Cada linha em ordem. Pressione Enter para separar linhas..."></textarea></div>
+    <div class="at-field"><div class="at-lbl">CTA</div><input type="text" class="at-inp" id="at-cta" placeholder="Ex: Segue pra ver mais choques culturais do gringo no Brasil."></div>
+  </div>
+  <div class="at-ftr">
+    <button class="at-cancel" onclick="closeAddTopic()">Cancelar</button>
+    <button class="at-save" onclick="saveNewTopic()">💾 Criar tópico</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ POST MODAL (Calendar) ═══════ -->
+<div class="post-modal-ov" id="post-modal-ov" onclick="closePostModalOut(event)">
+<div class="post-modal">
+  <div class="pm-header"><div class="pm-title" id="pm-title">Adicionar post</div><button class="modal-close" onclick="closePostModal()">✕</button></div>
+  <div class="pm-body">
+    <div class="pm-field"><div class="pm-lbl">Título / descrição</div><input type="text" class="pm-inp" id="pm-text" placeholder="Ex: Choques culturais — Reel Atrair"></div>
+    <div class="pm-row">
+      <div class="pm-field"><div class="pm-lbl">Formato</div>
+        <select class="pm-select" id="pm-format">
+          <option value="ST">ST — Storytelling</option><option value="CO">CO — Double Down</option>
+          <option value="AT">AT — Authority</option><option value="ED">ED — Educational</option>
+          <option value="SE">SE — Série</option><option value="CA">CA — Carrossel</option><option value="SO">SO — Story</option>
+        </select>
+      </div>
+      <div class="pm-field"><div class="pm-lbl">Objetivo</div>
+        <select class="pm-select" id="pm-goal">
+          <option value="attract">Atrair</option><option value="nurture">Nutrir</option>
+          <option value="position">Posicionar</option><option value="convert">Converter</option>
+        </select>
+      </div>
+    </div>
+    <div class="pm-field"><div class="pm-lbl">Plataforma</div>
+      <select class="pm-select" id="pm-platform"><option value="both">Instagram + TikTok</option><option value="ig">Só Instagram</option><option value="tt">Só TikTok</option></select>
+    </div>
+    <div class="pm-field"><div class="pm-lbl">Notas</div><input type="text" class="pm-inp" id="pm-notes" placeholder="Observações, hashtags..."></div>
+  </div>
+  <div class="pm-footer">
+    <button class="pm-del-btn" id="pm-del-btn" style="display:none" onclick="deletePost()">🗑 Apagar</button>
+    <button class="modal-close" onclick="closePostModal()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted2);padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;border-radius:7px;cursor:pointer;width:auto;height:auto;">Cancelar</button>
+    <button class="pm-save-btn" onclick="savePost()">💾 Salvar</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ LOG MODAL (Metrics) ═══════ -->
+<div class="log-modal-ov" id="log-modal-ov" onclick="closeLogModalOut(event)">
+<div class="log-modal">
+  <div class="log-modal-hdr">
+    <div><div class="log-modal-hdr-title" id="log-modal-title">Logar métricas</div><div class="log-modal-hdr-sub" id="log-modal-sub"></div></div>
+    <button class="modal-close" onclick="closeLogModal()">✕</button>
+  </div>
+  <div class="log-modal-body">
+    <div class="log-field"><div class="log-lbl">Título do post</div><input type="text" class="log-inp" id="log-title" placeholder="Ex: Choques culturais — Reel Atrair"></div>
+    <div class="log-grid">
+      <div class="log-field"><div class="log-lbl">Formato</div>
+        <select class="pm-select log-inp" id="log-format" style="font-size:13px">
+          <option value="ST">ST — Storytelling</option><option value="CO">CO — Double Down</option>
+          <option value="AT">AT — Authority</option><option value="ED">ED — Educational</option>
+          <option value="SE">SE — Série</option><option value="CA">CA — Carrossel</option><option value="SO">SO — Story</option>
+        </select>
+      </div>
+      <div class="log-field"><div class="log-lbl">Objetivo</div>
+        <select class="pm-select log-inp" id="log-goal" style="font-size:13px">
+          <option value="attract">Atrair</option><option value="nurture">Nutrir</option>
+          <option value="position">Posicionar</option><option value="convert">Converter</option>
+        </select>
+      </div>
+    </div>
+    <div class="log-grid">
+      <div class="log-field"><div class="log-lbl">Pilar</div>
+        <select class="pm-select log-inp" id="log-pillar" style="font-size:13px">
+          <option value="p1">P1 — Americano</option><option value="p2">P2 — Idiomas</option><option value="p3">P3 — Tech</option><option value="none">Sem pilar</option>
+        </select>
+      </div>
+      <div class="log-field"><div class="log-lbl">Data</div><input type="date" class="log-inp" id="log-date"></div>
+    </div>
+    <div class="log-grid">
+      <div class="log-field"><div class="log-lbl">👁 Views</div><input type="number" class="log-inp" id="log-views" placeholder="0" min="0"></div>
+      <div class="log-field"><div class="log-lbl">🔖 Saves</div><input type="number" class="log-inp" id="log-saves" placeholder="0" min="0"></div>
+      <div class="log-field"><div class="log-lbl">↗ Shares</div><input type="number" class="log-inp" id="log-shares" placeholder="0" min="0"></div>
+      <div class="log-field"><div class="log-lbl">💬 Comentários</div><input type="number" class="log-inp" id="log-comments" placeholder="0" min="0"></div>
+    </div>
+    <div class="log-field"><div class="log-lbl">📝 Observação</div><input type="text" class="log-inp" id="log-note" placeholder="O que funcionou? O que não funcionou?"></div>
+  </div>
+  <div class="log-modal-ftr">
+    <button class="log-del-btn" id="log-del-btn" style="display:none" onclick="deleteMetricEntry()">🗑 Apagar</button>
+    <button class="log-save-btn" onclick="saveLogEntry()">💾 Salvar</button>
+  </div>
+</div>
+</div>
+
+<div class="toast-wrap" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+const PILLAR_NAMES = { p1:'🌎 Americano no Brasil', p2:'🎙️ Idiomas & Aprendizado', p3:'⚡ Tech · Lógica · Disciplina' };
+const PILLAR_COLORS = { p1:'var(--p1)', p2:'var(--p2)', p3:'var(--p3)' };
+const JOB_LABELS = { attract:'ATRAIR', nurture:'NUTRIR', position:'POSICIONAR', convert:'CONVERTER' };
+const FORMAT_NAMES = { ST:'Storytelling', CO:'Double Down', AT:'Authority', ED:'Educational', SE:'Série', CA:'Carrossel', SO:'Story' };
+const FMTS = ['reel','carousel','story'];
+const FMT_LABELS = { reel:'🎬 Reel / Vídeo', carousel:'🖼 Carrossel', story:'⭕ Stories' };
+
+// ── TOPICS DATA ──────────────────────────────────────────
+// Each topic has: id, pillar, tipo, num, title, sub
+// versions: { attract:{reel,carousel,story}, nurture:..., position:..., convert:... }
+// Each version.reel/carousel/story: { format, lines:[{pt}], hook, cta }
+const DEFAULT_TOPICS = [
+// ── P1: AMERICANO NO BRASIL ──────────────────────────────
+{ id:1, pillar:'p1', tipo:'regular', num:1,
+  title:'Choques Culturais Inesperados',
+  sub:'O dia que descobri que o Brasil funciona com regras invisíveis',
+  versions:{
+    attract:{
+      reel:{ format:'ST', hook:'O dia em que percebi que o Brasil funciona com regras invisíveis…', lines:[
+        {pt:'Cheguei aqui achando que entendia tudo. Afinal, sou adulto, já viajei bastante.'},
+        {pt:'Fui ao mercado e a fila não era uma fila. Era um grupo esperando em silêncio. Com uma ordem que ninguém explicou.'},
+        {pt:'Aprendi: o Brasil tem um código social que os brasileiros conhecem desde bebê. Eu tive que aprender do zero.'}
+      ], cta:'Segue pra ver mais choques culturais do gringo no Brasil.'},
+      carousel:{ format:'CA', hook:'5 coisas que só fazem sentido no Brasil 🇧🇷', lines:[
+        {pt:'Slide 1 — Hook: "5 coisas que nenhum americano entende à primeira vista"'},
+        {pt:'Slide 2 — A fila que não é fila: tem uma ordem invisível que todo mundo respeita.'},
+        {pt:'Slide 3 — "Agora" pode ser daqui a 10 min, 1 hora ou amanhã.'},
+        {pt:'Slide 4 — "Dar um jeitinho" — a arte de resolver qualquer coisa criativamente.'},
+        {pt:'Slide 5 — O tchauzinho de festa que leva 40 minutos.'},
+        {pt:'Slide 6 — O churrasco de domingo que começa às 12h e termina às 22h.'},
+        {pt:'Slide 7 — Qual dessas você mais faz? 😂'},
+        {pt:'Slide 8 — CTA: Salva e manda pra alguém que é muito brasileiro! 🇧🇷'}
+      ], cta:'Salva e manda pro gringo da sua vida!'},
+      story:{ format:'SO', hook:'Me conta: qual a coisa mais brasileira que você faz sem perceber? 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Qual foi a coisa mais estranha que você fez hoje sem perceber? 👇"'},
+        {pt:'Frame 2 — Contexto: Brasileiros têm costumes incríveis que são completamente normais pra vocês…'},
+        {pt:'Frame 3 — Conteúdo: Mas pra um americano como eu, cada momento é uma descoberta nova.'},
+        {pt:'Frame 4 — Prova: Hoje eu [descreve uma situação do dia].'},
+        {pt:'Frame 5 — Pergunta: Você consegue imaginar como eu fiquei? 😅'},
+        {pt:'Frame 6 — CTA: Responde aqui 👇 qual é a coisa mais brasileira que você faz todo dia.'}
+      ], cta:'Responde aqui 👇'}
+    },
+    nurture:{
+      reel:{ format:'ED', hook:'3 expressões brasileiras que não têm tradução em inglês — e o que revelam.', lines:[
+        {pt:'"Jeitinho" = resolver criativamente. Não existe em inglês.'},
+        {pt:'"Saudade" = falta que dói. Nem "miss" nem "nostalgia" capturam.'},
+        {pt:'"Vai que é tua" = incentivo + empurrão + irresponsabilidade calculada.'},
+        {pt:'Cada idioma revela a alma de uma cultura. Por isso contexto cultural importa tanto no inglês.'}
+      ], cta:'Salva e me conta qual dessas você mais usa.'},
+      carousel:{ format:'CA', hook:'Por que a cultura importa mais que a gramática no inglês 🧠', lines:[
+        {pt:'Slide 1 — Hook: "Sua gramática está certa. Mas você ainda soa estranho. Por quê?"'},
+        {pt:'Slide 2 — Porque idioma não é só código — é cultura.'},
+        {pt:'Slide 3 — Americanos são diretos. Brasileiros são contextuais. Isso muda tudo.'},
+        {pt:'Slide 4 — Exemplo: "How are you?" não é pergunta. É cumprimento.'},
+        {pt:'Slide 5 — Resposta certa: "Good, thanks!" — não uma história de vida.'},
+        {pt:'Slide 6 — Aprender cultura americana acelera seu inglês mais que qualquer gramática.'},
+        {pt:'Slide 7 — Qual expressão em inglês te confundiu recentemente? 👇'},
+        {pt:'Slide 8 — CTA: Salva esse carrossel pra revisar antes da próxima conversa!'}
+      ], cta:'Salva pra usar na próxima conversa!'},
+      story:{ format:'SO', hook:'Qual parte da cultura americana mais te intriga? 🇺🇸 👇', lines:[
+        {pt:'Frame 1 — Gancho: [Enquete] Qual você tem mais vontade de entender: 🇺🇸 EUA ou 🇧🇷 BR?'},
+        {pt:'Frame 2 — Contexto: Vivo nos dois mundos há mais de 1 ano…'},
+        {pt:'Frame 3 — Conteúdo: E a maior diferença não é a língua. É o jeito de se relacionar.'},
+        {pt:'Frame 4 — Detalhe: Nos EUA: privacidade > comunidade. No Brasil: comunidade > privacidade.'},
+        {pt:'Frame 5 — Pergunta: Você prefere qual?'},
+        {pt:'Frame 6 — CTA: Me conta nos comentários do reel de hoje!'}
+      ], cta:'Me conta! 👇'}
+    },
+    position:{
+      reel:{ format:'AT', hook:'Como americano que vive no Brasil, estudei essas diferenças culturais. Elas fazem sentido.', lines:[
+        {pt:'O Brasil é uma sociedade de alta contextualização. Muito do que é dito está no que não é dito.'},
+        {pt:'Nos EUA é o oposto: somos diretos ao ponto. Você diz o que pensa.'},
+        {pt:'Isso afeta como brasileiros falam inglês — costumam ser indiretos demais, gerando mal-entendidos.'},
+        {pt:'Quando você entende a diferença cultural, o idioma faz muito mais sentido.'}
+      ], cta:'Me segue pra mais análises de cultura e idioma.'},
+      carousel:{ format:'CA', hook:'Brasil × EUA: 6 diferenças que impactam seu inglês 🌎', lines:[
+        {pt:'Slide 1 — Hook: "Por que brasileiros parecem frios em inglês? A resposta é cultural."'},
+        {pt:'Slide 2 — Diferença 1: Português é contextual. Inglês é direto.'},
+        {pt:'Slide 3 — Diferença 2: Saudação BR = convite pra conversa. EN = só protocolo.'},
+        {pt:'Slide 4 — Diferença 3: Brasileiro diz "não" indiretamente. Americano diz diretamente.'},
+        {pt:'Slide 5 — Diferença 4: Espaço pessoal diferente nas duas culturas.'},
+        {pt:'Slide 6 — Diferença 5: Tempo diferente — BR relacional, EUA cronológico.'},
+        {pt:'Slide 7 — Conhecer essas diferenças te faz soar mais natural em inglês.'},
+        {pt:'Slide 8 — CTA: Salva — vai mudar como você fala inglês com americanos!'}
+      ], cta:'Salva — vai mudar como você fala inglês!'},
+      story:{ format:'SO', hook:'Teste: você sabe como americanos realmente se cumprimentam? 👇', lines:[
+        {pt:'Frame 1 — Gancho: [Quiz] Como americano responde "How are you?" 🤔'},
+        {pt:'Frame 2 — A) Fine, thanks! B) Not bad! C) Pretty good! D) Todas estão certas'},
+        {pt:'Frame 3 — Resposta: Todas estão certas — mas cada uma tem um contexto.'},
+        {pt:'Frame 4 — "Pretty good" soa mais natural e casual. "Fine" soa um pouco formal.'},
+        {pt:'Frame 5 — Pequenos detalhes como esse separam quem estuda de quem parece nativo.'},
+        {pt:'Frame 6 — CTA: Me segue pra mais dicas de cultura americana do americano real 🇺🇸'}
+      ], cta:'Me segue! 🇺🇸'}
+    },
+    convert:{
+      reel:{ format:'CO', hook:'Aprendi português por imersão, sem curso. O mesmo método funciona pro inglês.', lines:[
+        {pt:'Todo mundo acha que aprender idiomas é sobre gramática. Não é.'},
+        {pt:'É sobre exposição, contexto e uso real. Fiz isso com o português e funciona.'},
+        {pt:'Brasileiros que entendem cultura americana falam inglês completamente diferente — mais natural, mais fluente.'},
+        {pt:'É exatamente isso que eu ensino no @FluencyConnect.'}
+      ], cta:'Me manda mensagem ou segue o @FluencyConnect.'},
+      carousel:{ format:'CA', hook:'Por que o inglês com contexto cultural é diferente de tudo que você já estudou', lines:[
+        {pt:'Slide 1 — Hook: "Você estuda inglês há anos e ainda sente que falta algo. Eu sei o que é."'},
+        {pt:'Slide 2 — Não é vocabulário. Não é gramática. É contexto cultural.'},
+        {pt:'Slide 3 — Aprendi português morando no Brasil. Vi o que acelera o aprendizado.'},
+        {pt:'Slide 4 — É a mesma coisa que ensinamos no Fluency Connect.'},
+        {pt:'Slide 5 — Não é inglês de livro. É inglês de americano nativo.'},
+        {pt:'Slide 6 — Com Michael como professor, você aprende como nativos realmente falam.'},
+        {pt:'Slide 7 — Resultado: fluência real, não desempenho de prova.'},
+        {pt:'Slide 8 — CTA: Segue o @FluencyConnect e conhece o método.'}
+      ], cta:'Segue o @FluencyConnect!'},
+      story:{ format:'SO', hook:'Você quer aprender inglês do jeito que um nativo ensina? 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Você quer aprender inglês de um americano real? Me responde aqui 👇"'},
+        {pt:'Frame 2 — Sou americano, vivo no Brasil, e ensino inglês com contexto cultural real.'},
+        {pt:'Frame 3 — Não é curso de gramática. É inglês que nativos usam no dia a dia.'},
+        {pt:'Frame 4 — Alunos que estudam com esse método avançam muito mais rápido.'},
+        {pt:'Frame 5 — Quer entrar? Link na bio ou manda "INGLÊS" aqui.'},
+        {pt:'Frame 6 — CTA: Arrasta pra cima e conhece o Fluency Connect!'}
+      ], cta:'Arrasta pra cima! 👆'}
+    }
+  }
+},
+// ── P2: IDIOMAS & APRENDIZADO ─────────────────────────────
+{ id:2, pillar:'p2', tipo:'regular', num:1,
+  title:'Como Aprendi Português Sozinho',
+  sub:'O dia em que comecei a pensar em português sem querer',
+  versions:{
+    attract:{
+      reel:{ format:'ST', hook:'O dia que percebi que estava pensando em português sem querer.', lines:[
+        {pt:'Estava no mercado. Olhei pro preço e pensei: "Isso tá caro." Em português. Sem traduzir.'},
+        {pt:'Voltei pra casa e contei pra minha esposa. Ela começou a chorar. Feliz.'},
+        {pt:'Esse momento não acontece do dia pra noite. Levou meses de imersão, vergonha e errar na frente dos outros.'},
+        {pt:'Mas quando acontece? É a melhor sensação do mundo.'}
+      ], cta:'Me conta: você já teve esse momento com o inglês?'},
+      carousel:{ format:'CA', hook:'Como aprendi português sem curso formal em 3 fases 🗣️', lines:[
+        {pt:'Slide 1 — Hook: "Aprendi português fluente sem curso. Aqui está como."'},
+        {pt:'Slide 2 — Fase 1 — Sobrevivência: frases essenciais pra me virar no dia a dia.'},
+        {pt:'Slide 3 — Fase 2 — Conexão: aprendi piadas, gírias e referências culturais.'},
+        {pt:'Slide 4 — Fase 3 — Fluência: parei de traduzir. Comecei a pensar diretamente.'},
+        {pt:'Slide 5 — O segredo: imersão forçada. Toda interação em português, mesmo errando.'},
+        {pt:'Slide 6 — O momento que sabia que tinha chegado: pensar em português no mercado sem querer.'},
+        {pt:'Slide 7 — Esse mesmo processo funciona pro seu inglês. 👇'},
+        {pt:'Slide 8 — CTA: Salva e aplica esse método ao inglês hoje!'}
+      ], cta:'Salva e aplica hoje!'},
+      story:{ format:'SO', hook:'Você já teve aquele momento em que pensou em inglês sem querer? 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Você já teve aquele momento em que pensou em inglês sem querer? 👇"'},
+        {pt:'Frame 2 — Esse é o sinal de que você chegou na fluência de verdade…'},
+        {pt:'Frame 3 — E ele não acontece com gramática. Acontece com imersão.'},
+        {pt:'Frame 4 — Tô preparando conteúdo sobre como chegar nesse ponto mais rápido.'},
+        {pt:'Frame 5 — Qual é seu maior bloqueio no inglês hoje?'},
+        {pt:'Frame 6 — CTA: Me responde aqui 👇 quero entender pra te ajudar melhor.'}
+      ], cta:'Me responde aqui 👇'}
+    },
+    nurture:{
+      reel:{ format:'ED', hook:'3 técnicas que usei todo dia pra virar fluente em português.', lines:[
+        {pt:'Técnica 1: Conversação forçada. Toda interação em português, mesmo errando.'},
+        {pt:'Técnica 2: Pensar em voz alta. Descrever o que via no caminho de casa.'},
+        {pt:'Técnica 3: Frases, não palavras. "Você pode me ajudar?" > só a palavra "ajudar".'}
+      ], cta:'Escolhe uma das 3 e aplica hoje.'},
+      carousel:{ format:'CA', hook:'3 técnicas de imersão que funcionam em qualquer idioma 🚀', lines:[
+        {pt:'Slide 1 — Hook: "3 técnicas de imersão que aprendi aprendendo português sozinho."'},
+        {pt:'Slide 2 — Técnica 1: Conversação forçada — só o idioma-alvo em cada interação.'},
+        {pt:'Slide 3 — Técnica 2: Pensar em voz alta — descreve o que vê no idioma novo.'},
+        {pt:'Slide 4 — Técnica 3: Aprende frases completas, não palavras isoladas.'},
+        {pt:'Slide 5 — Por que funciona: o cérebro aprende padrões, não vocabulário avulso.'},
+        {pt:'Slide 6 — Bônus: troca o idioma do celular pra inglês agora. É imersão passiva gratuita.'},
+        {pt:'Slide 7 — Qual das 3 você vai começar hoje? 👇'},
+        {pt:'Slide 8 — CTA: Salva e começa pela técnica 3 ainda hoje!'}
+      ], cta:'Salva e começa hoje!'},
+      story:{ format:'SO', hook:'Qual técnica de estudo você usa hoje? [Enquete] 👇', lines:[
+        {pt:'Frame 1 — Enquete: Como você estuda inglês? A) App B) Curso C) Séries D) Nenhum'},
+        {pt:'Frame 2 — Qualquer um desses pode funcionar — mas faltam as técnicas certas.'},
+        {pt:'Frame 3 — A técnica mais subestimada: falar em voz alta pra você mesmo.'},
+        {pt:'Frame 4 — 30 segundos descrevendo qualquer coisa em inglês. Todo dia.'},
+        {pt:'Frame 5 — Em 30 dias a diferença é impressionante.'},
+        {pt:'Frame 6 — CTA: Segue pra mais técnicas testadas que realmente funcionam!'}
+      ], cta:'Segue! 👇'}
+    },
+    position:{
+      reel:{ format:'AT', hook:'Como professor e bilíngue, o método exato que usei pra soar nativo em português.', lines:[
+        {pt:'Fase 1 — Sobrevivência: frases essenciais pro dia a dia.'},
+        {pt:'Fase 2 — Conexão: entender piadas, gírias, referências culturais.'},
+        {pt:'Fase 3 — Fluência: parar de traduzir e pensar diretamente no idioma.'},
+        {pt:'Esse mesmo processo funciona pro seu inglês. E é o que ensinamos no Fluency Connect.'}
+      ], cta:'Me segue pra aprender inglês com esse método.'},
+      carousel:{ format:'CA', hook:'O método de aprendizado de idiomas que realmente funciona (baseado em ciência) 🧠', lines:[
+        {pt:'Slide 1 — Hook: "Por que você estuda inglês há anos e ainda não flui?"'},
+        {pt:'Slide 2 — Não é falta de esforço. É método errado.'},
+        {pt:'Slide 3 — Método errado: gramática → vocabulário → falar. Resultado: trava.'},
+        {pt:'Slide 4 — Método certo: sobrevivência → conexão → fluência.'},
+        {pt:'Slide 5 — Aprendi português assim. Funciona em qualquer idioma.'},
+        {pt:'Slide 6 — A diferença: você aprende a usar o idioma, não a estudar sobre ele.'},
+        {pt:'Slide 7 — Esse método é o que ensinamos no Fluency Connect.'},
+        {pt:'Slide 8 — CTA: Segue o @FluencyConnect e conhece o método completo!'}
+      ], cta:'Segue o @FluencyConnect!'},
+      story:{ format:'SO', hook:'Você aprende melhor com teoria ou prática? [Enquete] 👇', lines:[
+        {pt:'Frame 1 — Enquete: Como você aprende melhor? A) Teoria B) Prática C) Os dois'},
+        {pt:'Frame 2 — Pesquisas mostram: prática ativa supera teoria em velocidade de aprendizado.'},
+        {pt:'Frame 3 — Mas a maioria dos cursos de inglês é 80% teoria, 20% prática.'},
+        {pt:'Frame 4 — No Fluency Connect é o oposto.'},
+        {pt:'Frame 5 — Por isso alunos de lá evoluem tão rápido.'},
+        {pt:'Frame 6 — CTA: Link na bio pra conhecer o método. 👆'}
+      ], cta:'Link na bio 👆'}
+    },
+    convert:{
+      reel:{ format:'CO', hook:'A maioria aprende idiomas estudando gramática. Eu aprendi português vivendo o idioma.', lines:[
+        {pt:'A diferença é enorme. Um te dá teoria. O outro te dá fluência.'},
+        {pt:'É esse jeito que ensinamos inglês no Fluency Connect — com situações reais, cultura, contexto.'},
+        {pt:'Não é inglês de livro. É inglês que nativos usam de verdade.'}
+      ], cta:'Link na bio pra começar. Ou manda mensagem.'},
+      carousel:{ format:'CA', hook:'Fluency Connect: inglês do jeito que nativos realmente falam', lines:[
+        {pt:'Slide 1 — Hook: "Cansado de estudar inglês e ainda travar na hora de falar?"'},
+        {pt:'Slide 2 — O problema: você sabe gramática mas não sabe usar.'},
+        {pt:'Slide 3 — A solução: inglês com contexto real de americano nativo.'},
+        {pt:'Slide 4 — Michael é americano. Viveu nos EUA. Ensina o inglês que nativos usam.'},
+        {pt:'Slide 5 — Alunos do Fluency Connect avançam mais rápido porque o método é certo.'},
+        {pt:'Slide 6 — Não é mais um curso de gramática.'},
+        {pt:'Slide 7 — É inglês cultural, contextual, com professor nativo.'},
+        {pt:'Slide 8 — CTA: Link na bio ou manda "INGLÊS" no direct agora!'}
+      ], cta:'Manda "INGLÊS" no direct!'},
+      story:{ format:'SO', hook:'Você quer começar no Fluency Connect? Me responde aqui 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Última vaga dessa turma. Me responde: você quer entrar? 👇"'},
+        {pt:'Frame 2 — O que você recebe: método testado + professor nativo + comunidade.'},
+        {pt:'Frame 3 — Sem gramática chata. Com inglês real de americano.'},
+        {pt:'Frame 4 — Já ajudei centenas de brasileiros a saírem do bloqueio.'},
+        {pt:'Frame 5 — Você pode ser o próximo.'},
+        {pt:'Frame 6 — CTA: Manda "INGLÊS" aqui agora e eu te mando os detalhes! 👇'}
+      ], cta:'Manda "INGLÊS" agora! 👇'}
+    }
+  }
+},
+{ id:3, pillar:'p2', tipo:'regular', num:2,
+  title:'O Maior Erro dos Brasileiros ao Falar Inglês',
+  sub:'Todo meu aluno tinha o mesmo bloqueio — e eu só percebi depois',
+  versions:{
+    attract:{
+      reel:{ format:'CO', hook:'Para de tentar traduzir enquanto fala inglês. Está te travando.', lines:[
+        {pt:'Todo mundo que trava no speaking faz a mesma coisa: tenta traduzir mentalmente antes de falar.'},
+        {pt:'Resultado: demora, hesita, esquece o que ia dizer, parece inseguro.'},
+        {pt:'O que nativos fazem: pensam e falam ao mesmo tempo. A prática oral diária é o que cria esse hábito.'}
+      ], cta:'Salva pra lembrar disso na próxima vez que for falar inglês.'},
+      carousel:{ format:'CA', hook:'O erro que trava 90% dos brasileiros no inglês 🚫', lines:[
+        {pt:'Slide 1 — Hook: "Por que você trava no inglês mesmo sabendo as palavras?"'},
+        {pt:'Slide 2 — O problema: você está tentando traduzir em tempo real.'},
+        {pt:'Slide 3 — Isso cria um delay entre o pensamento e a fala.'},
+        {pt:'Slide 4 — Que parece trava, hesitação, insegurança.'},
+        {pt:'Slide 5 — A solução: prática oral diária que corta esse caminho.'},
+        {pt:'Slide 6 — 30 segundos descrevendo qualquer objeto em inglês. Todo dia.'},
+        {pt:'Slide 7 — Em 30 dias o delay some. Testado com centenas de alunos.'},
+        {pt:'Slide 8 — CTA: Salva e começa o exercício hoje!'}
+      ], cta:'Salva e começa hoje!'},
+      story:{ format:'SO', hook:'Você trava mais no speaking ou na escrita? [Enquete] 👇', lines:[
+        {pt:'Frame 1 — Enquete: Onde você trava mais em inglês? A) Speaking B) Escrita C) Os dois'},
+        {pt:'Frame 2 — Se você votou Speaking: você não está sozinho. 80% dos brasileiros têm esse bloqueio.'},
+        {pt:'Frame 3 — E a causa não é falta de vocabulário. É falta de prática oral.'},
+        {pt:'Frame 4 — Tô postando um exercício de 30 segundos amanhã que resolve isso.'},
+        {pt:'Frame 5 — Ativa as notificações pra não perder.'},
+        {pt:'Frame 6 — CTA: Me segue e ativa o sino! 🔔'}
+      ], cta:'Me segue e ativa o sino! 🔔'}
+    },
+    nurture:{
+      reel:{ format:'ED', hook:'Exercício de 30 segundos pra destravar o speaking hoje.', lines:[
+        {pt:'Pega um objeto qualquer. Descreve ele em inglês em voz alta por 30 segundos.'},
+        {pt:'"This is a cup. It is blue. I use it every morning. I drink coffee from it."'},
+        {pt:'Não para. Não pensa muito. Só fala o que vier.'},
+        {pt:'Trinta segundos por dia. Em 30 dias o bloqueio diminui visivelmente.'}
+      ], cta:'Testa agora e me manda o que você descreveu.'},
+      carousel:{ format:'CA', hook:'5 exercícios de speaking pra fazer em casa (sem precisar de professor) 🏠', lines:[
+        {pt:'Slide 1 — Hook: "5 exercícios de speaking que você faz sozinho em casa. Sem professor."'},
+        {pt:'Slide 2 — Exercício 1: Descreve objetos em inglês por 30 segundos.'},
+        {pt:'Slide 3 — Exercício 2: Shadowing — repete o que ouve imediatamente.'},
+        {pt:'Slide 4 — Exercício 3: Narra sua rotina em voz alta enquanto faz as coisas.'},
+        {pt:'Slide 5 — Exercício 4: Responde perguntas em voz alta (tô gravando uma lista pra vocês).'},
+        {pt:'Slide 6 — Exercício 5: Grava um áudio de 1 minuto falando sobre qualquer tema.'},
+        {pt:'Slide 7 — Faz um por dia. Em 5 dias você já sente a diferença.'},
+        {pt:'Slide 8 — CTA: Salva esse carrossel e começa pelo exercício 1 agora!'}
+      ], cta:'Salva e começa agora!'},
+      story:{ format:'SO', hook:'Vou fazer um challenge de speaking. Você entra? 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Challenge: 7 dias de speaking em 30 segundos por dia. Você entra? 👇"'},
+        {pt:'Frame 2 — Todo dia eu posto um objeto ou tema pra você descrever em inglês.'},
+        {pt:'Frame 3 — Você grava um áudio de 30 segundos e manda pra mim.'},
+        {pt:'Frame 4 — Eu dou feedback nos melhores.'},
+        {pt:'Frame 5 — Simples. Gratuito. Funciona.'},
+        {pt:'Frame 6 — CTA: Manda "SIM" aqui pra começar amanhã! 👇'}
+      ], cta:'Manda "SIM" aqui! 👇'}
+    },
+    position:{
+      reel:{ format:'AT', hook:'Como professor, explico por que o bloqueio de speaking acontece com brasileiros.', lines:[
+        {pt:'O cérebro bilíngue tem duas redes neurais. No início, não estão bem conectadas.'},
+        {pt:'Cada vez que você tenta falar inglês, o cérebro vai buscar no português primeiro. Isso cria o delay.'},
+        {pt:'A solução não é estudar mais gramática. É criar uma rota direta entre pensamento e inglês — com prática oral constante.'}
+      ], cta:'Me segue pra mais ciência do aprendizado de idiomas.'},
+      carousel:{ format:'CA', hook:'A neurociência por trás do bloqueio de speaking (e como resolver) 🧠', lines:[
+        {pt:'Slide 1 — Hook: "O bloqueio de speaking tem uma causa neurológica. E tem solução."'},
+        {pt:'Slide 2 — O cérebro bilíngue opera em duas redes separadas.'},
+        {pt:'Slide 3 — No início, a rede do inglês é fraca e acessa a do português primeiro.'},
+        {pt:'Slide 4 — Isso gera o delay que parece trava — mas é só latência neural.'},
+        {pt:'Slide 5 — A solução: prática que fortalece a rede do inglês diretamente.'},
+        {pt:'Slide 6 — Isso se faz com output oral, não com gramática ou leitura.'},
+        {pt:'Slide 7 — É exatamente o que ensinamos no Fluency Connect.'},
+        {pt:'Slide 8 — CTA: Salva e segue pra aprender mais sobre isso!'}
+      ], cta:'Salva e segue!'},
+      story:{ format:'SO', hook:'Sabia que o bloqueio de speaking é neurológico, não de vocabulário? 🧠', lines:[
+        {pt:'Frame 1 — Gancho: "O bloqueio de speaking tem uma causa neurológica. Eu explico."'},
+        {pt:'Frame 2 — Não é falta de palavras. É falta de rota direta entre pensamento e fala.'},
+        {pt:'Frame 3 — Essa rota se constrói com prática oral. Não com estudo.'},
+        {pt:'Frame 4 — No Fluency Connect trabalhamos isso desde a primeira aula.'},
+        {pt:'Frame 5 — Quer saber mais sobre como funciona?'},
+        {pt:'Frame 6 — CTA: Me manda "NEURO" aqui e eu te mando um conteúdo especial sobre isso!'}
+      ], cta:'Manda "NEURO" aqui! 👇'}
+    },
+    convert:{
+      reel:{ format:'CO', hook:'A maioria dos cursos treina gramática. Deviam treinar o desbloqueio.', lines:[
+        {pt:'Porque o problema de quem trava no speaking não é gramática — é o acesso rápido ao que já sabe.'},
+        {pt:'No Fluency Connect trabalhamos exatamente isso: desbloqueio de speaking desde a primeira aula.'},
+        {pt:'Resultado: alunos que falavam inglês "no papel" começam a usar de verdade.'}
+      ], cta:'Link na bio pra conhecer o método. Ou manda "INGLÊS" no direct.'},
+      carousel:{ format:'CA', hook:'Por que o Fluency Connect funciona quando outros métodos falharam', lines:[
+        {pt:'Slide 1 — Hook: "Você já tentou vários métodos e ainda não flui. Por quê?"'},
+        {pt:'Slide 2 — Porque a maioria dos cursos ignora o maior bloqueio: o speaking.'},
+        {pt:'Slide 3 — No Fluency Connect o foco é diferente: output desde o dia 1.'},
+        {pt:'Slide 4 — Você fala antes de estar "pronto". Porque esperar "estar pronto" é o erro.'},
+        {pt:'Slide 5 — Michael, professor nativo, te dá feedback real de como você soa.'},
+        {pt:'Slide 6 — Não é motivação. É método. E método tem resultado mensurável.'},
+        {pt:'Slide 7 — Centenas de brasileiros já saíram do bloqueio com esse método.'},
+        {pt:'Slide 8 — CTA: Você pode ser o próximo. Link na bio!'}
+      ], cta:'Link na bio!'},
+      story:{ format:'SO', hook:'Já tentou aprender inglês e trava sempre? Tenho uma solução. 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Você trava no inglês há anos? Tenho algo específico pra você. 👇"'},
+        {pt:'Frame 2 — Não é mais um curso de gramática.'},
+        {pt:'Frame 3 — É um método de desbloqueio de speaking com professor nativo.'},
+        {pt:'Frame 4 — Feito especificamente pra quem sabe inglês mas não consegue falar.'},
+        {pt:'Frame 5 — Próxima turma abrindo em breve.'},
+        {pt:'Frame 6 — CTA: Manda "BLOQUEIO" aqui pra garantir sua vaga! 👇'}
+      ], cta:'Manda "BLOQUEIO" aqui! 👇'}
+    }
+  }
+},
+// ── P3: TECH · LÓGICA · DISCIPLINA ──────────────────────
+{ id:4, pillar:'p3', tipo:'regular', num:1,
+  title:'Minha Jornada Estudando Programação',
+  sub:'Eu quase desisti da programação no primeiro semestre',
+  versions:{
+    attract:{
+      reel:{ format:'ST', hook:'Quase desisti da programação no primeiro semestre.', lines:[
+        {pt:'Estava no college. Primeira aula de C++. O professor escreveu código no quadro. Não entendi uma linha.'},
+        {pt:'Pensei: não sou feito pra isso. Quase mudei de curso.'},
+        {pt:'O que me fez continuar: um aluno mais velho disse "todo mundo sente isso. A diferença é quem fica."'},
+        {pt:'Fiquei. E hoje sou programador. Se você está passando por isso: não desiste.'}
+      ], cta:'Me conta: você já pensou em desistir? O que te fez continuar?'},
+      carousel:{ format:'CA', hook:'3 erros que todo dev iniciante comete (e como evitar) 💻', lines:[
+        {pt:'Slide 1 — Hook: "Comecei a programar e cometi esses 3 erros. Você pode evitar."'},
+        {pt:'Slide 2 — Erro 1: querer entender tudo antes de praticar. Programação se aprende fazendo.'},
+        {pt:'Slide 3 — Erro 2: copiar código sem entender cada linha.'},
+        {pt:'Slide 4 — Erro 3: pular etapas da sequência lógica.'},
+        {pt:'Slide 5 — O que funciona: 1 projeto pequeno por semana. Sem tutorial. Do zero.'},
+        {pt:'Slide 6 — Empresa contrata quem mostra o que sabe fazer. Portfólio > certificado.'},
+        {pt:'Slide 7 — Você está em qual fase agora? Me conta 👇'},
+        {pt:'Slide 8 — CTA: Salva e evita esses erros desde o início!'}
+      ], cta:'Salva e evita esses erros!'},
+      story:{ format:'SO', hook:'Devs iniciantes: qual é o maior obstáculo que vocês enfrentam? 👇', lines:[
+        {pt:'Frame 1 — Enquete: Maior obstáculo no aprendizado de programação? A) Lógica B) Linguagem C) Tempo D) Inglês'},
+        {pt:'Frame 2 — Baseado na resposta, vou direcionar o próximo conteúdo…'},
+        {pt:'Frame 3 — O maior obstáculo que vejo: estudar sem construir. Cursos sem fim.'},
+        {pt:'Frame 4 — Projeto pequeno por semana > 10 cursos sem terminar.'},
+        {pt:'Frame 5 — Qual você votou?'},
+        {pt:'Frame 6 — CTA: Me responde aqui e eu te mando um dica específica 👇'}
+      ], cta:'Me responde aqui! 👇'}
+    },
+    nurture:{
+      reel:{ format:'ED', hook:'3 erros que eu cometi quando comecei a programar.', lines:[
+        {pt:'Erro 1: querer entender tudo antes de praticar. Programação é como nadar. Você aprende fazendo.'},
+        {pt:'Erro 2: copiar código sem entender. Copiar é ok — mas você tem que dissecar cada linha depois.'},
+        {pt:'Erro 3: estudar em sequência linear sem projetos práticos.'}
+      ], cta:'Salva e evita esses erros desde o início.'},
+      carousel:{ format:'CA', hook:'Como montar um portfólio de dev do zero (mesmo sendo iniciante) 📁', lines:[
+        {pt:'Slide 1 — Hook: "Empresa não contrata CV. Contrata portfólio. Aqui como montar o seu."'},
+        {pt:'Slide 2 — Passo 1: define 3 projetos pequenos que resolvem problemas reais.'},
+        {pt:'Slide 3 — Passo 2: constrói cada um do zero. Sem tutorial passo a passo.'},
+        {pt:'Slide 4 — Passo 3: documenta no GitHub com README em inglês.'},
+        {pt:'Slide 5 — Passo 4: coloca no LinkedIn e no seu site pessoal.'},
+        {pt:'Slide 6 — Passo 5: apresenta pro recrutador com 2 frases de impacto.'},
+        {pt:'Slide 7 — 3 projetos reais > 10 cursos com certificado.'},
+        {pt:'Slide 8 — CTA: Salva e define seus 3 projetos ainda hoje!'}
+      ], cta:'Salva e define seus projetos hoje!'},
+      story:{ format:'SO', hook:'Você está construindo projetos ou só assistindo cursos? [Enquete] 👇', lines:[
+        {pt:'Frame 1 — Enquete: Como você aprende programação? A) Cursos B) Projetos C) Os dois D) Perdido'},
+        {pt:'Frame 2 — Se você votou Cursos: cuidado. Curso sem projeto = teoria sem aplicação.'},
+        {pt:'Frame 3 — A fórmula que funciona: 1 hora de curso → 2 horas de projeto.'},
+        {pt:'Frame 4 — Projeto pode ser pequeno. Calculadora, lista de tarefas, qualquer coisa.'},
+        {pt:'Frame 5 — O importante é construir, não só consumir.'},
+        {pt:'Frame 6 — CTA: Me conta seu próximo projeto aqui 👇'}
+      ], cta:'Me conta seu projeto! 👇'}
+    },
+    position:{
+      reel:{ format:'AT', hook:'A verdade sobre estudar dev nos EUA — expectativa vs realidade.', lines:[
+        {pt:'Expectativa: sair do college pronto pro mercado. Realidade: o mercado exige muito mais que o currículo.'},
+        {pt:'O diploma abre a porta. O que você construiu por fora fecha o contrato.'},
+        {pt:'O inglês técnico fluente é o que separa quem fica no mercado local de quem acessa vagas globais.'}
+      ], cta:'Me segue pra mais verdades sobre carreira em tech.'},
+      carousel:{ format:'CA', hook:'Dev nos EUA vs Brasil: o que ninguém te conta ⚡', lines:[
+        {pt:'Slide 1 — Hook: "Estudei dev nos EUA. Aqui está o que ninguém te conta."'},
+        {pt:'Slide 2 — EUA: o college ensina fundamentos. Frameworks modernos você aprende por fora.'},
+        {pt:'Slide 3 — EUA: entrevistas técnicas são intensas. Leetcode, system design, inglês técnico.'},
+        {pt:'Slide 4 — Brasil: mercado crescendo mas ainda limitado pra quem não tem inglês.'},
+        {pt:'Slide 5 — Internacional: inglês + portfólio + GitHub = acesso a salários 3–10x maiores.'},
+        {pt:'Slide 6 — O que diferencia: inglês técnico fluente. Não é diferencial. É filtro.'},
+        {pt:'Slide 7 — Onde você quer chegar em 2 anos?'},
+        {pt:'Slide 8 — CTA: Salva pra não esquecer essa realidade!'}
+      ], cta:'Salva essa realidade!'},
+      story:{ format:'SO', hook:'Você sabe inglês técnico ou inglês geral? Tem diferença. 👇', lines:[
+        {pt:'Frame 1 — Enquete: Seu inglês técnico está em qual nível? A) Básico B) Funcional C) Fluente D) Que inglês?'},
+        {pt:'Frame 2 — Inglês geral e inglês técnico são habilidades distintas.'},
+        {pt:'Frame 3 — Para entrevistas técnicas, você precisa de inglês específico.'},
+        {pt:'Frame 4 — "Tell me about a time you had a conflict with a teammate." Você sabe responder?'},
+        {pt:'Frame 5 — Tô preparando um conteúdo específico sobre inglês técnico pra devs.'},
+        {pt:'Frame 6 — CTA: Manda "DEVS" aqui pra receber quando sair! 👇'}
+      ], cta:'Manda "DEVS" aqui! 👇'}
+    },
+    convert:{
+      reel:{ format:'CO', hook:'O que mais me ajudou a avançar em tech não foi um curso. Foi o inglês.', lines:[
+        {pt:'Toda documentação, Stack Overflow, GitHub, reuniões internacionais — inglês.'},
+        {pt:'Quem domina inglês técnico tem acesso ao mercado global. Quem não domina fica no local.'},
+        {pt:'Eu te ensino inglês com foco em tech no Fluency Connect.'}
+      ], cta:'Link na bio pra saber mais.'},
+      carousel:{ format:'CA', hook:'Por que inglês é o investimento mais importante que um dev pode fazer 💡', lines:[
+        {pt:'Slide 1 — Hook: "Inglês não é diferencial pra devs. É pré-requisito."'},
+        {pt:'Slide 2 — Stack Overflow: inglês. GitHub: inglês. Docs: inglês. Reuniões internacionais: inglês.'},
+        {pt:'Slide 3 — Salário dev local: R$ 4–10k. Salário dev internacional: R$ 15–40k.'},
+        {pt:'Slide 4 — A diferença? Inglês técnico fluente.'},
+        {pt:'Slide 5 — No Fluency Connect ensinamos inglês com foco em tech.'},
+        {pt:'Slide 6 — Vocabulário técnico, entrevistas, comunicação em times internacionais.'},
+        {pt:'Slide 7 — Desenvolvido por professor nativo que estudou tech nos EUA.'},
+        {pt:'Slide 8 — CTA: Link na bio pra entrar na próxima turma!'}
+      ], cta:'Link na bio!'},
+      story:{ format:'SO', hook:'Dev: inglês está te segurando? Tenho algo específico pra você. 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Você é dev mas o inglês te segura? Isso é mais comum que você pensa. 👇"'},
+        {pt:'Frame 2 — Já trabalhei com devs que são excelentes tecnicamente mas não crescem por causa do inglês.'},
+        {pt:'Frame 3 — No Fluency Connect temos uma trilha específica pra devs.'},
+        {pt:'Frame 4 — Vocabulário técnico + entrevistas + comunicação em times remotos.'},
+        {pt:'Frame 5 — Com Michael como professor — americano que estudou tech nos EUA.'},
+        {pt:'Frame 6 — CTA: Manda "TECH" aqui e te mando os detalhes da trilha! 👇'}
+      ], cta:'Manda "TECH" aqui! 👇'}
+    }
+  }
+},
+{ id:5, pillar:'p3', tipo:'regular', num:2,
+  title:'Xadrez como Ferramenta Mental',
+  sub:'O que xadrez, programação e inglês têm em comum',
+  versions:{
+    attract:{
+      reel:{ format:'ST', hook:'O xadrez me ensinou mais sobre programação do que qualquer curso.', lines:[
+        {pt:'No xadrez você analisa o estado atual, prevê consequências, planeja movimentos à frente.'},
+        {pt:'Na programação você faz exatamente isso. Analisar, prever, escolher a melhor solução.'},
+        {pt:'Joguei xadrez por anos sem saber que estava treinando minha mente pra programar.'}
+      ], cta:'Você joga xadrez? Me conta nos comentários.'},
+      carousel:{ format:'CA', hook:'Por que todo dev deveria aprender xadrez ♟️', lines:[
+        {pt:'Slide 1 — Hook: "Xadrez me deixou um dev melhor. Sem exagero."'},
+        {pt:'Slide 2 — O que xadrez treina: análise de estado atual, previsão de consequências.'},
+        {pt:'Slide 3 — O que programação exige: análise de problema, previsão de comportamento.'},
+        {pt:'Slide 4 — Xadrez também treina: foco prolongado, paciência, regulação emocional.'},
+        {pt:'Slide 5 — Essas são as habilidades que diferenciam um dev mediano de um excelente.'},
+        {pt:'Slide 6 — Bônus: chess.com é gratuito. Sem desculpa pra não começar.'},
+        {pt:'Slide 7 — Você joga xadrez? Me conta 👇'},
+        {pt:'Slide 8 — CTA: Salva e começa uma partida hoje!'}
+      ], cta:'Salva e começa hoje!'},
+      story:{ format:'SO', hook:'Você joga xadrez? [Enquete] 👇', lines:[
+        {pt:'Frame 1 — Enquete: Você joga xadrez? A) Sim frequentemente B) Às vezes C) Aprendi mas parei D) Nunca'},
+        {pt:'Frame 2 — Interessante: a maioria dos devs que conheço joga ou jogou xadrez.'},
+        {pt:'Frame 3 — Não é coincidência. As habilidades cognitivas se transferem.'},
+        {pt:'Frame 4 — Raciocínio lógico, análise de padrões, planejamento — xadrez e programação usam o mesmo músculo mental.'},
+        {pt:'Frame 5 — Tô postando um reel sobre isso amanhã. Vai valer a pena ver.'},
+        {pt:'Frame 6 — CTA: Me segue pra não perder! 🔔'}
+      ], cta:'Me segue! 🔔'}
+    },
+    nurture:{
+      reel:{ format:'ED', hook:'3 princípios do xadrez que se aplicam à programação e à vida.', lines:[
+        {pt:'1. Controle do centro: foca no essencial, não na periferia.'},
+        {pt:'2. Desenvolve antes de atacar: prepara seus recursos antes de executar.'},
+        {pt:'3. Pensa antes de agir: cada decisão tem consequências.'}
+      ], cta:'Salva e aplica o princípio do xadrez hoje.'},
+      carousel:{ format:'CA', hook:'5 lições do xadrez que melhoram seu código (e sua vida) ♟️💻', lines:[
+        {pt:'Slide 1 — Hook: "5 lições que o xadrez me ensinou sobre programação."'},
+        {pt:'Slide 2 — Lição 1: Controle o centro — priorize o que é essencial.'},
+        {pt:'Slide 3 — Lição 2: Desenvolva antes de atacar — prepare antes de executar.'},
+        {pt:'Slide 4 — Lição 3: Pense 3 movimentos à frente — preveja consequências no código.'},
+        {pt:'Slide 5 — Lição 4: Saiba quando sacrificar — às vezes refatorar agora vale o custo.'},
+        {pt:'Slide 6 — Lição 5: Aprenda com as derrotas — cada bug é uma lição.'},
+        {pt:'Slide 7 — Qual dessas você mais usa no seu trabalho? 👇'},
+        {pt:'Slide 8 — CTA: Salva e aplica uma dessas lições hoje!'}
+      ], cta:'Salva e aplica hoje!'},
+      story:{ format:'SO', hook:'Teste de raciocínio lógico rápido 🧩 👇', lines:[
+        {pt:'Frame 1 — Gancho: "Teste de raciocínio lógico em 5 segundos. Você consegue? 👇"'},
+        {pt:'Frame 2 — [Problema simples de xadrez ou lógica]'},
+        {pt:'Frame 3 — Resposta: [solução]'},
+        {pt:'Frame 4 — Raciocínio lógico se treina. Xadrez é uma das melhores formas.'},
+        {pt:'Frame 5 — E esse mesmo raciocínio se aplica a programação, idiomas e decisões diárias.'},
+        {pt:'Frame 6 — CTA: Me conta quanto tempo levou pra resolver! 👇'}
+      ], cta:'Me conta! 👇'}
+    },
+    position:{
+      reel:{ format:'AT', hook:'Como o xadrez desenvolve habilidades cognitivas que se transferem pra tech.', lines:[
+        {pt:'Memória de trabalho: no xadrez você mantém várias sequências na cabeça ao mesmo tempo.'},
+        {pt:'Raciocínio condicional: "se eu faço X, ele faz Y, então eu faço Z." É o que programadores fazem.'},
+        {pt:'Regulação emocional: aprender a perder sem se desintegrar. Habilidade escassa e valiosa.'}
+      ], cta:'Me segue pra mais sobre desenvolvimento cognitivo e tech.'},
+      carousel:{ format:'CA', hook:'A ciência por trás de jogar xadrez e escrever código melhor 🧠', lines:[
+        {pt:'Slide 1 — Hook: "Por que jogadores de xadrez se tornam programmers melhores? Tem ciência."'},
+        {pt:'Slide 2 — Memória de trabalho: xadrez treina manter múltiplos cenários em mente simultaneamente.'},
+        {pt:'Slide 3 — Programação exige o mesmo: variáveis de estado, fluxos, edge cases.'},
+        {pt:'Slide 4 — Raciocínio condicional: if-then-else é estrutura do xadrez e do código.'},
+        {pt:'Slide 5 — Regulação emocional: não entra em pânico quando algo quebra em produção.'},
+        {pt:'Slide 6 — Estudos mostram: crianças que jogam xadrez têm melhor desempenho em matemática.'},
+        {pt:'Slide 7 — As habilidades são as mesmas. O contexto é diferente.'},
+        {pt:'Slide 8 — CTA: Salva e joga uma partida hoje!'}
+      ], cta:'Salva e joga hoje!'},
+      story:{ format:'SO', hook:'Sabia que xadrez e programação usam o mesmo músculo mental? 🧠', lines:[
+        {pt:'Frame 1 — Gancho: "Xadrez e programação usam o mesmo músculo mental. Explico."'},
+        {pt:'Frame 2 — Os dois exigem: análise, previsão, raciocínio condicional e paciência.'},
+        {pt:'Frame 3 — Não é coincidência que tantos devs jogam ou jogaram xadrez.'},
+        {pt:'Frame 4 — Tô postando um carrossel sobre isso amanhã com a ciência por trás.'},
+        {pt:'Frame 5 — Vai ser bom. Prometo.'},
+        {pt:'Frame 6 — CTA: Me segue pra não perder! 🔔'}
+      ], cta:'Me segue! 🔔'}
+    },
+    convert:{
+      reel:{ format:'CO', hook:'Xadrez, inglês e programação têm um denominador comum: método e prática deliberada.', lines:[
+        {pt:'Não é talento. É sistema. Os três exigem paciência, consistência e aprendizado estruturado.'},
+        {pt:'É com essa mentalidade que ensinamos inglês no Fluency Connect.'},
+        {pt:'Método claro. Prática constante. Progresso real.'}
+      ], cta:'Link na bio pra conhecer o método.'},
+      carousel:{ format:'CA', hook:'O que xadrez me ensinou sobre aprender inglês rápido ♟️🗣️', lines:[
+        {pt:'Slide 1 — Hook: "Aprendo xadrez e inglês da mesma forma. Aqui como."'},
+        {pt:'Slide 2 — Os dois requerem prática deliberada, não prática casual.'},
+        {pt:'Slide 3 — Prática deliberada: foco em pontos fracos específicos. Não na zona de conforto.'},
+        {pt:'Slide 4 — No xadrez: estuda aberturas, táticas e finais separadamente.'},
+        {pt:'Slide 5 — No inglês: trabalha speaking, pronúncia e vocabulário separadamente.'},
+        {pt:'Slide 6 — Resultado: progresso muito mais rápido do que estudar aleatoriamente.'},
+        {pt:'Slide 7 — No Fluency Connect usamos esse princípio em cada aula.'},
+        {pt:'Slide 8 — CTA: Link na bio pra conhecer o método!'}
+      ], cta:'Link na bio!'},
+      story:{ format:'SO', hook:'Qual das 3 você quer melhorar: xadrez, inglês ou programação? 👇', lines:[
+        {pt:'Frame 1 — Enquete: O que você quer dominar em 2025? A) Inglês B) Programação C) Xadrez D) Os 3'},
+        {pt:'Frame 2 — Se você votou Inglês: tenho um método específico pra te ajudar.'},
+        {pt:'Frame 3 — Fluency Connect: inglês de americano nativo, com método de prática deliberada.'},
+        {pt:'Frame 4 — Não é mais um curso. É um sistema que funciona.'},
+        {pt:'Frame 5 — Próxima turma abrindo em breve.'},
+        {pt:'Frame 6 — CTA: Manda "MÉTODO" aqui pra eu te enviar os detalhes! 👇'}
+      ], cta:'Manda "MÉTODO" aqui! 👇'}
+    }
+  }
+}
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let TOPICS = JSON.parse(localStorage.getItem('mic_topics_v4') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TOPICS));
+let recorded = JSON.parse(localStorage.getItem('mic_rec_v4') || '{}');  // { topicId_version_fmt: bool }
+let dates    = JSON.parse(localStorage.getItem('mic_dates_v4') || '{}'); // { topicId_version_fmt: {rec,post} }
+let notes    = JSON.parse(localStorage.getItem('mic_notes_v4') || '{}'); // { topicId: string }
+let calPosts = JSON.parse(localStorage.getItem('mic_cal_v4') || '{}');
+let edits    = JSON.parse(localStorage.getItem('mic_edits_v4') || '{}');
+let metricsLog = JSON.parse(localStorage.getItem('mic_metrics_v4') || '[]');
+
+let filterState = { pillar:'all', type:null, fmt:null, status:null };
+let calState    = { year: new Date().getFullYear(), month: new Date().getMonth(), editingId:null, editingDay:null };
+let activeModalTopic = null;
+let activeModalVersion = 'attract';
+let activeModalFormat  = 'reel';
+let editMode = false;
+let metricFilter = 'all';
+let pendingInlineEdits = {};
+let editingLogId = null;
+
+function saveTopics()   { localStorage.setItem('mic_topics_v4', JSON.stringify(TOPICS)); }
+function saveRecorded() { localStorage.setItem('mic_rec_v4', JSON.stringify(recorded)); }
+function saveDates()    { localStorage.setItem('mic_dates_v4', JSON.stringify(dates)); }
+function saveNotesSt()  { localStorage.setItem('mic_notes_v4', JSON.stringify(notes)); }
+function saveCalPosts() { localStorage.setItem('mic_cal_v4', JSON.stringify(calPosts)); }
+function saveEdits()    { localStorage.setItem('mic_edits_v4', JSON.stringify(edits)); }
+function saveMetrics()  { localStorage.setItem('mic_metrics_v4', JSON.stringify(metricsLog)); }
+
+function recKey(topicId, version, fmt) { return `${topicId}_${version}_${fmt}`; }
+function dateKey(topicId, version, fmt) { return `${topicId}_${version}_${fmt}`; }
+function calPostKey(y,m) { return `${y}-${String(m+1).padStart(2,'0')}`; }
+function getPostsForMonth(y,m) { return calPosts[calPostKey(y,m)] || []; }
+function getPostsForDay(y,m,d) { return getPostsForMonth(y,m).filter(p=>p.day===d); }
+
+function isRecorded(topicId, version, fmt) { return !!recorded[recKey(topicId,version,fmt)]; }
+function toggleRecorded(topicId, version, fmt) {
+  const k = recKey(topicId,version,fmt);
+  recorded[k] = !recorded[k];
+  saveRecorded();
+  renderGrid();
+  updatePillarProgress();
+  updateHeaderCount();
+}
+
+function topicRecordedCount(t) {
+  let n=0;
+  ['attract','nurture','position','convert'].forEach(v => FMTS.forEach(f => { if(isRecorded(t.id,v,f)) n++; }));
+  return n;
+}
+
+function getTopicData(t) {
+  const e = edits[t.id] || {};
+  return { ...t, title: e.title!==undefined?e.title:t.title, sub: e.sub!==undefined?e.sub:t.sub };
+}
+
+function isTopicEdited(id) { return !!(edits[id] && Object.keys(edits[id]).length > 0); }
+
+function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PAGE NAV
+// ═══════════════════════════════════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='calendar'){renderCalendar();buildMonthJump();}
+  if(id==='guide')renderGuide();
+  if(id==='metrics')renderMetrics();
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILTERS + GRID
+// ═══════════════════════════════════════════════════════════
+function setFilter(key, value) {
+  if(key==='pillar'){filterState={pillar:value,type:null,fmt:null,status:null};}
+  else if(key==='type'){filterState={pillar:'all',type:filterState.type===value?null:value,fmt:null,status:null};}
+  else if(key==='fmt'){filterState={pillar:'all',type:null,fmt:filterState.fmt===value?null:value,status:null};}
+  else if(key==='status'){filterState={pillar:'all',type:null,fmt:null,status:filterState.status===value?null:value};}
+  updateFilterBtns();
+  renderGrid();
+}
+
+function updateFilterBtns() {
+  document.querySelectorAll('.filters .filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const oc = btn.getAttribute('onclick')||'';
+    if(oc.includes("'pillar','all'") && filterState.pillar==='all'&&!filterState.type&&!filterState.fmt&&!filterState.status) btn.classList.add('active');
+    ['p1','p2','p3'].forEach(p=>{ if(oc.includes(`'pillar','${p}'`) && filterState.pillar===p) btn.classList.add('active'); });
+    ['attract','nurture','position','convert'].forEach(t=>{ if(oc.includes(`'type','${t}'`) && filterState.type===t) btn.classList.add('active'); });
+    ['reel','carousel','story'].forEach(f=>{ if(oc.includes(`'fmt','${f}'`) && filterState.fmt===f) btn.classList.add('active'); });
+    if(oc.includes("'status','pending'") && filterState.status==='pending') btn.classList.add('active');
+    if(oc.includes("'status','done'") && filterState.status==='done') btn.classList.add('active');
+  });
+}
+
+function getFilteredCards() {
+  const cards=[];
+  TOPICS.forEach(t=>{
+    if(filterState.pillar!=='all'&&t.pillar!==filterState.pillar) return;
+    const fmtList = filterState.fmt ? [filterState.fmt] : FMTS;
+    const verList = filterState.type ? [filterState.type] : ['attract','nurture','position','convert'];
+    verList.forEach(v=>{
+      fmtList.forEach(f=>{
+        const ver = t.versions[v];
+        if(!ver||!ver[f]) return;
+        const done = isRecorded(t.id,v,f);
+        if(filterState.status==='done'&&!done) return;
+        if(filterState.status==='pending'&&done) return;
+        cards.push({t,v,f,done});
+      });
+    });
+  });
+  return cards;
+}
+
+function renderGrid() {
+  const cards = getFilteredCards();
+  const totalCards = TOPICS.length * 4 * 3;
+  const recCards = TOPICS.reduce((a,t)=>a+topicRecordedCount(t),0);
+
+  document.getElementById('stats-bar').innerHTML=`
+    <div class="stat-item"><strong>${TOPICS.length}</strong>tópicos</div>
+    <div class="stat-item"><strong>${cards.length}</strong>cards visíveis</div>
+    <div class="stat-item"><strong>${recCards}</strong>gravados</div>
+    <div class="stat-item"><strong>${totalCards-recCards}</strong>pendentes</div>
+    <div class="stat-item"><strong>${Math.round(recCards/totalCards*100)}%</strong>completo</div>`;
+
+  if(!cards.length){
+    document.getElementById('video-grid').innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Nenhum card encontrado com esses filtros.</div>';
+    return;
+  }
+  document.getElementById('video-grid').innerHTML = cards.map(({t,v,f,done})=>{
+    const td = getTopicData(t);
+    const pc = PILLAR_COLORS[t.pillar];
+    const ver = t.versions[v];
+    const sc  = ver[f];
+    const dk = dateKey(t.id,v,f);
+    const dd = dates[dk]||{};
+    const dateInfo = (dd.rec?`<span class="card-date-tag">🎬 ${dd.rec}</span>`:'')+
+                     (dd.post?`<span class="card-date-tag">📅 ${dd.post}</span>`:'');
+    return `<div class="video-card ${done?'done':''}" onclick="openModal(${t.id},'${v}','${f}')">
+      ${done?'<div class="done-check">✓</div>':''}
+      <div class="card-top">
+        <div class="card-num" style="color:${pc}">${String(t.id).padStart(2,'0')}</div>
+        <div class="card-badges">
+          <span class="badge badge-${f}">${FMT_LABELS[f]}</span>
+          <span class="badge badge-${v}">${JOB_LABELS[v]}</span>
+          <span class="badge badge-fmt">• ${sc.format}</span>
+        </div>
+      </div>
+      <div class="card-title">${escH(td.title)}</div>
+      <div class="card-sub">${escH(td.sub)}</div>
+      ${done?'<div class="card-rec-label">✅ Gravado</div>':''}
+      ${isTopicEdited(t.id)?'<div class="card-rec-label" style="color:#e8a060">✏️ Editado</div>':''}
+      ${dateInfo?`<div class="card-dates-row">${dateInfo}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function updatePillarProgress() {
+  ['p1','p2','p3'].forEach(p=>{
+    const pts = TOPICS.filter(t=>t.pillar===p);
+    const total = pts.length * 4 * 3;
+    const done  = pts.reduce((a,t)=>a+topicRecordedCount(t),0);
+    const pct   = total?Math.round(done/total*100):0;
+    const bar = document.getElementById('prog-'+p);
+    if(bar) bar.style.width=pct+'%';
+    const cnt = document.getElementById('count-'+p);
+    if(cnt) cnt.textContent=`${pts.length} tópicos · ${done}/${total} gravados`;
+  });
+  const allT = TOPICS.length;
+  document.getElementById('count-all').textContent=`${allT} tópicos`;
+  updateHeaderCount();
+}
+
+function updateHeaderCount() {
+  const total = TOPICS.reduce((a,t)=>a+topicRecordedCount(t),0);
+  document.getElementById('hdr-rec-count').textContent = total;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════
+function openModal(topicId, version, fmt) {
+  const t = TOPICS.find(x=>x.id===topicId);
+  if(!t) return;
+  activeModalTopic = t;
+  activeModalVersion = version;
+  activeModalFormat  = fmt;
+  editMode = false;
+  const btn = document.getElementById('edit-toggle-btn');
+  if(btn){btn.classList.remove('active');btn.textContent='✏️ Editar';}
+  const td = getTopicData(t);
+  document.getElementById('modal-title').textContent = td.title;
+  document.getElementById('modal-sub').textContent   = td.sub;
+  document.getElementById('edited-badge').style.display = isTopicEdited(t.id)?'inline-block':'none';
+  // Job tabs
+  document.getElementById('modal-tabs').innerHTML =
+    ['attract','nurture','position','convert'].map(v=>
+      `<button class="modal-tab ${v===version?'active':''}" onclick="switchModalTab('${v}')">${JOB_LABELS[v]}</button>`
+    ).join('');
+  renderFormatTabs();
+  renderModalBody(t, version, fmt);
+  loadDatesBar(t.id, version, fmt);
+  loadNotesBar(t.id);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function switchModalTab(version) {
+  activeModalVersion = version;
+  activeModalFormat  = 'reel';
+  editMode=false;
+  const btn=document.getElementById('edit-toggle-btn');
+  if(btn){btn.classList.remove('active');btn.textContent='✏️ Editar';}
+  document.querySelectorAll('.modal-tab').forEach(t=>{
+    t.classList.toggle('active', t.textContent===JOB_LABELS[version]);
+  });
+  renderFormatTabs();
+  renderModalBody(activeModalTopic, version, 'reel');
+  loadDatesBar(activeModalTopic.id, version, 'reel');
+}
+
+function switchFormatTab(fmt) {
+  activeModalFormat = fmt;
+  editMode=false;
+  const btn=document.getElementById('edit-toggle-btn');
+  if(btn){btn.classList.remove('active');btn.textContent='✏️ Editar';}
+  renderFormatTabs();
+  renderModalBody(activeModalTopic, activeModalVersion, fmt);
+  loadDatesBar(activeModalTopic.id, activeModalVersion, fmt);
+}
+
+function renderFormatTabs() {
+  document.getElementById('modal-format-tabs').innerHTML =
+    [{k:'reel',l:'🎬 Reel / Vídeo'},{k:'carousel',l:'🖼 Carrossel'},{k:'story',l:'⭕ Stories'}].map(f=>
+      `<button class="modal-fmt-tab fmt-${f.k} ${f.k===activeModalFormat?'active':''}" onclick="switchFormatTab('${f.k}')">${f.l}</button>`
+    ).join('');
+}
+
+function renderModalBody(t, version, fmt) {
+  const td   = getTopicData(t);
+  const ver  = t.versions[version];
+  if(!ver||!ver[fmt]) return;
+  const sc   = ver[fmt];
+  const done = isRecorded(t.id, version, fmt);
+  const ek   = `${t.id}_${version}_${fmt}`;
+  const ev   = (edits[ek])||{};
+  const hook = ev.hook!==undefined ? ev.hook : sc.hook;
+  const lines = sc.lines.map((l,i)=>({...l, pt: ev.lines&&ev.lines[i]!==undefined?ev.lines[i]:l.pt}));
+  const cta  = ev.cta!==undefined ? ev.cta : sc.cta;
+
+  const fmtColors={reel:'var(--green)',carousel:'#e0a030',story:'#5b8dee'};
+  const fmtColor = fmtColors[fmt];
+
+  if(editMode){
+    document.getElementById('modal-body').innerHTML=`
+      <div class="edit-field-group"><div class="edit-label">Título do tópico</div><textarea class="editable-field title-field" id="edit-title" rows="2">${escH(td.title)}</textarea></div>
+      <div class="edit-field-group"><div class="edit-label">Subtítulo</div><textarea class="editable-field" id="edit-sub" rows="2">${escH(td.sub)}</textarea></div>
+      <div class="edit-field-group"><div class="edit-label" style="color:${fmtColor}">🪝 Hook</div><textarea class="editable-field" id="edit-hook" rows="3">${escH(hook)}</textarea></div>
+      <div class="edit-label" style="margin-bottom:6px">Linhas do script</div>
+      ${lines.map((l,i)=>`
+        <div class="edit-field-group">
+          <div class="edit-label" style="color:#5b8dee;margin-bottom:4px">🎙️ Michael — Linha ${i+1}</div>
+          <textarea class="editable-field" id="edit-line-${i}" rows="3">${escH(l.pt)}</textarea>
+        </div>`).join('')}
+      <div class="edit-field-group"><div class="edit-label">📣 CTA</div><textarea class="editable-field" id="edit-cta" rows="2">${escH(cta)}</textarea></div>
+      <button class="save-edits-btn" onclick="saveModalEdits(${t.id},'${version}','${fmt}',${lines.length})">💾 Salvar alterações</button>
+      ${isTopicEdited(t.id)?`<button class="reset-edits-btn" onclick="resetTopicEdits(${t.id})">🗑 Restaurar originais deste tópico</button>`:''}`;
+  } else {
+    document.getElementById('modal-body').innerHTML=`
+      <div class="script-meta">
+        <span class="badge badge-${version}">${JOB_LABELS[version]}</span>
+        <span class="badge badge-${fmt}">${FMT_LABELS[fmt]}</span>
+        <span class="badge badge-fmt">• ${sc.format} — ${FORMAT_NAMES[sc.format]||sc.format}</span>
+        ${isTopicEdited(t.id)?'<span class="edited-badge">✏️ Editado</span>':''}
+      </div>
+      <div class="hook-box"><div class="hook-label">Hook</div>${escH(hook)}</div>
+      <div class="script-section">
+        <div class="script-section-label">Script — ${FMT_LABELS[fmt]}</div>
+        ${lines.map(l=>`<div class="script-line"><div class="line-speaker">🎙️ Michael</div><div class="line-pt">${escH(l.pt)}</div></div>`).join('')}
+      </div>
+      <div class="cta-box"><div class="cta-label">Call to Action</div>${escH(cta)}</div>
+      <button class="record-btn ${done?'recorded':''}" onclick="toggleRecBtn(${t.id},'${version}','${fmt}')">
+        ${done?'✅ Marcado como gravado — clique para desmarcar':'🔴 Marcar como gravado'}
+      </button>
+      <button style="width:100%;margin-top:6px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .2s"
+        onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'"
+        onclick="openLogModal(null,'${version}','${fmt}')">📊 Logar métricas deste post</button>`;
+  }
+}
+
+function toggleRecBtn(topicId, version, fmt) {
+  toggleRecorded(topicId, version, fmt);
+  renderModalBody(TOPICS.find(t=>t.id===topicId), version, fmt);
+}
+
+function toggleEditMode() {
+  editMode = !editMode;
+  const btn = document.getElementById('edit-toggle-btn');
+  btn.classList.toggle('active', editMode);
+  btn.textContent = editMode ? '👁 Ver Script' : '✏️ Editar';
+  renderModalBody(activeModalTopic, activeModalVersion, activeModalFormat);
+}
+
+function saveModalEdits(topicId, version, fmt, lineCount) {
+  const title = document.getElementById('edit-title')?.value.trim();
+  const sub   = document.getElementById('edit-sub')?.value.trim();
+  const hook  = document.getElementById('edit-hook')?.value.trim();
+  const cta   = document.getElementById('edit-cta')?.value.trim();
+  if(!edits[topicId]) edits[topicId]={};
+  if(title!==undefined) edits[topicId].title=title;
+  if(sub!==undefined)   edits[topicId].sub=sub;
+  const ek=`${topicId}_${version}_${fmt}`;
+  if(!edits[ek]) edits[ek]={};
+  if(hook!==undefined) edits[ek].hook=hook;
+  if(cta!==undefined)  edits[ek].cta=cta;
+  const lines=[];
+  for(let i=0;i<lineCount;i++){
+    const el=document.getElementById(`edit-line-${i}`);
+    lines.push(el?el.value.trim():'');
+  }
+  edits[ek].lines=lines;
+  saveEdits();
+  document.getElementById('edited-badge').style.display='inline-block';
+  const btn=document.querySelector('.save-edits-btn');
+  if(btn){btn.textContent='✅ Salvo!';btn.style.background='#17a07f';setTimeout(()=>{btn.textContent='💾 Salvar alterações';btn.style.background='';},1600);}
+  renderGrid();
+  updatePillarProgress();
+}
+
+function resetTopicEdits(topicId) {
+  if(!confirm('Restaurar todos os originais deste tópico?')) return;
+  // Remove all edit keys for this topic
+  Object.keys(edits).filter(k=>k==topicId||k.startsWith(topicId+'_')).forEach(k=>delete edits[k]);
+  saveEdits();
+  renderModalBody(activeModalTopic, activeModalVersion, activeModalFormat);
+  renderGrid();
+}
+
+function closeModal(e) { if(e.target===document.getElementById('modal-overlay')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+function deleteActiveTopic() {
+  if(!activeModalTopic) return;
+  if(!confirm(`Deletar "${getTopicData(activeModalTopic).title}"? Isso não pode ser desfeito.`)) return;
+  TOPICS = TOPICS.filter(t=>t.id!==activeModalTopic.id);
+  saveTopics();
+  closeModalDirect();
+  renderGrid();
+  updatePillarProgress();
+  showToast('🗑 Tópico deletado.');
+}
+
+// ── Dates ──
+function loadDatesBar(topicId, version, fmt) {
+  const d = dates[dateKey(topicId,version,fmt)]||{};
+  const r = document.getElementById('date-rec');
+  const p = document.getElementById('date-post');
+  if(r) r.value = d.rec||'';
+  if(p) p.value = d.post||'';
+  updatePushBtn(topicId, version, fmt);
+}
+
+function saveDateField(field, value) {
+  if(!activeModalTopic) return;
+  const k = dateKey(activeModalTopic.id, activeModalVersion, activeModalFormat);
+  if(!dates[k]) dates[k]={};
+  dates[k][field] = value;
+  saveDates();
+  updatePushBtn(activeModalTopic.id, activeModalVersion, activeModalFormat);
+  renderGrid();
+}
+
+function updatePushBtn(topicId, version, fmt) {
+  const btn = document.getElementById('push-cal-btn');
+  if(!btn) return;
+  const k   = dateKey(topicId,version,fmt);
+  const d   = dates[k]||{};
+  const already = d.post && getPostsForMonth(calState.year, calState.month).some(p=>p.topicId===topicId&&p.versionKey===`${version}_${fmt}`);
+  btn.textContent = already ? `✅ No Calendário` : (d.post ? `📅 Agendar para ${d.post}` : '📅 Enviar pro Calendário');
+  btn.className = 'push-cal-btn' + (already?' pushed':'');
+}
+
+function pushToCalendar() {
+  if(!activeModalTopic) return;
+  const k = dateKey(activeModalTopic.id, activeModalVersion, activeModalFormat);
+  const d = dates[k]||{};
+  if(!d.post){
+    const el=document.getElementById('date-post');
+    if(el){el.focus();el.style.borderColor='#e05252';setTimeout(()=>el.style.borderColor='',1500);}
+    return;
+  }
+  const [y,m,day]=d.post.split('-').map(Number);
+  const mKey = calPostKey(y,m-1);
+  if(!calPosts[mKey]) calPosts[mKey]=[];
+  const already=calPosts[mKey].some(p=>p.topicId===activeModalTopic.id&&p.versionKey===`${activeModalVersion}_${activeModalFormat}`);
+  if(already) return;
+  const fmtLabel={reel:'Reel',carousel:'Carrossel',story:'Story'}[activeModalFormat];
+  calPosts[mKey].push({
+    id:'p'+Date.now(), topicId:activeModalTopic.id,
+    versionKey:`${activeModalVersion}_${activeModalFormat}`,
+    day, text:getTopicData(activeModalTopic).title,
+    format:activeModalFormat==='carousel'?'CA':activeModalFormat==='story'?'SO':'ST',
+    goal:activeModalVersion, platform:'both', notes:fmtLabel
+  });
+  saveCalPosts();
+  updatePushBtn(activeModalTopic.id, activeModalVersion, activeModalFormat);
+  showToast('📅 Adicionado ao calendário!');
+}
+
+// ── Notes ──
+function loadNotesBar(topicId) {
+  const el = document.getElementById('modal-notes');
+  if(el) el.value = notes[topicId]||'';
+}
+
+function saveNotes() {
+  if(!activeModalTopic) return;
+  const el = document.getElementById('modal-notes');
+  if(el){ notes[activeModalTopic.id]=el.value; saveNotesSt(); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ADD TOPIC
+// ═══════════════════════════════════════════════════════════
+function openAddTopic() {
+  document.getElementById('at-title').value='';
+  document.getElementById('at-sub').value='';
+  document.getElementById('at-hook').value='';
+  document.getElementById('at-script').value='';
+  document.getElementById('at-cta').value='';
+  document.getElementById('addtopic-ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeAddTopic() {
+  document.getElementById('addtopic-ov').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function closeAddTopicOut(e) { if(e.target===document.getElementById('addtopic-ov')) closeAddTopic(); }
+
+function saveNewTopic() {
+  const title = document.getElementById('at-title').value.trim();
+  const sub   = document.getElementById('at-sub').value.trim();
+  const hook  = document.getElementById('at-hook').value.trim();
+  const script= document.getElementById('at-script').value.trim();
+  const cta   = document.getElementById('at-cta').value.trim();
+  const pillar= document.getElementById('at-pillar').value;
+  const tipo  = document.getElementById('at-tipo').value;
+  if(!title){document.getElementById('at-title').focus();return;}
+  const lines = script ? script.split('\n').filter(l=>l.trim()).map(l=>({pt:l.trim()})) : [{pt:''}];
+  const newId = TOPICS.length ? Math.max(...TOPICS.map(t=>t.id))+1 : 1;
+  const pNum  = TOPICS.filter(t=>t.pillar===pillar).length+1;
+  const makeVer = (fmt) => ({ format: fmt==='reel'?'ST':fmt==='carousel'?'CA':'SO', hook:hook||'Hook a ser escrito.', lines:[...lines], cta:cta||'CTA a ser definido.' });
+  const makeJob = () => ({ reel:makeVer('reel'), carousel:makeVer('carousel'), story:makeVer('story') });
+  TOPICS.push({ id:newId, pillar, tipo, num:pNum, title, sub: sub||'',
+    versions:{ attract:makeJob(), nurture:makeJob(), position:makeJob(), convert:makeJob() }
+  });
+  saveTopics();
+  closeAddTopic();
+  renderGrid();
+  updatePillarProgress();
+  showToast('✅ Tópico criado!');
+}
+
+// ═══════════════════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════════════════
+function buildMonthJump() {
+  const sel=document.getElementById('cal-month-jump');
+  if(!sel) return;
+  const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const now=new Date(); let opts='';
+  for(let d=-3;d<=12;d++){
+    const dt=new Date(now.getFullYear(),now.getMonth()+d,1);
+    const y=dt.getFullYear(),m=dt.getMonth();
+    const cur=y===calState.year&&m===calState.month;
+    opts+=`<option value="${y}-${m}" ${cur?'selected':''}>${months[m]} ${y}</option>`;
+  }
+  sel.innerHTML=opts;
+}
+
+function jumpMonth(val){const[y,m]=val.split('-').map(Number);calState.year=y;calState.month=m;renderCalendar();buildMonthJump();}
+function changeMonth(d){const dt=new Date(calState.year,calState.month+d,1);calState.year=dt.getFullYear();calState.month=dt.getMonth();renderCalendar();buildMonthJump();}
+function goToday(){const n=new Date();calState.year=n.getFullYear();calState.month=n.getMonth();renderCalendar();buildMonthJump();}
+
+function renderCalendar() {
+  const {year,month}=calState;
+  const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('cal-month-title').textContent=`${months[month]} ${year}`;
+  const today=new Date();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const daysInPrev=new Date(year,month,0).getDate();
+  const dows=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-cell other-month"><div class="cal-day-num">${daysInPrev-firstDay+1+i}</div></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+    const posts=getPostsForDay(year,month,d);
+    // Also show dates from topics
+    const topicDates=[];
+    TOPICS.forEach(t=>{
+      ['attract','nurture','position','convert'].forEach(v=>FMTS.forEach(f=>{
+        const dk=dateKey(t.id,v,f);
+        const dd=dates[dk]||{};
+        const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        if(dd.rec===ds) topicDates.push({type:'rec',t,v,f});
+        if(dd.post===ds&&!posts.some(p=>p.topicId===t.id&&p.versionKey===`${v}_${f}`)) topicDates.push({type:'post',t,v,f});
+      }));
+    });
+    const allEvents=[...topicDates,...posts.map(p=>({type:'calpost',p}))];
+    const evHtml = allEvents.slice(0,3).map(e=>{
+      if(e.type==='rec') return `<div class="cal-post fmt-story" title="🎬 Gravação: ${escH(getTopicData(e.t).title)}">🎬 ${escH(getTopicData(e.t).title.substring(0,16))}</div>`;
+      if(e.type==='post') return `<div class="cal-post fmt-${e.f}" title="📅 Post: ${escH(getTopicData(e.t).title)}">📅 ${FMT_LABELS[e.f].split(' ')[0]} ${escH(getTopicData(e.t).title.substring(0,14))}</div>`;
+      return `<div class="cal-post fmt-${e.p.format==='CA'?'carousel':e.p.format==='SO'?'story':'reel'}" onclick="openEditPost(event,'${e.p.id}',${d})" title="${escH(e.p.text)}">${escH((e.p.notes||'')+' '+e.p.text).substring(0,22)}</div>`;
+    }).join('');
+    const more = allEvents.length>3?`<div class="cal-more">+${allEvents.length-3} mais</div>`:'';
+    html+=`<div class="cal-cell ${isToday?'today':''}" onclick="openAddPost(event,${d})">${'<div class="cal-day-num">'+d+'</div>'}${evHtml}${more}</div>`;
+  }
+  const trailing=(7-(firstDay+daysInMonth)%7)%7;
+  for(let i=1;i<=trailing;i++) html+=`<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
+  document.getElementById('cal-grid').innerHTML=html;
+}
+
+function openAddPost(e,day){
+  if(e.target.classList.contains('cal-post')||e.target.classList.contains('cal-more')) return;
+  calState.editingId=null;calState.editingDay=day;
+  document.getElementById('pm-title').textContent=`Adicionar post — dia ${day}`;
+  document.getElementById('pm-text').value='';
+  document.getElementById('pm-notes').value='';
+  document.getElementById('pm-format').value='ST';
+  document.getElementById('pm-goal').value='attract';
+  document.getElementById('pm-del-btn').style.display='none';
+  document.getElementById('post-modal-ov').classList.add('open');
+}
+
+function openEditPost(e,postId,day){
+  e.stopPropagation();
+  const posts=getPostsForMonth(calState.year,calState.month);
+  const post=posts.find(p=>p.id===postId);
+  if(!post) return;
+  calState.editingId=postId;calState.editingDay=day;
+  document.getElementById('pm-title').textContent=`Editar post — dia ${day}`;
+  document.getElementById('pm-text').value=post.text;
+  document.getElementById('pm-format').value=post.format||'ST';
+  document.getElementById('pm-goal').value=post.goal||'attract';
+  document.getElementById('pm-platform').value=post.platform||'both';
+  document.getElementById('pm-notes').value=post.notes||'';
+  document.getElementById('pm-del-btn').style.display='block';
+  document.getElementById('post-modal-ov').classList.add('open');
+}
+
+function closePostModal(){document.getElementById('post-modal-ov').classList.remove('open');}
+function closePostModalOut(e){if(e.target===document.getElementById('post-modal-ov'))closePostModal();}
+
+function savePost(){
+  const text=document.getElementById('pm-text').value.trim();
+  if(!text){document.getElementById('pm-text').focus();return;}
+  const k=calPostKey(calState.year,calState.month);
+  if(!calPosts[k]) calPosts[k]=[];
+  const data={text,format:document.getElementById('pm-format').value,goal:document.getElementById('pm-goal').value,platform:document.getElementById('pm-platform').value,notes:document.getElementById('pm-notes').value.trim(),day:calState.editingDay};
+  if(calState.editingId){const idx=calPosts[k].findIndex(p=>p.id===calState.editingId);if(idx>=0)calPosts[k][idx]={...calPosts[k][idx],...data};}
+  else{data.id='p'+Date.now();calPosts[k].push(data);}
+  saveCalPosts();closePostModal();renderCalendar();
+}
+
+function deletePost(){
+  if(!calState.editingId) return;
+  if(!confirm('Apagar este post do calendário?')) return;
+  const k=calPostKey(calState.year,calState.month);
+  calPosts[k]=(calPosts[k]||[]).filter(p=>p.id!==calState.editingId);
+  saveCalPosts();closePostModal();renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════
+// GUIDE
+// ═══════════════════════════════════════════════════════════
+const GUIDE_DATA=[
+  {key:'ST',cls:'gc-ST',color:'var(--green)',name:'Storytelling',goal:'Atrair / Nutrir',
+    steps:[{l:'Hook',d:'Frase que prende em 3 segundos'},{l:'Stakes',d:'O que estava em jogo?'},{l:'Clímax',d:'O momento de virada'},{l:'Lição',d:'O que você aprendeu'},{l:'CTA',d:'Segue / salva / comenta'}],
+    ex:{Hook:'"O dia que quase desisti da programação no primeiro semestre."',Stakes:'"Primeira aula de C++. Quadro cheio de código. Não entendi nada."',Clímax:'"Um aluno mais velho disse: a diferença é quem fica."',Lição:'"Fiquei. E hoje sou programador."',CTA:'"Me conta: você já pensou em desistir?"'}
+  },
+  {key:'CO',cls:'gc-CO',color:'#e0a030',name:'Double Down',goal:'Atrair',
+    steps:[{l:'Hook',d:'Contradiz uma crença popular'},{l:'Crença comum',d:'O que todo mundo acredita'},{l:'Contradição',d:'O que é diferente'},{l:'Explicação',d:'Por que você está certo'},{l:'CTA',d:'Salva / comenta'}],
+    ex:{Hook:'"Para de tentar traduzir enquanto fala inglês."',Crença:'"Todo mundo acha que precisa traduzir mentalmente."',Contradição:'"Isso cria um delay que trava o speaking."',Explicação:'"Nativos pensam e falam ao mesmo tempo. Prática oral cria esse hábito."',CTA:'"Salva — vai lembrar disso na próxima conversa."'}
+  },
+  {key:'AT',cls:'gc-AT',color:'var(--position)',name:'Authority',goal:'Posicionar',
+    steps:[{l:'Hook',d:'Credencial ou observação única'},{l:'Experiência',d:'O que você viveu'},{l:'Observação',d:'O que você viu nos outros'},{l:'Insight',d:'Conclusão não-óbvia'},{l:'CTA',d:'Me segue / link na bio'}],
+    ex:{Hook:'"Como americano que aprendeu português no Brasil, eu vejo isso claramente."',Experiência:'"Aprendi português em imersão total. Sem curso."',Observação:'"O que acelera o aprendizado é sempre a mesma coisa: prática antes de estar pronto."',Insight:'"A diferença não é talento. É método e tolerância ao erro."',CTA:'"Me segue pra mais sobre aprendizado de idiomas."'}
+  },
+  {key:'ED',cls:'gc-ED',color:'var(--nurture)',name:'Educational',goal:'Nutrir',
+    steps:[{l:'Hook',d:'Erro ou problema comum'},{l:'Problema',d:'Por que isso acontece'},{l:'Solução',d:'O jeito certo'},{l:'Prática',d:'Exercício imediato'},{l:'CTA',d:'Salva — vai usar isso'}],
+    ex:{Hook:'"3 técnicas que usei todo dia pra virar fluente em português."',Problema:'"A maioria aprende vocabulário mas nunca chega à fluência."',Solução:'"Conversação forçada, pensar em voz alta, frases completas."',Prática:'"Escolhe uma das 3 e aplica hoje. Só uma."',CTA:'"Me conta qual você escolheu."'}
+  },
+  {key:'SE',cls:'gc-SE',color:'var(--convert)',name:'Série',goal:'Converter',
+    steps:[{l:'Hook + Número',d:'Nome da série + número do episódio'},{l:'Contexto',d:'O que este episódio cobre'},{l:'Lição',d:'O conteúdo do episódio'},{l:'Prévia',d:'O que vem no próximo'},{l:'CTA',d:'Segue pra não perder'}],
+    ex:{'Hook + Número':'"Coisas que só aprendi vivendo no Brasil — Parte 1."',Contexto:'"O glossário do tempo brasileiro."',Lição:'"Agora = qualquer momento. Tô chegando = estou pensando em sair."',Prévia:'"Na próxima parte: os gestos que não existem em nenhum lugar."',CTA:'"Segue pra não perder."'}
+  },
+  {key:'CA',cls:'gc-CA',color:'#e09840',name:'Carrossel',goal:'Salvar / Nutrir',
+    steps:[{l:'Slide 1 — Hook',d:'Frase que para o scroll. Funciona sozinha como reel.'},{l:'Slides 2–7',d:'Um ponto por slide. Valor denso, visualmente simples.'},{l:'Slide 8 — CTA',d:'Salva + palavra-chave ou link na bio'}],
+    ex:{'Slide 1 — Hook':'"5 coisas que só fazem sentido no Brasil 🇧🇷"','Slides 2–7':'"Slide 2: A fila que não é fila. Slide 3: Agora que não é agora…"','Slide 8 — CTA':'"Salva e manda pro gringo da sua vida!"'}
+  },
+  {key:'SO',cls:'gc-SO',color:'#5b8dee',name:'Stories',goal:'Engajar / Converter',
+    steps:[{l:'Frame 1 — Gancho',d:'Pergunta ou afirmação que cria curiosidade imediata'},{l:'Frames 2–5',d:'Contexto → Conteúdo → Detalhe → Pergunta'},{l:'Frame 6 — CTA',d:'Responde aqui / link / palavra-chave'}],
+    ex:{'Frame 1 — Gancho':'"Me conta: qual a coisa mais brasileira que você faz sem perceber? 👇"','Frames 2–5':'"Frame 2: Contexto. Frame 3: Conteúdo real. Frame 4: Detalhe ou prova. Frame 5: Pergunta de engajamento."','Frame 6 — CTA':'"Manda aqui 👇 / Link na bio / Manda [PALAVRA]"'}
+  }
+];
+
+function renderGuide() {
+  const grid=document.getElementById('guide-grid');
+  if(!grid) return;
+  grid.innerHTML=GUIDE_DATA.map(g=>`
+    <div class="guide-card ${g.cls}">
+      <div class="gc-key" style="color:${g.color}">${g.key}</div>
+      <div class="gc-name">${g.name}</div>
+      <div class="gc-goal">Objetivo: ${g.goal}</div>
+      <div class="gc-steps">${g.steps.map((s,i)=>`
+        <div class="gc-step">
+          <div class="gc-stepnum" style="background:${g.color}">${i+1}</div>
+          <div class="gc-steptext"><strong>${s.l}:</strong> ${s.d}</div>
+        </div>`).join('')}
+      </div>
+      <div class="gc-example">
+        <div class="gc-ex-label">Exemplo</div>
+        ${g.steps.map(s=>`<div class="gc-ex-line"><strong>${s.l}:</strong> ${escH(g.ex[s.l]||'—')}</div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// METRICS
+// ═══════════════════════════════════════════════════════════
+function setMetricFilter(f,btn){
+  metricFilter=f;
+  document.querySelectorAll('.metrics-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderMetrics();
+}
+
+function renderMetrics() {
+  const total=metricsLog.length;
+  const views=metricsLog.reduce((a,x)=>a+(x.views||0),0);
+  const saves=metricsLog.reduce((a,x)=>a+(x.saves||0),0);
+  const shares=metricsLog.reduce((a,x)=>a+(x.shares||0),0);
+  const eng=views>0?((saves+shares)/views*100).toFixed(1):'—';
+  document.getElementById('kpi-posts').textContent=total;
+  document.getElementById('kpi-views').textContent=total?views.toLocaleString('pt-BR'):'—';
+  document.getElementById('kpi-saves').textContent=total?saves.toLocaleString('pt-BR'):'—';
+  document.getElementById('kpi-shares').textContent=total?shares.toLocaleString('pt-BR'):'—';
+  document.getElementById('kpi-eng').textContent=total?eng+'%':'—';
+
+  const d14=document.getElementById('ck14-badge'),d30=document.getElementById('ck30-badge');
+  if(d14){d14.textContent=total>=5?'✅ Pronto':'Pendente';d14.className='ck-badge '+(total>=5?'ready':'pending');}
+  if(d30){d30.textContent=total>=10?'✅ Pronto':'Pendente';d30.className='ck-badge '+(total>=10?'ready':'pending');}
+
+  const ins=document.getElementById('metrics-insight');
+  if(total>=5){
+    const fmtStats={};
+    metricsLog.forEach(x=>{if(!fmtStats[x.format])fmtStats[x.format]={saves:0,shares:0,views:0,count:0};fmtStats[x.format].saves+=x.saves||0;fmtStats[x.format].shares+=x.shares||0;fmtStats[x.format].views+=x.views||0;fmtStats[x.format].count++;});
+    const best=Object.entries(fmtStats).sort((a,b)=>(b[1].saves+b[1].shares)-(a[1].saves+a[1].shares))[0];
+    if(best){ins.style.display='block';ins.innerHTML=`<strong>💡 Insight:</strong> O formato <strong>${best[0]}</strong> tem a melhor performance em saves+shares (${best[1].saves+best[1].shares} total). Continue apostando nele.`;}
+  } else {ins.style.display='none';}
+
+  let filtered=metricFilter==='all'?metricsLog:metricFilter==='top'?[...metricsLog].sort((a,b)=>(b.saves+b.shares)-(a.saves+a.shares)).slice(0,10):metricsLog.filter(x=>x.goal===metricFilter||x.pillar===metricFilter);
+  const maxEng=Math.max(...filtered.map(x=>x.views?((x.saves||0)+(x.shares||0))/x.views*100:0),1);
+  document.getElementById('metrics-tbody').innerHTML=filtered.length?filtered.map(x=>{
+    const engPct=x.views?((x.saves||0)+(x.shares||0))/x.views*100:0;
+    const barW=Math.round(engPct/maxEng*100);
+    return `<tr>
+      <td style="font-weight:700;color:var(--text)">${escH(x.title||'—')}</td>
+      <td><span class="badge badge-fmt">${x.format}</span></td>
+      <td><span class="badge badge-${x.pillar||''}">${x.pillar||'—'}</span></td>
+      <td style="white-space:nowrap;font-size:11px;color:var(--muted)">${x.date||'—'}</td>
+      <td class="num"><input class="metric-num-input" type="number" value="${x.views||''}" placeholder="—" onchange="inlineEdit('${x.id}','views',this.value)" oninput="this.classList.add('dirty')"></td>
+      <td class="num"><input class="metric-num-input" type="number" value="${x.saves||''}" placeholder="—" onchange="inlineEdit('${x.id}','saves',this.value)" oninput="this.classList.add('dirty')"></td>
+      <td class="num"><input class="metric-num-input" type="number" value="${x.shares||''}" placeholder="—" onchange="inlineEdit('${x.id}','shares',this.value)" oninput="this.classList.add('dirty')"></td>
+      <td class="num"><input class="metric-num-input" type="number" value="${x.comments||''}" placeholder="—" onchange="inlineEdit('${x.id}','comments',this.value)" oninput="this.classList.add('dirty')"></td>
+      <td class="num">${x.views?engPct.toFixed(1)+'%':'—'}</td>
+      <td><div class="perf-bar-wrap"><div class="perf-bar" style="width:${barW}%"></div><span class="perf-label">${x.views?engPct.toFixed(1)+'%':'—'}</span></div></td>
+      <td><button onclick="openLogModal('${x.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" title="Editar">✏️</button></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:30px">Nenhum post logado ainda. Clique em "Logar post" para começar.</td></tr>`;
+
+  // Format breakdown
+  const fmtB={};metricsLog.forEach(x=>{if(!fmtB[x.format])fmtB[x.format]={saves:0,shares:0,views:0,count:0};fmtB[x.format].saves+=x.saves||0;fmtB[x.format].shares+=x.shares||0;fmtB[x.format].views+=x.views||0;fmtB[x.format].count++;});
+  document.getElementById('format-breakdown').innerHTML=Object.entries(fmtB).map(([f,s])=>`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+      <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;margin-bottom:6px">${f}</div>
+      <div style="font-size:20px;font-weight:900;color:var(--green)">${s.count}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${s.saves} saves · ${s.shares} shares</div>
+    </div>`).join('')||'<div style="color:var(--muted);font-size:12px">Sem dados</div>';
+
+  // Pillar breakdown
+  const pilB={p1:{saves:0,shares:0,views:0,count:0},p2:{saves:0,shares:0,views:0,count:0},p3:{saves:0,shares:0,views:0,count:0}};
+  metricsLog.forEach(x=>{if(pilB[x.pillar]){pilB[x.pillar].saves+=x.saves||0;pilB[x.pillar].shares+=x.shares||0;pilB[x.pillar].views+=x.views||0;pilB[x.pillar].count++;}});
+  document.getElementById('pillar-breakdown').innerHTML=Object.entries(pilB).map(([p,s])=>`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;border-top:3px solid ${PILLAR_COLORS[p]}">
+      <div style="font-size:11px;font-weight:800;color:${PILLAR_COLORS[p]};margin-bottom:6px">${PILLAR_NAMES[p]}</div>
+      <div style="font-size:20px;font-weight:900;color:var(--green)">${s.count}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${s.saves} saves · ${s.shares} shares</div>
+    </div>`).join('');
+}
+
+function inlineEdit(id,field,value){
+  if(!pendingInlineEdits[id]) pendingInlineEdits[id]={};
+  pendingInlineEdits[id][field]=Number(value)||0;
+  document.getElementById('bulk-save-bar').classList.add('visible');
+}
+
+function commitInlineEdits(){
+  Object.entries(pendingInlineEdits).forEach(([id,fields])=>{
+    const idx=metricsLog.findIndex(x=>x.id===id);
+    if(idx>=0) Object.assign(metricsLog[idx],fields);
+  });
+  pendingInlineEdits={};
+  saveMetrics();
+  document.getElementById('bulk-save-bar').classList.remove('visible');
+  renderMetrics();
+  showToast('💾 Métricas salvas!');
+}
+
+function discardInlineEdits(){
+  pendingInlineEdits={};
+  document.getElementById('bulk-save-bar').classList.remove('visible');
+  renderMetrics();
+}
+
+function openLogModal(id,version,fmt){
+  editingLogId=id;
+  const ex=id?metricsLog.find(x=>x.id===id):null;
+  document.getElementById('log-modal-title').textContent=id?'Editar métricas':'Logar novo post';
+  document.getElementById('log-modal-sub').textContent=ex?ex.title:'';
+  document.getElementById('log-title').value=ex?ex.title:'';
+  document.getElementById('log-format').value=ex?ex.format:(fmt==='carousel'?'CA':fmt==='story'?'SO':'ST');
+  document.getElementById('log-goal').value=ex?ex.goal:(version||'attract');
+  document.getElementById('log-pillar').value=ex?ex.pillar:(activeModalTopic?activeModalTopic.pillar:'p1');
+  document.getElementById('log-date').value=ex?ex.date:'';
+  document.getElementById('log-views').value=ex?(ex.views||''):'';
+  document.getElementById('log-saves').value=ex?(ex.saves||''):'';
+  document.getElementById('log-shares').value=ex?(ex.shares||''):'';
+  document.getElementById('log-comments').value=ex?(ex.comments||''):'';
+  document.getElementById('log-note').value=ex?(ex.note||''):'';
+  document.getElementById('log-del-btn').style.display=id?'block':'none';
+  document.getElementById('log-modal-ov').classList.add('open');
+}
+
+function closeLogModal(){document.getElementById('log-modal-ov').classList.remove('open');}
+function closeLogModalOut(e){if(e.target===document.getElementById('log-modal-ov'))closeLogModal();}
+
+function saveLogEntry(){
+  const title=document.getElementById('log-title').value.trim();
+  if(!title){document.getElementById('log-title').focus();return;}
+  const entry={
+    id:editingLogId||(Date.now().toString()),
+    title,
+    format:document.getElementById('log-format').value,
+    goal:document.getElementById('log-goal').value,
+    pillar:document.getElementById('log-pillar').value,
+    date:document.getElementById('log-date').value,
+    views:Number(document.getElementById('log-views').value)||0,
+    saves:Number(document.getElementById('log-saves').value)||0,
+    shares:Number(document.getElementById('log-shares').value)||0,
+    comments:Number(document.getElementById('log-comments').value)||0,
+    note:document.getElementById('log-note').value.trim()
+  };
+  if(editingLogId){const idx=metricsLog.findIndex(x=>x.id===editingLogId);if(idx>=0)metricsLog[idx]=entry;else metricsLog.push(entry);}
+  else metricsLog.push(entry);
+  saveMetrics();
+  closeLogModal();
+  renderMetrics();
+  showToast('💾 Post logado!');
+}
+
+function deleteMetricEntry(){
+  if(!editingLogId||!confirm('Apagar este registro?')) return;
+  metricsLog=metricsLog.filter(x=>x.id!==editingLogId);
+  saveMetrics();
+  closeLogModal();
+  renderMetrics();
+}
+
+// ═══════════════════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('log-modal-ov').classList.contains('open')){closeLogModal();return;}
+    if(document.getElementById('post-modal-ov').classList.contains('open')){closePostModal();return;}
+    if(document.getElementById('addtopic-ov').classList.contains('open')){closeAddTopic();return;}
+    if(document.getElementById('modal-overlay').classList.contains('open')){closeModalDirect();return;}
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+renderGrid();
+renderGuide();
+updatePillarProgress();
+updateFilterBtns();
+</script>
+</body>
+</html>
