@@ -281,6 +281,53 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   .page{padding:14px}
   .ai-checkboxes{grid-template-columns:1fr 1fr}
 }
+/* ── SCRIPTS PAGE ── */
+.sp-filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px}
+.sp-stats{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.sp-stat{font-size:12px;color:var(--muted)}
+.sp-stat strong{color:var(--green);font-size:16px;font-weight:900;margin-right:3px}
+.sp-search{position:relative;margin-left:auto}
+.sp-search-inp{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 14px 5px 30px;font-size:12px;font-weight:600;font-family:'Nunito',sans-serif;color:var(--text);outline:none;width:180px;transition:border-color .2s}
+.sp-search-inp:focus{border-color:var(--green)}
+.sp-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
+.sp-pillar-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:28px}
+.sp-pillar-label:first-child{margin-top:0}
+.sp-pillar-bar{flex:1;height:1px;background:var(--border)}
+.sp-pillar-count{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap}
+.sp-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.sp-card[data-v="attract"]{border-left:3px solid var(--attract)}
+.sp-card[data-v="nurture"]{border-left:3px solid var(--nurture)}
+.sp-card[data-v="position"]{border-left:3px solid var(--position)}
+.sp-card[data-v="convert"]{border-left:3px solid var(--convert)}
+.sp-card-head{padding:12px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none;transition:background .15s}
+.sp-card-head:hover{background:rgba(255,255,255,.025)}
+.sp-card-num{font-size:20px;font-weight:900;line-height:1;width:28px;flex-shrink:0}
+.sp-card-info{flex:1;min-width:0}
+.sp-card-title{font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-card-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-card-badges{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.sp-chevron{font-size:11px;color:var(--muted);flex-shrink:0;transition:transform .22s}
+.sp-chevron.open{transform:rotate(180deg)}
+.sp-card-body{display:none;padding:0 18px 18px}
+.sp-card-body.open{display:block}
+.sp-hook{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px}
+.sp-hook-lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px}
+.sp-hook-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.5;font-style:italic}
+.sp-fields-grid{display:flex;flex-direction:column;gap:0}
+.sp-field-row{display:grid;grid-template-columns:90px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);align-items:start}
+.sp-field-row:last-child{border-bottom:none}
+.sp-field-lbl{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding-top:3px;line-height:1.4;color:var(--muted)}
+.sp-field-val{font-size:13px;font-weight:600;color:var(--text);line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.sp-field-val.empty{color:var(--muted);font-style:italic;font-size:11px}
+.sp-fmt-header{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.sp-fmt-header::after{content:'';flex:1;height:1px;background:var(--border)}
+.sp-open-btn{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .2s}
+.sp-open-btn:hover{border-color:var(--green);color:var(--green)}
+.sp-open-btn.recorded{border-color:var(--green);color:var(--green)}
+.sp-no-results{padding:60px;text-align:center;color:var(--muted);font-size:14px}
+.sp-expand-btns{display:flex;gap:8px;margin-left:auto}
+.sp-add-btn{background:var(--green);border:none;border-radius:8px;color:#000;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;padding:9px 18px;cursor:pointer;white-space:nowrap;transition:opacity .2s;flex-shrink:0}
+.sp-add-btn:hover{opacity:.88}
 </style>
 </head>
 <body>
@@ -290,6 +337,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   <nav class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('videos',this)">📹 Vídeos</button>
     <button class="nav-tab" onclick="showPage('repurpose',this)">♻️ Repurpose</button>
+    <button class="nav-tab" onclick="showPage('scripts',this)">📋 Scripts</button>
     <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
     <button class="nav-tab" onclick="showPage('guide',this)">📖 Guia</button>
     <button class="nav-tab" onclick="showPage('schedule',this)">🕐 Horários</button>
@@ -346,6 +394,44 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   </div>
   <div class="stats-bar" id="stats-bar"></div>
   <div class="video-grid" id="video-grid"></div>
+</div>
+
+<!-- ═══════════ SCRIPTS PAGE ═══════════ -->
+<div class="page" id="page-scripts">
+  <div class="section-title">Scripts Completos — 140 Vídeos</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px">
+    <div>
+      <div class="section-desc" style="margin-bottom:0">Expanda qualquer card para ver os campos escritos. Use "✏️ Editar no Modal" para editar inline.</div>
+    </div>
+    <button class="sp-add-btn" onclick="openAddScript()">＋ Adicionar Script</button>
+  </div>
+
+  <div class="sp-filter-bar">
+    <button class="filter-btn active" id="sp-btn-all"      onclick="spSetFilter('all')">Todos</button>
+    <button class="filter-btn p1"     id="sp-btn-p1"       onclick="spSetFilter('p1')">P1 False Beginner</button>
+    <button class="filter-btn p2"     id="sp-btn-p2"       onclick="spSetFilter('p2')">P2 Real-Life</button>
+    <button class="filter-btn p3"     id="sp-btn-p3"       onclick="spSetFilter('p3')">P3 Pronúncia</button>
+    <button class="filter-btn p4"     id="sp-btn-p4"       onclick="spSetFilter('p4')">P4 Culture</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn attract"  id="sp-btn-attract"  onclick="spSetFilter('attract')">Atrair</button>
+    <button class="filter-btn nurture"  id="sp-btn-nurture"  onclick="spSetFilter('nurture')">Nutrir</button>
+    <button class="filter-btn position" id="sp-btn-position" onclick="spSetFilter('position')">Posicionar</button>
+    <button class="filter-btn convert"  id="sp-btn-convert"  onclick="spSetFilter('convert')">Converter</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" id="sp-btn-serie" onclick="spSetFilter('serie')">🎬 Séries</button>
+    <div class="filter-sep"></div>
+    <div class="sp-search">
+      <span class="sp-search-icon">🔍</span>
+      <input type="text" class="sp-search-inp" id="sp-search" placeholder="Buscar tópico..." oninput="spRender()">
+    </div>
+    <div class="sp-expand-btns">
+      <button class="filter-btn" onclick="spExpandAll()">📂 Expandir Todos</button>
+      <button class="filter-btn" onclick="spCollapseAll()">📁 Recolher</button>
+    </div>
+  </div>
+
+  <div class="sp-stats" id="sp-stats"></div>
+  <div id="sp-grid"></div>
 </div>
 
 <!-- ═══════════ REPURPOSE PAGE ═══════════ -->
@@ -601,6 +687,63 @@ PROVA (quem): ___________________<br><br>
   </div>
 </div>
 
+<!-- ═══════════ ADD SCRIPT MODAL ═══════════ -->
+<div class="modal-overlay" id="add-script-overlay" onclick="closeAddScriptOutside(event)">
+<div class="modal" id="add-script-modal" style="max-width:680px">
+  <div class="modal-header">
+    <div style="flex:1;min-width:0">
+      <div class="modal-title">＋ Adicionar / Escrever Script</div>
+      <div class="modal-sub">Selecione o tópico, versão e formato para começar a escrever.</div>
+    </div>
+    <div class="modal-header-actions">
+      <button class="modal-close" onclick="closeAddScript()">✕</button>
+    </div>
+  </div>
+
+  <!-- Selectors -->
+  <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div>
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px">Tópico</div>
+      <select id="as-topic" class="gen-select" onchange="refreshAddScript()" style="font-size:11px">
+        <option value="">— Seleciona —</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px">Versão</div>
+      <select id="as-version" class="gen-select" onchange="refreshAddScript()" style="font-size:11px">
+        <option value="attract">Atrair</option>
+        <option value="nurture">Nutrir</option>
+        <option value="position">Posicionar</option>
+        <option value="convert">Converter</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px">Formato</div>
+      <select id="as-format" class="gen-select" onchange="refreshAddScript()" style="font-size:11px">
+        <option value="video">🎬 Vídeo</option>
+        <option value="carousel">🖼 Carrossel</option>
+        <option value="story">⚡ Story</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Fields body -->
+  <div class="modal-body" id="as-body" style="min-height:200px">
+    <div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">Selecione um tópico para começar a escrever.</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer" style="justify-content:space-between">
+    <div style="display:flex;gap:8px">
+      <button class="record-btn" id="as-save-btn" onclick="saveAddScript()" style="flex:none;padding:9px 24px;font-size:12px">💾 Salvar Script</button>
+      <button class="modal-action-btn ai-btn" id="as-ai-btn" onclick="openModalAIPanelForAdd()" style="font-size:11px">✨ Gerar com IA</button>
+    </div>
+    <span class="save-note">💾 Salvo no localStorage</span>
+  </div>
+  <div id="as-ai-panel-container"></div>
+</div>
+</div>
+
 <!-- ═══════════ MODAL ═══════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
 <div class="modal" id="modal">
@@ -831,6 +974,7 @@ function showPage(id,btn){
   document.getElementById('page-'+id).classList.add('active');
   if(btn) btn.classList.add('active');
   if(id==='guide') renderGuide();
+  if(id==='scripts') spRender();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1271,6 +1415,316 @@ const GUIDE_DATA=[
 ];
 function renderGuide(){
   document.getElementById('guide-grid').innerHTML=GUIDE_DATA.map(g=>`<div class="guide-card ${g.cls}"><div class="gc-key" style="color:${g.color}">${g.key.toUpperCase()}</div><div class="gc-name">${g.name}</div><div class="gc-goal" style="color:var(--muted)">Objetivo: ${g.goal}</div><div class="gc-steps">${g.steps.map((s,i)=>`<div class="gc-step"><div class="gc-stepnum" style="background:${g.color}">${i+1}</div><div class="gc-steptext"><strong>${s.l}:</strong> ${s.d}</div></div>`).join('')}</div></div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// SCRIPTS PAGE
+// ═══════════════════════════════════════════════════
+const SP_PILLAR_COLORS = {p1:'var(--p1)',p2:'var(--p2)',p3:'var(--p3)',p4:'var(--p4)'};
+const SP_PILLAR_FULL   = {p1:'P1 — False Beginner Breakthrough',p2:'P2 — Real-Life Fluency',p3:'P3 — Pronúncia + Confiança',p4:'P4 — Culture Immersion'};
+const SP_FORMAT_NAMES  = {video:'Vídeo',carousel:'Carrossel',story:'Story'};
+
+let spFilter    = 'all';
+let spOpenCards = new Set();
+
+function spSetFilter(f){
+  spFilter = f;
+  ['all','p1','p2','p3','p4','attract','nurture','position','convert','serie'].forEach(id=>{
+    const btn=document.getElementById('sp-btn-'+id);
+    if(btn) btn.classList.toggle('active', id===f);
+  });
+  spRender();
+}
+
+function spMatches(topic, version){
+  if(spFilter==='serie' && topic.type!=='serie') return false;
+  if(['p1','p2','p3','p4'].includes(spFilter) && topic.pillar!==spFilter) return false;
+  if(VERSIONS.includes(spFilter) && version!==spFilter) return false;
+  const q=(document.getElementById('sp-search')?.value||'').toLowerCase();
+  if(q){
+    const hay=(topic.title+' '+topic.sub).toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function spRender(){
+  const grid=document.getElementById('sp-grid');
+  if(!grid) return;
+  const pillars=['p1','p2','p3','p4'];
+  let totalVisible=0;
+  const html=pillars.map(p=>{
+    const cards=[];
+    TOPICS.filter(t=>t.pillar===p).forEach(t=>{
+      VERSIONS.forEach(v=>{
+        if(!spMatches(t,v)) return;
+        cards.push(spCard(t,v));
+        totalVisible++;
+      });
+    });
+    if(!cards.length) return '';
+    return `<div>
+      <div class="sp-pillar-label" style="color:${SP_PILLAR_COLORS[p]}">
+        ${SP_PILLAR_FULL[p]}
+        <div class="sp-pillar-bar"></div>
+        <span class="sp-pillar-count">${cards.length} script${cards.length!==1?'s':''}</span>
+      </div>
+      ${cards.join('')}
+    </div>`;
+  }).join('');
+  grid.innerHTML=html||'<div class="sp-no-results">Nenhum script encontrado.</div>';
+
+  const statsEl=document.getElementById('sp-stats');
+  if(statsEl){
+    const total=TOPICS.length*4;
+    const written=TOPICS.reduce((acc,t)=>acc+VERSIONS.reduce((a2,v)=>{
+      const hasAny=FORMATS.some(f=>SCRIPT_FIELDS[v][f].some(fld=>getScript(t.id,v,f,fld.key).trim()));
+      return a2+(hasAny?1:0);
+    },0),0);
+    statsEl.innerHTML=`
+      <div class="sp-stat"><strong>${totalVisible}</strong>visíveis</div>
+      <div class="sp-stat"><strong>${total}</strong>total</div>
+      <div class="sp-stat"><strong>${written}</strong>com script escrito</div>
+      <div class="sp-stat"><strong>${total-written}</strong>em branco</div>`;
+  }
+
+  // Re-apply open state
+  spOpenCards.forEach(key=>{
+    const body=document.getElementById('spb-'+key);
+    const chev=document.getElementById('spc-'+key);
+    if(body) body.classList.add('open');
+    if(chev) chev.classList.add('open');
+  });
+}
+
+function spCard(t, version){
+  const key=t.id+'-'+version;
+  const pillarC=SP_PILLAR_COLORS[t.pillar];
+  const done=isRecorded(t.id,version);
+  const vLabel=VERSION_LABELS[version];
+
+  // Build fields preview across all 3 formats for this version
+  let formatsHtml='';
+  FORMATS.forEach(fmt=>{
+    const fields=SCRIPT_FIELDS[version][fmt];
+    const hasContent=fields.some(f=>getScript(t.id,version,fmt,f.key).trim());
+    const fmtIcons={video:'🎬',carousel:'🖼',story:'⚡'};
+    formatsHtml+=`<div class="sp-fmt-header">${fmtIcons[fmt]} ${FORMAT_LABELS[fmt]}</div>`;
+    formatsHtml+='<div class="sp-fields-grid">';
+    fields.forEach(f=>{
+      const val=getScript(t.id,version,fmt,f.key);
+      formatsHtml+=`<div class="sp-field-row">
+        <span class="sp-field-lbl ${f.cls}">${f.label}</span>
+        <span class="sp-field-val${val.trim()?'':' empty'}">${val.trim()||'— não escrito ainda'}</span>
+      </div>`;
+    });
+    formatsHtml+='</div>';
+  });
+
+  return `<div class="sp-card" data-v="${version}">
+    <div class="sp-card-head" onclick="spToggle('${key}')">
+      <div class="sp-card-num" style="color:${pillarC}">${String(t.id).padStart(2,'0')}</div>
+      <div class="sp-card-info">
+        <div class="sp-card-title">${t.title}</div>
+        <div class="sp-card-sub">${t.sub}</div>
+      </div>
+      <div class="sp-card-badges">
+        ${t.type==='serie'?'<span class="badge badge-serie">SÉRIE</span>':''}
+        <span class="badge badge-${version}">${vLabel}</span>
+        ${done?'<span class="badge" style="background:rgba(29,185,148,.15);color:var(--green)">✅ Gravado</span>':''}
+      </div>
+      <div class="sp-chevron" id="spc-${key}">▼</div>
+    </div>
+    <div class="sp-card-body" id="spb-${key}">
+      ${formatsHtml}
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <button class="sp-open-btn${done?' recorded':''}" onclick="openModal(${t.id},'${version}')">
+          ✏️ Editar no Modal
+        </button>
+        <button class="sp-open-btn${done?' recorded':''}" onclick="spToggleRecorded(${t.id},'${version}')">
+          ${done?'✅ Gravado — desmarcar':'🔴 Marcar como gravado'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function spToggle(key){
+  const body=document.getElementById('spb-'+key);
+  const chev=document.getElementById('spc-'+key);
+  if(!body) return;
+  const open=body.classList.toggle('open');
+  if(chev) chev.classList.toggle('open',open);
+  if(open) spOpenCards.add(key); else spOpenCards.delete(key);
+}
+
+function spExpandAll(){
+  document.querySelectorAll('.sp-card-body').forEach(b=>b.classList.add('open'));
+  document.querySelectorAll('.sp-chevron').forEach(c=>c.classList.add('open'));
+  TOPICS.forEach(t=>VERSIONS.forEach(v=>spOpenCards.add(t.id+'-'+v)));
+}
+
+function spCollapseAll(){
+  document.querySelectorAll('.sp-card-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.sp-chevron').forEach(c=>c.classList.remove('open'));
+  spOpenCards.clear();
+}
+
+// ── ADD SCRIPT MODAL ──────────────────────────────────────────────
+function openAddScript(){
+  // Populate topic selector if empty
+  const sel=document.getElementById('as-topic');
+  if(sel.options.length<=1){
+    TOPICS.forEach(t=>{
+      const o=document.createElement('option');
+      o.value=t.id;
+      o.textContent=`${t.id}. ${t.title}`;
+      sel.appendChild(o);
+    });
+  }
+  refreshAddScript();
+  document.getElementById('add-script-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeAddScript(){
+  document.getElementById('add-script-overlay').classList.remove('open');
+  document.getElementById('as-ai-panel-container').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function closeAddScriptOutside(e){
+  if(e.target===document.getElementById('add-script-overlay')) closeAddScript();
+}
+
+function refreshAddScript(){
+  const tid=parseInt(document.getElementById('as-topic').value);
+  const ver=document.getElementById('as-version').value;
+  const fmt=document.getElementById('as-format').value;
+  const body=document.getElementById('as-body');
+  document.getElementById('as-ai-panel-container').innerHTML='';
+
+  if(!tid){
+    body.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">Selecione um tópico para começar a escrever.</div>';
+    return;
+  }
+
+  const t=TOPICS.find(x=>x.id===tid);
+  const fields=SCRIPT_FIELDS[ver][fmt];
+  const fmtDescs={
+    video:{attract:'ST — Storytelling · ~60s',nurture:'ED — Educational · ~90s',position:'AT — Authority · ~60s',convert:'SR — Série Ep.1 · ~75s'},
+    carousel:{attract:'Visual Story · 6 slides',nurture:'Tutorial Slides · 7 slides',position:'Proof + Method · 6 slides',convert:'Série Visual · 5 slides'},
+    story:{attract:'Poll Hook · 6 slides',nurture:'Quick Tips · 6 slides',position:'Bold Opinion · 6 slides',convert:'Oferta Direta · 6 slides'}
+  };
+
+  let html=`<div class="fmt-section-header">
+    <span class="fmt-icon">${{video:'🎬',carousel:'🖼',story:'⚡'}[fmt]}</span>
+    <span class="fmt-title">${FORMAT_LABELS[fmt]}</span>
+    <span class="fmt-desc">${fmtDescs[fmt][ver]||''}</span>
+  </div>`;
+
+  // Slide preview for carousel/story
+  if(fmt==='carousel'){
+    html+=`<div class="slides-preview">${fields.map((_,i)=>`<div class="slide-thumb${i===0?' cover':''}">${i===0?'CAPA':'S'+(i+1)}</div>`).join('')}</div>`;
+  }
+  if(fmt==='story'){
+    html+=`<div class="slides-preview">${fields.map((_,i)=>`<div class="story-thumb${i===fields.length-1?' cta-t':''}">${i+1}</div>`).join('')}</div>`;
+  }
+
+  fields.forEach(f=>{
+    const val=getScript(tid,ver,fmt,f.key);
+    html+=`<div class="script-row">
+      <span class="row-label ${f.cls}">${f.label}</span>
+      <textarea class="script-textarea" rows="${f.rows}" placeholder="${f.ph.replace(/"/g,'&quot;')}"
+        onchange="setScript(${tid},'${ver}','${fmt}','${f.key}',this.value)"
+        oninput="autoResize(this)">${val}</textarea>
+    </div>`;
+  });
+
+  body.innerHTML=html;
+  body.querySelectorAll('.script-textarea').forEach(autoResize);
+}
+
+function saveAddScript(){
+  const tid=parseInt(document.getElementById('as-topic').value);
+  if(!tid){ alert('Selecione um tópico primeiro.'); return; }
+  // Scripts auto-save on change via setScript() — just give feedback
+  const btn=document.getElementById('as-save-btn');
+  btn.textContent='✅ Salvo!';
+  setTimeout(()=>btn.textContent='💾 Salvar Script',1500);
+  // Refresh scripts page if open
+  if(document.getElementById('page-scripts')?.classList.contains('active')) spRender();
+}
+
+function openModalAIPanelForAdd(){
+  const tid=parseInt(document.getElementById('as-topic').value);
+  const ver=document.getElementById('as-version').value;
+  const fmt=document.getElementById('as-format').value;
+  if(!tid){ alert('Selecione um tópico primeiro.'); return; }
+  // Temporarily set modal state and reuse existing AI panel logic
+  const t=TOPICS.find(x=>x.id===tid);
+  appState.modalTopic=t;
+  appState.modalVersion=ver;
+  appState.modalFormat=fmt;
+  // Redirect AI panel output to add-script container
+  const container=document.getElementById('as-ai-panel-container');
+  const srcFields=SCRIPT_FIELDS[ver][fmt];
+  const srcContent=srcFields.map(f=>{const v=getScript(tid,ver,fmt,f.key);return v?`${f.label}: ${v}`:''}).filter(Boolean).join('\n');
+  const items=[];
+  VERSIONS.forEach(v=>{ FORMATS.forEach(f=>{ items.push({v,f,label:`${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}`}); }); });
+  const sourceKey=`${ver}_${fmt}`;
+  let cbHtml=items.map(i=>{
+    const key=`${i.v}_${i.f}`;
+    const isSrc=key===sourceKey;
+    return `<label class="ai-checkbox-item"><input type="checkbox" id="asaicb_${key}" ${isSrc?'disabled':''} ${!isSrc?'checked':''}> ${i.label}${isSrc?' (origem)':''}</label>`;
+  }).join('');
+  container.innerHTML=`<div class="ai-panel" style="margin:0;border-radius:0;border-left:none;border-right:none;border-bottom:none">
+    <div class="ai-panel-title">✨ Gerar com IA — fonte: ${VERSION_LABELS[ver]} ${FORMAT_LABELS[fmt]}</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Script de origem será usado como referência. Se estiver em branco, a IA vai criar do zero baseado no tópico.</div>
+    <div class="ai-checkboxes" style="margin-bottom:12px">${cbHtml}</div>
+    <button class="ai-generate-btn" onclick="runAddScriptGenerate(${tid},'${ver}','${fmt}')">✨ Gerar Selecionados</button>
+    <div class="ai-status" id="as-ai-status"></div>
+  </div>`;
+}
+
+async function runAddScriptGenerate(tid, srcVer, srcFmt){
+  const key=getApiKey();
+  if(!key){ document.getElementById('as-ai-status').textContent='⚠️ Configure sua API key em ⚙️ API Key.'; return; }
+  const t=TOPICS.find(x=>x.id===tid);
+  const srcFields=SCRIPT_FIELDS[srcVer][srcFmt];
+  const srcContent=srcFields.map(f=>{const v=getScript(tid,srcVer,srcFmt,f.key);return v?`${f.label}: ${v}`:''}).filter(Boolean).join('\n');
+  const toGenerate=[];
+  VERSIONS.forEach(v=>{ FORMATS.forEach(f=>{
+    const id=`asaicb_${v}_${f}`;
+    const cb=document.getElementById(id);
+    if(cb&&cb.checked&&!cb.disabled) toGenerate.push({v,f});
+  }); });
+  if(!toGenerate.length){ document.getElementById('as-ai-status').textContent='⚠️ Selecione pelo menos uma peça.'; return; }
+  document.querySelector('#as-ai-panel-container .ai-generate-btn').disabled=true;
+  document.getElementById('as-ai-status').textContent=`⏳ Gerando ${toGenerate.length} peça(s)...`;
+  let done=0;
+  for(const {v,f} of toGenerate){
+    document.getElementById('as-ai-status').textContent=`⏳ Gerando ${done+1}/${toGenerate.length}: ${VERSION_LABELS[v]} ${FORMAT_LABELS[f]}...`;
+    try{
+      const result=await generateScript(t,srcVer,srcFmt,srcContent||`Tópico: ${t.title}`,v,f);
+      applyGeneratedScript(tid,v,f,result);
+      done++;
+    } catch(err){
+      document.getElementById('as-ai-status').textContent=`❌ Erro: ${err.message}`;
+      document.querySelector('#as-ai-panel-container .ai-generate-btn').disabled=false;
+      return;
+    }
+  }
+  document.getElementById('as-ai-status').textContent=`✅ ${done} peça(s) geradas! Muda o seletor de versão/formato para ver.`;
+  document.querySelector('#as-ai-panel-container .ai-generate-btn').disabled=false;
+  // Refresh the current view
+  refreshAddScript();
+}
+
+function spToggleRecorded(tid,ver){
+  if(!appState.recorded[tid]) appState.recorded[tid]={};
+  appState.recorded[tid][ver]=!appState.recorded[tid][ver];
+  saveRec(); renderGrid(); updatePillarProgress(); spRender();
 }
 
 // ═══════════════════════════════════════════════════
