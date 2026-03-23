@@ -353,6 +353,53 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .ep-dot{width:20px;height:20px;border-radius:50%;font-size:8px;font-weight:900;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);color:var(--muted);background:var(--bg3)}
 .ep-dot.recorded{background:var(--green);color:#000;border-color:var(--green)}
 .series-card-pillar{font-size:9px;font-weight:800;letter-spacing:.5px;margin-bottom:6px}
+/* ── CALENDAR PAGE ── */
+.cal-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.cal-nav-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);cursor:pointer;padding:7px 14px;border-radius:7px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s}
+.cal-nav-btn:hover{border-color:var(--green);color:var(--green)}
+.cal-month-title{font-size:18px;font-weight:900;color:var(--text);min-width:200px;text-align:center}
+.cal-today-btn{background:var(--green);border:none;color:#000;cursor:pointer;padding:7px 14px;border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;transition:opacity .2s}
+.cal-today-btn:hover{opacity:.88}
+.cal-jump{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:12px;color:var(--text);cursor:pointer;outline:none}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-dow{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:center;padding:6px 0}
+.cal-cell{background:var(--bg2);border:1px solid var(--border);border-radius:8px;min-height:90px;padding:6px;cursor:pointer;transition:all .2s;position:relative}
+.cal-cell:hover{border-color:var(--green)}
+.cal-cell.today{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+.cal-cell.other-month{opacity:.3;pointer-events:none}
+.cal-day-num{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px}
+.cal-cell.today .cal-day-num{color:var(--green)}
+.cal-post{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-bottom:2px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;transition:opacity .2s}
+.cal-post:hover{opacity:.75}
+.cp-attract{background:rgba(29,185,148,.18);color:var(--attract)}
+.cp-nurture{background:rgba(155,89,182,.18);color:#b57fe0}
+.cp-position{background:rgba(52,152,219,.18);color:#6aade0}
+.cp-convert{background:rgba(230,126,34,.18);color:#e8a060}
+.cp-serie{background:rgba(29,185,148,.12);color:var(--green);border:1px solid rgba(29,185,148,.25)}
+.cp-carousel{background:rgba(224,160,48,.18);color:#e0a030}
+.cp-story{background:rgba(91,141,238,.18);color:#5b8dee}
+.cal-more{font-size:10px;color:var(--muted);padding:1px 4px;cursor:pointer}
+.cal-add-hint{position:absolute;bottom:4px;right:6px;font-size:14px;color:var(--border);opacity:0;transition:opacity .2s;pointer-events:none}
+.cal-cell:hover .cal-add-hint{opacity:1}
+.cal-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.cal-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted2)}
+.cal-leg-dot{width:8px;height:8px;border-radius:50%}
+/* Post modal */
+.post-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.post-modal-ov.open{opacity:1;pointer-events:all}
+.post-modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:480px;overflow:hidden}
+.post-modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.post-modal-title{font-size:14px;font-weight:800}
+.post-modal-body{padding:20px;display:flex;flex-direction:column;gap:12px}
+.pm-field{display:flex;flex-direction:column;gap:4px}
+.pm-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.pm-input{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s}
+.pm-input:focus{border-color:var(--green)}
+.pm-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);cursor:pointer;outline:none}
+.post-modal-ftr{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
+.pm-save-btn{flex:1;padding:9px;background:var(--green);border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer}
+.pm-del-btn{padding:9px 14px;background:transparent;border:1px solid var(--border);border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:#e05252;cursor:pointer;transition:all .2s}
+.pm-del-btn:hover{border-color:#e05252;background:rgba(224,82,82,.08)}
 </style>
 </head>
 <body>
@@ -365,6 +412,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <button class="nav-tab" onclick="showPage('scripts',this)">📋 Scripts</button>
     <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
     <button class="nav-tab" onclick="showPage('guide',this)">📖 Guia</button>
+    <button class="nav-tab" onclick="showPage('calendar',this)">📅 Calendário</button>
     <button class="nav-tab" onclick="showPage('schedule',this)">🕐 Horários</button>
     <button class="nav-tab" onclick="showPage('whatsapp',this)">💬 WhatsApp</button>
   </nav>
@@ -680,6 +728,97 @@ PROVA (quem): ___________________<br><br>
   <div class="section-title">Guia de Formatos</div>
   <div class="section-desc">Estrutura de cada formato — Vídeo, Carrossel e Story.</div>
   <div class="guide-grid" id="guide-grid"></div>
+</div>
+
+<!-- ═══════════ CALENDAR PAGE ═══════════ -->
+<div class="page" id="page-calendar">
+  <div class="section-title">Calendário de Publicações</div>
+  <div class="section-desc">Clique em qualquer dia para adicionar um post. Posts marcados com data de postagem nos tópicos aparecem automaticamente.</div>
+
+  <div class="cal-toolbar">
+    <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+    <div class="cal-month-title" id="cal-month-title">—</div>
+    <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+    <button class="cal-today-btn" onclick="goToday()">Hoje</button>
+    <select class="cal-jump" id="cal-month-jump" onchange="jumpMonth(this.value)"></select>
+  </div>
+
+  <div class="cal-legend">
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:var(--attract)"></div>Atrair</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#b57fe0"></div>Nutrir</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#6aade0"></div>Posicionar</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#e8a060"></div>Converter</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:var(--green)"></div>Série</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#e0a030"></div>Carrossel</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#5b8dee"></div>Story</div>
+  </div>
+
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- POST MODAL -->
+<div class="post-modal-ov" id="post-modal-ov" onclick="closePostModalOut(event)">
+  <div class="post-modal">
+    <div class="post-modal-hdr">
+      <div class="post-modal-title" id="pm-title">Adicionar post</div>
+      <button class="modal-close" onclick="closePostModal()">✕</button>
+    </div>
+    <div class="post-modal-body">
+      <div class="pm-field">
+        <div class="pm-lbl">Título / Descrição</div>
+        <input type="text" class="pm-input" id="pm-text" placeholder="Ex: O momento que a Sabrina travou...">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="pm-field">
+          <div class="pm-lbl">Formato</div>
+          <select class="pm-select" id="pm-format">
+            <option value="ST">ST — Storytelling</option>
+            <option value="CO">CO — Comparison</option>
+            <option value="AT">AT — Authority</option>
+            <option value="ED">ED — Educational</option>
+            <option value="SE">SE — Série</option>
+            <option value="CA">CA — Carrossel</option>
+            <option value="SO">SO — Story</option>
+          </select>
+        </div>
+        <div class="pm-field">
+          <div class="pm-lbl">Objetivo</div>
+          <select class="pm-select" id="pm-goal">
+            <option value="attract">Atrair</option>
+            <option value="nurture">Nutrir</option>
+            <option value="position">Posicionar</option>
+            <option value="convert">Converter</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="pm-field">
+          <div class="pm-lbl">Horário</div>
+          <select class="pm-select" id="pm-time">
+            <option value="9h">9h — Manhã (Atrair)</option>
+            <option value="13h">13h — Almoço (Nutrir)</option>
+            <option value="19h">19h — Noite (Converter)</option>
+          </select>
+        </div>
+        <div class="pm-field">
+          <div class="pm-lbl">Plataforma</div>
+          <select class="pm-select" id="pm-platform">
+            <option value="both">Instagram + TikTok</option>
+            <option value="ig">Só Instagram</option>
+            <option value="tt">Só TikTok</option>
+          </select>
+        </div>
+      </div>
+      <div class="pm-field">
+        <div class="pm-lbl">Notas (opcional)</div>
+        <input type="text" class="pm-input" id="pm-notes" placeholder="Observações, hashtags, link...">
+      </div>
+    </div>
+    <div class="post-modal-ftr">
+      <button class="pm-save-btn" onclick="savePost()">💾 Salvar</button>
+      <button class="pm-del-btn" id="pm-del-btn" style="display:none" onclick="deletePost()">🗑 Apagar</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════ SCHEDULE PAGE ═══════════ -->
@@ -1513,6 +1652,229 @@ function renderGuide(){
 }
 
 // ═══════════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════════
+let calPosts = JSON.parse(localStorage.getItem('fc8_calposts')||'{}');
+// calPosts[YYYY-MM] = [{id, day, text, format, goal, time, platform, notes, topicId}]
+let calState = {
+  year: new Date().getFullYear(),
+  month: new Date().getMonth(),
+  editingId: null,
+  editingDay: null
+};
+
+function saveCalPosts(){ localStorage.setItem('fc8_calposts',JSON.stringify(calPosts)); }
+function calKey(y,m){ return `${y}-${String(m+1).padStart(2,'0')}`; }
+function getPostsForMonth(y,m){ return calPosts[calKey(y,m)]||[]; }
+function getPostsForDay(y,m,d){ return getPostsForMonth(y,m).filter(p=>p.day===d); }
+
+function renderCalendar(){
+  const {year,month}=calState;
+  const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const titleEl=document.getElementById('cal-month-title');
+  if(titleEl) titleEl.textContent=`${months[month]} ${year}`;
+  const grid=document.getElementById('cal-grid');
+  if(!grid) return;
+
+  const today=new Date();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const daysInPrev=new Date(year,month,0).getDate();
+  const dows=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const goalColors={attract:'cp-attract',nurture:'cp-nurture',position:'cp-position',convert:'cp-convert'};
+  const fmtIcons={ST:'📖',CO:'⚡',AT:'👑',ED:'📚',SE:'🎬',CA:'🖼',SO:'⭕'};
+
+  let html=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  // Prev month trailing days
+  for(let i=0;i<firstDay;i++){
+    html+=`<div class="cal-cell other-month"><div class="cal-day-num">${daysInPrev-firstDay+1+i}</div></div>`;
+  }
+
+  // Current month days
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+    const posts=getPostsForDay(year,month,d);
+    const visible=posts.slice(0,3);
+    const hidden=posts.length-3;
+    const postsHtml=visible.map(p=>{
+      const isSerie=p.format==='SE';
+      const cls=isSerie?'cp-serie':p.format==='CA'?'cp-carousel':p.format==='SO'?'cp-story':(goalColors[p.goal]||'cp-attract');
+      const icon=fmtIcons[p.format]||'📹';
+      const timeTag=p.time?`<span style="opacity:.7">${p.time}</span> `:'';
+      return `<div class="cal-post ${cls}" onclick="openEditPost(event,'${p.id}',${d})" title="${escCalHtml(p.text)}">${icon} ${timeTag}${escCalHtml(p.text)}</div>`;
+    }).join('');
+    const moreHtml=hidden>0?`<div class="cal-more">+${hidden} mais</div>`:'';
+
+    html+=`<div class="cal-cell${isToday?' today':''}" onclick="openAddPost(event,${d})">
+      <div class="cal-day-num">${d}</div>
+      ${postsHtml}${moreHtml}
+      <div class="cal-add-hint">＋</div>
+    </div>`;
+  }
+
+  // Next month leading days
+  const total=firstDay+daysInMonth;
+  const trailing=total%7===0?0:7-(total%7);
+  for(let i=1;i<=trailing;i++){
+    html+=`<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
+  }
+
+  grid.innerHTML=html;
+}
+
+function buildMonthJump(){
+  const sel=document.getElementById('cal-month-jump');
+  if(!sel||sel.options.length>0) return;
+  const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const currentYear=new Date().getFullYear();
+  for(let y=currentYear;y<=currentYear+1;y++){
+    months.forEach((m,i)=>{
+      const o=document.createElement('option');
+      o.value=`${y}-${i}`;
+      o.textContent=`${m} ${y}`;
+      if(y===calState.year&&i===calState.month) o.selected=true;
+      sel.appendChild(o);
+    });
+  }
+}
+
+function changeMonth(dir){
+  calState.month+=dir;
+  if(calState.month>11){ calState.month=0; calState.year++; }
+  if(calState.month<0){ calState.month=11; calState.year--; }
+  renderCalendar();
+  syncMonthJump();
+}
+
+function goToday(){
+  const now=new Date();
+  calState.year=now.getFullYear();
+  calState.month=now.getMonth();
+  renderCalendar();
+  syncMonthJump();
+}
+
+function jumpMonth(val){
+  const [y,m]=val.split('-').map(Number);
+  calState.year=y; calState.month=m;
+  renderCalendar();
+}
+
+function syncMonthJump(){
+  const sel=document.getElementById('cal-month-jump');
+  if(!sel) return;
+  const target=`${calState.year}-${calState.month}`;
+  for(const o of sel.options){ if(o.value===target){ o.selected=true; break; } }
+}
+
+function escCalHtml(str){
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── POST MODAL ──────────────────────────────────────
+function openAddPost(event,day){
+  if(event.target.classList.contains('cal-post')||event.target.classList.contains('cal-more')) return;
+  calState.editingId=null; calState.editingDay=day;
+  document.getElementById('pm-title').textContent=`Adicionar post — dia ${day}`;
+  document.getElementById('pm-text').value='';
+  document.getElementById('pm-notes').value='';
+  document.getElementById('pm-format').value='ST';
+  document.getElementById('pm-goal').value='attract';
+  document.getElementById('pm-time').value='9h';
+  document.getElementById('pm-platform').value='both';
+  document.getElementById('pm-del-btn').style.display='none';
+  document.getElementById('post-modal-ov').classList.add('open');
+}
+
+function openEditPost(event,postId,day){
+  event.stopPropagation();
+  const posts=getPostsForMonth(calState.year,calState.month);
+  const post=posts.find(p=>p.id===postId);
+  if(!post) return;
+  calState.editingId=postId; calState.editingDay=day;
+  document.getElementById('pm-title').textContent=`Editar post — dia ${day}`;
+  document.getElementById('pm-text').value=post.text;
+  document.getElementById('pm-format').value=post.format||'ST';
+  document.getElementById('pm-goal').value=post.goal||'attract';
+  document.getElementById('pm-time').value=post.time||'9h';
+  document.getElementById('pm-platform').value=post.platform||'both';
+  document.getElementById('pm-notes').value=post.notes||'';
+  document.getElementById('pm-del-btn').style.display='block';
+  document.getElementById('post-modal-ov').classList.add('open');
+}
+
+function closePostModal(){ document.getElementById('post-modal-ov').classList.remove('open'); }
+function closePostModalOut(e){ if(e.target===document.getElementById('post-modal-ov')) closePostModal(); }
+
+function savePost(){
+  const text=document.getElementById('pm-text').value.trim();
+  if(!text){ document.getElementById('pm-text').focus(); return; }
+  const k=calKey(calState.year,calState.month);
+  if(!calPosts[k]) calPosts[k]=[];
+  const data={
+    text,
+    format: document.getElementById('pm-format').value,
+    goal:   document.getElementById('pm-goal').value,
+    time:   document.getElementById('pm-time').value,
+    platform: document.getElementById('pm-platform').value,
+    notes:  document.getElementById('pm-notes').value.trim(),
+    day:    calState.editingDay
+  };
+  if(calState.editingId){
+    const idx=calPosts[k].findIndex(p=>p.id===calState.editingId);
+    if(idx>=0) calPosts[k][idx]={...calPosts[k][idx],...data};
+  } else {
+    data.id='p'+Date.now();
+    calPosts[k].push(data);
+  }
+  saveCalPosts();
+  closePostModal();
+  renderCalendar();
+}
+
+function deletePost(){
+  if(!calState.editingId) return;
+  if(!confirm('Apagar este post do calendário?')) return;
+  const k=calKey(calState.year,calState.month);
+  calPosts[k]=(calPosts[k]||[]).filter(p=>p.id!==calState.editingId);
+  saveCalPosts();
+  closePostModal();
+  renderCalendar();
+}
+
+// ── PUSH TO CALENDAR (called from video modal) ──────
+// Adds a post to the calendar from a topic's post date
+function pushTopicToCalendar(tid,ver,postDateStr){
+  if(!postDateStr) return;
+  const d=new Date(postDateStr+'T12:00:00');
+  if(isNaN(d)) return;
+  const t=TOPICS.find(x=>x.id===tid);
+  if(!t) return;
+  const y=d.getFullYear(), m=d.getMonth(), day=d.getDate();
+  const k=calKey(y,m);
+  if(!calPosts[k]) calPosts[k]=[];
+  // Avoid duplicate pushes for same topic+version
+  const exists=calPosts[k].some(p=>p.topicId===tid&&p.version===ver);
+  if(exists){ alert('Este tópico/versão já está no calendário nesse mês.'); return; }
+  const versionFormat={attract:'ST',nurture:'ED',position:'AT',convert:'SE'};
+  calPosts[k].push({
+    id:'p'+Date.now(),
+    day, text:t.title,
+    format: versionFormat[ver]||'ST',
+    goal: ver,
+    time:'9h',
+    platform:'both',
+    notes:`${VERSION_LABELS[ver]} · ${t.sub}`,
+    topicId:tid,
+    version:ver
+  });
+  saveCalPosts();
+  // Re-render calendar if it's currently open
+  if(document.getElementById('page-calendar')?.classList.contains('active')) renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════
 // SCRIPTS PAGE
 // ═══════════════════════════════════════════════════
 const SP_PILLAR_COLORS = {p1:'var(--p1)',p2:'var(--p2)',p3:'var(--p3)',p4:'var(--p4)'};
@@ -2224,6 +2586,8 @@ window.showPage=function(id,btn){
   origShowPage(id,btn);
   if(id==='repurpose') initRepurposePage();
   if(id==='generator') initGeneratorPage();
+  if(id==='calendar'){ renderCalendar(); buildMonthJump(); }
+  if(id==='scripts') spRender();
 };
 
 renderGrid();
@@ -2232,7 +2596,12 @@ renderSeriesGrid();
 seriesState.sectionOpen=true;
 document.getElementById('series-body').classList.add('open');
 document.getElementById('series-chevron').classList.add('open');
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeSettings(); } });
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeModal(); closeSettings(); closePostModal();
+    closeSeriesModal(); closeAddScript();
+  }
+});
 </script>
 </body>
 </html>
