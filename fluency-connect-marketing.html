@@ -328,6 +328,31 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .sp-expand-btns{display:flex;gap:8px;margin-left:auto}
 .sp-add-btn{background:var(--green);border:none;border-radius:8px;color:#000;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;padding:9px 18px;cursor:pointer;white-space:nowrap;transition:opacity .2s;flex-shrink:0}
 .sp-add-btn:hover{opacity:.88}
+/* ── SERIES SECTION ── */
+.series-section-header{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid rgba(29,185,148,.25);border-radius:10px;padding:14px 18px;cursor:pointer;transition:all .2s;margin-bottom:0}
+.series-section-header:hover{border-color:var(--green)}
+.series-chevron{font-size:12px;color:var(--muted);transition:transform .25s}
+.series-chevron.open{transform:rotate(180deg)}
+.series-body{display:none;padding-top:14px}
+.series-body.open{display:block}
+.series-filter-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.series-stats{display:flex;gap:12px}
+.series-stat{font-size:11px;color:var(--muted)}
+.series-stat strong{color:var(--green);font-weight:900}
+
+.series-card{background:var(--bg2);border:1px solid rgba(29,185,148,.2);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.series-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green)}
+.series-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 4px 20px rgba(29,185,148,.1)}
+.series-card.done{opacity:.55}
+.series-card-icon{font-size:22px;margin-bottom:6px}
+.series-card-num{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:2px;letter-spacing:.5px}
+.series-card-title{font-size:12px;font-weight:800;color:var(--text);line-height:1.4;margin-bottom:3px}
+.series-card-sub{font-size:10px;color:var(--muted);line-height:1.4;margin-bottom:10px}
+.series-card-episodes{display:flex;gap:4px;margin-top:6px}
+.ep-dot{width:20px;height:20px;border-radius:50%;font-size:8px;font-weight:900;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);color:var(--muted);background:var(--bg3)}
+.ep-dot.recorded{background:var(--green);color:#000;border-color:var(--green)}
+.series-card-pillar{font-size:9px;font-weight:800;letter-spacing:.5px;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -391,9 +416,38 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <div class="filter-sep"></div>
     <button class="filter-btn" onclick="setFilter('status','pending')">📋 Pendentes</button>
     <button class="filter-btn" onclick="setFilter('status','done')">✅ Gravados</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" id="filter-serie-btn" onclick="setFilter('serie','serie')">🎬 Séries</button>
   </div>
   <div class="stats-bar" id="stats-bar"></div>
   <div class="video-grid" id="video-grid"></div>
+
+  <!-- Series Section -->
+  <div id="series-section" style="margin-top:28px">
+    <div class="series-section-header" onclick="toggleSeriesSection()">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">🎬</span>
+        <div>
+          <div style="font-size:14px;font-weight:900;color:var(--text)">Séries de Conteúdo</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:1px">11 séries · episódios com estrutura própria e CTA de conversão</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="series-stats" id="series-stats-bar"></div>
+        <span class="series-chevron" id="series-chevron">▼</span>
+      </div>
+    </div>
+    <div id="series-body" class="series-body">
+      <div class="series-filter-bar">
+        <button class="filter-btn active" id="sf-btn-all" onclick="seriesSetFilter('all')">Todas</button>
+        <button class="filter-btn p1" id="sf-btn-p1" onclick="seriesSetFilter('p1')">P1 False Beginner</button>
+        <button class="filter-btn p2" id="sf-btn-p2" onclick="seriesSetFilter('p2')">P2 Real-Life</button>
+        <button class="filter-btn p3" id="sf-btn-p3" onclick="seriesSetFilter('p3')">P3 Pronúncia</button>
+        <button class="filter-btn p4" id="sf-btn-p4" onclick="seriesSetFilter('p4')">P4 Culture</button>
+      </div>
+      <div class="series-grid" id="series-grid"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════ SCRIPTS PAGE ═══════════ -->
@@ -744,6 +798,39 @@ PROVA (quem): ___________________<br><br>
 </div>
 </div>
 
+<!-- ═══════════ SERIES MODAL ═══════════ -->
+<div class="modal-overlay" id="series-modal-overlay" onclick="closeSeriesModalOutside(event)">
+<div class="modal" id="series-modal" style="max-width:860px">
+  <div class="modal-header">
+    <div style="flex:1;min-width:0">
+      <div class="modal-title" id="sm-title"></div>
+      <div class="modal-sub" id="sm-sub"></div>
+    </div>
+    <div class="modal-header-actions">
+      <span class="badge badge-serie" style="font-size:10px;padding:3px 9px">SÉRIE</span>
+      <button class="modal-action-btn ai-btn" onclick="openSeriesAIPanel()">✨ Gerar Episódios</button>
+      <button class="modal-close" onclick="closeSeriesModal()">✕</button>
+    </div>
+  </div>
+
+  <!-- Episode tabs -->
+  <div class="modal-tabs" id="sm-ep-tabs"></div>
+
+  <!-- Format tabs -->
+  <div class="format-tabs" id="sm-fmt-tabs"></div>
+
+  <div class="modal-body" id="sm-body"></div>
+
+  <!-- AI panel -->
+  <div id="sm-ai-container"></div>
+
+  <div class="modal-footer">
+    <button class="record-btn" id="sm-record-btn" onclick="toggleSeriesRecorded()">✓ Marcar episódio como gravado</button>
+    <span class="save-note">💾 Auto-salvo</span>
+  </div>
+</div>
+</div>
+
 <!-- ═══════════ MODAL ═══════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
 <div class="modal" id="modal">
@@ -981,9 +1068,17 @@ function showPage(id,btn){
 // GRID
 // ═══════════════════════════════════════════════════
 function setFilter(key,val){
-  if(key==='pillar'){ appState.filterPillar=val; appState.filterType=null; appState.filterStatus=null; }
-  else if(key==='type'){ appState.filterType=appState.filterType===val?null:val; appState.filterPillar='all'; appState.filterStatus=null; }
-  else if(key==='status'){ appState.filterStatus=appState.filterStatus===val?null:val; appState.filterPillar='all'; appState.filterType=null; }
+  if(key==='pillar'){ appState.filterPillar=val; appState.filterType=null; appState.filterStatus=null; appState.filterSerie=null; }
+  else if(key==='type'){ appState.filterType=appState.filterType===val?null:val; appState.filterPillar='all'; appState.filterStatus=null; appState.filterSerie=null; }
+  else if(key==='status'){ appState.filterStatus=appState.filterStatus===val?null:val; appState.filterPillar='all'; appState.filterType=null; appState.filterSerie=null; }
+  else if(key==='serie'){
+    // Jump to series section and open it
+    seriesState.sectionOpen=true;
+    document.getElementById('series-body').classList.add('open');
+    document.getElementById('series-chevron').classList.add('open');
+    document.getElementById('series-section').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
   updateFilterBtns();
   renderGrid();
 }
@@ -1728,6 +1823,399 @@ function spToggleRecorded(tid,ver){
 }
 
 // ═══════════════════════════════════════════════════
+// SERIES SECTION
+// ═══════════════════════════════════════════════════
+const SERIES_TOPICS = TOPICS.filter(t=>t.type==='serie');
+const SERIES_EPISODES = ['ep1','ep2','ep3'];
+const SERIES_EP_LABELS = {ep1:'Episódio 1',ep2:'Episódio 2',ep3:'Episódio 3'};
+
+// Series scripts stored under fc8_series key
+// key: `serie_${tid}_${ep}_${fmt}_${field}`
+let seriesScripts = JSON.parse(localStorage.getItem('fc8_series')||'{}');
+let seriesRecorded = JSON.parse(localStorage.getItem('fc8_seriesrec')||'{}');
+function saveSeriesScripts(){ localStorage.setItem('fc8_series',JSON.stringify(seriesScripts)); }
+function saveSeriesRec(){ localStorage.setItem('fc8_seriesrec',JSON.stringify(seriesRecorded)); }
+function getSeriesScript(tid,ep,fmt,field){ return seriesScripts[`serie_${tid}_${ep}_${fmt}_${field}`]||''; }
+function setSeriesScript(tid,ep,fmt,field,val){ seriesScripts[`serie_${tid}_${ep}_${fmt}_${field}`]=val; saveSeriesScripts(); }
+function isEpRecorded(tid,ep){ return !!(seriesRecorded[tid]&&seriesRecorded[tid][ep]); }
+function isSeriesDone(tid){ return SERIES_EPISODES.every(ep=>isEpRecorded(tid,ep)); }
+
+// Series script fields — episode structure: problem/hook, fix/lesson, note, CTA
+const SERIES_FIELDS = {
+  video:[
+    {key:'hook',   label:'Hook / Ep.',cls:'l-hook',  rows:2, ph:'Nome da série + Ep.X + gancho...'},
+    {key:'problem',label:'Problema',  cls:'l-problem',rows:3, ph:'O problema ou situação deste episódio...'},
+    {key:'fix',    label:'Fix / Lição',cls:'l-lesson',rows:3,ph:'A solução ou aprendizado do episódio...'},
+    {key:'note',   label:'Nota Extra', cls:'l-why',  rows:2, ph:'Contexto extra, nuance, dica bônus...'},
+    {key:'gcta',   label:'CTA Crescimento',cls:'l-cta',rows:1,ph:'Segue pra não perder o Ep.X / Ativa o sino...'},
+    {key:'ccta',   label:'CTA Conversão',cls:'l-preview',rows:2,ph:'Manda VOCABULÁRIO/ESTRATÉGIA no WhatsApp. Link na bio.'}
+  ],
+  carousel:[
+    {key:'s1',label:'Slide 1 · Capa',cls:'l-cover',rows:2,ph:'"Série: [Nome] — Ep.X 🎬"\n→ Branding forte.'},
+    {key:'s2',label:'Slide 2 · Problema',cls:'l-slide',rows:2,ph:'"O problema deste episódio"\n→ Faz o seguidor se identificar.'},
+    {key:'s3',label:'Slide 3 · Fix',cls:'l-steps',rows:2,ph:'"A solução / lição"\n→ Texto de impacto.'},
+    {key:'s4',label:'Slide 4 · Teaser',cls:'l-preview',rows:2,ph:'"No Ep.X+1: [teaser] 👀"\n→ Cria curiosidade.'},
+    {key:'s5',label:'Slide 5 · CTA',cls:'l-cta',rows:3,ph:'"Manda ESTRATÉGIA no WhatsApp — de graça."\n→ Visual do ebook ou WhatsApp.'}
+  ],
+  story:[
+    {key:'s1',label:'Slide 1',cls:'l-text',rows:2,ph:'TEXTO: "Série: [Nome]"\nVISUAL: Branding da série.'},
+    {key:'s2',label:'Slide 2',cls:'l-text',rows:2,ph:'TEXTO: "Ep.X já no feed 👆"\nVISUAL: Seta apontando pro feed.'},
+    {key:'s3',label:'Slide 3',cls:'l-text',rows:2,ph:'TEXTO: "O problema de hoje:"\nVISUAL: Sabrina olhando pra câmera.'},
+    {key:'s4',label:'Slide 4',cls:'l-text',rows:2,ph:'TEXTO: "É de graça."\nVISUAL: Texto enorme. Fundo escuro.'},
+    {key:'s5',label:'Slide 5',cls:'l-text',rows:2,ph:'TEXTO: "Manda ESTRATÉGIA no WhatsApp"\nVISUAL: Ícone do WhatsApp.'},
+    {key:'s6',label:'Slide 6 · CTA',cls:'l-sticker',rows:3,ph:'TEXTO: "Link na bio 👆"\nSTICKER: Link → bio do Instagram\nVISUAL: Sabrina apontando pra cima.'}
+  ]
+};
+
+let seriesState = {
+  modalTopic:null, modalEp:'ep1', modalFmt:'video',
+  sectionOpen:true, seriesFilter:'all'
+};
+
+// ── SECTION TOGGLE ─────────────────────────────────
+function toggleSeriesSection(){
+  seriesState.sectionOpen=!seriesState.sectionOpen;
+  document.getElementById('series-body').classList.toggle('open',seriesState.sectionOpen);
+  document.getElementById('series-chevron').classList.toggle('open',seriesState.sectionOpen);
+}
+
+function seriesSetFilter(f){
+  seriesState.seriesFilter=f;
+  ['all','p1','p2','p3','p4'].forEach(id=>{
+    const btn=document.getElementById('sf-btn-'+id);
+    if(btn) btn.classList.toggle('active',id===f);
+  });
+  renderSeriesGrid();
+}
+
+// ── RENDER SERIES GRID ─────────────────────────────
+function renderSeriesGrid(){
+  const pColors={p1:'var(--p1)',p2:'var(--p2)',p3:'var(--p3)',p4:'var(--p4)'};
+  const pNames={p1:'P1 False Beginner',p2:'P2 Real-Life',p3:'P3 Pronúncia',p4:'P4 Culture'};
+  const filtered=SERIES_TOPICS.filter(t=>seriesState.seriesFilter==='all'||t.pillar===seriesState.seriesFilter);
+  const total=SERIES_TOPICS.length*3;
+  const done=SERIES_TOPICS.reduce((a,t)=>a+SERIES_EPISODES.filter(ep=>isEpRecorded(t.id,ep)).length,0);
+
+  // Stats bar
+  document.getElementById('series-stats-bar').innerHTML=`
+    <div class="series-stat"><strong>${SERIES_TOPICS.length}</strong> séries</div>
+    <div class="series-stat"><strong>${done}/${total}</strong> eps gravados</div>`;
+
+  let html='';
+  filtered.forEach(t=>{
+    const isDone=isSeriesDone(t.id);
+    const pillarColor=pColors[t.pillar];
+    const epDots=SERIES_EPISODES.map(ep=>`<div class="ep-dot${isEpRecorded(t.id,ep)?' recorded':''}">${ep.replace('ep','')}</div>`).join('');
+    html+=`<div class="series-card${isDone?' done':''}" onclick="openSeriesModal(${t.id})">
+      <div class="series-card-pillar" style="color:${pillarColor}">${pNames[t.pillar]}</div>
+      <div class="series-card-icon">🎬</div>
+      <div class="series-card-num">#${String(t.id).padStart(2,'0')}</div>
+      <div class="series-card-title">${t.title}</div>
+      <div class="series-card-sub">${t.sub}</div>
+      <div class="series-card-episodes">${epDots}</div>
+      ${isDone?'<div style="font-size:10px;color:var(--green);margin-top:6px">✅ Todos gravados</div>':''}
+    </div>`;
+  });
+  document.getElementById('series-grid').innerHTML=html||'<div style="padding:30px;color:var(--muted)">Nenhuma série encontrada.</div>';
+}
+
+// ── SERIES MODAL ───────────────────────────────────
+function openSeriesModal(tid){
+  const t=TOPICS.find(x=>x.id===tid);
+  if(!t) return;
+  seriesState.modalTopic=t;
+  seriesState.modalEp='ep1';
+  seriesState.modalFmt='video';
+  document.getElementById('sm-title').textContent=t.title;
+  document.getElementById('sm-sub').textContent=t.sub;
+  document.getElementById('sm-ai-container').innerHTML='';
+  renderSeriesEpTabs();
+  renderSeriesFmtTabs();
+  renderSeriesBody();
+  updateSeriesRecordBtn();
+  document.getElementById('series-modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeSeriesModal(){
+  document.getElementById('series-modal-overlay').classList.remove('open');
+  document.getElementById('sm-ai-container').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function closeSeriesModalOutside(e){
+  if(e.target===document.getElementById('series-modal-overlay')) closeSeriesModal();
+}
+
+function renderSeriesEpTabs(){
+  const tid=seriesState.modalTopic.id;
+  const tabs=SERIES_EPISODES.map((ep,idx)=>{
+    const done=isEpRecorded(tid,ep);
+    const isActive=ep===seriesState.modalEp;
+    // Only show delete X on episodes beyond the original 3
+    const deleteBtn=idx>=3
+      ? `<span onclick="deleteSeriesEpisode(event,'${ep}')" title="Apagar episódio" style="margin-left:5px;font-size:10px;color:var(--muted);cursor:pointer;line-height:1;padding:1px 3px;border-radius:3px;transition:all .15s" onmouseover="this.style.color='#e05252'" onmouseout="this.style.color='var(--muted)'">✕</span>`
+      : '';
+    return `<button class="modal-tab${isActive?' active':''}" onclick="switchSeriesEp('${ep}')" style="${isActive?'color:var(--green);border-bottom-color:var(--green)':''}">
+      ${SERIES_EP_LABELS[ep]} ${done?'✅':''}${deleteBtn}
+    </button>`;
+  }).join('');
+  const addBtn=`<button class="modal-tab" onclick="addSeriesEpisode()" title="Adicionar episódio" style="color:var(--green);letter-spacing:0;font-size:16px;padding:10px 14px">＋</button>`;
+  document.getElementById('sm-ep-tabs').innerHTML=tabs+addBtn;
+}
+
+function addSeriesEpisode(){
+  const nextNum=SERIES_EPISODES.length+1;
+  const epKey='ep'+nextNum;
+  if(SERIES_EPISODES.includes(epKey)) return; // already exists
+  SERIES_EPISODES.push(epKey);
+  SERIES_EP_LABELS[epKey]='Episódio '+nextNum;
+  // Switch to the new episode and re-render
+  seriesState.modalEp=epKey;
+  document.getElementById('sm-ai-container').innerHTML='';
+  renderSeriesEpTabs();
+  renderSeriesFmtTabs();
+  renderSeriesBody();
+  updateSeriesRecordBtn();
+}
+
+function deleteSeriesEpisode(event, ep){
+  event.stopPropagation(); // don't trigger the tab switch
+  if(!confirm(`Apagar ${SERIES_EP_LABELS[ep]} e todos os seus scripts?`)) return;
+  const idx=SERIES_EPISODES.indexOf(ep);
+  if(idx<3) return; // safety — never delete original 3
+  SERIES_EPISODES.splice(idx,1);
+  delete SERIES_EP_LABELS[ep];
+  // Clear any saved scripts for this episode
+  const tid=seriesState.modalTopic.id;
+  FORMATS.forEach(fmt=>{
+    SERIES_FIELDS[fmt].forEach(f=>{
+      delete seriesScripts[`serie_${tid}_${ep}_${fmt}_${f.key}`];
+    });
+  });
+  if(seriesRecorded[tid]) delete seriesRecorded[tid][ep];
+  saveSeriesScripts();
+  saveSeriesRec();
+  // Switch back to ep1 if we just deleted the active tab
+  if(seriesState.modalEp===ep) seriesState.modalEp='ep1';
+  document.getElementById('sm-ai-container').innerHTML='';
+  renderSeriesEpTabs();
+  renderSeriesFmtTabs();
+  renderSeriesBody();
+  updateSeriesRecordBtn();
+}
+
+function renderSeriesFmtTabs(){
+  const fmtColors={video:'var(--video)',carousel:'var(--carousel)',story:'var(--story)'};
+  document.getElementById('sm-fmt-tabs').innerHTML=FORMATS.map(f=>`
+    <button class="format-tab ${f}${f===seriesState.modalFmt?' active':''}" onclick="switchSeriesFmt('${f}')">
+      ${FORMAT_LABELS[f]}
+    </button>`).join('');
+}
+
+function switchSeriesEp(ep){
+  seriesState.modalEp=ep;
+  document.getElementById('sm-ai-container').innerHTML='';
+  renderSeriesEpTabs(); renderSeriesFmtTabs(); renderSeriesBody(); updateSeriesRecordBtn();
+}
+
+function switchSeriesFmt(fmt){
+  seriesState.modalFmt=fmt;
+  renderSeriesFmtTabs(); renderSeriesBody();
+}
+
+function renderSeriesBody(){
+  const {modalTopic:t, modalEp:ep, modalFmt:fmt}=seriesState;
+  const fields=SERIES_FIELDS[fmt];
+  const fmtDescs={
+    video:{ep1:'Ep.1 — Apresenta o problema · ~45s',ep2:'Ep.2 — O fix central · ~45s',ep3:'Ep.3 — Nota extra + CTA forte · ~40s'},
+    carousel:{ep1:'Série Visual · 5 slides · Ep.1',ep2:'Série Visual · 5 slides · Ep.2',ep3:'Série Visual · 5 slides · Ep.3'},
+    story:{ep1:'Story Série · 6 slides · Ep.1',ep2:'Story Série · 6 slides · Ep.2',ep3:'Story Série · 6 slides · Ep.3'}
+  };
+
+  let html=`<div class="fmt-section-header">
+    <span class="fmt-icon">${{video:'🎬',carousel:'🖼',story:'⚡'}[fmt]}</span>
+    <span class="fmt-title">${FORMAT_LABELS[fmt]}</span>
+    <span class="fmt-desc">${fmtDescs[fmt][ep]||''}</span>
+  </div>`;
+
+  if(fmt==='carousel'){
+    html+=`<div class="slides-preview">${fields.map((_,i)=>`<div class="slide-thumb${i===0?' cover':''}">${i===0?'CAPA':'S'+(i+1)}</div>`).join('')}</div>`;
+  }
+  if(fmt==='story'){
+    html+=`<div class="slides-preview">${fields.map((_,i)=>`<div class="story-thumb${i===fields.length-1?' cta-t':''}">${i+1}</div>`).join('')}</div>`;
+  }
+
+  fields.forEach(f=>{
+    const val=getSeriesScript(t.id,ep,fmt,f.key);
+    html+=`<div class="script-row">
+      <span class="row-label ${f.cls}">${f.label}</span>
+      <textarea class="script-textarea" rows="${f.rows}"
+        placeholder="${f.ph.replace(/"/g,'&quot;')}"
+        onchange="setSeriesScript(${t.id},'${ep}','${fmt}','${f.key}',this.value)"
+        oninput="autoResize(this)">${val}</textarea>
+    </div>`;
+  });
+
+  document.getElementById('sm-body').innerHTML=html;
+  document.querySelectorAll('#sm-body .script-textarea').forEach(autoResize);
+}
+
+function updateSeriesRecordBtn(){
+  const {modalTopic:t, modalEp:ep}=seriesState;
+  if(!t) return;
+  const done=isEpRecorded(t.id,ep);
+  const btn=document.getElementById('sm-record-btn');
+  btn.textContent=done?'↩ Desmarcar episódio':'✓ Marcar episódio como gravado';
+  btn.className='record-btn'+(done?' recorded':'');
+}
+
+function toggleSeriesRecorded(){
+  const {modalTopic:t, modalEp:ep}=seriesState;
+  if(!t) return;
+  if(!seriesRecorded[t.id]) seriesRecorded[t.id]={};
+  seriesRecorded[t.id][ep]=!seriesRecorded[t.id][ep];
+  saveSeriesRec();
+  updateSeriesRecordBtn();
+  renderSeriesEpTabs();
+  renderSeriesGrid();
+}
+
+// ── SERIES AI PANEL ────────────────────────────────
+function openSeriesAIPanel(){
+  const {modalTopic:t, modalEp:ep, modalFmt:fmt}=seriesState;
+  const container=document.getElementById('sm-ai-container');
+  if(container.innerHTML){ container.innerHTML=''; return; }
+
+  const srcFields=SERIES_FIELDS[fmt];
+  const srcContent=srcFields.map(f=>{
+    const v=getSeriesScript(t.id,ep,fmt,f.key);
+    return v?`${f.label}: ${v}`:'';
+  }).filter(Boolean).join('\n');
+
+  // Checkboxes for all eps × formats except current
+  let cbHtml='';
+  SERIES_EPISODES.forEach(e=>{
+    FORMATS.forEach(f=>{
+      const key=`${e}_${f}`;
+      const isSrc=e===ep&&f===fmt;
+      cbHtml+=`<label class="ai-checkbox-item">
+        <input type="checkbox" id="sai_${key}" ${isSrc?'disabled':''} ${!isSrc?'checked':''}>
+        ${SERIES_EP_LABELS[e]} · ${FORMAT_LABELS[f]}${isSrc?' (origem)':''}
+      </label>`;
+    });
+  });
+
+  container.innerHTML=`<div class="ai-panel" style="margin:0;border-radius:0;border-left:none;border-right:none;border-bottom:none">
+    <div class="ai-panel-title">✨ Gerar Episódios com IA</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px">O script de origem (ep/formato atual) é a referência. A IA mantém a mesma série e progressão lógica.</div>
+    <div class="ai-checkboxes" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">${cbHtml}</div>
+    <button class="ai-generate-btn" onclick="runSeriesGenerate()">✨ Gerar Selecionados</button>
+    <div class="ai-status" id="sm-ai-status"></div>
+  </div>`;
+}
+
+async function runSeriesGenerate(){
+  const key=getApiKey();
+  if(!key){ document.getElementById('sm-ai-status').textContent='⚠️ Configure sua API key.'; return; }
+  const {modalTopic:t, modalEp:srcEp, modalFmt:srcFmt}=seriesState;
+  const srcFields=SERIES_FIELDS[srcFmt];
+  const srcContent=srcFields.map(f=>{
+    const v=getSeriesScript(t.id,srcEp,srcFmt,f.key);
+    return v?`${f.label}: ${v}`:'';
+  }).filter(Boolean).join('\n');
+
+  const toGenerate=[];
+  SERIES_EPISODES.forEach(ep=>{
+    FORMATS.forEach(fmt=>{
+      const cb=document.getElementById(`sai_${ep}_${fmt}`);
+      if(cb&&cb.checked&&!cb.disabled) toGenerate.push({ep,fmt});
+    });
+  });
+
+  if(!toGenerate.length){ document.getElementById('sm-ai-status').textContent='⚠️ Selecione pelo menos uma peça.'; return; }
+  document.querySelector('#sm-ai-container .ai-generate-btn').disabled=true;
+  let done=0;
+
+  for(const {ep,fmt} of toGenerate){
+    document.getElementById('sm-ai-status').textContent=`⏳ Gerando ${done+1}/${toGenerate.length}: ${SERIES_EP_LABELS[ep]} · ${FORMAT_LABELS[fmt]}...`;
+    try{
+      const result=await generateSeriesScript(t,srcEp,srcFmt,srcContent,ep,fmt);
+      const fields=SERIES_FIELDS[fmt];
+      fields.forEach(field=>{
+        let val=result[field.key]||result[field.label]||'';
+        if(!val){
+          const k=Object.keys(result).find(rk=>rk.toLowerCase().includes(field.key.toLowerCase()));
+          if(k) val=result[k];
+        }
+        if(val) setSeriesScript(t.id,ep,fmt,field.key,val);
+      });
+      done++;
+    } catch(err){
+      document.getElementById('sm-ai-status').textContent=`❌ Erro: ${err.message}`;
+      document.querySelector('#sm-ai-container .ai-generate-btn').disabled=false;
+      return;
+    }
+  }
+
+  document.getElementById('sm-ai-status').textContent=`✅ ${done} peça(s) geradas! Navegue pelos episódios para ver.`;
+  document.querySelector('#sm-ai-container .ai-generate-btn').disabled=false;
+  renderSeriesBody();
+}
+
+async function generateSeriesScript(topic, srcEp, srcFmt, srcContent, targetEp, targetFmt){
+  const fields=SERIES_FIELDS[targetFmt];
+  const fieldList=fields.map(f=>`- ${f.key}: ${f.label} (${f.ph.split('\n')[0]})`).join('\n');
+  const epContext={ep1:'Episódio 1 — apresenta o problema central da série',ep2:'Episódio 2 — entrega o fix/solução principal',ep3:'Episódio 3 — nota extra, nuance, dica bônus + CTA de conversão forte'};
+  const fmtGuide={video:'Vídeo/Reel · 30-50s por episódio · script curto e direto.',carousel:'Carrossel · 5 slides · visual da série com branding consistente.',story:'Story · 6 slides · tap-through rápido com CTA no último slide.'};
+
+  const prompt=`Você é especialista em conteúdo de série para o Fluency Connect, escola de inglês brasileira.
+Contexto: casal intercultural (Michael americano nativo + Sabrina brasileira que morou nos EUA). Público: mulheres brasileiras 25-34 aprendendo inglês. Captions em português.
+
+SÉRIE: "${topic.title}"
+Descrição: "${topic.sub}"
+
+SCRIPT DE ORIGEM (${SERIES_EP_LABELS[srcEp]} · ${srcFmt}):
+${srcContent||'(sem conteúdo de origem — crie baseado na série)'}
+
+TAREFA: Escreva o ${SERIES_EP_LABELS[targetEp]} para formato ${targetFmt.toUpperCase()}.
+
+Contexto do episódio alvo:
+${epContext[targetEp]}
+
+Formato alvo:
+${fmtGuide[targetFmt]}
+
+Regras importantes:
+- Mantenha a progressão lógica da série (Ep1→problema, Ep2→fix, Ep3→nota+CTA)
+- CTA de crescimento: "Segue pra Ep.X / Ativa o sino"
+- CTA de conversão: palavra de ativação WhatsApp (VOCABULÁRIO ou ESTRATÉGIA) + "Link na bio"
+- Não invente nova série — use o mesmo núcleo temático
+
+Responda APENAS em JSON válido com estes campos:
+{
+${fieldList}
+}
+
+Nenhum texto fora do JSON.`;
+
+  const response=await fetch('https://anthropic-proxy.sabrinamcgehee1.workers.dev',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+  });
+  if(!response.ok){
+    const err=await response.json();
+    throw new Error(err.error?.message||`HTTP ${response.status}`);
+  }
+  const data=await response.json();
+  const text=data.content.map(c=>c.text||'').join('');
+  const clean=text.replace(/```json|```/g,'').trim();
+  try{ return JSON.parse(clean); }
+  catch(e){ throw new Error('Resposta da API não era JSON válido.'); }
+}
+
+// ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
 // Populate topic selectors when pages are opened
@@ -1740,6 +2228,10 @@ window.showPage=function(id,btn){
 
 renderGrid();
 updateFilterBtns();
+renderSeriesGrid();
+seriesState.sectionOpen=true;
+document.getElementById('series-body').classList.add('open');
+document.getElementById('series-chevron').classList.add('open');
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeSettings(); } });
 </script>
 </body>
