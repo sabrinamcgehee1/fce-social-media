@@ -513,6 +513,23 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .gc-ex-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
 .gc-ex-line{font-size:11px;color:var(--muted2);line-height:1.65}
 .gc-ex-line strong{color:var(--muted2);font-weight:700}
+/* ── VIDEO CARD STATES ── */
+.video-card.scripted{border-color:rgba(52,152,219,.4);background:rgba(52,152,219,.06)}
+.video-card.scripted .card-num{color:var(--position)}
+.badge-scripted{background:rgba(52,152,219,.15);color:var(--position)}
+/* Recorded tab */
+.rec-tab-bar{display:flex;gap:2px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.rec-tab-btn{padding:10px 16px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.rec-tab-btn:hover{color:var(--text)}
+.rec-tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+/* Add topic button per pillar */
+.pillar-add-btn{position:absolute;bottom:10px;right:10px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1}
+.pillar-add-btn:hover{background:var(--green);border-color:var(--green);color:#000}
+.pillar-card{position:relative}
+/* Add topic modal */
+.add-topic-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.add-topic-modal-ov.open{opacity:1;pointer-events:all}
+.add-topic-modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:480px;overflow:hidden}
 </style>
 </head>
 <body>
@@ -539,29 +556,42 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 
 <!-- ═══════════ VIDEOS PAGE ═══════════ -->
 <div class="page active" id="page-videos">
-  <div class="section-title">Central de Conteúdo</div>
-  <div class="section-desc">Clique em qualquer card para ver e editar os scripts — Vídeo, Carrossel e Story para cada versão.</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px">
+    <div>
+      <div class="section-title" style="margin-bottom:2px">Central de Conteúdo</div>
+      <div class="section-desc" style="margin-bottom:0">Clique em qualquer card para ver e editar os scripts.</div>
+    </div>
+  </div>
+  <!-- Topics / Recorded sub-tabs -->
+  <div class="rec-tab-bar">
+    <button class="rec-tab-btn active" id="vtab-topics" onclick="switchVideoTab('topics')">📋 Tópicos</button>
+    <button class="rec-tab-btn" id="vtab-recorded" onclick="switchVideoTab('recorded')">✅ Gravados</button>
+  </div>
 
   <div class="pillar-header">
     <div class="pillar-card p1" onclick="setFilter('pillar','p1')">
       <div class="pillar-num">1</div><div class="pillar-name">False Beginner Breakthrough</div>
       <div class="pillar-count" id="cnt-p1">9 tópicos</div>
       <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p1" style="width:0%"></div></div>
+      <button class="pillar-add-btn" onclick="event.stopPropagation();openAddTopic('p1')" title="Adicionar tópico ao P1">＋</button>
     </div>
     <div class="pillar-card p2" onclick="setFilter('pillar','p2')">
       <div class="pillar-num">2</div><div class="pillar-name">Real-Life Fluency</div>
       <div class="pillar-count" id="cnt-p2">9 tópicos</div>
       <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p2" style="width:0%"></div></div>
+      <button class="pillar-add-btn" onclick="event.stopPropagation();openAddTopic('p2')" title="Adicionar tópico ao P2">＋</button>
     </div>
     <div class="pillar-card p3" onclick="setFilter('pillar','p3')">
       <div class="pillar-num">3</div><div class="pillar-name">Pronúncia + Confiança</div>
       <div class="pillar-count" id="cnt-p3">8 tópicos</div>
       <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p3" style="width:0%"></div></div>
+      <button class="pillar-add-btn" onclick="event.stopPropagation();openAddTopic('p3')" title="Adicionar tópico ao P3">＋</button>
     </div>
     <div class="pillar-card p4" onclick="setFilter('pillar','p4')">
       <div class="pillar-num">4</div><div class="pillar-name">Culture Immersion</div>
       <div class="pillar-count" id="cnt-p4">9 tópicos</div>
       <div class="pillar-progress"><div class="pillar-progress-bar" id="prog-p4" style="width:0%"></div></div>
+      <button class="pillar-add-btn" onclick="event.stopPropagation();openAddTopic('p4')" title="Adicionar tópico ao P4">＋</button>
     </div>
   </div>
 
@@ -1440,6 +1470,47 @@ PROVA (quem): ___________________<br><br>
   </div>
 </div>
 
+<!-- ═══════════ ADD TOPIC MODAL ═══════════ -->
+<div class="add-topic-modal-ov" id="add-topic-overlay" onclick="closeAddTopicOutside(event)">
+<div class="add-topic-modal">
+  <div class="post-modal-hdr">
+    <div class="post-modal-title" id="add-topic-title">＋ Novo Tópico</div>
+    <button class="modal-close" onclick="closeAddTopic()">✕</button>
+  </div>
+  <div class="post-modal-body">
+    <div class="pm-field">
+      <div class="pm-lbl">Título do tópico</div>
+      <input type="text" class="pm-input" id="at-title" placeholder="Ex: Como usar 'gonna' naturalmente">
+    </div>
+    <div class="pm-field">
+      <div class="pm-lbl">Subtítulo / contexto</div>
+      <input type="text" class="pm-input" id="at-sub" placeholder="Ex: A contração que nativos usam o tempo todo">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="pm-field">
+        <div class="pm-lbl">Pilar</div>
+        <select class="pm-select" id="at-pillar">
+          <option value="p1">P1 — False Beginner</option>
+          <option value="p2">P2 — Real-Life Fluency</option>
+          <option value="p3">P3 — Pronúncia + Confiança</option>
+          <option value="p4">P4 — Culture Immersion</option>
+        </select>
+      </div>
+      <div class="pm-field">
+        <div class="pm-lbl">Tipo</div>
+        <select class="pm-select" id="at-type">
+          <option value="regular">Regular (4 versões)</option>
+          <option value="serie">Série (episódios)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="post-modal-ftr">
+    <button class="pm-save-btn" onclick="saveNewTopic()">＋ Adicionar Tópico</button>
+  </div>
+</div>
+</div>
+
 <!-- ═══════════ ADD SCRIPT MODAL ═══════════ -->
 <div class="modal-overlay" id="add-script-overlay" onclick="closeAddScriptOutside(event)">
 <div class="modal" id="add-script-modal" style="max-width:680px">
@@ -1811,17 +1882,18 @@ function getFiltered(){
     return true;
   });
 }
+
 function renderGrid(){
   const topics=getFiltered();
   const pColors={p1:'var(--p1)',p2:'var(--p2)',p3:'var(--p3)',p4:'var(--p4)'};
   const totalV=TOPICS.length*4, doneV=TOPICS.reduce((a,t)=>a+VERSIONS.filter(v=>isRecorded(t.id,v)).length,0);
-  document.getElementById('stats-bar').innerHTML=`<div class="stat-item"><strong>${topics.length}</strong>tópicos</div><div class="stat-item"><strong>${doneV}</strong>versões gravadas</div><div class="stat-item"><strong>${totalV-doneV}</strong>pendentes</div><div class="stat-item"><strong>${Math.round(doneV/totalV*100)}%</strong>completo</div>`;
+  document.getElementById('stats-bar').innerHTML=`<div class=\"stat-item\"><strong>${topics.length}</strong>tópicos</div><div class=\"stat-item\"><strong>${doneV}</strong>versões gravadas</div><div class=\"stat-item\"><strong>${totalV-doneV}</strong>pendentes</div><div class=\"stat-item\"><strong>${Math.round(doneV/totalV*100)}%</strong>completo</div>`;
   const versionsToShow=appState.filterType?[appState.filterType]:VERSIONS;
   let html='';
   topics.forEach(t=>{
     versionsToShow.forEach(v=>{
       const done=isRecorded(t.id,v);
-      html+=`<div class="video-card${done?' done':''}" onclick="openModal(${t.id},'${v}')">
+      html+=`<div class="video-card${done?' done':''}\" onclick="openModal(${t.id},'${v}')">
         ${done?'<div class="done-check">✓</div>':''}
         <div class="card-top">
           <div class="card-num" style="color:${pColors[t.pillar]}">${String(t.id).padStart(2,'0')}</div>
@@ -1839,6 +1911,7 @@ function renderGrid(){
   document.getElementById('video-grid').innerHTML=html||'<div style="padding:40px;color:var(--muted);text-align:center">Nenhum tópico encontrado.</div>';
   updatePillarProgress();
 }
+
 function updatePillarProgress(){
   ['p1','p2','p3','p4'].forEach(p=>{
     const ts=TOPICS.filter(t=>t.pillar===p);
@@ -2207,6 +2280,67 @@ function saveProdCard(tid){
   fields.forEach(f=>saveProdField(tid,f.dataset.field,f.value));
   const btn=document.querySelector('.prod-save-btn');
   if(btn){ btn.textContent='✅ Salvo!'; setTimeout(()=>btn.textContent='💾 Salvar Production Card',1500); }
+}
+
+// ═══════════════════════════════════════════════════
+// VIDEO TAB — TOPICS / RECORDED SUB-TABS
+// ═══════════════════════════════════════════════════
+let videoTab = 'topics'; // 'topics' or 'recorded'
+
+function switchVideoTab(tab){
+  videoTab=tab;
+  document.getElementById('vtab-topics').classList.toggle('active',tab==='topics');
+  document.getElementById('vtab-recorded').classList.toggle('active',tab==='recorded');
+  renderGrid();
+}
+
+// ═══════════════════════════════════════════════════
+// ADD TOPIC
+// ═══════════════════════════════════════════════════
+let customTopics = JSON.parse(localStorage.getItem('fc8_custom_topics')||'[]');
+function saveCustomTopics(){ localStorage.setItem('fc8_custom_topics',JSON.stringify(customTopics)); }
+
+function openAddTopic(pillar){
+  document.getElementById('at-pillar').value=pillar||'p1';
+  document.getElementById('at-title').value='';
+  document.getElementById('at-sub').value='';
+  document.getElementById('at-type').value='regular';
+  document.getElementById('add-topic-title').textContent=`＋ Novo Tópico — P${pillar?.replace('p','')||'1'}`;
+  document.getElementById('add-topic-overlay').classList.add('open');
+}
+function closeAddTopic(){ document.getElementById('add-topic-overlay').classList.remove('open'); }
+function closeAddTopicOutside(e){ if(e.target===document.getElementById('add-topic-overlay')) closeAddTopic(); }
+
+function saveNewTopic(){
+  const title=document.getElementById('at-title').value.trim();
+  if(!title){ document.getElementById('at-title').focus(); return; }
+  const newId=Math.max(...TOPICS.map(t=>t.id),...customTopics.map(t=>t.id),0)+1;
+  const newTopic={
+    id:newId,
+    pillar:document.getElementById('at-pillar').value,
+    type:document.getElementById('at-type').value,
+    title,
+    sub:document.getElementById('at-sub').value.trim()||'—',
+    custom:true
+  };
+  TOPICS.push(newTopic);
+  customTopics.push(newTopic);
+  saveCustomTopics();
+  closeAddTopic();
+  renderGrid();
+  updatePillarProgress();
+  // Also refresh scripts page if open
+  if(document.getElementById('page-scripts')?.classList.contains('active')) spRender();
+}
+
+// ═══════════════════════════════════════════════════
+// SCRIPT-WRITTEN STATE (blue card)
+// ═══════════════════════════════════════════════════
+function isScripted(tid,ver){
+  // A version is "scripted" if ANY format has at least one non-empty field
+  return FORMATS.some(fmt=>
+    SCRIPT_FIELDS[ver][fmt].some(f=>getScript(tid,ver,fmt,f.key).trim().length>0)
+  );
 }
 
 // ═══════════════════════════════════════════════════
@@ -3523,6 +3657,12 @@ window.showPage=function(id,btn){
   if(id==='scripts') spRender();
 };
 
+// Reload any custom topics saved from previous sessions
+const savedCustom=JSON.parse(localStorage.getItem('fc8_custom_topics')||'[]');
+savedCustom.forEach(ct=>{
+  if(!TOPICS.find(t=>t.id===ct.id)) TOPICS.push(ct);
+});
+
 renderGrid();
 // Update pillar distribution cards with live topic counts
 ['p1','p2','p3','p4'].forEach(p=>{
@@ -3542,7 +3682,7 @@ document.getElementById('series-chevron').classList.add('open');
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     closeModal(); closeSettings(); closePostModal();
-    closeSeriesModal(); closeAddScript(); closeLogModal();
+    closeSeriesModal(); closeAddScript(); closeLogModal(); closeAddTopic();
   }
 });
 </script>
