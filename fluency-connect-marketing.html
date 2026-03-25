@@ -400,6 +400,34 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .pm-save-btn{flex:1;padding:9px;background:var(--green);border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer}
 .pm-del-btn{padding:9px 14px;background:transparent;border:1px solid var(--border);border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:#e05252;cursor:pointer;transition:all .2s}
 .pm-del-btn:hover{border-color:#e05252;background:rgba(224,82,82,.08)}
+/* ── PILLARS PAGE ── */
+.pillar-block-full{border-radius:14px;padding:22px 26px;margin-bottom:16px;border:1px solid transparent}
+.pb-full-1{background:rgba(29,185,148,.06);border-color:rgba(29,185,148,.2)}
+.pb-full-2{background:rgba(224,82,82,.06);border-color:rgba(224,82,82,.2)}
+.pb-full-3{background:rgba(224,160,48,.06);border-color:rgba(224,160,48,.2)}
+.pb-full-4{background:rgba(91,141,238,.06);border-color:rgba(91,141,238,.2)}
+.pb-num-big{font-size:36px;font-weight:900;line-height:1;margin-bottom:4px}
+.pb-full-1 .pb-num-big{color:var(--p1)}
+.pb-full-2 .pb-num-big{color:var(--p2)}
+.pb-full-3 .pb-num-big{color:var(--p3)}
+.pb-full-4 .pb-num-big{color:var(--p4)}
+.pb-title-big{font-size:20px;font-weight:900;margin-bottom:3px}
+.pb-sub-tag{font-size:11px;color:var(--muted2);margin-bottom:14px;letter-spacing:.03em}
+.pb-divider{height:1px;background:rgba(255,255,255,.06);margin-bottom:14px}
+.pb-description{font-size:13px;color:var(--muted2);line-height:1.75;margin-bottom:10px}
+.pb-tags-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.pb-tag-pill{padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid}
+.pb-full-1 .pb-tag-pill{background:rgba(29,185,148,.12);border-color:rgba(29,185,148,.25);color:var(--p1)}
+.pb-full-2 .pb-tag-pill{background:rgba(224,82,82,.12);border-color:rgba(224,82,82,.25);color:var(--p2)}
+.pb-full-3 .pb-tag-pill{background:rgba(224,160,48,.12);border-color:rgba(224,160,48,.25);color:var(--p3)}
+.pb-full-4 .pb-tag-pill{background:rgba(91,141,238,.12);border-color:rgba(91,141,238,.25);color:var(--p4)}
+.pb-insight-box{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:12px;font-size:12px;color:var(--muted2);line-height:1.7}
+.pb-insight-box strong{color:var(--text)}
+.pb-dist-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pb-dist-card{text-align:center;padding:12px;background:var(--bg3);border-radius:8px}
+.pb-dist-num{font-size:22px;font-weight:900}
+.pb-dist-detail{font-size:11px;color:var(--muted2);margin-top:2px;line-height:1.5}
+@media(max-width:700px){.pb-dist-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -413,8 +441,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
     <button class="nav-tab" onclick="showPage('guide',this)">📖 Guia</button>
     <button class="nav-tab" onclick="showPage('calendar',this)">📅 Calendário</button>
+    <button class="nav-tab" onclick="showPage('pillars',this)">⭐ Pilares</button>
     <button class="nav-tab" onclick="showPage('schedule',this)">🕐 Horários</button>
     <button class="nav-tab" onclick="showPage('whatsapp',this)">💬 WhatsApp</button>
+    <button class="nav-tab" onclick="showPage('metrics',this)">📊 Métricas</button>
   </nav>
   <div class="header-right">
     <span class="hdr-counter">Gravados: <strong id="hdr-rec">0</strong>/140</span>
@@ -817,6 +847,127 @@ PROVA (quem): ___________________<br><br>
     <div class="post-modal-ftr">
       <button class="pm-save-btn" onclick="savePost()">💾 Salvar</button>
       <button class="pm-del-btn" id="pm-del-btn" style="display:none" onclick="deletePost()">🗑 Apagar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PILLARS PAGE ═══════════ -->
+<div class="page" id="page-pillars">
+  <div class="section-title">Pilares do Fluency Connect</div>
+  <div class="section-desc">Os 4 pilares que organizam todo o conteúdo — propósito, audiência e gatilhos de cada um.</div>
+
+  <div class="pillar-block-full pb-full-1">
+    <div class="pb-num-big">1</div>
+    <div class="pb-title-big">False Beginner Breakthrough</div>
+    <div class="pb-sub-tag">Fluência · Método · Bloqueio · Mindset</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">Para quem estudou inglês por anos mas ainda não consegue falar. Esse é o maior grupo de brasileiros — eles têm vocabulário, têm gramática, mas travam na hora da conversa real. O problema não é linguístico, é metodológico e psicológico.</div>
+    <div class="pb-description">A história da Sabrina (travou com um americano depois de anos de estudo) e a história do Michael (aprendeu português na terceira tentativa, falando desde o dia 1) são os âncoras narrativos desse pilar. É o pilar de maior identificação do público.</div>
+    <div class="pb-tags-row">
+      <span class="pb-tag-pill">Storytelling</span>
+      <span class="pb-tag-pill">Double Down</span>
+      <span class="pb-tag-pill">Educational</span>
+      <span class="pb-tag-pill">Séries</span>
+    </div>
+    <div class="pb-insight-box"><strong>Gatilho principal:</strong> "Estudei inglês por anos e ainda não falo" — qualquer conteúdo que confirme que esse não é problema de inteligência ou talento gera alto compartilhamento. O público quer ser absolvido e mostrar um caminho.</div>
+  </div>
+
+  <div class="pillar-block-full pb-full-2">
+    <div class="pb-num-big">2</div>
+    <div class="pb-title-big">Real-Life Fluency</div>
+    <div class="pb-sub-tag">Inglês real · Situações práticas · Conversação · Vocabulário ativo</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">O inglês que ninguém aprende no livro didático. Frases reais de nativos, small talk, reações naturais, inglês do trabalho, inglês de viagem. A Sabrina viveu nos EUA e tem histórias reais — restaurante, trabalho, entrevista. O Michael é a fonte nativa para validar o que é real vs o que é formal demais.</div>
+    <div class="pb-description">Conteúdo de alto valor percebido e alta taxa de salvamento. O público salva porque quer usar. Formatos ideais: comparação (textbook vs real), listas de frases, correções de erros comuns.</div>
+    <div class="pb-tags-row">
+      <span class="pb-tag-pill">Educational</span>
+      <span class="pb-tag-pill">Comparison</span>
+      <span class="pb-tag-pill">Séries</span>
+      <span class="pb-tag-pill">Carrossel</span>
+    </div>
+    <div class="pb-insight-box"><strong>Gatilho principal:</strong> "Para de falar X — diz Y" gera saves e compartilhamentos imediatos. Comparações diretas (Hollywood English vs Real English) criam surpresa e curiosidade. O Michael como nativo é a autoridade máxima aqui.</div>
+  </div>
+
+  <div class="pillar-block-full pb-full-3">
+    <div class="pb-num-big">3</div>
+    <div class="pb-title-big">Pronúncia + Confiança</div>
+    <div class="pb-sub-tag">Pronúncia · Ritmo · Confiança · Desbloqueio</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">O pilar que aborda a parte mais emocional do aprendizado: o medo de soar errado, o sotaque, a vergonha de falar. A Sabrina tem a história da apresentação tremendo. O Michael tem a história de perceber que soava gringo demais no ritmo, não nos sons.</div>
+    <div class="pb-description">Conteúdo que valida a insegurança do público e oferece uma saída prática. O foco é em ritmo e entonação (stress-timed vs syllable-timed), não em sons isolados — porque é o que realmente muda como a pessoa soa.</div>
+    <div class="pb-tags-row">
+      <span class="pb-tag-pill">Storytelling</span>
+      <span class="pb-tag-pill">Educational</span>
+      <span class="pb-tag-pill">Authority</span>
+      <span class="pb-tag-pill">Séries</span>
+    </div>
+    <div class="pb-insight-box"><strong>Gatilho principal:</strong> Mostrar que o problema não é o sotaque — é o ritmo. Isso é contraintuitivo e gera debate e engajamento. "Falar rápido não é fluência — é ansiedade" é o tipo de frase que para o scroll.</div>
+  </div>
+
+  <div class="pillar-block-full pb-full-4">
+    <div class="pb-num-big">4</div>
+    <div class="pb-title-big">Culture Immersion</div>
+    <div class="pb-sub-tag">Cultura americana · Choque cultural · Imersão em casa · Casal intercultural</div>
+    <div class="pb-divider"></div>
+    <div class="pb-description">O pilar que nenhum concorrente tem: o casal bilíngue intercultural como fonte de conteúdo. Michael explica a cultura americana de dentro. Sabrina explica o choque cultural de quem chegou de fora. Os dois juntos criam perspectiva que não existe em nenhum outro canal de inglês.</div>
+    <div class="pb-description">Conteúdo de imersão em casa (sem sair do Brasil), diferenças culturais Brasil × EUA, por que americanos parecem rudes, como criar ambiente de inglês no dia a dia. Alto potencial viral porque resolve uma crença limitante: "preciso ir pros EUA para ser fluente".</div>
+    <div class="pb-tags-row">
+      <span class="pb-tag-pill">Storytelling</span>
+      <span class="pb-tag-pill">Comparison</span>
+      <span class="pb-tag-pill">Educational</span>
+      <span class="pb-tag-pill">Séries</span>
+      <span class="pb-tag-pill">Carrossel</span>
+    </div>
+    <div class="pb-insight-box"><strong>Diferencial único:</strong> Nenhum outro professor de inglês brasileiro tem um americano nativo como parceiro. O Michael como co-apresentador valida tudo o que a Sabrina ensina. Esse é o ativo mais difícil de replicar pelos concorrentes.</div>
+  </div>
+
+  <!-- Distribution summary -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-top:8px">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px">Distribuição de conteúdo por pilar</div>
+    <div class="pb-dist-grid">
+      <div class="pb-dist-card">
+        <div class="pb-dist-num" style="color:var(--p1)">P1</div>
+        <div class="pb-dist-detail" id="pb-dist-p1">9 tópicos · 36 vídeos</div>
+      </div>
+      <div class="pb-dist-card">
+        <div class="pb-dist-num" style="color:var(--p2)">P2</div>
+        <div class="pb-dist-detail" id="pb-dist-p2">9 tópicos · 36 vídeos</div>
+      </div>
+      <div class="pb-dist-card">
+        <div class="pb-dist-num" style="color:var(--p3)">P3</div>
+        <div class="pb-dist-detail" id="pb-dist-p3">8 tópicos · 32 vídeos</div>
+      </div>
+      <div class="pb-dist-card">
+        <div class="pb-dist-num" style="color:var(--p4)">P4</div>
+        <div class="pb-dist-detail" id="pb-dist-p4">9 tópicos · 36 vídeos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content job reminder -->
+  <div style="background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.2);border-radius:10px;padding:18px 22px;margin-top:12px">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:12px">Distribuição de Content Jobs (40/25/20/15)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+      <div style="text-align:center;padding:12px;background:rgba(29,185,148,.08);border-radius:8px;border:1px solid rgba(29,185,148,.15)">
+        <div style="font-size:20px;font-weight:900;color:var(--attract)">40%</div>
+        <div style="font-size:11px;font-weight:800;color:var(--attract);margin-top:2px">ATRAIR</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">Storytelling<br>sem pitch</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:rgba(155,89,182,.08);border-radius:8px;border:1px solid rgba(155,89,182,.15)">
+        <div style="font-size:20px;font-weight:900;color:var(--nurture)">25%</div>
+        <div style="font-size:11px;font-weight:800;color:var(--nurture);margin-top:2px">NUTRIR</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">Educational<br>constrói confiança</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:rgba(52,152,219,.08);border-radius:8px;border:1px solid rgba(52,152,219,.15)">
+        <div style="font-size:20px;font-weight:900;color:var(--position)">20%</div>
+        <div style="font-size:11px;font-weight:800;color:var(--position);margin-top:2px">POSICIONAR</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">Authority<br>mostra o método</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:rgba(230,126,34,.08);border-radius:8px;border:1px solid rgba(230,126,34,.15)">
+        <div style="font-size:20px;font-weight:900;color:var(--convert)">15%</div>
+        <div style="font-size:11px;font-weight:800;color:var(--convert);margin-top:2px">CONVERTER</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">CTA direto<br>ebook / curso / app</div>
+      </div>
     </div>
   </div>
 </div>
@@ -2591,6 +2742,16 @@ window.showPage=function(id,btn){
 };
 
 renderGrid();
+// Update pillar distribution cards with live topic counts
+['p1','p2','p3','p4'].forEach(p=>{
+  const el=document.getElementById('pb-dist-'+p);
+  if(!el) return;
+  const ts=TOPICS.filter(t=>t.pillar===p);
+  const reg=ts.filter(t=>t.type==='regular').length;
+  const ser=ts.filter(t=>t.type==='serie').length;
+  const done=ts.reduce((a,t)=>a+VERSIONS.filter(v=>isRecorded(t.id,v)).length,0);
+  el.textContent=`${ts.length} tópicos · ${reg} regulares · ${ser} séries · ${done}/${ts.length*4} gravados`;
+});
 updateFilterBtns();
 renderSeriesGrid();
 seriesState.sectionOpen=true;
