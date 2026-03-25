@@ -428,6 +428,91 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .pb-dist-num{font-size:22px;font-weight:900}
 .pb-dist-detail{font-size:11px;color:var(--muted2);margin-top:2px;line-height:1.5}
 @media(max-width:700px){.pb-dist-grid{grid-template-columns:repeat(2,1fr)}}
+/* ── METRICS PAGE ── */
+.metrics-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.metric-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.metric-kpi-value{font-size:28px;font-weight:900;color:var(--green);line-height:1}
+.metric-kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:4px}
+.metric-kpi-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.metrics-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.metrics-table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.metrics-table{width:100%;border-collapse:collapse;font-size:12px}
+.metrics-table th{padding:10px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);background:var(--bg3);border-bottom:1px solid var(--border);white-space:nowrap}
+.metrics-table th.num{text-align:right}
+.metrics-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:middle}
+.metrics-table td.num{text-align:right;font-weight:700;color:var(--text);font-size:13px}
+.metrics-table tr:last-child td{border-bottom:none}
+.metrics-table tr:hover td{background:rgba(255,255,255,.02)}
+.metrics-table .topic-name{color:var(--text);font-weight:600;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.metrics-table .log-btn{background:var(--bg3);border:1px solid var(--border);color:var(--green);border-radius:5px;padding:3px 9px;font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap}
+.metrics-table .log-btn:hover{border-color:var(--green);background:rgba(29,185,148,.1)}
+.star-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:800}
+.star-top{background:rgba(29,185,148,.15);color:var(--green)}
+.star-ok{background:rgba(255,255,255,.05);color:var(--muted)}
+.star-low{background:rgba(224,82,82,.12);color:#e05252}
+.eng-bar-wrap{width:80px;height:6px;background:var(--border);border-radius:3px;display:inline-block;vertical-align:middle;overflow:hidden}
+.eng-bar{height:100%;border-radius:3px;background:var(--green);transition:width .3s}
+.insight-strip{background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.18);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:12px;color:var(--muted2);line-height:1.7}
+.insight-strip strong{color:var(--green)}
+.checkpoint-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.checkpoint-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.checkpoint-card.active-checkpoint{border-color:var(--green)}
+.ck-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ck-badge{background:var(--green);color:#000;font-size:9px;font-weight:900;padding:2px 7px;border-radius:10px}
+.ck-badge.pending{background:var(--bg3);color:var(--muted);border:1px solid var(--border)}
+.ck-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.metrics-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.metrics-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.period-tab{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--muted2);transition:all .2s}
+.period-tab:hover{border-color:var(--green);color:var(--text)}
+.period-tab.active{background:var(--green);border-color:var(--green);color:#000}
+.bulk-save-bar{display:none;align-items:center;gap:12px;padding:10px 14px;background:rgba(29,185,148,.08);border:1px solid rgba(29,185,148,.25);border-radius:8px;margin-bottom:12px}
+.bulk-save-bar.visible{display:flex}
+.bulk-save-btn{padding:6px 16px;background:var(--green);border:none;border-radius:6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:#000;cursor:pointer}
+.bulk-discard-btn{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer}
+.metric-num-input{width:70px;text-align:right;background:transparent;border:1px solid transparent;border-radius:5px;padding:4px 6px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);outline:none;cursor:pointer;transition:all .15s;-moz-appearance:textfield}
+.metric-num-input::-webkit-outer-spin-button,.metric-num-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.metric-num-input::placeholder{color:var(--muted);font-weight:400;font-size:12px}
+.metric-num-input:hover{border-color:var(--border);background:var(--bg3)}
+.metric-num-input:focus{border-color:var(--green);background:var(--bg3);cursor:text}
+.metric-num-input.dirty{border-color:rgba(29,185,148,.5);background:rgba(29,185,148,.06)}
+/* Log modal */
+.log-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.log-modal-ov.open{opacity:1;pointer-events:all}
+.log-modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:440px;overflow:hidden}
+.log-modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.log-modal-hdr-title{font-size:13px;font-weight:800}
+.log-modal-hdr-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.log-modal-body{padding:20px;display:flex;flex-direction:column;gap:14px}
+.log-field{display:flex;flex-direction:column;gap:4px}
+.log-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.log-inp{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);outline:none;width:100%;transition:border .2s}
+.log-inp:focus{border-color:var(--green)}
+.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.log-modal-ftr{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px}
+.log-save-btn{flex:1;padding:9px;background:var(--green);border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer}
+.log-del-btn{padding:9px 14px;background:transparent;border:1px solid var(--border);border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:#e05252;cursor:pointer}
+.log-del-btn:hover{border-color:#e05252}
+@media(max-width:900px){.metrics-summary{grid-template-columns:repeat(3,1fr)}.checkpoint-row{grid-template-columns:1fr}}
+@media(max-width:600px){.metrics-summary{grid-template-columns:repeat(2,1fr)}}
+/* ── MODAL DATES BAR ── */
+.modal-dates-bar{padding:10px 20px;border-top:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;align-items:center;background:var(--bg3)}
+.date-group{display:flex;align-items:center;gap:8px}
+.date-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);white-space:nowrap}
+.date-inp{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;cursor:pointer;transition:border .2s}
+.date-inp:focus{border-color:var(--green)}
+.date-inp::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+.push-cal-btn{padding:6px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--bg2);color:var(--green);transition:all .2s;white-space:nowrap}
+.push-cal-btn:hover{border-color:var(--green);background:rgba(29,185,148,.08)}
+.push-cal-btn.pushed{background:rgba(29,185,148,.1);color:var(--green);border-color:rgba(29,185,148,.3)}
+.gc-ST::before{background:var(--green)}.gc-CO::before{background:#e0a030}
+.gc-AT::before{background:var(--position)}.gc-ED::before{background:var(--nurture)}
+.gc-SE::before{background:var(--convert)}.gc-CA::before{background:#e09840}
+.gc-SO::before{background:var(--p4)}
+.gc-example{margin-top:12px;background:var(--bg3);border-radius:8px;padding:10px 12px}
+.gc-ex-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.gc-ex-line{font-size:11px;color:var(--muted2);line-height:1.65}
+.gc-ex-line strong{color:var(--muted2);font-weight:700}
 </style>
 </head>
 <body>
@@ -974,30 +1059,112 @@ PROVA (quem): ___________________<br><br>
 
 <!-- ═══════════ SCHEDULE PAGE ═══════════ -->
 <div class="page" id="page-schedule">
-  <div class="section-title">Grade de Horários</div>
-  <div class="section-desc">3 posts por dia — 9h (Atrair), 13h (Nutrir), 19h (Converter/Transformação)</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+    <div>
+      <div class="section-title" style="margin-bottom:4px">Grade de Horários</div>
+      <div class="section-desc" style="margin-bottom:0">3 posts por dia — 9h, 13h e 19h. Horários baseados em comportamento da audiência brasileira.</div>
+    </div>
+    <button class="sp-add-btn" onclick="showPage('calendar',document.querySelector('[onclick*=calendar]'))">📅 Abrir Calendário</button>
+  </div>
+
+  <!-- Time cards -->
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--attract)"></div>
       <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Manhã</div>
       <div style="font-size:32px;font-weight:900;color:var(--green)">9h</div>
-      <div style="font-size:13px;font-weight:700;margin-top:4px">Atrair ou Correção de Erro</div>
+      <div style="font-size:13px;font-weight:700;margin-top:4px;color:var(--attract)">Atrair / Correção de Erro</div>
       <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6">Pessoa abrindo o feed no café. Conteúdo leve, engraçado, compartilhável. Sem pitch.</div>
+      <div style="margin-top:10px;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Formatos ideais</div>
+      <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">
+        <span class="badge badge-attract">ST</span>
+        <span class="badge badge-attract">CO</span>
+      </div>
     </div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--nurture)"></div>
       <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Almoço</div>
       <div style="font-size:32px;font-weight:900;color:var(--green)">13h</div>
-      <div style="font-size:13px;font-weight:700;margin-top:4px">Nutrir ou Casal Bilíngue</div>
+      <div style="font-size:13px;font-weight:700;margin-top:4px;color:var(--nurture)">Nutrir / Casal Bilíngue</div>
       <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6">Pausa do trabalho. Mais tempo pra consumir. Conteúdo educativo ou de conexão emocional.</div>
+      <div style="margin-top:10px;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Formatos ideais</div>
+      <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">
+        <span class="badge badge-nurture">ED</span>
+        <span class="badge badge-nurture">CA</span>
+      </div>
     </div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--convert)"></div>
       <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Noite</div>
       <div style="font-size:32px;font-weight:900;color:var(--green)">19h</div>
-      <div style="font-size:13px;font-weight:700;margin-top:4px">Converter ou Transformação</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6">Em casa, relaxando. Melhor horário para CTAs — ebook, curso, aulas.</div>
+      <div style="font-size:13px;font-weight:700;margin-top:4px;color:var(--convert)">Converter / Transformação</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6">Em casa, relaxando, mais receptivo a decisões. Melhor horário para CTAs.</div>
+      <div style="margin-top:10px;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Formatos ideais</div>
+      <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">
+        <span class="badge badge-convert">SE</span>
+        <span class="badge badge-position">AT</span>
+      </div>
     </div>
   </div>
-  <div style="background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.2);border-radius:8px;padding:14px;font-size:12px;color:var(--muted2);line-height:1.8">
-    <strong style="color:var(--green)">Checkpoints obrigatórios:</strong> Dia 14 e Dia 30 — traga métricas reais antes de ajustar a estratégia. O que analisar: qual formato tem mais saves? Qual pilar tem mais shares? Qual horário gerou mais alcance?
+
+  <!-- Weekly grid -->
+  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px">Distribuição Semanal</div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px">
+    <!-- DOM -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">DOM</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(155,89,182,.15);color:#b57fe0">NUTRIR</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(230,126,34,.15);color:#e8a060">CONVERTER</span></div>
+    </div>
+    <!-- SEG -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">SEG</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(52,152,219,.15);color:#6aade0">POSICIONAR</span></div>
+    </div>
+    <!-- TER -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">TER</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(155,89,182,.15);color:#b57fe0">NUTRIR</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(230,126,34,.15);color:#e8a060">CONVERTER</span></div>
+    </div>
+    <!-- QUA -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">QUA</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(155,89,182,.15);color:#b57fe0">NUTRIR</span></div>
+    </div>
+    <!-- QUI -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">QUI</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(52,152,219,.15);color:#6aade0">POSICIONAR</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(230,126,34,.15);color:#e8a060">CONVERTER</span></div>
+    </div>
+    <!-- SEX -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">SEX</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(29,185,148,.15);color:var(--attract)">ATRAIR</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(155,89,182,.15);color:#b57fe0">NUTRIR</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(155,89,182,.15);color:#b57fe0">NUTRIR</span></div>
+    </div>
+    <!-- SÁB -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:8px 10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)">SÁB</div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">9h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(255,255,255,.08);color:var(--muted2)">CASAL</span></div>
+      <div style="padding:8px 10px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:800;color:var(--green)">13h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(224,160,48,.15);color:#e0a030">TRANSFORM.</span></div>
+      <div style="padding:8px 10px"><div style="font-size:10px;font-weight:800;color:var(--green)">19h</div><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(230,126,34,.15);color:#e8a060">CONVERTER</span></div>
+    </div>
+  </div>
+
+  <!-- Checkpoint reminder + calendar CTA -->
+  <div style="background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.2);border-radius:8px;padding:14px 18px;font-size:12px;color:var(--muted2);line-height:1.8;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div><strong style="color:var(--green)">Checkpoints obrigatórios — Dia 14 e Dia 30.</strong> Traga métricas reais antes de ajustar. O que analisar: qual formato tem mais saves? Qual pilar tem mais shares? Qual horário gerou mais alcance?</div>
+    <button class="sp-add-btn" style="flex-shrink:0" onclick="showPage('calendar',document.querySelector('[onclick*=calendar]'))">📅 Ver Calendário</button>
   </div>
 </div>
 
@@ -1027,6 +1194,166 @@ PROVA (quem): ___________________<br><br>
       <div style="font-size:14px;font-weight:800;margin-bottom:6px">Mensagem automática</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Configure no WhatsApp Business ou ManyChat.</div>
       <div style="background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;color:var(--muted2);line-height:1.8;font-style:italic">Oi! 👋 Aqui é o Michael do Fluency Connect.<br><br>Obrigado! Aqui está o ebook: [LINK]<br><br>Qual é seu maior desafio?<br>(a) Vocabulário &nbsp;(b) Gramática<br>(c) Conversação &nbsp;(d) Consistência</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ METRICS PAGE ═══════════ -->
+<div class="page" id="page-metrics">
+  <div class="section-title">Métricas de Performance</div>
+  <div class="section-desc">Logue os dados reais de cada post publicado. Aos 14 e 30 dias os insights aparecem automaticamente.</div>
+
+  <!-- KPIs -->
+  <div class="metrics-summary">
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-posts">0</div><div class="metric-kpi-label">Posts logados</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-views">—</div><div class="metric-kpi-label">Total views</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-saves">—</div><div class="metric-kpi-label">Total saves</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-shares">—</div><div class="metric-kpi-label">Total shares</div></div>
+    <div class="metric-kpi"><div class="metric-kpi-value" id="kpi-eng">—</div><div class="metric-kpi-label">Eng. médio</div><div class="metric-kpi-sub">(saves+shares)/views</div></div>
+  </div>
+
+  <!-- Checkpoints -->
+  <div class="metrics-section-title">Checkpoints</div>
+  <div class="checkpoint-row">
+    <div class="checkpoint-card" id="ck-14">
+      <div class="ck-title">📍 Dia 14 <span class="ck-badge pending" id="ck14-badge">Pendente</span></div>
+      <div class="ck-desc" id="ck14-desc">Precisa de pelo menos 5 posts logados. <strong>Analisar:</strong> Qual formato tem mais saves? Qual pilar tem mais shares? Qual horário gerou mais alcance?</div>
+    </div>
+    <div class="checkpoint-card" id="ck-30">
+      <div class="ck-title">🏁 Dia 30 <span class="ck-badge pending" id="ck30-badge">Pendente</span></div>
+      <div class="ck-desc" id="ck30-desc">Precisa de pelo menos 10 posts logados. <strong>Decidir:</strong> Qual formato dobrar? Qual pilar pausar? Qual horário cortar?</div>
+    </div>
+  </div>
+
+  <!-- Insight strip -->
+  <div class="insight-strip" id="metrics-insight" style="display:none"></div>
+
+  <!-- Filters -->
+  <div class="metrics-section-title">Posts</div>
+  <div class="metrics-filters">
+    <button class="filter-btn active" onclick="setMetricFilter('all',this)">Todos</button>
+    <button class="filter-btn" onclick="setMetricFilter('attract',this)">Atrair</button>
+    <button class="filter-btn" onclick="setMetricFilter('nurture',this)">Nutrir</button>
+    <button class="filter-btn" onclick="setMetricFilter('position',this)">Posicionar</button>
+    <button class="filter-btn" onclick="setMetricFilter('convert',this)">Converter</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setMetricFilter('p1',this)">P1</button>
+    <button class="filter-btn" onclick="setMetricFilter('p2',this)">P2</button>
+    <button class="filter-btn" onclick="setMetricFilter('p3',this)">P3</button>
+    <button class="filter-btn" onclick="setMetricFilter('p4',this)">P4</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setMetricFilter('top',this)">⭐ Top performers</button>
+    <div style="margin-left:auto">
+      <button class="filter-btn" style="border-color:var(--green);color:var(--green)" onclick="openLogModal(null)">＋ Logar post manual</button>
+    </div>
+  </div>
+
+  <!-- Period tabs -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-right:4px">Período:</span>
+    <button class="period-tab active" onclick="setPeriod('all',this)">Todos</button>
+    <button class="period-tab" onclick="setPeriod('d14',this)">📍 Dia 1–14</button>
+    <button class="period-tab" onclick="setPeriod('d28',this)">📍 Dia 15–28</button>
+    <button class="period-tab" onclick="setPeriod('d42',this)">📍 Dia 29–42</button>
+    <span style="font-size:11px;color:var(--muted);margin-left:8px">Clique nos números da tabela para editar diretamente</span>
+  </div>
+
+  <!-- Bulk save bar -->
+  <div class="bulk-save-bar" id="bulk-save-bar">
+    <span style="font-size:12px;color:var(--green);font-weight:700">💾 Alterações não salvas</span>
+    <button class="bulk-save-btn" onclick="commitInlineEdits()">Salvar tudo</button>
+    <button class="bulk-discard-btn" onclick="discardInlineEdits()">Descartar</button>
+  </div>
+
+  <!-- Table -->
+  <div class="metrics-table-wrap">
+    <table class="metrics-table">
+      <thead>
+        <tr>
+          <th>Tópico / Post</th><th>Formato</th><th>Pilar</th><th>Data</th>
+          <th class="num">Views</th><th class="num">Saves</th><th class="num">Shares</th>
+          <th class="num">Coments.</th><th class="num">Eng%</th><th>Performance</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="metrics-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Breakdowns -->
+  <div class="metrics-section-title">Performance por formato</div>
+  <div id="format-breakdown" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:24px"></div>
+  <div class="metrics-section-title">Performance por pilar</div>
+  <div id="pillar-breakdown" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px"></div>
+</div>
+
+<!-- LOG MODAL -->
+<div class="log-modal-ov" id="log-modal-ov" onclick="closeLogModalOut(event)">
+  <div class="log-modal">
+    <div class="log-modal-hdr">
+      <div>
+        <div class="log-modal-hdr-title" id="log-modal-title">Logar métricas</div>
+        <div class="log-modal-hdr-sub" id="log-modal-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeLogModal()">✕</button>
+    </div>
+    <div class="log-modal-body">
+      <div class="log-field">
+        <div class="log-lbl">Título do post</div>
+        <input type="text" class="log-inp" id="log-title" placeholder="Ex: O dia que a Sabrina travou...">
+      </div>
+      <div class="log-grid">
+        <div class="log-field">
+          <div class="log-lbl">Formato</div>
+          <select class="pm-select log-inp" id="log-format" style="font-size:13px">
+            <option value="ST">ST — Storytelling</option>
+            <option value="CO">CO — Comparison</option>
+            <option value="AT">AT — Authority</option>
+            <option value="ED">ED — Educational</option>
+            <option value="SE">SE — Série</option>
+            <option value="CA">CA — Carrossel</option>
+            <option value="SO">SO — Story</option>
+          </select>
+        </div>
+        <div class="log-field">
+          <div class="log-lbl">Objetivo</div>
+          <select class="pm-select log-inp" id="log-goal" style="font-size:13px">
+            <option value="attract">Atrair</option>
+            <option value="nurture">Nutrir</option>
+            <option value="position">Posicionar</option>
+            <option value="convert">Converter</option>
+          </select>
+        </div>
+      </div>
+      <div class="log-grid">
+        <div class="log-field">
+          <div class="log-lbl">Pilar</div>
+          <select class="pm-select log-inp" id="log-pillar" style="font-size:13px">
+            <option value="p1">P1 — False Beginner</option>
+            <option value="p2">P2 — Real-Life Fluency</option>
+            <option value="p3">P3 — Pronúncia + Confiança</option>
+            <option value="p4">P4 — Culture Immersion</option>
+            <option value="none">Sem pilar</option>
+          </select>
+        </div>
+        <div class="log-field">
+          <div class="log-lbl">Data do post</div>
+          <input type="date" class="log-inp" id="log-date">
+        </div>
+      </div>
+      <div class="log-grid">
+        <div class="log-field"><div class="log-lbl">👁 Views</div><input type="number" class="log-inp" id="log-views" placeholder="0" min="0"></div>
+        <div class="log-field"><div class="log-lbl">🔖 Saves</div><input type="number" class="log-inp" id="log-saves" placeholder="0" min="0"></div>
+        <div class="log-field"><div class="log-lbl">↗ Shares</div><input type="number" class="log-inp" id="log-shares" placeholder="0" min="0"></div>
+        <div class="log-field"><div class="log-lbl">💬 Comentários</div><input type="number" class="log-inp" id="log-comments" placeholder="0" min="0"></div>
+      </div>
+      <div class="log-field">
+        <div class="log-lbl">📝 Observação (opcional)</div>
+        <input type="text" class="log-inp" id="log-note" placeholder="Ex: Publicado às 9h, pillar P1...">
+      </div>
+    </div>
+    <div class="log-modal-ftr">
+      <button class="log-save-btn" onclick="saveLogEntry()">💾 Salvar métricas</button>
+      <button class="log-del-btn" id="log-del-btn" style="display:none" onclick="deleteLogEntry()">🗑</button>
     </div>
   </div>
 </div>
@@ -1114,8 +1441,19 @@ PROVA (quem): ___________________<br><br>
   <!-- AI panel -->
   <div id="sm-ai-container"></div>
 
+  <div class="modal-dates-bar" id="modal-dates-bar">
+    <div class="date-group">
+      <div class="date-lbl">🎬 Gravação</div>
+      <input type="date" class="date-inp" id="date-rec" onchange="saveDateField('rec',this.value)">
+    </div>
+    <div class="date-group">
+      <div class="date-lbl">📤 Postagem</div>
+      <input type="date" class="date-inp" id="date-post" onchange="saveDateField('post',this.value)">
+    </div>
+    <button class="push-cal-btn" id="push-cal-btn" onclick="pushCurrentToCalendar()">📅 Enviar pro Calendário</button>
+  </div>
   <div class="modal-footer">
-    <button class="record-btn" id="sm-record-btn" onclick="toggleSeriesRecorded()">✓ Marcar episódio como gravado</button>
+    <button class="record-btn" id="record-btn" onclick="toggleRecorded()">✓ Marcar como gravado</button>
     <span class="save-note">💾 Auto-salvo</span>
   </div>
 </div>
@@ -1450,6 +1788,7 @@ function openModal(tid,ver='attract'){
   document.getElementById('modal-ai-panel-container').innerHTML='';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  loadDateFields();
 }
 function renderModalTabs(){
   document.getElementById('modal-tabs').innerHTML=VERSIONS.map(v=>`<button class="modal-tab ${v}${v===appState.modalVersion?' active':''}" onclick="switchModalVersion('${v}')">${VERSION_LABELS[v]}</button>`).join('');
@@ -1463,6 +1802,7 @@ function switchModalVersion(v){
   appState.aiPanelOpen=false;
   document.getElementById('modal-ai-panel-container').innerHTML='';
   renderModalTabs(); renderFormatTabs(); renderModalBody(); updateRecordBtn();
+  loadDateFields();
 }
 function switchModalFormat(f){
   appState.modalFormat=f;
@@ -1788,18 +2128,377 @@ function saveProdCard(tid){
 }
 
 // ═══════════════════════════════════════════════════
+// TOPIC DATES
+// ═══════════════════════════════════════════════════
+let topicDates = JSON.parse(localStorage.getItem('fc8_dates')||'{}');
+// topicDates[tid_ver] = { rec, post }
+function saveDates(){ localStorage.setItem('fc8_dates',JSON.stringify(topicDates)); }
+function dateKey(tid,ver){ return `${tid}_${ver}`; }
+
+function loadDateFields(){
+  const {modalTopic:t, modalVersion:ver}=appState;
+  if(!t) return;
+  const saved=topicDates[dateKey(t.id,ver)]||{};
+  document.getElementById('date-rec').value=saved.rec||'';
+  document.getElementById('date-post').value=saved.post||'';
+  const btn=document.getElementById('push-cal-btn');
+  if(btn){ btn.classList.toggle('pushed',!!(saved.pushedToCalendar)); btn.textContent=saved.pushedToCalendar?'✅ No Calendário':'📅 Enviar pro Calendário'; }
+}
+
+function saveDateField(field, val){
+  const {modalTopic:t, modalVersion:ver}=appState;
+  if(!t) return;
+  const k=dateKey(t.id,ver);
+  if(!topicDates[k]) topicDates[k]={};
+  topicDates[k][field]=val;
+  topicDates[k].pushedToCalendar=false; // reset pushed flag when date changes
+  const btn=document.getElementById('push-cal-btn');
+  if(btn){ btn.classList.remove('pushed'); btn.textContent='📅 Enviar pro Calendário'; }
+  saveDates();
+}
+
+function pushCurrentToCalendar(){
+  const {modalTopic:t, modalVersion:ver}=appState;
+  if(!t) return;
+  const k=dateKey(t.id,ver);
+  const postDate=(topicDates[k]||{}).post;
+  if(!postDate){ alert('Defina uma data de postagem primeiro.'); return; }
+  pushTopicToCalendar(t.id,ver,postDate);
+  if(!topicDates[k]) topicDates[k]={};
+  topicDates[k].pushedToCalendar=true;
+  saveDates();
+  const btn=document.getElementById('push-cal-btn');
+  if(btn){ btn.classList.add('pushed'); btn.textContent='✅ No Calendário'; }
+}
+
+// ═══════════════════════════════════════════════════
+// METRICS
+// ═══════════════════════════════════════════════════
+let metricsLog = JSON.parse(localStorage.getItem('fc8_metrics')||'[]');
+let metricFilter = 'all';
+let metricPeriod = 'all';
+let editingLogId = null;
+let pendingInlineEdits = {};
+
+function saveMetrics(){ localStorage.setItem('fc8_metrics',JSON.stringify(metricsLog)); }
+
+const FORMAT_COLORS = {ST:'var(--green)',CO:'#e0a030',AT:'var(--position)',ED:'var(--nurture)',SE:'var(--convert)',CA:'#e09840',SO:'var(--p4)'};
+const GOAL_PT = {attract:'Atrair',nurture:'Nutrir',position:'Posicionar',convert:'Converter'};
+const PILLAR_SHORT = {p1:'P1 False Beginner',p2:'P2 Real-Life',p3:'P3 Pronúncia',p4:'P4 Culture',none:'—'};
+const FMT_NAMES = {ST:'Storytelling',CO:'Comparison',AT:'Authority',ED:'Educational',SE:'Série',CA:'Carrossel',SO:'Stories'};
+
+function setMetricFilter(f,btn){
+  metricFilter=f;
+  document.querySelectorAll('.metrics-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderMetrics();
+}
+
+function setPeriod(p,btn){
+  metricPeriod=p;
+  document.querySelectorAll('.period-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderMetrics();
+}
+
+function getFilteredLogs(){
+  const sorted=[...metricsLog].sort((a,b)=>new Date(a.date||0)-new Date(b.date||0));
+  let pool=sorted;
+  if(metricPeriod==='d14') pool=sorted.slice(0,14);
+  else if(metricPeriod==='d28') pool=sorted.slice(14,28);
+  else if(metricPeriod==='d42') pool=sorted.slice(28,42);
+  return pool.filter(e=>{
+    if(metricFilter==='all') return true;
+    if(metricFilter==='top') return engRate(e)>=0.03;
+    if(['attract','nurture','position','convert'].includes(metricFilter)) return e.goal===metricFilter;
+    if(['p1','p2','p3','p4'].includes(metricFilter)) return e.pillar===metricFilter;
+    return true;
+  }).reverse();
+}
+
+function engRate(e){
+  const v=parseInt(e.views)||0;
+  if(!v) return 0;
+  return ((parseInt(e.saves)||0)+(parseInt(e.shares)||0))/v;
+}
+
+function perfLabel(eng){
+  if(eng>=0.05) return '<span class="star-badge star-top">⭐ Top</span>';
+  if(eng>=0.02) return '<span class="star-badge star-ok">✓ OK</span>';
+  if(eng>0)     return '<span class="star-badge star-low">↓ Baixo</span>';
+  return '<span class="star-badge star-ok">— sem dados</span>';
+}
+
+function markInlineDirty(input){
+  input.classList.add('dirty');
+  document.getElementById('bulk-save-bar').classList.add('visible');
+  const row=input.closest('tr');
+  if(row) refreshRowEng(row,input.dataset.id);
+}
+
+function refreshRowEng(row,entryId){
+  const entry=metricsLog.find(e=>e.id===entryId);
+  if(!entry) return;
+  const get=f=>{ const inp=row.querySelector(`input[data-field="${f}"]`); return parseInt(inp?inp.value:(entry[f]||0))||0; };
+  const views=get('views'), saves=get('saves'), shares=get('shares');
+  const eng=views?(saves+shares)/views:0;
+  const maxEng=Math.max(...metricsLog.map(e=>engRate(e)),eng,0.001);
+  const engPct=eng?(eng*100).toFixed(1)+'%':'—';
+  const barW=Math.round((eng/maxEng)*100);
+  const engCell=row.querySelector('.eng-live');
+  if(engCell) engCell.innerHTML=`<div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span>${engPct}</span><div class="eng-bar-wrap"><div class="eng-bar" style="width:${barW}%"></div></div></div>`;
+  const perfCell=row.querySelector('.perf-live');
+  if(perfCell) perfCell.innerHTML=perfLabel(eng);
+}
+
+function commitInlineEdits(){
+  document.querySelectorAll('.metric-num-input.dirty').forEach(input=>{
+    const id=input.dataset.id, field=input.dataset.field;
+    if(!pendingInlineEdits[id]) pendingInlineEdits[id]={};
+    pendingInlineEdits[id][field]=input.value.replace(/\D/g,'');
+  });
+  Object.entries(pendingInlineEdits).forEach(([id,changes])=>{
+    const idx=metricsLog.findIndex(e=>e.id===id);
+    if(idx>=0) Object.assign(metricsLog[idx],changes);
+  });
+  pendingInlineEdits={};
+  saveMetrics();
+  const bar=document.getElementById('bulk-save-bar');
+  bar.classList.remove('visible');
+  const btn=bar.querySelector('.bulk-save-btn');
+  if(btn){ btn.textContent='✅ Salvo!'; setTimeout(()=>btn.textContent='Salvar tudo',1500); }
+  renderMetrics();
+}
+
+function discardInlineEdits(){
+  pendingInlineEdits={};
+  document.querySelectorAll('.metric-num-input.dirty').forEach(input=>{
+    const entry=metricsLog.find(e=>e.id===input.dataset.id);
+    if(entry) input.value=parseInt(entry[input.dataset.field])||'';
+    input.classList.remove('dirty');
+  });
+  document.getElementById('bulk-save-bar').classList.remove('visible');
+}
+
+function renderMetrics(){
+  const logs=getFilteredLogs();
+  const all=metricsLog;
+  const totalViews=all.reduce((s,e)=>s+(parseInt(e.views)||0),0);
+  const totalSaves=all.reduce((s,e)=>s+(parseInt(e.saves)||0),0);
+  const totalShares=all.reduce((s,e)=>s+(parseInt(e.shares)||0),0);
+  const avgEng=totalViews?((totalSaves+totalShares)/totalViews*100).toFixed(1)+'%':'—';
+  document.getElementById('kpi-posts').textContent=all.length;
+  document.getElementById('kpi-views').textContent=totalViews?totalViews.toLocaleString('pt-BR'):'—';
+  document.getElementById('kpi-saves').textContent=totalSaves?totalSaves.toLocaleString('pt-BR'):'—';
+  document.getElementById('kpi-shares').textContent=totalShares?totalShares.toLocaleString('pt-BR'):'—';
+  document.getElementById('kpi-eng').textContent=avgEng;
+
+  const tbody=document.getElementById('metrics-tbody');
+  if(!tbody) return;
+  if(logs.length===0){
+    tbody.innerHTML=`<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--muted)">Nenhum post logado ainda. Clique em "＋ Logar post manual" para começar.</td></tr>`;
+  } else {
+    const maxEng=Math.max(...logs.map(e=>engRate(e)),0.001);
+    tbody.innerHTML=logs.map(e=>{
+      const eng=engRate(e);
+      const engPct=eng?(eng*100).toFixed(1)+'%':'—';
+      const barW=Math.round((eng/maxEng)*100);
+      const fmtColor=FORMAT_COLORS[e.format]||'var(--muted)';
+      const dateStr=e.date?new Date(e.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):'—';
+      const mkCell=(field,val)=>`<input type="number" class="metric-num-input" value="${parseInt(val)||''}" placeholder="—" min="0" data-id="${e.id}" data-field="${field}" oninput="markInlineDirty(this)">`;
+      return `<tr>
+        <td><span class="topic-name" title="${e.title}">${e.title}</span><div style="font-size:10px;color:var(--muted);margin-top:2px">${GOAL_PT[e.goal]||e.goal}</div></td>
+        <td><span class="badge" style="background:rgba(255,255,255,.06);color:${fmtColor}">${e.format}</span></td>
+        <td><span style="font-size:11px;color:var(--muted2)">${PILLAR_SHORT[e.pillar]||'—'}</span></td>
+        <td style="font-size:11px;color:var(--muted)">${dateStr}</td>
+        <td class="num">${mkCell('views',e.views)}</td>
+        <td class="num">${mkCell('saves',e.saves)}</td>
+        <td class="num">${mkCell('shares',e.shares)}</td>
+        <td class="num">${mkCell('comments',e.comments)}</td>
+        <td class="num eng-live"><div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span>${engPct}</span><div class="eng-bar-wrap"><div class="eng-bar" style="width:${barW}%"></div></div></div></td>
+        <td class="perf-live">${perfLabel(eng)}</td>
+        <td style="white-space:nowrap">
+          <button class="log-btn" onclick="openLogModal('${e.id}')">✏️</button>
+          <button class="log-btn" style="color:#e05252;border-color:rgba(224,82,82,.3);margin-left:4px" onclick="quickDeleteLog('${e.id}')">🗑</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Format breakdown
+  const fmtGroups={};
+  all.forEach(e=>{ if(!fmtGroups[e.format]) fmtGroups[e.format]={count:0,saves:0,shares:0,views:0}; fmtGroups[e.format].count++; fmtGroups[e.format].saves+=parseInt(e.saves)||0; fmtGroups[e.format].shares+=parseInt(e.shares)||0; fmtGroups[e.format].views+=parseInt(e.views)||0; });
+  document.getElementById('format-breakdown').innerHTML=Object.entries(fmtGroups).length===0
+    ?'<div style="color:var(--muted);font-size:12px;grid-column:1/-1">Nenhum dado ainda.</div>'
+    :Object.entries(fmtGroups).sort((a,b)=>(b[1].saves+b[1].shares)-(a[1].saves+a[1].shares)).map(([fmt,d])=>{
+      const e=d.views?((d.saves+d.shares)/d.views*100).toFixed(1)+'%':'—';
+      const c=FORMAT_COLORS[fmt]||'var(--muted)';
+      return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:${c}"></div><div style="font-size:11px;font-weight:800;color:${c};margin-bottom:2px">${fmt} — ${FMT_NAMES[fmt]||fmt}</div><div style="font-size:20px;font-weight:900;color:var(--text)">${d.count}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">${d.saves} saves · ${d.shares} shares</div><div style="font-size:11px;font-weight:700;color:var(--green);margin-top:4px">eng: ${e}</div></div>`;
+    }).join('');
+
+  // Pillar breakdown
+  const pillarG={p1:{count:0,saves:0,shares:0,views:0},p2:{count:0,saves:0,shares:0,views:0},p3:{count:0,saves:0,shares:0,views:0},p4:{count:0,saves:0,shares:0,views:0}};
+  all.forEach(e=>{ if(pillarG[e.pillar]){ pillarG[e.pillar].count++; pillarG[e.pillar].saves+=parseInt(e.saves)||0; pillarG[e.pillar].shares+=parseInt(e.shares)||0; pillarG[e.pillar].views+=parseInt(e.views)||0; }});
+  const pillarColors={p1:'var(--p1)',p2:'var(--p2)',p3:'var(--p3)',p4:'var(--p4)'};
+  const pillarNames={p1:'False Beginner',p2:'Real-Life Fluency',p3:'Pronúncia + Confiança',p4:'Culture Immersion'};
+  document.getElementById('pillar-breakdown').innerHTML=Object.entries(pillarG).map(([p,d])=>{
+    const e=d.views?((d.saves+d.shares)/d.views*100).toFixed(1)+'%':'—';
+    const c=pillarColors[p];
+    return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:${c}"></div><div style="font-size:10px;font-weight:800;color:${c};margin-bottom:2px">${p.toUpperCase()}</div><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">${pillarNames[p]}</div><div style="font-size:18px;font-weight:900;color:var(--text)">${d.count}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${d.saves} saves · ${d.shares} shares</div><div style="font-size:11px;font-weight:700;color:var(--green);margin-top:4px">eng: ${e}</div></div>`;
+  }).join('');
+
+  renderCheckpoints(all);
+}
+
+function renderCheckpoints(all){
+  const n=all.length;
+  const ck14badge=document.getElementById('ck14-badge');
+  const ck14desc=document.getElementById('ck14-desc');
+  if(n>=5){
+    ck14badge.textContent='✓ Pronto'; ck14badge.className='ck-badge';
+    document.getElementById('ck-14').classList.add('active-checkpoint');
+    const topFmt=getBestGroup(all,'format'), topPillar=getBestGroup(all,'pillar');
+    ck14desc.innerHTML=`<strong>Insight Dia 14:</strong> Melhor formato: <strong style="color:var(--green)">${topFmt}</strong>. Pilar com mais engajamento: <strong style="color:var(--green)">${PILLAR_SHORT[topPillar]||topPillar}</strong>. Dobre a frequência desses e reduza o que está abaixo da média.`;
+  } else {
+    ck14badge.textContent=`${n}/5 posts`; ck14badge.className='ck-badge pending';
+    document.getElementById('ck-14').classList.remove('active-checkpoint');
+    ck14desc.innerHTML=`Precisa de pelo menos 5 posts logados. <strong>Analisar:</strong> Qual formato tem mais saves? Qual pilar tem mais shares?`;
+  }
+  const ck30badge=document.getElementById('ck30-badge');
+  const ck30desc=document.getElementById('ck30-desc');
+  if(n>=10){
+    ck30badge.textContent='✓ Pronto'; ck30badge.className='ck-badge';
+    document.getElementById('ck-30').classList.add('active-checkpoint');
+    const topFmt=getBestGroup(all,'format'), worstFmt=getWorstGroup(all,'format');
+    const topGoal=getBestGroup(all,'goal');
+    const avgE=all.reduce((s,e)=>s+engRate(e),0)/all.length*100;
+    const topPosts=[...all].sort((a,b)=>engRate(b)-engRate(a)).slice(0,3);
+    ck30desc.innerHTML=`<strong>Insight Dia 30:</strong> Dobrar: <strong style="color:var(--green)">${topFmt}</strong>. Pausar: <strong style="color:#e05252">${worstFmt}</strong>. Objetivo com mais tração: <strong style="color:var(--green)">${GOAL_PT[topGoal]||topGoal}</strong>. Eng médio: <strong style="color:var(--green)">${avgE.toFixed(1)}%</strong>.`;
+    const strip=document.getElementById('metrics-insight');
+    strip.style.display='block';
+    strip.innerHTML=`<strong>🏁 Análise Dia 30:</strong> Dados suficientes para decidir. Formato mais forte: <strong>${topFmt}</strong>. Engajamento médio: <strong>${avgE.toFixed(1)}%</strong>. Use esses dados — não a intuição.`;
+  } else {
+    ck30badge.textContent=`${n}/10 posts`; ck30badge.className='ck-badge pending';
+    document.getElementById('ck-30').classList.remove('active-checkpoint');
+    ck30desc.innerHTML=`Precisa de pelo menos 10 posts logados. <strong>Decidir:</strong> Qual formato dobrar? Qual pilar pausar?`;
+    document.getElementById('metrics-insight').style.display='none';
+  }
+}
+
+function getBestGroup(logs,key){
+  const g={};
+  logs.forEach(e=>{ const k=e[key]; if(!g[k]) g[k]={eng:0,count:0}; g[k].eng+=engRate(e); g[k].count++; });
+  return Object.entries(g).sort((a,b)=>(b[1].eng/b[1].count)-(a[1].eng/a[1].count))[0]?.[0]||'—';
+}
+function getWorstGroup(logs,key){
+  const g={};
+  logs.forEach(e=>{ const k=e[key]; if(!g[k]) g[k]={eng:0,count:0}; g[k].eng+=engRate(e); g[k].count++; });
+  return Object.entries(g).filter(([,v])=>v.count>=2).sort((a,b)=>(a[1].eng/a[1].count)-(b[1].eng/b[1].count))[0]?.[0]||'—';
+}
+
+function openLogModal(id){
+  editingLogId=id;
+  const entry=id?metricsLog.find(e=>e.id===id):null;
+  document.getElementById('log-modal-title').textContent=entry?'Editar métricas':'Logar post';
+  document.getElementById('log-modal-sub').textContent=entry?entry.title:'Novo post manual';
+  document.getElementById('log-title').value=entry?.title||'';
+  document.getElementById('log-format').value=entry?.format||'ST';
+  document.getElementById('log-goal').value=entry?.goal||'attract';
+  document.getElementById('log-pillar').value=entry?.pillar||'p1';
+  document.getElementById('log-date').value=entry?.date||new Date().toISOString().split('T')[0];
+  document.getElementById('log-views').value=entry?.views||'';
+  document.getElementById('log-saves').value=entry?.saves||'';
+  document.getElementById('log-shares').value=entry?.shares||'';
+  document.getElementById('log-comments').value=entry?.comments||'';
+  document.getElementById('log-note').value=entry?.note||'';
+  document.getElementById('log-del-btn').style.display=entry?'block':'none';
+  document.getElementById('log-modal-ov').classList.add('open');
+}
+
+function saveLogEntry(){
+  const title=document.getElementById('log-title').value.trim();
+  if(!title){ document.getElementById('log-title').focus(); return; }
+  const data={title,format:document.getElementById('log-format').value,goal:document.getElementById('log-goal').value,pillar:document.getElementById('log-pillar').value,date:document.getElementById('log-date').value,views:document.getElementById('log-views').value,saves:document.getElementById('log-saves').value,shares:document.getElementById('log-shares').value,comments:document.getElementById('log-comments').value,note:document.getElementById('log-note').value.trim()};
+  if(editingLogId){
+    const idx=metricsLog.findIndex(e=>e.id===editingLogId);
+    if(idx>=0) metricsLog[idx]={...metricsLog[idx],...data};
+  } else {
+    data.id='m'+Date.now();
+    metricsLog.push(data);
+  }
+  saveMetrics(); closeLogModal(); renderMetrics();
+}
+
+function deleteLogEntry(){
+  if(!editingLogId) return;
+  if(!confirm('Apagar este registro de métricas?')) return;
+  metricsLog=metricsLog.filter(e=>e.id!==editingLogId);
+  saveMetrics(); closeLogModal(); renderMetrics();
+}
+
+function quickDeleteLog(id){
+  if(!confirm('Apagar este registro?')) return;
+  metricsLog=metricsLog.filter(e=>e.id!==id);
+  if(pendingInlineEdits[id]) delete pendingInlineEdits[id];
+  saveMetrics(); renderMetrics();
+}
+
+function closeLogModal(){ document.getElementById('log-modal-ov').classList.remove('open'); editingLogId=null; }
+function closeLogModalOut(e){ if(e.target===document.getElementById('log-modal-ov')) closeLogModal(); }
+
+// ═══════════════════════════════════════════════════
+// GUIDE
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 // GUIDE
 // ═══════════════════════════════════════════════════
 const GUIDE_DATA=[
-  {key:'Vídeo',cls:'gc-video',color:'var(--video)',name:'Vídeo / Reel',goal:'Atrair · Nutrir · Posicionar · Converter',
-   steps:[{l:'Hook',d:'Frase que prende em 3 segundos. Para o scroll.'},{l:'Desenvolvimento',d:'Stakes / Problema / Experiência — o que estava em jogo'},{l:'Virada / Solução',d:'Clímax / Passos / Observação — a mudança'},{l:'Lição / Insight',d:'O aprendizado principal, a conclusão'},{l:'CTA',d:'Uma ação clara — pergunta, save, link na bio ou trigger WhatsApp'}]},
-  {key:'Carrossel',cls:'gc-carousel',color:'var(--carousel)',name:'Carrossel',goal:'Salvar · Nutrir · Posicionar',
-   steps:[{l:'Slide 1 — Capa',d:'Para o scroll. 1 frase forte. Visual impactante.'},{l:'Slides 2–3 — Contexto',d:'Problema ou por que importa. 2–3 linhas.'},{l:'Slides 4–5 — Conteúdo',d:'A lista, correção, método — 1 ponto por slide'},{l:'Slides 6–7 — Resolução',d:'Payoff ou insight. Pode repetir os pontos em resumo.'},{l:'Slide final — CTA',d:'Salva / Manda trigger no WhatsApp / Link na bio'}]},
-  {key:'Story',cls:'gc-story',color:'var(--story)',name:'Story',goal:'Engajar · Converter · Tráfego',
-   steps:[{l:'Slide 1 — Interrupção',d:'Para o auto-tap. Pergunta ou afirmação forte.'},{l:'Slides 2–3 — Tensão',d:'Puxa pra dentro. Máx 7 palavras por slide.'},{l:'Slides 4–5 — Conteúdo',d:'A dica, o erro, a expressão. Imagem carrega o peso.'},{l:'Slide 6 — CTA',d:'Sticker de enquete / link / "Comenta aqui" / seta pra cima'}]}
+  {key:'ST',cls:'gc-ST',color:'var(--green)',name:'Storytelling',goal:'Atrair / Nutrir',
+   steps:[{l:'Hook',d:'Frase que prende em 3 segundos. Para o scroll.'},{l:'Stakes',d:'O que estava em jogo? Por que importava?'},{l:'Clímax',d:'O momento de virada da história'},{l:'Lição',d:'O que vocês aprenderam'},{l:'CTA',d:'Segue / salva / comenta'}],
+   ex:{Hook:'"O dia que a Sabrina travou completamente com um americano."',Stakes:'"Anos de estudo. Vocabulário sólido. Mas na hora real — nada."',Clímax:'"Ela me ligou em pânico. Não conseguia pedir a conta."',Lição:'"Falar é uma habilidade separada. Você precisa treinar ela."',CTA:'"Segue pra mais dicas de fluência real."'}},
+  {key:'CO',cls:'gc-CO',color:'#e0a030',name:'Comparison / Double Down',goal:'Atrair',
+   steps:[{l:'Hook',d:'Contradiz uma crença popular diretamente'},{l:'Crença comum',d:'O que todo mundo acredita que é verdade'},{l:'Contradição',d:'O que é diferente ou oposto à crença'},{l:'Explicação',d:'Por que vocês estão certos'},{l:'CTA',d:'Salva / comenta'}],
+   ex:{Hook:'"Netflix NÃO vai te deixar fluente."','Crença comum':'"Todo mundo diz que imersão resolve tudo."',Contradição:'"Ouvir passivamente não treina fala."',Explicação:'"Você precisa de prática ativa de output."',CTA:'"Salva se você quer fluência real."'}},
+  {key:'AT',cls:'gc-AT',color:'var(--position)',name:'Authority',goal:'Posicionar',
+   steps:[{l:'Hook',d:'Credencial ou observação única'},{l:'Experiência',d:'O que vocês viveram'},{l:'Observação',d:'O que vocês viram nos alunos'},{l:'Insight',d:'A conclusão não-óbvia'},{l:'CTA',d:'Link na bio / segue'}],
+   ex:{Hook:'"Depois de ensinar centenas de brasileiros, vemos esse padrão sempre."',Experiência:'"Michael aprendeu português. Sabrina aprendeu inglês nos EUA."',Observação:'"Alunos que falam desde o dia 1 evoluem muito mais rápido."',Insight:'"Fluência cresce a partir do output, não da perfeição."',CTA:'"Conheça o Fluency Connect. Link na bio."'}},
+  {key:'ED',cls:'gc-ED',color:'var(--nurture)',name:'Educational',goal:'Nutrir / Posicionar',
+   steps:[{l:'Hook',d:'Um erro ou problema muito comum'},{l:'Problema',d:'Por que esse erro acontece'},{l:'Solução',d:'O jeito certo de fazer'},{l:'Prática',d:'Exercício que o seguidor faz agora'},{l:'CTA',d:'Salva — vai usar isso'}],
+   ex:{Hook:'"Para de falar \'I have 20 years.\'"',Problema:'"Tradução literal do português não funciona."',Solução:'"Em inglês: \'I\'m 20 years old.\'"',Prática:'"Fala comigo: My name is ___ and I\'m ___ years old."',CTA:'"Salva esse vídeo."'}},
+  {key:'SE',cls:'gc-SE',color:'var(--convert)',name:'Série',goal:'Converter',
+   steps:[{l:'Hook + Número',d:'Nome da série + número do episódio'},{l:'Contexto',d:'O que este episódio cobre'},{l:'Lição',d:'O conteúdo do episódio'},{l:'Prévia',d:'O que vem no próximo'},{l:'CTA Crescimento',d:'Segue / ativa o sino'},{l:'CTA Conversão',d:'Palavra de ativação WhatsApp'}],
+   ex:{'Hook + Número':'"Stop Saying This — Parte 1."',Contexto:'"Erros de vocabulário que fazem brasileiros soarem errados."',Lição:'"Para de dizer \'I have 20 years.\' O correto é \'I\'m 20 years old.\'"',Prévia:'"No próximo: outro erro clássico."','CTA Crescimento':'"Segue e ativa o sino."','CTA Conversão':'"Manda VOCABULÁRIO no WhatsApp. Link na bio."'}},
+  {key:'CA',cls:'gc-CA',color:'#e09840',name:'Carrossel',goal:'Salvar / Nutrir',
+   steps:[{l:'Slide 1 — Hook',d:'Frase que para o scroll. Deve funcionar sozinha como reel'},{l:'Slides 2–3 — Problema',d:'Contexto e por que isso importa'},{l:'Slides 4–5 — Solução',d:'A lista, a correção, a dica — um item por slide'},{l:'Slides 6–7 — Exemplo',d:'Comparação visual: Errado vs Certo'},{l:'Slide final — CTA',d:'Salva + VOCABULÁRIO ou ESTRATÉGIA no WhatsApp'}],
+   ex:{'Slide 1 — Hook':'"10 frases que nativos usam que você não aprende no livro."','Slides 2–3 — Problema':'"O inglês do livro é formal demais pra vida real."','Slides 4–5 — Solução':'"Slide 4: \'Got it\' / Slide 5: \'No way!\'"','Slides 6–7 — Exemplo':'"Textbook: I understand → Real: Got it, makes sense, gotcha."','Slide final — CTA':'"Salva e manda VOCABULÁRIO no WhatsApp."'}},
+  {key:'SO',cls:'gc-SO',color:'var(--p4)',name:'Stories',goal:'Engajar / Converter',
+   steps:[{l:'Story 1 — Gancho',d:'Pergunta ou afirmação que cria curiosidade imediata'},{l:'Stories 2–3 — Contexto',d:'Uma frase por story. Máximo 2 linhas.'},{l:'Stories 4–5 — Conteúdo',d:'A dica, o erro, a expressão. Simples e visual.'},{l:'Story 6 — CTA',d:'Responde aqui / Link na bio / VOCABULÁRIO no WhatsApp'}],
+   ex:{'Story 1 — Gancho':'"Você sabe responder \'How are you?\' em inglês?"','Stories 2–3 — Contexto':'"A maioria responde \'Fine, thanks.\' Que soa formal demais."','Stories 4–5 — Conteúdo':'"Nativos dizem: \'Pretty good!\' / \'Not bad!\' / \'Can\'t complain!\'"','Story 6 — CTA':'"Manda VOCABULÁRIO pra receber mais expressões como essa."'}}
 ];
+
 function renderGuide(){
-  document.getElementById('guide-grid').innerHTML=GUIDE_DATA.map(g=>`<div class="guide-card ${g.cls}"><div class="gc-key" style="color:${g.color}">${g.key.toUpperCase()}</div><div class="gc-name">${g.name}</div><div class="gc-goal" style="color:var(--muted)">Objetivo: ${g.goal}</div><div class="gc-steps">${g.steps.map((s,i)=>`<div class="gc-step"><div class="gc-stepnum" style="background:${g.color}">${i+1}</div><div class="gc-steptext"><strong>${s.l}:</strong> ${s.d}</div></div>`).join('')}</div></div>`).join('');
+  const grid=document.getElementById('guide-grid');
+  if(!grid) return;
+  grid.innerHTML=GUIDE_DATA.map(g=>`
+    <div class="guide-card ${g.cls}">
+      <div class="gc-key" style="color:${g.color}">${g.key}</div>
+      <div class="gc-name">${g.name}</div>
+      <div class="gc-goal">Objetivo: ${g.goal}</div>
+      <div class="gc-steps">
+        ${g.steps.map((s,i)=>`
+          <div class="gc-step">
+            <div class="gc-stepnum" style="background:${g.color}">${i+1}</div>
+            <div class="gc-steptext"><strong>${s.l}:</strong> ${s.d}</div>
+          </div>`).join('')}
+      </div>
+      <div class="gc-example">
+        <div class="gc-ex-label">Exemplo</div>
+        ${g.steps.map(s=>{
+          const val=g.ex[s.l]||'';
+          return `<div class="gc-ex-line"><strong>${s.l}:</strong> ${val||'—'}</div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
 }
 
 // ═══════════════════════════════════════════════════
@@ -2738,6 +3437,7 @@ window.showPage=function(id,btn){
   if(id==='repurpose') initRepurposePage();
   if(id==='generator') initGeneratorPage();
   if(id==='calendar'){ renderCalendar(); buildMonthJump(); }
+  if(id==='metrics') renderMetrics();
   if(id==='scripts') spRender();
 };
 
@@ -2760,7 +3460,7 @@ document.getElementById('series-chevron').classList.add('open');
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     closeModal(); closeSettings(); closePostModal();
-    closeSeriesModal(); closeAddScript();
+    closeSeriesModal(); closeAddScript(); closeLogModal();
   }
 });
 </script>
