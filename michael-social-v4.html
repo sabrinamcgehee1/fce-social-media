@@ -501,6 +501,16 @@ select.at-inp{cursor:pointer;}
 
   <div class="stats-bar" id="stats-bar"></div>
   <div class="video-grid" id="video-grid"></div>
+
+  <!-- SERIES SECTION -->
+  <div id="mic-series-section" style="margin-top:28px;display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--convert);">🎬 Séries de Conteúdo</div>
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+      <button onclick="micToggleSeriesSection()" id="mic-series-toggle-btn" style="background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">▼ Recolher</button>
+    </div>
+    <div class="video-grid" id="mic-series-grid"></div>
+  </div>
 </div>
 
 <!-- ═══════ GENERATOR PAGE ═══════ -->
@@ -1265,6 +1275,7 @@ const DEFAULT_TOPICS = [
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
+const micDeletedBuiltins = JSON.parse(localStorage.getItem('mic_deleted_builtins') || '[]');
 let TOPICS = JSON.parse(localStorage.getItem('mic_topics_v5') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TOPICS));
 let recorded = JSON.parse(localStorage.getItem('mic_rec_v4') || '{}');  // { topicId_version_fmt: bool }
 let dates    = JSON.parse(localStorage.getItem('mic_dates_v4') || '{}'); // { topicId_version_fmt: {rec,post} }
@@ -1284,6 +1295,8 @@ let pendingInlineEdits = {};
 let editingLogId = null;
 
 function saveTopics() { localStorage.setItem('mic_topics_v5', JSON.stringify(TOPICS)); }
+// Filter out permanently deleted built-in topics on load
+micDeletedBuiltins.forEach(id => { const i = TOPICS.findIndex(x => x.id === id); if (i > -1) TOPICS.splice(i, 1); });
 function saveRecorded() { localStorage.setItem('mic_rec_v4', JSON.stringify(recorded)); }
 function saveDates()    { localStorage.setItem('mic_dates_v4', JSON.stringify(dates)); }
 function saveNotesSt()  { localStorage.setItem('mic_notes_v4', JSON.stringify(notes)); }
@@ -1401,11 +1414,17 @@ function renderGrid() {
     <div class="stat-item"><strong>${totalCards-recCards}</strong>pendentes</div>
     <div class="stat-item"><strong>${Math.round(recCards/totalCards*100)}%</strong>completo</div>`;
 
-  if(!cards.length){
+  const regularCards = cards.filter(({t}) => t.tipo !== 'serie');
+  const seriesCards  = cards.filter(({t}) => t.tipo === 'serie');
+
+  if(!regularCards.length && !seriesCards.length){
     document.getElementById('video-grid').innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Nenhum card encontrado com esses filtros.</div>';
+    const sec = document.getElementById('mic-series-section');
+    if (sec) sec.style.display = 'none';
     return;
   }
-  document.getElementById('video-grid').innerHTML = cards.map(({t,v,f,done,sc})=>{
+
+  const buildCard = ({t,v,f,done,sc}) => {
     const td = getTopicData(t);
     const pc = PILLAR_COLORS[t.pillar];
     const scriptKey = f==='carousel'?'CA':f==='story'?'SO':JOB_TO_SCRIPT[v];
@@ -1431,7 +1450,32 @@ function renderGrid() {
       ${isTopicEdited(t.id)?'<div class="card-rec-label" style="color:#e8a060">✏️ Editado</div>':''}
       ${dateInfo?`<div class="card-dates-row">${dateInfo}</div>`:''}
     </div>`;
-  }).join('');
+  };
+
+  document.getElementById('video-grid').innerHTML =
+    regularCards.length ? regularCards.map(buildCard).join('') :
+    '<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Nenhum tópico regular encontrado.</div>';
+
+  const seriesSec  = document.getElementById('mic-series-section');
+  const seriesGrid = document.getElementById('mic-series-grid');
+  if (seriesCards.length > 0) {
+    seriesSec.style.display = 'block';
+    seriesGrid.innerHTML = seriesCards.map(buildCard).join('');
+    const lbl = seriesSec.querySelector('[style*="color:var(--convert)"]');
+    if (lbl) lbl.textContent = `🎬 Séries de Conteúdo — ${[...new Set(seriesCards.map(c=>c.t.id))].length} tópico${[...new Set(seriesCards.map(c=>c.t.id))].length !== 1 ? 's' : ''}`;
+  } else {
+    seriesSec.style.display = 'none';
+  }
+}
+
+let micSeriesCollapsed = false;
+
+function micToggleSeriesSection() {
+  micSeriesCollapsed = !micSeriesCollapsed;
+  const grid = document.getElementById('mic-series-grid');
+  const btn  = document.getElementById('mic-series-toggle-btn');
+  grid.style.display = micSeriesCollapsed ? 'none' : '';
+  btn.textContent = micSeriesCollapsed ? '▶ Expandir' : '▼ Recolher';
 }
 
 function updatePillarProgress() {
@@ -1626,7 +1670,14 @@ function closeModalDirect() {
 function deleteActiveTopic() {
   if(!activeModalTopic) return;
   if(!confirm(`Deletar "${getTopicData(activeModalTopic).title}"? Isso não pode ser desfeito.`)) return;
-  TOPICS = TOPICS.filter(t=>t.id!==activeModalTopic.id);
+  const id = activeModalTopic.id;
+  // If built-in (not added by user), save to permanent deleted list
+  const isCustom = !DEFAULT_TOPICS.find(x => x.id === id);
+  if (!isCustom) {
+    micDeletedBuiltins.push(id);
+    localStorage.setItem('mic_deleted_builtins', JSON.stringify(micDeletedBuiltins));
+  }
+  TOPICS = TOPICS.filter(t => t.id !== id);
   saveTopics();
   closeModalDirect();
   renderGrid();
