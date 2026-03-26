@@ -380,6 +380,15 @@ select.at-inp{cursor:pointer;}
   .page{padding:16px 14px;}
   .cal-grid-wrap{grid-template-columns:repeat(7,1fr);}
 }
+/* ── AI PANEL ── */
+.mic-ai-panel{background:var(--bg3);border-bottom:1px solid var(--border);padding:14px 20px;}
+.mic-ai-panel-title{font-size:11px;font-weight:800;color:var(--green);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.mic-ai-checkboxes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.mic-ai-cb-item{display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;}
+.mic-ai-cb-item input{accent-color:var(--green);cursor:pointer;}
+.mic-ai-gen-btn{padding:8px 18px;background:var(--green);border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:#000;cursor:pointer;}
+.mic-ai-gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+.mic-ai-status{font-size:11px;color:var(--muted2);margin-top:8px;min-height:16px;}
 </style>
 </head>
 <body>
@@ -393,10 +402,14 @@ select.at-inp{cursor:pointer;}
     <button class="nav-tab" onclick="showPage('guide',this)">📖 Guia de Formatos</button>
     <button class="nav-tab" onclick="showPage('pillars',this)">⭐ Pilares</button>
     <button class="nav-tab" onclick="showPage('metrics',this)">📊 Métricas</button>
+    <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
+    <button class="nav-tab" onclick="showPage('repurpose',this)">♻️ Repurpose</button>
+    <button class="nav-tab" onclick="showPage('scripts',this)">📋 Scripts</button>
   </nav>
   <div class="header-right">
     <span class="hdr-count">Gravados: <strong id="hdr-rec-count">0</strong></span>
     <button class="add-topic-btn" onclick="openAddTopic()">+ Novo Tópico</button>
+    <button onclick="openMicGenSettings()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted2);padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">⚙️ API Key</button>
   </div>
 </header>
 
@@ -452,6 +465,88 @@ select.at-inp{cursor:pointer;}
 
   <div class="stats-bar" id="stats-bar"></div>
   <div class="video-grid" id="video-grid"></div>
+</div>
+
+<!-- ═══════ GENERATOR PAGE ═══════ -->
+<div class="page" id="page-generator">
+  <div class="section-title">✨ AI Script Generator</div>
+  <div class="section-desc">Selecione um tópico, escreva o script de origem e o Claude gera as outras versões automaticamente.</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">⚙️ Configurar Geração</div>
+
+      <div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;">Tópico</div>
+        <select id="mic-gen-topic" onchange="onMicGenTopicChange()" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;">
+          <option value="">— Seleciona um tópico —</option>
+        </select>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;">Versão de origem</div>
+          <select id="mic-gen-source-job" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;">
+            <option value="attract">Atrair</option>
+            <option value="nurture">Nutrir</option>
+            <option value="position">Posicionar</option>
+            <option value="convert">Converter</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;">Formato de origem</div>
+          <select id="mic-gen-source-fmt" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;">
+            <option value="reel">🎬 Reel</option>
+            <option value="carousel">🖼 Carrossel</option>
+            <option value="story">⭕ Story</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;">
+          Gerar estas peças
+          <button onclick="micGenToggleAll()" style="margin-left:8px;background:none;border:none;color:var(--green);font-size:10px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;">☑ Todos / Nenhum</button>
+        </div>
+        <div id="mic-gen-checkboxes" style="font-size:12px;color:var(--muted);font-style:italic;">Seleciona um tópico para começar.</div>
+      </div>
+
+      <button onclick="runMicGenerator()" id="mic-gen-run-btn" style="padding:11px;background:var(--green);border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer;transition:opacity .2s;">✨ Gerar Scripts Selecionados</button>
+      <div style="font-size:10px;color:var(--muted);line-height:1.6;">⚡ Usa a API da Anthropic. Configure sua chave em <strong>⚙️ API Key</strong> no topo.</div>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">📄 Script de Origem</div>
+      <div id="mic-gen-source-preview" style="font-size:12px;color:var(--muted);font-style:italic;line-height:1.7;">Seleciona um tópico e versão para ver o script aqui.</div>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);">✨ Scripts Gerados</div>
+    <div id="mic-gen-results" style="font-size:12px;color:var(--muted);font-style:italic;">Os scripts gerados aparecerão aqui.</div>
+  </div>
+</div>
+
+<!-- ═══════ API SETTINGS MODAL ═══════ -->
+<div id="mic-settings-ov" onclick="if(event.target===this)closeMicGenSettings()" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:420px;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:13px;font-weight:800;">⚙️ Configurações da API</div>
+      <button onclick="closeMicGenSettings()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;">Anthropic API Key</div>
+        <input type="password" id="mic-api-key-inp" placeholder="sk-ant-..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Nunito',sans-serif;outline:none;">
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7;">
+        🔒 Salva apenas no localStorage do seu navegador.<br><br>
+        Obter chave: <strong style="color:var(--text);">console.anthropic.com</strong> → API Keys → Create Key.<br><br>
+        Usa <strong style="color:var(--text);">claude-sonnet-4-20250514</strong> e consome créditos da sua conta.
+      </div>
+      <button onclick="saveMicGenSettings()" style="padding:10px;background:var(--green);border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer;">💾 Salvar</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════ CALENDAR PAGE ═══════ -->
@@ -623,11 +718,13 @@ select.at-inp{cursor:pointer;}
       <div class="modal-sub" id="modal-sub"></div>
     </div>
     <div class="modal-header-actions">
+      <button id="mic-ai-btn" onclick="openMicModalAIPanel()" style="background:transparent;border:1px solid rgba(29,185,148,.4);color:var(--green);padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .15s;">✨ Gerar</button>
       <button class="edit-toggle" id="edit-toggle-btn" onclick="toggleEditMode()">✏️ Editar</button>
       <button class="del-topic-btn" onclick="deleteActiveTopic()">🗑</button>
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
   </div>
+  <div id="mic-ai-panel-container"></div>
   <div class="modal-tabs" id="modal-tabs"></div>
   <div class="modal-format-tabs" id="modal-format-tabs"></div>
   <div class="modal-body" id="modal-body"></div>
@@ -975,6 +1072,7 @@ function showPage(id, btn) {
   if(id==='calendar'){renderCalendar();buildMonthJump();}
   if(id==='guide')renderGuide();
   if(id==='metrics')renderMetrics();
+  if(id==='generator'){initMicGeneratorPage();}
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1010,12 +1108,12 @@ function getFilteredCards() {
     const verList = filterState.type ? [filterState.type] : ['attract','nurture','position','convert'];
     verList.forEach(v=>{
       fmtList.forEach(f=>{
-        const ver = t.versions[v];
-        if(!ver||!ver[f]) return;
+        const scriptKey = f==='carousel'?'CA':f==='story'?'SO':JOB_TO_SCRIPT[v];
+        const sc = (t.scripts||{})[scriptKey];
         const done = isRecorded(t.id,v,f);
         if(filterState.status==='done'&&!done) return;
         if(filterState.status==='pending'&&done) return;
-        cards.push({t,v,f,done});
+        cards.push({t,v,f,done,sc});
       });
     });
   });
@@ -1038,11 +1136,11 @@ function renderGrid() {
     document.getElementById('video-grid').innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Nenhum card encontrado com esses filtros.</div>';
     return;
   }
-  document.getElementById('video-grid').innerHTML = cards.map(({t,v,f,done})=>{
+  document.getElementById('video-grid').innerHTML = cards.map(({t,v,f,done,sc})=>{
     const td = getTopicData(t);
     const pc = PILLAR_COLORS[t.pillar];
-    const ver = t.versions[v];
-    const sc  = ver[f];
+    const scriptKey = f==='carousel'?'CA':f==='story'?'SO':JOB_TO_SCRIPT[v];
+    const hook = sc ? (sc.hook||'') : '';
     const dk = dateKey(t.id,v,f);
     const dd = dates[dk]||{};
     const dateInfo = (dd.rec?`<span class="card-date-tag">🎬 ${dd.rec}</span>`:'')+
@@ -1054,11 +1152,12 @@ function renderGrid() {
         <div class="card-badges">
           <span class="badge badge-${f}">${FMT_LABELS[f]}</span>
           <span class="badge badge-${v}">${JOB_LABELS[v]}</span>
-          <span class="badge badge-fmt">• ${sc.format}</span>
+          <span class="badge badge-fmt">• ${scriptKey}</span>
         </div>
       </div>
       <div class="card-title">${escH(td.title)}</div>
       <div class="card-sub">${escH(td.sub)}</div>
+      ${hook?`<div class="card-sub" style="font-style:italic;margin-top:3px;opacity:.7">${escH(hook.substring(0,60))}${hook.length>60?'…':''}</div>`:''}
       ${done?'<div class="card-rec-label">✅ Gravado</div>':''}
       ${isTopicEdited(t.id)?'<div class="card-rec-label" style="color:#e8a060">✏️ Editado</div>':''}
       ${dateInfo?`<div class="card-dates-row">${dateInfo}</div>`:''}
@@ -1248,7 +1347,12 @@ function resetTopicEdits(topicId) {
 }
 
 function closeModal(e) { if(e.target===document.getElementById('modal-overlay')) closeModalDirect(); }
-function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalDirect() {
+  micAiPanelOpen = false;
+  document.getElementById('mic-ai-panel-container').innerHTML = '';
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 function deleteActiveTopic() {
   if(!activeModalTopic) return;
@@ -1710,6 +1814,362 @@ renderGrid();
 renderGuide();
 updatePillarProgress();
 updateFilterBtns();
+// ═══════════════════════════════════════════════════════════
+// AI GENERATOR — MODAL INLINE
+// ═══════════════════════════════════════════════════════════
+let micAiPanelOpen = false;
+
+function openMicModalAIPanel() {
+  micAiPanelOpen = !micAiPanelOpen;
+  const container = document.getElementById('mic-ai-panel-container');
+  if (!micAiPanelOpen) { container.innerHTML = ''; return; }
+
+  const JOB_LABEL = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+  const FMT_LABEL = { reel:'🎬 Reel', carousel:'🖼 Carrossel', story:'⭕ Story' };
+  const srcJob = activeModalVersion;
+  const srcFmt = activeModalFormat;
+  const srcKey = `${srcJob}_${srcFmt}`;
+
+  const cbHtml = MIC_JOBS.map(j => MIC_FMTS.map(f => {
+    const key = `${j}_${f}`;
+    const isSrc = key === srcKey;
+    return `<label class="mic-ai-cb-item">
+      <input type="checkbox" id="mic_aicb_${key}" ${isSrc ? 'disabled' : 'checked'}>
+      ${JOB_LABEL[j]} · ${FMT_LABEL[f]}${isSrc ? ' <em style="color:var(--muted);font-style:normal">(origem)</em>' : ''}
+    </label>`;
+  }).join('')).join('');
+
+  container.innerHTML = `
+    <div class="mic-ai-panel">
+      <div class="mic-ai-panel-title">✨ Gerar com IA — fonte: ${JOB_LABEL[srcJob]} · ${FMT_LABEL[srcFmt]}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Selecione as peças a gerar. O script de origem será usado como referência.</div>
+      <div class="mic-ai-checkboxes">${cbHtml}</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button class="mic-ai-gen-btn" id="mic-ai-run-btn" onclick="runMicModalAIGenerate()">✨ Gerar Selecionados</button>
+        <button onclick="micAiToggleAll()" style="background:none;border:none;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;">☑ Todos / Nenhum</button>
+      </div>
+      <div class="mic-ai-status" id="mic-ai-status"></div>
+    </div>`;
+}
+
+function micAiToggleAll() {
+  const boxes = document.querySelectorAll('[id^="mic_aicb_"]:not(:disabled)');
+  const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+  boxes.forEach(b => b.checked = anyUnchecked);
+}
+
+function setMicAIStatus(msg) {
+  const el = document.getElementById('mic-ai-status');
+  if (el) el.textContent = msg;
+}
+
+async function runMicModalAIGenerate() {
+  const apiKey = localStorage.getItem('mic_api_key') || '';
+  if (!apiKey) { setMicAIStatus('⚠️ Configure sua API key — botão ⚙️ API Key no topo.'); openMicGenSettings(); return; }
+
+  const t = activeModalTopic;
+  if (!t) return;
+  if (!t.scripts) t.scripts = {};
+
+  const srcJob = activeModalVersion;
+  const srcFmt = activeModalFormat;
+  const srcKey = srcFmt === 'carousel' ? 'CA' : srcFmt === 'story' ? 'SO' : JOB_TO_SCRIPT[srcJob];
+  const srcSt  = SCRIPT_TYPES[srcKey] || {};
+  const srcSc  = t.scripts[srcKey] || {};
+  const srcContent = (srcSt.fields || [])
+    .map((f, i) => srcSc[f] ? `${srcSt.labels?.[i] || f}: ${srcSc[f]}` : '')
+    .filter(Boolean).join('\n');
+
+  if (!srcContent.trim()) { setMicAIStatus('⚠️ Escreva o script de origem primeiro.'); return; }
+
+  const toGenerate = [];
+  MIC_JOBS.forEach(j => MIC_FMTS.forEach(f => {
+    const cb = document.getElementById(`mic_aicb_${j}_${f}`);
+    if (cb && cb.checked && !cb.disabled) toGenerate.push({ job: j, fmt: f });
+  }));
+  if (!toGenerate.length) { setMicAIStatus('⚠️ Selecione pelo menos uma peça.'); return; }
+
+  const btn = document.getElementById('mic-ai-run-btn');
+  btn.disabled = true;
+  let done = 0;
+
+  const JOB_LABEL = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+  const FMT_LABEL = { reel:'Reel', carousel:'Carrossel', story:'Story' };
+  const typeGuide = {
+    attract: 'ATRAIR: Para o scroll. Faz sentir identificado. SEM produto. Termina com pergunta emocional.',
+    nurture: 'NUTRIR: Ensina. Dá valor real. Passos práticos. Termina com \"Salva esse vídeo\".',
+    position:'POSICIONAR: Mostra autoridade como americano nativo. Liga ao Fluency Connect. Termina com \"Link na bio\".',
+    convert: 'CONVERTER: CTA direto. Um produto. Palavra de ativação WhatsApp ou @FluencyConnect.'
+  };
+  const fmtGuide = {
+    reel:     'Reel/Vídeo curto (30–90s). Voz do Michael — americano, direto, com sotaque brasileiro.',
+    carousel: 'Carrossel Instagram. Cada campo = um slide. Hook forte no primeiro.',
+    story:    'Story sequencial. Máx 7 palavras por frame. CTA no último.'
+  };
+
+  for (const { job, fmt } of toGenerate) {
+    const targetKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : JOB_TO_SCRIPT[job];
+    const targetSt  = SCRIPT_TYPES[targetKey] || {};
+    setMicAIStatus(`⏳ Gerando ${done + 1}/${toGenerate.length}: ${JOB_LABEL[job]} · ${FMT_LABEL[fmt]}...`);
+
+    const fieldList = (targetSt.fields || [])
+      .map((f, i) => `- "${f}": ${targetSt.labels?.[i] || f} (ex: ${targetSt.placeholders?.[i]?.split('...')[0] || ''})`)
+      .join('\n');
+
+    const prompt = `Você é especialista em criação de conteúdo para o Michael — americano que vive no Brasil, co-fundador do Fluency Connect com a Sabrina. Tom: autêntico, direto, perspectiva de nativo americano vivendo no Brasil. Público: brasileiros 25–40 aprendendo inglês. Idioma: português brasileiro.
+
+TÓPICO: "${getTopicData(t).title}"
+Subtítulo: "${getTopicData(t).sub || ''}"
+Pilar: ${PILLAR_NAMES[t.pillar] || t.pillar}
+
+SCRIPT DE ORIGEM (${JOB_LABEL[srcJob]} · ${FMT_LABEL[srcFmt]}):
+${srcContent}
+
+TAREFA: Reescreva esse conteúdo como ${JOB_LABEL[job]} · ${FMT_LABEL[fmt]}
+
+Diretrizes do tipo ${job.toUpperCase()}:
+${typeGuide[job]}
+
+Diretrizes do formato ${fmt.toUpperCase()}:
+${fmtGuide[fmt]}
+
+Regra chave: Não invente nova história. USE O MESMO NÚCLEO do script de origem — mude apenas o ângulo e o objetivo.
+
+Responda APENAS em JSON válido com estes campos exatos:
+{
+${fieldList}
+}
+
+Nenhum texto fora do JSON.`;
+
+    try {
+      const res = await fetch('https://anthropic-proxy.sabrinamcgehee1.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+      const data = await res.json();
+      const text = data.content.map(c => c.text || '').join('');
+      const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+
+      if (!t.scripts[targetKey]) t.scripts[targetKey] = { goal: job };
+      (targetSt.fields || []).forEach(f => { if (parsed[f]) t.scripts[targetKey][f] = parsed[f]; });
+      saveTopics();
+      done++;
+    } catch (err) {
+      setMicAIStatus(`❌ Erro: ${err.message}`);
+      btn.disabled = false;
+      return;
+    }
+  }
+
+  setMicAIStatus(`✅ ${done} peça(s) geradas e salvas! Clique nas abas para ver.`);
+  btn.disabled = false;
+  renderModalBody(activeModalTopic, activeModalVersion, activeModalFormat);
+}
+
+// ═══════════════════════════════════════════════════════════
+// AI GENERATOR — STANDALONE PAGE
+// ═══════════════════════════════════════════════════════════
+const MIC_GEN_PIECES = [
+  { job:'attract', fmt:'reel',     label:'Atrair · Reel' },
+  { job:'attract', fmt:'carousel', label:'Atrair · Carrossel' },
+  { job:'attract', fmt:'story',    label:'Atrair · Story' },
+  { job:'nurture', fmt:'reel',     label:'Nutrir · Reel' },
+  { job:'nurture', fmt:'carousel', label:'Nutrir · Carrossel' },
+  { job:'nurture', fmt:'story',    label:'Nutrir · Story' },
+  { job:'position',fmt:'reel',     label:'Posicionar · Reel' },
+  { job:'position',fmt:'carousel', label:'Posicionar · Carrossel' },
+  { job:'position',fmt:'story',    label:'Posicionar · Story' },
+  { job:'convert', fmt:'reel',     label:'Converter · Reel' },
+  { job:'convert', fmt:'carousel', label:'Converter · Carrossel' },
+  { job:'convert', fmt:'story',    label:'Converter · Story' },
+];
+
+function initMicGeneratorPage() {
+  const sel = document.getElementById('mic-gen-topic');
+  sel.innerHTML = '<option value="">— Seleciona um tópico —</option>';
+  TOPICS.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t.id;
+    o.textContent = `[${t.pillar.toUpperCase()}] ${getTopicData(t).title}`;
+    sel.appendChild(o);
+  });
+}
+
+function onMicGenTopicChange() {
+  const tid = parseInt(document.getElementById('mic-gen-topic').value);
+  if (!tid) {
+    document.getElementById('mic-gen-checkboxes').innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic;">Seleciona um tópico para começar.</span>';
+    document.getElementById('mic-gen-source-preview').innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic;">Seleciona um tópico e versão para ver o script aqui.</span>';
+    return;
+  }
+  renderMicGenCheckboxes();
+  renderMicGenSourcePreview();
+}
+
+function renderMicGenCheckboxes() {
+  document.getElementById('mic-gen-checkboxes').innerHTML = MIC_GEN_PIECES.map((p, i) =>
+    `<label style="display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;">
+      <input type="checkbox" id="mic_gp_${i}" checked style="accent-color:var(--green);width:14px;height:14px;">
+      <span style="font-size:12px;color:var(--muted2);">${p.label}</span>
+    </label>`
+  ).join('');
+}
+
+function micGenToggleAll() {
+  const boxes = document.querySelectorAll('#mic-gen-checkboxes input[type=checkbox]');
+  const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+  boxes.forEach(b => b.checked = anyUnchecked);
+}
+
+function renderMicGenSourcePreview() {
+  const tid = parseInt(document.getElementById('mic-gen-topic').value);
+  const job = document.getElementById('mic-gen-source-job').value;
+  const fmt = document.getElementById('mic-gen-source-fmt').value;
+  const t = TOPICS.find(x => x.id === tid);
+  if (!t) return;
+  const typeKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : JOB_TO_SCRIPT[job];
+  const st = SCRIPT_TYPES[typeKey] || {};
+  const sc = (t.scripts || {})[typeKey] || {};
+  const fields = st.fields || [];
+  const html = fields.length
+    ? fields.map((f, i) => `<div style="margin-bottom:10px;">
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px;">${st.labels?.[i] || f}</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.65;">${sc[f] || '<em style="color:var(--muted)">Vazio</em>'}</div>
+      </div>`).join('')
+    : '<span style="font-size:12px;color:var(--muted);font-style:italic;">Nenhum script encontrado.</span>';
+  document.getElementById('mic-gen-source-preview').innerHTML = html;
+}
+
+async function runMicGenerator() {
+  const apiKey = localStorage.getItem('mic_api_key') || '';
+  if (!apiKey) { alert('Configure sua API key primeiro. Clique em ⚙️ API Key no topo.'); openMicGenSettings(); return; }
+  const tid = parseInt(document.getElementById('mic-gen-topic').value);
+  if (!tid) { alert('Seleciona um tópico primeiro.'); return; }
+  const t = TOPICS.find(x => x.id === tid);
+  const srcJob = document.getElementById('mic-gen-source-job').value;
+  const srcFmt = document.getElementById('mic-gen-source-fmt').value;
+  const srcKey = srcFmt === 'carousel' ? 'CA' : srcFmt === 'story' ? 'SO' : JOB_TO_SCRIPT[srcJob];
+  const srcSt  = SCRIPT_TYPES[srcKey] || {};
+  const srcSc  = (t.scripts || {})[srcKey] || {};
+  const srcContent = (srcSt.fields || [])
+    .map((f, i) => srcSc[f] ? `${srcSt.labels?.[i] || f}: ${srcSc[f]}` : '')
+    .filter(Boolean).join('\n');
+  if (!srcContent.trim()) { alert('O script de origem está vazio. Escreva o script primeiro.'); return; }
+
+  const selected = MIC_GEN_PIECES.filter((_, i) => {
+    const cb = document.getElementById(`mic_gp_${i}`);
+    return cb && cb.checked;
+  });
+  if (!selected.length) { alert('Seleciona pelo menos uma peça.'); return; }
+
+  const btn = document.getElementById('mic-gen-run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Gerando...';
+  const resultsEl = document.getElementById('mic-gen-results');
+  resultsEl.innerHTML = '';
+
+  const JOB_LABEL = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+  const FMT_LABEL = { reel:'Reel', carousel:'Carrossel', story:'Story' };
+  const typeGuide = {
+    attract: 'ATRAIR: Para o scroll. Perspectiva do americano no Brasil. SEM produto. Termina com pergunta.',
+    nurture: 'NUTRIR: Ensina. Valor real. Tom educativo mas pessoal. Termina com \"Salva\".',
+    position:'POSICIONAR: Autoridade como americano nativo. Liga ao Fluency Connect. CTA: link na bio.',
+    convert: 'CONVERTER: CTA direto. @FluencyConnect ou palavra de ativação WhatsApp.'
+  };
+  const fmtGuide = {
+    reel:     'Reel/Vídeo curto (30–90s). Direto, pessoal, tom do Michael.',
+    carousel: 'Carrossel. Cada campo = um slide. Hook forte no Slide 1.',
+    story:    'Story sequencial. Máx 7 palavras por frame. CTA no último.'
+  };
+
+  let done = 0;
+  for (const piece of selected) {
+    const targetKey = piece.fmt === 'carousel' ? 'CA' : piece.fmt === 'story' ? 'SO' : JOB_TO_SCRIPT[piece.job];
+    const targetSt  = SCRIPT_TYPES[targetKey] || {};
+    const fieldList = (targetSt.fields || [])
+      .map((f, i) => `- "${f}": ${targetSt.labels?.[i] || f}`)
+      .join('\n');
+
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;';
+    card.innerHTML = `<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:8px;">${piece.label}</div><div style="font-size:12px;color:var(--muted);font-style:italic;">Gerando...</div>`;
+    resultsEl.appendChild(card);
+
+    const prompt = `Você é especialista em criação de conteúdo para o Michael — americano que vive no Brasil, co-fundador do Fluency Connect. Tom: direto, autêntico, perspectiva de americano nativo. Público: brasileiros 25–40. Idioma: português brasileiro.
+
+TÓPICO: "${getTopicData(t).title}"
+Subtítulo: "${getTopicData(t).sub || ''}"
+
+SCRIPT DE ORIGEM (${JOB_LABEL[srcJob]} · ${FMT_LABEL[srcFmt]}):
+${srcContent}
+
+TAREFA: Reescreva como ${JOB_LABEL[piece.job]} · ${FMT_LABEL[piece.fmt]}
+Diretrizes: ${typeGuide[piece.job]} | ${fmtGuide[piece.fmt]}
+Regra: mesmo núcleo do script de origem — mude só o ângulo e objetivo.
+
+Responda APENAS em JSON válido:
+{
+${fieldList}
+}`;
+
+    try {
+      const res = await fetch('https://anthropic-proxy.sabrinamcgehee1.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+      const data = await res.json();
+      const parsed = JSON.parse(data.content.map(c => c.text || '').join('').replace(/```json|```/g,'').trim());
+
+      if (!t.scripts) t.scripts = {};
+      if (!t.scripts[targetKey]) t.scripts[targetKey] = { goal: piece.job };
+      (targetSt.fields || []).forEach(f => { if (parsed[f]) t.scripts[targetKey][f] = parsed[f]; });
+      saveTopics();
+
+      const fieldsHtml = (targetSt.fields || []).map((f, i) =>
+        `<div style="margin-bottom:8px;">
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:2px;">${targetSt.labels?.[i] || f}</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.65;">${parsed[f] || '—'}</div>
+        </div>`).join('');
+
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green);">${piece.label}</div>
+          <button onclick="openModal(${t.id},'${piece.job}','${piece.fmt}')" style="padding:4px 10px;background:var(--green);border:none;border-radius:5px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;color:#000;cursor:pointer;">Ver no Modal →</button>
+        </div>
+        ${fieldsHtml}`;
+      done++;
+    } catch (err) {
+      card.style.background = 'rgba(224,82,82,.08)';
+      card.style.borderColor = 'rgba(224,82,82,.2)';
+      card.innerHTML = `<div style="font-size:12px;color:#e05252;">❌ Erro ao gerar ${piece.label}: ${err.message}</div>`;
+    }
+  }
+
+  btn.textContent = '✨ Gerar Scripts Selecionados';
+  btn.disabled = false;
+}
+
+// API Key settings
+function openMicGenSettings() {
+  const inp = document.getElementById('mic-api-key-inp');
+  if (inp) inp.value = localStorage.getItem('mic_api_key') || '';
+  const ov = document.getElementById('mic-settings-ov');
+  ov.style.opacity = '1'; ov.style.pointerEvents = 'all';
+}
+function closeMicGenSettings() {
+  const ov = document.getElementById('mic-settings-ov');
+  ov.style.opacity = '0'; ov.style.pointerEvents = 'none';
+}
+function saveMicGenSettings() {
+  const key = document.getElementById('mic-api-key-inp').value.trim();
+  if (key) localStorage.setItem('mic_api_key', key);
+  closeMicGenSettings();
+}
 </script>
 </body>
 </html>
