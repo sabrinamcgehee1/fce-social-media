@@ -774,6 +774,47 @@ select.at-inp{cursor:pointer;}
 // DATA
 // ═══════════════════════════════════════════════════════════
 const PILLAR_NAMES = { p1:'🌎 Americano no Brasil', p2:'🎙️ Idiomas & Aprendizado', p3:'⚡ Tech · Lógica · Disciplina' };
+// ── SCRIPT TYPES (matching Sabrina/FC structure) ──────────
+const SCRIPT_TYPES = {
+  ST:{ label:'📖 Storytelling', color:'var(--green)', goal:'attract',
+    fields:['hook','stakes','climax','lesson','cta'],
+    labels:['Hook','Stakes','Clímax','Lição','CTA'],
+    placeholders:['Frase que prende em 3 segundos...','O que estava em jogo? Por que importava?','O momento de virada...','O que você aprendeu...','Ação clara — Segue / Salva / Comenta...']
+  },
+  CO:{ label:'⚡ Comparison', color:'#e0a030', goal:'attract',
+    fields:['hook','wrong','right','why','cta'],
+    labels:['Hook','Jeito errado','Jeito certo','Por que importa','CTA'],
+    placeholders:['Contradiz uma crença comum...','Como a maioria faz / pensa...','Como nativos realmente fazem...','Por que essa diferença muda tudo...','Salva esse vídeo...']
+  },
+  AT:{ label:'👑 Authority', color:'var(--position)', goal:'position',
+    fields:['hook','experience','observation','insight','cta'],
+    labels:['Hook','Experiência','Observação','Insight','CTA'],
+    placeholders:['Credencial ou observação única...','O que você viveu como americano no Brasil...','O que você viu nos alunos / brasileiros...','A conclusão não-óbvia...','Link na bio / Me segue...']
+  },
+  ED:{ label:'📚 Educational', color:'var(--nurture)', goal:'nurture',
+    fields:['hook','problem','solution','practice','cta'],
+    labels:['Hook','Problema','Solução','Prática','CTA'],
+    placeholders:['Um erro ou problema comum...','Por que esse problema acontece...','O jeito certo / como nativos fazem...','Exercício que o seguidor pode fazer agora...','Salva — vai usar isso...']
+  },
+  SE:{ label:'🎬 Series', color:'var(--convert)', goal:'convert',
+    fields:['hook','episode','lesson','preview','cta'],
+    labels:['Hook (+ nº da série)','Episódio / Contexto','Lição / Conteúdo','Prévia do próximo','CTA'],
+    placeholders:['Nome da série + #1...','Contexto desse episódio...','O conteúdo do episódio...','O que vem no próximo...','Segue pra não perder...']
+  },
+  CA:{ label:'🖼️ Carrossel', color:'#e0a030', goal:'nurture',
+    fields:['hook','slide2','slide3','slide4','slide5','slide6','slide7','cta'],
+    labels:['Slide 1 — Hook (capa)','Slide 2','Slide 3','Slide 4','Slide 5','Slide 6','Slide 7','Slide 8 — CTA'],
+    placeholders:['Frase impactante que para o scroll...','Ponto 1 — o mais importante...','Ponto 2...','Ponto 3...','Ponto 4 / exemplo...','Ponto 5 / comparação...','Resumo ou insight final...','CTA com link ou @FluencyConnect...']
+  },
+  SO:{ label:'📲 Story', color:'#5b8dee', goal:'nurture',
+    fields:['hook','frame2','frame3','frame4','frame5','cta'],
+    labels:['Frame 1 — Gancho','Frame 2 — Contexto','Frame 3 — Conteúdo','Frame 4 — Prova / Detalhe','Frame 5 — Reflexão / Pergunta','Frame 6 — CTA'],
+    placeholders:['Para o auto-tap. Pergunta ou frase de impacto...','Contexto rápido — o que é isso, por que importa...','O conteúdo real — dica, expressão, bastidor...','Prova, print, detalhe que apoia o frame 3...','Pergunta pra engajar ou reflexão pessoal...','Sticker de resposta / link / arrasta pra cima...']
+  }
+};
+const JOB_TO_SCRIPT = { attract:'ST', nurture:'ED', position:'AT', convert:'SE' };
+const MIC_JOBS = ['attract','nurture','position','convert'];
+const MIC_FMTS = ['reel','carousel','story'];
 const PILLAR_COLORS = { p1:'var(--p1)', p2:'var(--p2)', p3:'var(--p3)' };
 const JOB_LABELS = { attract:'ATRAIR', nurture:'NUTRIR', position:'POSICIONAR', convert:'CONVERTER' };
 const FORMAT_NAMES = { ST:'Storytelling', CO:'Double Down', AT:'Authority', ED:'Educational', SE:'Série', CA:'Carrossel', SO:'Story' };
@@ -789,548 +830,77 @@ const DEFAULT_TOPICS = [
 { id:1, pillar:'p1', tipo:'regular', num:1,
   title:'Choques Culturais Inesperados',
   sub:'O dia que descobri que o Brasil funciona com regras invisíveis',
-  versions:{
-    attract:{
-      reel:{ format:'ST', hook:'O dia em que percebi que o Brasil funciona com regras invisíveis…', lines:[
-        {pt:'Cheguei aqui achando que entendia tudo. Afinal, sou adulto, já viajei bastante.'},
-        {pt:'Fui ao mercado e a fila não era uma fila. Era um grupo esperando em silêncio. Com uma ordem que ninguém explicou.'},
-        {pt:'Aprendi: o Brasil tem um código social que os brasileiros conhecem desde bebê. Eu tive que aprender do zero.'}
-      ], cta:'Segue pra ver mais choques culturais do gringo no Brasil.'},
-      carousel:{ format:'CA', hook:'5 coisas que só fazem sentido no Brasil 🇧🇷', lines:[
-        {pt:'Slide 1 — Hook: "5 coisas que nenhum americano entende à primeira vista"'},
-        {pt:'Slide 2 — A fila que não é fila: tem uma ordem invisível que todo mundo respeita.'},
-        {pt:'Slide 3 — "Agora" pode ser daqui a 10 min, 1 hora ou amanhã.'},
-        {pt:'Slide 4 — "Dar um jeitinho" — a arte de resolver qualquer coisa criativamente.'},
-        {pt:'Slide 5 — O tchauzinho de festa que leva 40 minutos.'},
-        {pt:'Slide 6 — O churrasco de domingo que começa às 12h e termina às 22h.'},
-        {pt:'Slide 7 — Qual dessas você mais faz? 😂'},
-        {pt:'Slide 8 — CTA: Salva e manda pra alguém que é muito brasileiro! 🇧🇷'}
-      ], cta:'Salva e manda pro gringo da sua vida!'},
-      story:{ format:'SO', hook:'Me conta: qual a coisa mais brasileira que você faz sem perceber? 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Qual foi a coisa mais estranha que você fez hoje sem perceber? 👇"'},
-        {pt:'Frame 2 — Contexto: Brasileiros têm costumes incríveis que são completamente normais pra vocês…'},
-        {pt:'Frame 3 — Conteúdo: Mas pra um americano como eu, cada momento é uma descoberta nova.'},
-        {pt:'Frame 4 — Prova: Hoje eu [descreve uma situação do dia].'},
-        {pt:'Frame 5 — Pergunta: Você consegue imaginar como eu fiquei? 😅'},
-        {pt:'Frame 6 — CTA: Responde aqui 👇 qual é a coisa mais brasileira que você faz todo dia.'}
-      ], cta:'Responde aqui 👇'}
-    },
-    nurture:{
-      reel:{ format:'ED', hook:'3 expressões brasileiras que não têm tradução em inglês — e o que revelam.', lines:[
-        {pt:'"Jeitinho" = resolver criativamente. Não existe em inglês.'},
-        {pt:'"Saudade" = falta que dói. Nem "miss" nem "nostalgia" capturam.'},
-        {pt:'"Vai que é tua" = incentivo + empurrão + irresponsabilidade calculada.'},
-        {pt:'Cada idioma revela a alma de uma cultura. Por isso contexto cultural importa tanto no inglês.'}
-      ], cta:'Salva e me conta qual dessas você mais usa.'},
-      carousel:{ format:'CA', hook:'Por que a cultura importa mais que a gramática no inglês 🧠', lines:[
-        {pt:'Slide 1 — Hook: "Sua gramática está certa. Mas você ainda soa estranho. Por quê?"'},
-        {pt:'Slide 2 — Porque idioma não é só código — é cultura.'},
-        {pt:'Slide 3 — Americanos são diretos. Brasileiros são contextuais. Isso muda tudo.'},
-        {pt:'Slide 4 — Exemplo: "How are you?" não é pergunta. É cumprimento.'},
-        {pt:'Slide 5 — Resposta certa: "Good, thanks!" — não uma história de vida.'},
-        {pt:'Slide 6 — Aprender cultura americana acelera seu inglês mais que qualquer gramática.'},
-        {pt:'Slide 7 — Qual expressão em inglês te confundiu recentemente? 👇'},
-        {pt:'Slide 8 — CTA: Salva esse carrossel pra revisar antes da próxima conversa!'}
-      ], cta:'Salva pra usar na próxima conversa!'},
-      story:{ format:'SO', hook:'Qual parte da cultura americana mais te intriga? 🇺🇸 👇', lines:[
-        {pt:'Frame 1 — Gancho: [Enquete] Qual você tem mais vontade de entender: 🇺🇸 EUA ou 🇧🇷 BR?'},
-        {pt:'Frame 2 — Contexto: Vivo nos dois mundos há mais de 1 ano…'},
-        {pt:'Frame 3 — Conteúdo: E a maior diferença não é a língua. É o jeito de se relacionar.'},
-        {pt:'Frame 4 — Detalhe: Nos EUA: privacidade > comunidade. No Brasil: comunidade > privacidade.'},
-        {pt:'Frame 5 — Pergunta: Você prefere qual?'},
-        {pt:'Frame 6 — CTA: Me conta nos comentários do reel de hoje!'}
-      ], cta:'Me conta! 👇'}
-    },
-    position:{
-      reel:{ format:'AT', hook:'Como americano que vive no Brasil, estudei essas diferenças culturais. Elas fazem sentido.', lines:[
-        {pt:'O Brasil é uma sociedade de alta contextualização. Muito do que é dito está no que não é dito.'},
-        {pt:'Nos EUA é o oposto: somos diretos ao ponto. Você diz o que pensa.'},
-        {pt:'Isso afeta como brasileiros falam inglês — costumam ser indiretos demais, gerando mal-entendidos.'},
-        {pt:'Quando você entende a diferença cultural, o idioma faz muito mais sentido.'}
-      ], cta:'Me segue pra mais análises de cultura e idioma.'},
-      carousel:{ format:'CA', hook:'Brasil × EUA: 6 diferenças que impactam seu inglês 🌎', lines:[
-        {pt:'Slide 1 — Hook: "Por que brasileiros parecem frios em inglês? A resposta é cultural."'},
-        {pt:'Slide 2 — Diferença 1: Português é contextual. Inglês é direto.'},
-        {pt:'Slide 3 — Diferença 2: Saudação BR = convite pra conversa. EN = só protocolo.'},
-        {pt:'Slide 4 — Diferença 3: Brasileiro diz "não" indiretamente. Americano diz diretamente.'},
-        {pt:'Slide 5 — Diferença 4: Espaço pessoal diferente nas duas culturas.'},
-        {pt:'Slide 6 — Diferença 5: Tempo diferente — BR relacional, EUA cronológico.'},
-        {pt:'Slide 7 — Conhecer essas diferenças te faz soar mais natural em inglês.'},
-        {pt:'Slide 8 — CTA: Salva — vai mudar como você fala inglês com americanos!'}
-      ], cta:'Salva — vai mudar como você fala inglês!'},
-      story:{ format:'SO', hook:'Teste: você sabe como americanos realmente se cumprimentam? 👇', lines:[
-        {pt:'Frame 1 — Gancho: [Quiz] Como americano responde "How are you?" 🤔'},
-        {pt:'Frame 2 — A) Fine, thanks! B) Not bad! C) Pretty good! D) Todas estão certas'},
-        {pt:'Frame 3 — Resposta: Todas estão certas — mas cada uma tem um contexto.'},
-        {pt:'Frame 4 — "Pretty good" soa mais natural e casual. "Fine" soa um pouco formal.'},
-        {pt:'Frame 5 — Pequenos detalhes como esse separam quem estuda de quem parece nativo.'},
-        {pt:'Frame 6 — CTA: Me segue pra mais dicas de cultura americana do americano real 🇺🇸'}
-      ], cta:'Me segue! 🇺🇸'}
-    },
-    convert:{
-      reel:{ format:'CO', hook:'Aprendi português por imersão, sem curso. O mesmo método funciona pro inglês.', lines:[
-        {pt:'Todo mundo acha que aprender idiomas é sobre gramática. Não é.'},
-        {pt:'É sobre exposição, contexto e uso real. Fiz isso com o português e funciona.'},
-        {pt:'Brasileiros que entendem cultura americana falam inglês completamente diferente — mais natural, mais fluente.'},
-        {pt:'É exatamente isso que eu ensino no @FluencyConnect.'}
-      ], cta:'Me manda mensagem ou segue o @FluencyConnect.'},
-      carousel:{ format:'CA', hook:'Por que o inglês com contexto cultural é diferente de tudo que você já estudou', lines:[
-        {pt:'Slide 1 — Hook: "Você estuda inglês há anos e ainda sente que falta algo. Eu sei o que é."'},
-        {pt:'Slide 2 — Não é vocabulário. Não é gramática. É contexto cultural.'},
-        {pt:'Slide 3 — Aprendi português morando no Brasil. Vi o que acelera o aprendizado.'},
-        {pt:'Slide 4 — É a mesma coisa que ensinamos no Fluency Connect.'},
-        {pt:'Slide 5 — Não é inglês de livro. É inglês de americano nativo.'},
-        {pt:'Slide 6 — Com Michael como professor, você aprende como nativos realmente falam.'},
-        {pt:'Slide 7 — Resultado: fluência real, não desempenho de prova.'},
-        {pt:'Slide 8 — CTA: Segue o @FluencyConnect e conhece o método.'}
-      ], cta:'Segue o @FluencyConnect!'},
-      story:{ format:'SO', hook:'Você quer aprender inglês do jeito que um nativo ensina? 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Você quer aprender inglês de um americano real? Me responde aqui 👇"'},
-        {pt:'Frame 2 — Sou americano, vivo no Brasil, e ensino inglês com contexto cultural real.'},
-        {pt:'Frame 3 — Não é curso de gramática. É inglês que nativos usam no dia a dia.'},
-        {pt:'Frame 4 — Alunos que estudam com esse método avançam muito mais rápido.'},
-        {pt:'Frame 5 — Quer entrar? Link na bio ou manda "INGLÊS" aqui.'},
-        {pt:'Frame 6 — CTA: Arrasta pra cima e conhece o Fluency Connect!'}
-      ], cta:'Arrasta pra cima! 👆'}
-    }
+  scripts:{
+    ST:{ goal:'attract', hook:'O dia em que percebi que o Brasil funciona com regras invisíveis…', stakes:'Cheguei aqui achando que entendia tudo. Afinal, sou adulto, já viajei bastante.', climax:'Fui ao mercado e a fila não era uma fila. Era um grupo esperando em silêncio, com uma ordem que ninguém explicou.', lesson:'O Brasil tem um código social que os brasileiros conhecem desde bebê. Eu tive que aprender do zero.', cta:'Segue pra ver mais choques culturais do gringo no Brasil.' },
+    CO:{ goal:'attract', hook:'O que americanos e brasileiros fazem completamente diferente — e ninguém fala sobre isso.', wrong:'Americanos chegam no horário marcado. Brasileiros chegam \"no horário brasileiro\".', right:'Mas no Brasil, chegar na hora pode parecer ansioso. O timing social é diferente.', why:'Entender essa diferença muda como você se comunica em inglês com americanos.', cta:'Salva e manda pro brasileiro mais pontual que você conhece.' },
+    AT:{ goal:'position', hook:'Como americano que vive no Brasil, estudei essas diferenças culturais. Elas fazem sentido.', experience:'O Brasil é uma sociedade de alta contextualização. Muito do que é dito está no que não é dito.', observation:'Nos EUA é o oposto: somos diretos ao ponto. Você diz o que pensa.', insight:'Quando você entende a diferença cultural, o idioma faz muito mais sentido.', cta:'Me segue pra mais análises de cultura e idioma.' },
+    ED:{ goal:'nurture', hook:'3 expressões brasileiras que não têm tradução em inglês — e o que revelam.', problem:'Cada idioma carrega a alma de uma cultura. Sem contexto, você perde o significado real.', solution:'\"Saudade\" = falta que dói. \"Jeitinho\" = resolver criativamente. \"Vai que\" = incentivo + irresponsabilidade calculada.', practice:'Hoje: explica em inglês o que é \"jeitinho\" pra alguém. Vai ser difícil — e vai te ensinar muito.', cta:'Salva e me conta qual dessas você mais usa.' },
+    SE:{ goal:'convert', hook:'Série: Americano no Brasil #1 — O primeiro choque cultural real.', episode:'Vou documentar minha jornada vivendo no Brasil — com os choques, as descobertas e o que aprendi sobre idioma.', lesson:'Hoje: a fila que não era fila. O mercado onde percebi que o Brasil tem um código invisível.', preview:'No próximo: a primeira vez que tentei fazer um elogio e saiu completamente errado.', cta:'Me segue e ativa o sino. Série toda semana.' },
+    CA:{ goal:'nurture', hook:'5 coisas que só fazem sentido no Brasil 🇧🇷', slide2:'A fila que não é fila — tem uma ordem invisível que todo mundo respeita.', slide3:'\"Agora\" pode ser daqui a 10 min, 1 hora ou amanhã. Depende do contexto.', slide4:'\"Dar um jeitinho\" — a arte de resolver qualquer coisa criativamente. Não existe em inglês.', slide5:'O tchauzinho de festa que leva 40 minutos. É ritual social, não despedida.', slide6:'O churrasco de domingo que começa às 12h e termina às 22h. O tempo é relacional, não cronológico.', slide7:'Cada um desses hábitos revela como brasileiros pensam — e como isso afeta seu inglês.', cta:'Salva e manda pra alguém que é muito brasileiro! 🇧🇷' },
+    SO:{ goal:'attract', hook:'Me conta: qual a coisa mais brasileira que você faz sem perceber? 👇', frame2:'Brasileiros têm costumes incríveis que são completamente normais pra vocês…', frame3:'Mas pra um americano como eu, cada momento é uma descoberta nova.', frame4:'Hoje eu fui ao mercado e aprendi que a fila não é uma fila. Foi um choque cultural real.', frame5:'Você consegue imaginar como eu fiquei? 😅 Qual é a coisa mais brasileira que você faz todo dia?', cta:'Responde aqui 👇 — adoro ler os comentários.' }
   }
 },
 // ── P2: IDIOMAS & APRENDIZADO ─────────────────────────────
 { id:2, pillar:'p2', tipo:'regular', num:1,
   title:'Como Aprendi Português Sozinho',
-  sub:'O dia em que comecei a pensar em português sem querer',
-  versions:{
-    attract:{
-      reel:{ format:'ST', hook:'O dia que percebi que estava pensando em português sem querer.', lines:[
-        {pt:'Estava no mercado. Olhei pro preço e pensei: "Isso tá caro." Em português. Sem traduzir.'},
-        {pt:'Voltei pra casa e contei pra minha esposa. Ela começou a chorar. Feliz.'},
-        {pt:'Esse momento não acontece do dia pra noite. Levou meses de imersão, vergonha e errar na frente dos outros.'},
-        {pt:'Mas quando acontece? É a melhor sensação do mundo.'}
-      ], cta:'Me conta: você já teve esse momento com o inglês?'},
-      carousel:{ format:'CA', hook:'Como aprendi português sem curso formal em 3 fases 🗣️', lines:[
-        {pt:'Slide 1 — Hook: "Aprendi português fluente sem curso. Aqui está como."'},
-        {pt:'Slide 2 — Fase 1 — Sobrevivência: frases essenciais pra me virar no dia a dia.'},
-        {pt:'Slide 3 — Fase 2 — Conexão: aprendi piadas, gírias e referências culturais.'},
-        {pt:'Slide 4 — Fase 3 — Fluência: parei de traduzir. Comecei a pensar diretamente.'},
-        {pt:'Slide 5 — O segredo: imersão forçada. Toda interação em português, mesmo errando.'},
-        {pt:'Slide 6 — O momento que sabia que tinha chegado: pensar em português no mercado sem querer.'},
-        {pt:'Slide 7 — Esse mesmo processo funciona pro seu inglês. 👇'},
-        {pt:'Slide 8 — CTA: Salva e aplica esse método ao inglês hoje!'}
-      ], cta:'Salva e aplica hoje!'},
-      story:{ format:'SO', hook:'Você já teve aquele momento em que pensou em inglês sem querer? 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Você já teve aquele momento em que pensou em inglês sem querer? 👇"'},
-        {pt:'Frame 2 — Esse é o sinal de que você chegou na fluência de verdade…'},
-        {pt:'Frame 3 — E ele não acontece com gramática. Acontece com imersão.'},
-        {pt:'Frame 4 — Tô preparando conteúdo sobre como chegar nesse ponto mais rápido.'},
-        {pt:'Frame 5 — Qual é seu maior bloqueio no inglês hoje?'},
-        {pt:'Frame 6 — CTA: Me responde aqui 👇 quero entender pra te ajudar melhor.'}
-      ], cta:'Me responde aqui 👇'}
-    },
-    nurture:{
-      reel:{ format:'ED', hook:'3 técnicas que usei todo dia pra virar fluente em português.', lines:[
-        {pt:'Técnica 1: Conversação forçada. Toda interação em português, mesmo errando.'},
-        {pt:'Técnica 2: Pensar em voz alta. Descrever o que via no caminho de casa.'},
-        {pt:'Técnica 3: Frases, não palavras. "Você pode me ajudar?" > só a palavra "ajudar".'}
-      ], cta:'Escolhe uma das 3 e aplica hoje.'},
-      carousel:{ format:'CA', hook:'3 técnicas de imersão que funcionam em qualquer idioma 🚀', lines:[
-        {pt:'Slide 1 — Hook: "3 técnicas de imersão que aprendi aprendendo português sozinho."'},
-        {pt:'Slide 2 — Técnica 1: Conversação forçada — só o idioma-alvo em cada interação.'},
-        {pt:'Slide 3 — Técnica 2: Pensar em voz alta — descreve o que vê no idioma novo.'},
-        {pt:'Slide 4 — Técnica 3: Aprende frases completas, não palavras isoladas.'},
-        {pt:'Slide 5 — Por que funciona: o cérebro aprende padrões, não vocabulário avulso.'},
-        {pt:'Slide 6 — Bônus: troca o idioma do celular pra inglês agora. É imersão passiva gratuita.'},
-        {pt:'Slide 7 — Qual das 3 você vai começar hoje? 👇'},
-        {pt:'Slide 8 — CTA: Salva e começa pela técnica 3 ainda hoje!'}
-      ], cta:'Salva e começa hoje!'},
-      story:{ format:'SO', hook:'Qual técnica de estudo você usa hoje? [Enquete] 👇', lines:[
-        {pt:'Frame 1 — Enquete: Como você estuda inglês? A) App B) Curso C) Séries D) Nenhum'},
-        {pt:'Frame 2 — Qualquer um desses pode funcionar — mas faltam as técnicas certas.'},
-        {pt:'Frame 3 — A técnica mais subestimada: falar em voz alta pra você mesmo.'},
-        {pt:'Frame 4 — 30 segundos descrevendo qualquer coisa em inglês. Todo dia.'},
-        {pt:'Frame 5 — Em 30 dias a diferença é impressionante.'},
-        {pt:'Frame 6 — CTA: Segue pra mais técnicas testadas que realmente funcionam!'}
-      ], cta:'Segue! 👇'}
-    },
-    position:{
-      reel:{ format:'AT', hook:'Como professor e bilíngue, o método exato que usei pra soar nativo em português.', lines:[
-        {pt:'Fase 1 — Sobrevivência: frases essenciais pro dia a dia.'},
-        {pt:'Fase 2 — Conexão: entender piadas, gírias, referências culturais.'},
-        {pt:'Fase 3 — Fluência: parar de traduzir e pensar diretamente no idioma.'},
-        {pt:'Esse mesmo processo funciona pro seu inglês. E é o que ensinamos no Fluency Connect.'}
-      ], cta:'Me segue pra aprender inglês com esse método.'},
-      carousel:{ format:'CA', hook:'O método de aprendizado de idiomas que realmente funciona (baseado em ciência) 🧠', lines:[
-        {pt:'Slide 1 — Hook: "Por que você estuda inglês há anos e ainda não flui?"'},
-        {pt:'Slide 2 — Não é falta de esforço. É método errado.'},
-        {pt:'Slide 3 — Método errado: gramática → vocabulário → falar. Resultado: trava.'},
-        {pt:'Slide 4 — Método certo: sobrevivência → conexão → fluência.'},
-        {pt:'Slide 5 — Aprendi português assim. Funciona em qualquer idioma.'},
-        {pt:'Slide 6 — A diferença: você aprende a usar o idioma, não a estudar sobre ele.'},
-        {pt:'Slide 7 — Esse método é o que ensinamos no Fluency Connect.'},
-        {pt:'Slide 8 — CTA: Segue o @FluencyConnect e conhece o método completo!'}
-      ], cta:'Segue o @FluencyConnect!'},
-      story:{ format:'SO', hook:'Você aprende melhor com teoria ou prática? [Enquete] 👇', lines:[
-        {pt:'Frame 1 — Enquete: Como você aprende melhor? A) Teoria B) Prática C) Os dois'},
-        {pt:'Frame 2 — Pesquisas mostram: prática ativa supera teoria em velocidade de aprendizado.'},
-        {pt:'Frame 3 — Mas a maioria dos cursos de inglês é 80% teoria, 20% prática.'},
-        {pt:'Frame 4 — No Fluency Connect é o oposto.'},
-        {pt:'Frame 5 — Por isso alunos de lá evoluem tão rápido.'},
-        {pt:'Frame 6 — CTA: Link na bio pra conhecer o método. 👆'}
-      ], cta:'Link na bio 👆'}
-    },
-    convert:{
-      reel:{ format:'CO', hook:'A maioria aprende idiomas estudando gramática. Eu aprendi português vivendo o idioma.', lines:[
-        {pt:'A diferença é enorme. Um te dá teoria. O outro te dá fluência.'},
-        {pt:'É esse jeito que ensinamos inglês no Fluency Connect — com situações reais, cultura, contexto.'},
-        {pt:'Não é inglês de livro. É inglês que nativos usam de verdade.'}
-      ], cta:'Link na bio pra começar. Ou manda mensagem.'},
-      carousel:{ format:'CA', hook:'Fluency Connect: inglês do jeito que nativos realmente falam', lines:[
-        {pt:'Slide 1 — Hook: "Cansado de estudar inglês e ainda travar na hora de falar?"'},
-        {pt:'Slide 2 — O problema: você sabe gramática mas não sabe usar.'},
-        {pt:'Slide 3 — A solução: inglês com contexto real de americano nativo.'},
-        {pt:'Slide 4 — Michael é americano. Viveu nos EUA. Ensina o inglês que nativos usam.'},
-        {pt:'Slide 5 — Alunos do Fluency Connect avançam mais rápido porque o método é certo.'},
-        {pt:'Slide 6 — Não é mais um curso de gramática.'},
-        {pt:'Slide 7 — É inglês cultural, contextual, com professor nativo.'},
-        {pt:'Slide 8 — CTA: Link na bio ou manda "INGLÊS" no direct agora!'}
-      ], cta:'Manda "INGLÊS" no direct!'},
-      story:{ format:'SO', hook:'Você quer começar no Fluency Connect? Me responde aqui 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Última vaga dessa turma. Me responde: você quer entrar? 👇"'},
-        {pt:'Frame 2 — O que você recebe: método testado + professor nativo + comunidade.'},
-        {pt:'Frame 3 — Sem gramática chata. Com inglês real de americano.'},
-        {pt:'Frame 4 — Já ajudei centenas de brasileiros a saírem do bloqueio.'},
-        {pt:'Frame 5 — Você pode ser o próximo.'},
-        {pt:'Frame 6 — CTA: Manda "INGLÊS" aqui agora e eu te mando os detalhes! 👇'}
-      ], cta:'Manda "INGLÊS" agora! 👇'}
-    }
+  sub:'O método que usei — e que funciona pro inglês também',
+  scripts:{
+    ST:{ goal:'attract', hook:'Aprendi português sem curso, sem professor, vivendo no Brasil. Aqui está o que realmente funcionou.', stakes:'Cheguei sem falar quase nada. Precisava me comunicar no dia a dia — supermercado, vizinhos, família da Sabrina.', climax:'Parei de estudar gramática e comecei a falar desde o dia 1. Errei muito. E aprendi muito mais rápido.', lesson:'Idioma não se aprende estudando — se aprende usando. Mesmo que você erre tudo.', cta:'Me segue pra mais dicas de quem aprendeu idioma na marra.' },
+    CO:{ goal:'attract', hook:'Jeito errado de aprender inglês vs o jeito que nativos ensinam. A diferença é enorme.', wrong:'Estudar gramática por meses antes de falar uma palavra. Esperar estar \"pronto\".', right:'Falar desde o dia 1. Errar na frente de pessoas reais. Ajustar a partir do feedback.', why:'Aprendi português assim — e funcionou. É exatamente o método do Fluency Connect.', cta:'Salva e manda pra quem tá travado esperando estar pronto.' },
+    AT:{ goal:'position', hook:'Aprendi português como adulto, sem imersão formal. O que descobri muda como você vê o aprendizado de inglês.', experience:'Morei no Brasil sem escola de idiomas. Aprendi por necessidade, contexto e muita tentativa e erro.', observation:'O que acelerou mais: conversas reais com brasileiros que não tinham paciência pra meu português ruim.', insight:'O desconforto de não ser entendido é o melhor professor. Nenhum app reproduz isso.', cta:'É o que a Sabrina e eu trazemos no Fluency Connect. Link na bio.' },
+    ED:{ goal:'nurture', hook:'3 estratégias que usei pra aprender português — que funcionam igualmente pro inglês.', problem:'A maioria estuda idioma de forma passiva — ouve, lê, faz exercício. Mas nunca produz.', solution:'1. Fala desde o dia 1, mesmo errando. 2. Aprende vocabulário em contexto, não em lista. 3. Consome conteúdo que você já entende parcialmente.', practice:'Hoje: fala em inglês por 2 minutos sobre qualquer coisa. Sozinho, em voz alta. Só fala.', cta:'Salva e me conta como foi.' },
+    SE:{ goal:'convert', hook:'Série: Aprendendo Idioma na Marra #1 — Por que eu parei de estudar gramática.', episode:'Vou contar minha jornada aprendendo português — com os erros, os momentos constrangedores e o que realmente funcionou.', lesson:'Semana 1: tentei usar o subjuntivo. Ninguém me entendeu. Desisti da gramática e comecei a imitar.', preview:'No próximo: a primeira conversa real que tive em português — e por que foi transformadora.', cta:'Me segue. Nova semana, novo episódio.' },
+    CA:{ goal:'nurture', hook:'Como aprendi português do zero morando no Brasil 🇧🇷 — o método completo', slide2:'Passo 1: Parei de estudar e comecei a falar. Mesmo sem saber quase nada.', slide3:'Passo 2: Aprendi as 100 palavras mais usadas no dia a dia — não vocabulário de livro.', slide4:'Passo 3: Assisti séries brasileiras com legenda em português. Não em inglês.', slide5:'Passo 4: Tive conversas reais com brasileiros que corrigiam meus erros sem piedade.', slide6:'Passo 5: Aceitei o constrangimento como parte do processo. Errar em público acelera o aprendizado.', slide7:'O mesmo método funciona pro inglês. É o que ensinamos no Fluency Connect.', cta:'Salva esse carrossel. E segue o @FluencyConnect.' },
+    SO:{ goal:'nurture', hook:'Como aprendi português sem escola, sem app, sem curso. 🇧🇷', frame2:'Cheguei no Brasil falando quase zero. Precisava me virar no dia a dia.', frame3:'O que funcionou: falar desde o dia 1. Mesmo errado. Mesmo com vergonha.', frame4:'O que não funcionou: tentar estudar gramática antes de usar. Congelei completamente.', frame5:'A lição mais importante: idioma não é conhecimento — é habilidade. Aprende-se fazendo.', cta:'Me conta: qual é sua maior dificuldade com inglês agora? 👇' }
   }
 },
+// ── P2: IDIOMAS #2 ────────────────────────────────────────
 { id:3, pillar:'p2', tipo:'regular', num:2,
-  title:'O Maior Erro dos Brasileiros ao Falar Inglês',
-  sub:'Todo meu aluno tinha o mesmo bloqueio — e eu só percebi depois',
-  versions:{
-    attract:{
-      reel:{ format:'CO', hook:'Para de tentar traduzir enquanto fala inglês. Está te travando.', lines:[
-        {pt:'Todo mundo que trava no speaking faz a mesma coisa: tenta traduzir mentalmente antes de falar.'},
-        {pt:'Resultado: demora, hesita, esquece o que ia dizer, parece inseguro.'},
-        {pt:'O que nativos fazem: pensam e falam ao mesmo tempo. A prática oral diária é o que cria esse hábito.'}
-      ], cta:'Salva pra lembrar disso na próxima vez que for falar inglês.'},
-      carousel:{ format:'CA', hook:'O erro que trava 90% dos brasileiros no inglês 🚫', lines:[
-        {pt:'Slide 1 — Hook: "Por que você trava no inglês mesmo sabendo as palavras?"'},
-        {pt:'Slide 2 — O problema: você está tentando traduzir em tempo real.'},
-        {pt:'Slide 3 — Isso cria um delay entre o pensamento e a fala.'},
-        {pt:'Slide 4 — Que parece trava, hesitação, insegurança.'},
-        {pt:'Slide 5 — A solução: prática oral diária que corta esse caminho.'},
-        {pt:'Slide 6 — 30 segundos descrevendo qualquer objeto em inglês. Todo dia.'},
-        {pt:'Slide 7 — Em 30 dias o delay some. Testado com centenas de alunos.'},
-        {pt:'Slide 8 — CTA: Salva e começa o exercício hoje!'}
-      ], cta:'Salva e começa hoje!'},
-      story:{ format:'SO', hook:'Você trava mais no speaking ou na escrita? [Enquete] 👇', lines:[
-        {pt:'Frame 1 — Enquete: Onde você trava mais em inglês? A) Speaking B) Escrita C) Os dois'},
-        {pt:'Frame 2 — Se você votou Speaking: você não está sozinho. 80% dos brasileiros têm esse bloqueio.'},
-        {pt:'Frame 3 — E a causa não é falta de vocabulário. É falta de prática oral.'},
-        {pt:'Frame 4 — Tô postando um exercício de 30 segundos amanhã que resolve isso.'},
-        {pt:'Frame 5 — Ativa as notificações pra não perder.'},
-        {pt:'Frame 6 — CTA: Me segue e ativa o sino! 🔔'}
-      ], cta:'Me segue e ativa o sino! 🔔'}
-    },
-    nurture:{
-      reel:{ format:'ED', hook:'Exercício de 30 segundos pra destravar o speaking hoje.', lines:[
-        {pt:'Pega um objeto qualquer. Descreve ele em inglês em voz alta por 30 segundos.'},
-        {pt:'"This is a cup. It is blue. I use it every morning. I drink coffee from it."'},
-        {pt:'Não para. Não pensa muito. Só fala o que vier.'},
-        {pt:'Trinta segundos por dia. Em 30 dias o bloqueio diminui visivelmente.'}
-      ], cta:'Testa agora e me manda o que você descreveu.'},
-      carousel:{ format:'CA', hook:'5 exercícios de speaking pra fazer em casa (sem precisar de professor) 🏠', lines:[
-        {pt:'Slide 1 — Hook: "5 exercícios de speaking que você faz sozinho em casa. Sem professor."'},
-        {pt:'Slide 2 — Exercício 1: Descreve objetos em inglês por 30 segundos.'},
-        {pt:'Slide 3 — Exercício 2: Shadowing — repete o que ouve imediatamente.'},
-        {pt:'Slide 4 — Exercício 3: Narra sua rotina em voz alta enquanto faz as coisas.'},
-        {pt:'Slide 5 — Exercício 4: Responde perguntas em voz alta (tô gravando uma lista pra vocês).'},
-        {pt:'Slide 6 — Exercício 5: Grava um áudio de 1 minuto falando sobre qualquer tema.'},
-        {pt:'Slide 7 — Faz um por dia. Em 5 dias você já sente a diferença.'},
-        {pt:'Slide 8 — CTA: Salva esse carrossel e começa pelo exercício 1 agora!'}
-      ], cta:'Salva e começa agora!'},
-      story:{ format:'SO', hook:'Vou fazer um challenge de speaking. Você entra? 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Challenge: 7 dias de speaking em 30 segundos por dia. Você entra? 👇"'},
-        {pt:'Frame 2 — Todo dia eu posto um objeto ou tema pra você descrever em inglês.'},
-        {pt:'Frame 3 — Você grava um áudio de 30 segundos e manda pra mim.'},
-        {pt:'Frame 4 — Eu dou feedback nos melhores.'},
-        {pt:'Frame 5 — Simples. Gratuito. Funciona.'},
-        {pt:'Frame 6 — CTA: Manda "SIM" aqui pra começar amanhã! 👇'}
-      ], cta:'Manda "SIM" aqui! 👇'}
-    },
-    position:{
-      reel:{ format:'AT', hook:'Como professor, explico por que o bloqueio de speaking acontece com brasileiros.', lines:[
-        {pt:'O cérebro bilíngue tem duas redes neurais. No início, não estão bem conectadas.'},
-        {pt:'Cada vez que você tenta falar inglês, o cérebro vai buscar no português primeiro. Isso cria o delay.'},
-        {pt:'A solução não é estudar mais gramática. É criar uma rota direta entre pensamento e inglês — com prática oral constante.'}
-      ], cta:'Me segue pra mais ciência do aprendizado de idiomas.'},
-      carousel:{ format:'CA', hook:'A neurociência por trás do bloqueio de speaking (e como resolver) 🧠', lines:[
-        {pt:'Slide 1 — Hook: "O bloqueio de speaking tem uma causa neurológica. E tem solução."'},
-        {pt:'Slide 2 — O cérebro bilíngue opera em duas redes separadas.'},
-        {pt:'Slide 3 — No início, a rede do inglês é fraca e acessa a do português primeiro.'},
-        {pt:'Slide 4 — Isso gera o delay que parece trava — mas é só latência neural.'},
-        {pt:'Slide 5 — A solução: prática que fortalece a rede do inglês diretamente.'},
-        {pt:'Slide 6 — Isso se faz com output oral, não com gramática ou leitura.'},
-        {pt:'Slide 7 — É exatamente o que ensinamos no Fluency Connect.'},
-        {pt:'Slide 8 — CTA: Salva e segue pra aprender mais sobre isso!'}
-      ], cta:'Salva e segue!'},
-      story:{ format:'SO', hook:'Sabia que o bloqueio de speaking é neurológico, não de vocabulário? 🧠', lines:[
-        {pt:'Frame 1 — Gancho: "O bloqueio de speaking tem uma causa neurológica. Eu explico."'},
-        {pt:'Frame 2 — Não é falta de palavras. É falta de rota direta entre pensamento e fala.'},
-        {pt:'Frame 3 — Essa rota se constrói com prática oral. Não com estudo.'},
-        {pt:'Frame 4 — No Fluency Connect trabalhamos isso desde a primeira aula.'},
-        {pt:'Frame 5 — Quer saber mais sobre como funciona?'},
-        {pt:'Frame 6 — CTA: Me manda "NEURO" aqui e eu te mando um conteúdo especial sobre isso!'}
-      ], cta:'Manda "NEURO" aqui! 👇'}
-    },
-    convert:{
-      reel:{ format:'CO', hook:'A maioria dos cursos treina gramática. Deviam treinar o desbloqueio.', lines:[
-        {pt:'Porque o problema de quem trava no speaking não é gramática — é o acesso rápido ao que já sabe.'},
-        {pt:'No Fluency Connect trabalhamos exatamente isso: desbloqueio de speaking desde a primeira aula.'},
-        {pt:'Resultado: alunos que falavam inglês "no papel" começam a usar de verdade.'}
-      ], cta:'Link na bio pra conhecer o método. Ou manda "INGLÊS" no direct.'},
-      carousel:{ format:'CA', hook:'Por que o Fluency Connect funciona quando outros métodos falharam', lines:[
-        {pt:'Slide 1 — Hook: "Você já tentou vários métodos e ainda não flui. Por quê?"'},
-        {pt:'Slide 2 — Porque a maioria dos cursos ignora o maior bloqueio: o speaking.'},
-        {pt:'Slide 3 — No Fluency Connect o foco é diferente: output desde o dia 1.'},
-        {pt:'Slide 4 — Você fala antes de estar "pronto". Porque esperar "estar pronto" é o erro.'},
-        {pt:'Slide 5 — Michael, professor nativo, te dá feedback real de como você soa.'},
-        {pt:'Slide 6 — Não é motivação. É método. E método tem resultado mensurável.'},
-        {pt:'Slide 7 — Centenas de brasileiros já saíram do bloqueio com esse método.'},
-        {pt:'Slide 8 — CTA: Você pode ser o próximo. Link na bio!'}
-      ], cta:'Link na bio!'},
-      story:{ format:'SO', hook:'Já tentou aprender inglês e trava sempre? Tenho uma solução. 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Você trava no inglês há anos? Tenho algo específico pra você. 👇"'},
-        {pt:'Frame 2 — Não é mais um curso de gramática.'},
-        {pt:'Frame 3 — É um método de desbloqueio de speaking com professor nativo.'},
-        {pt:'Frame 4 — Feito especificamente pra quem sabe inglês mas não consegue falar.'},
-        {pt:'Frame 5 — Próxima turma abrindo em breve.'},
-        {pt:'Frame 6 — CTA: Manda "BLOQUEIO" aqui pra garantir sua vaga! 👇'}
-      ], cta:'Manda "BLOQUEIO" aqui! 👇'}
-    }
+  title:'Por Que Brasileiros Travam ao Falar Inglês',
+  sub:'Não é falta de vocabulário — é algo mais profundo',
+  scripts:{
+    ST:{ goal:'attract', hook:'Ensinei inglês pra centenas de brasileiros. O problema nunca foi o vocabulário.', stakes:'Alunos com inglês avançado travavam na hora de falar. Sabiam as palavras — mas não conseguiam produzir.', climax:'Percebi que o problema era psicológico, não linguístico. Era medo de soar errado.', lesson:'Fluência não é perfeição. É disposição de se comunicar mesmo errando.', cta:'Me segue pra mais verdades sobre aprendizado de inglês.' },
+    CO:{ goal:'attract', hook:'Aluno que trava vs aluno que flui em inglês. A diferença não é o nível.', wrong:'Esperar estar pronto pra falar. Revisar mentalmente cada frase antes de dizer.', right:'Abrir a boca antes de ter certeza. Deixar o erro ser parte da conversa.', why:'Nativos erram o tempo todo e continuam falando. Fluência é velocidade, não perfeição.', cta:'Salva pra lembrar quando travar na próxima conversa.' },
+    AT:{ goal:'position', hook:'Como americano nativo que ensina inglês, vejo o mesmo padrão em todo brasileiro que trava.', experience:'Não é falta de vocabulário. É uma equação errada: \"errar = fracasso\".', observation:'Alunos que aceitam errar evoluem 3x mais rápido do que alunos que esperam a frase perfeita.', insight:'No Fluency Connect criamos um ambiente onde errar é parte do método, não exceção.', cta:'Conhece o Fluency Connect. Link na bio.' },
+    ED:{ goal:'nurture', hook:'Como parar de travar ao falar inglês — 3 passos que funcionam.', problem:'O travamento vem de uma equação errada: \"não sei falar perfeito = não devo falar\".', solution:'1. Fala 2 minutos por dia em inglês, sozinho. 2. Foca em ser entendido, não perfeito. 3. Grava sua voz e ouve — você vai perceber que soa muito melhor do que acha.', practice:'Hoje: fala em inglês por 2 minutos sobre seu dia. No carro, no banheiro, onde for.', cta:'Salva e me conta como foi depois de 7 dias.' },
+    SE:{ goal:'convert', hook:'Série: Destravando o Inglês #1 — O motivo real do travamento.', episode:'Nessa série vou mostrar exercícios reais que uso com alunos do Fluency Connect pra destravar o speaking.', lesson:'Exercício 1: shadow talking — pause um vídeo em inglês a cada frase e repita imitando o ritmo exato.', preview:'No próximo: o exercício de 5 minutos que muda o relacionamento com o erro.', cta:'Salva a série e me segue.' },
+    CA:{ goal:'nurture', hook:'Por que você trava em inglês — a explicação real 🧠', slide2:'Não é vocabulário. Você provavelmente sabe mais inglês do que pensa.', slide3:'É a equação que você criou: \"errar = parecer burro\". Essa equação bloqueia tudo.', slide4:'Fluência é habilidade de performance, não de conhecimento. Como tocar violão — aprende-se tocando.', slide5:'Exercício 1: fala em inglês por 2 min sozinho todos os dias. Sem ninguém ouvindo.', slide6:'Exercício 2: grava sua voz. Você vai perceber que soa muito melhor do que imagina.', slide7:'Com consistência, o speaking começa a sair antes do cérebro revisar. Esse é o momento da fluência.', cta:'Salva esse carrossel. Me manda INGLÊS no WhatsApp pra receber o guia completo.' },
+    SO:{ goal:'nurture', hook:'Você trava em inglês? Não é o que você pensa. 👇', frame2:'A maioria acha que o problema é vocabulário. Não é.', frame3:'É a equação: \"errar = fracasso\". Essa crença bloqueia o speaking antes de começar.', frame4:'Exercício simples: 2 minutos por dia falando em inglês sozinho. Sem ninguém ouvindo.', frame5:'Você tentaria isso por 7 dias?', cta:'Me conta aqui 👇 E me segue pra mais exercícios práticos.' }
   }
 },
-// ── P3: TECH · LÓGICA · DISCIPLINA ──────────────────────
+// ── P3: TECH · LÓGICA · DISCIPLINA ───────────────────────
 { id:4, pillar:'p3', tipo:'regular', num:1,
-  title:'Minha Jornada Estudando Programação',
-  sub:'Eu quase desisti da programação no primeiro semestre',
-  versions:{
-    attract:{
-      reel:{ format:'ST', hook:'Quase desisti da programação no primeiro semestre.', lines:[
-        {pt:'Estava no college. Primeira aula de C++. O professor escreveu código no quadro. Não entendi uma linha.'},
-        {pt:'Pensei: não sou feito pra isso. Quase mudei de curso.'},
-        {pt:'O que me fez continuar: um aluno mais velho disse "todo mundo sente isso. A diferença é quem fica."'},
-        {pt:'Fiquei. E hoje sou programador. Se você está passando por isso: não desiste.'}
-      ], cta:'Me conta: você já pensou em desistir? O que te fez continuar?'},
-      carousel:{ format:'CA', hook:'3 erros que todo dev iniciante comete (e como evitar) 💻', lines:[
-        {pt:'Slide 1 — Hook: "Comecei a programar e cometi esses 3 erros. Você pode evitar."'},
-        {pt:'Slide 2 — Erro 1: querer entender tudo antes de praticar. Programação se aprende fazendo.'},
-        {pt:'Slide 3 — Erro 2: copiar código sem entender cada linha.'},
-        {pt:'Slide 4 — Erro 3: pular etapas da sequência lógica.'},
-        {pt:'Slide 5 — O que funciona: 1 projeto pequeno por semana. Sem tutorial. Do zero.'},
-        {pt:'Slide 6 — Empresa contrata quem mostra o que sabe fazer. Portfólio > certificado.'},
-        {pt:'Slide 7 — Você está em qual fase agora? Me conta 👇'},
-        {pt:'Slide 8 — CTA: Salva e evita esses erros desde o início!'}
-      ], cta:'Salva e evita esses erros!'},
-      story:{ format:'SO', hook:'Devs iniciantes: qual é o maior obstáculo que vocês enfrentam? 👇', lines:[
-        {pt:'Frame 1 — Enquete: Maior obstáculo no aprendizado de programação? A) Lógica B) Linguagem C) Tempo D) Inglês'},
-        {pt:'Frame 2 — Baseado na resposta, vou direcionar o próximo conteúdo…'},
-        {pt:'Frame 3 — O maior obstáculo que vejo: estudar sem construir. Cursos sem fim.'},
-        {pt:'Frame 4 — Projeto pequeno por semana > 10 cursos sem terminar.'},
-        {pt:'Frame 5 — Qual você votou?'},
-        {pt:'Frame 6 — CTA: Me responde aqui e eu te mando um dica específica 👇'}
-      ], cta:'Me responde aqui! 👇'}
-    },
-    nurture:{
-      reel:{ format:'ED', hook:'3 erros que eu cometi quando comecei a programar.', lines:[
-        {pt:'Erro 1: querer entender tudo antes de praticar. Programação é como nadar. Você aprende fazendo.'},
-        {pt:'Erro 2: copiar código sem entender. Copiar é ok — mas você tem que dissecar cada linha depois.'},
-        {pt:'Erro 3: estudar em sequência linear sem projetos práticos.'}
-      ], cta:'Salva e evita esses erros desde o início.'},
-      carousel:{ format:'CA', hook:'Como montar um portfólio de dev do zero (mesmo sendo iniciante) 📁', lines:[
-        {pt:'Slide 1 — Hook: "Empresa não contrata CV. Contrata portfólio. Aqui como montar o seu."'},
-        {pt:'Slide 2 — Passo 1: define 3 projetos pequenos que resolvem problemas reais.'},
-        {pt:'Slide 3 — Passo 2: constrói cada um do zero. Sem tutorial passo a passo.'},
-        {pt:'Slide 4 — Passo 3: documenta no GitHub com README em inglês.'},
-        {pt:'Slide 5 — Passo 4: coloca no LinkedIn e no seu site pessoal.'},
-        {pt:'Slide 6 — Passo 5: apresenta pro recrutador com 2 frases de impacto.'},
-        {pt:'Slide 7 — 3 projetos reais > 10 cursos com certificado.'},
-        {pt:'Slide 8 — CTA: Salva e define seus 3 projetos ainda hoje!'}
-      ], cta:'Salva e define seus projetos hoje!'},
-      story:{ format:'SO', hook:'Você está construindo projetos ou só assistindo cursos? [Enquete] 👇', lines:[
-        {pt:'Frame 1 — Enquete: Como você aprende programação? A) Cursos B) Projetos C) Os dois D) Perdido'},
-        {pt:'Frame 2 — Se você votou Cursos: cuidado. Curso sem projeto = teoria sem aplicação.'},
-        {pt:'Frame 3 — A fórmula que funciona: 1 hora de curso → 2 horas de projeto.'},
-        {pt:'Frame 4 — Projeto pode ser pequeno. Calculadora, lista de tarefas, qualquer coisa.'},
-        {pt:'Frame 5 — O importante é construir, não só consumir.'},
-        {pt:'Frame 6 — CTA: Me conta seu próximo projeto aqui 👇'}
-      ], cta:'Me conta seu projeto! 👇'}
-    },
-    position:{
-      reel:{ format:'AT', hook:'A verdade sobre estudar dev nos EUA — expectativa vs realidade.', lines:[
-        {pt:'Expectativa: sair do college pronto pro mercado. Realidade: o mercado exige muito mais que o currículo.'},
-        {pt:'O diploma abre a porta. O que você construiu por fora fecha o contrato.'},
-        {pt:'O inglês técnico fluente é o que separa quem fica no mercado local de quem acessa vagas globais.'}
-      ], cta:'Me segue pra mais verdades sobre carreira em tech.'},
-      carousel:{ format:'CA', hook:'Dev nos EUA vs Brasil: o que ninguém te conta ⚡', lines:[
-        {pt:'Slide 1 — Hook: "Estudei dev nos EUA. Aqui está o que ninguém te conta."'},
-        {pt:'Slide 2 — EUA: o college ensina fundamentos. Frameworks modernos você aprende por fora.'},
-        {pt:'Slide 3 — EUA: entrevistas técnicas são intensas. Leetcode, system design, inglês técnico.'},
-        {pt:'Slide 4 — Brasil: mercado crescendo mas ainda limitado pra quem não tem inglês.'},
-        {pt:'Slide 5 — Internacional: inglês + portfólio + GitHub = acesso a salários 3–10x maiores.'},
-        {pt:'Slide 6 — O que diferencia: inglês técnico fluente. Não é diferencial. É filtro.'},
-        {pt:'Slide 7 — Onde você quer chegar em 2 anos?'},
-        {pt:'Slide 8 — CTA: Salva pra não esquecer essa realidade!'}
-      ], cta:'Salva essa realidade!'},
-      story:{ format:'SO', hook:'Você sabe inglês técnico ou inglês geral? Tem diferença. 👇', lines:[
-        {pt:'Frame 1 — Enquete: Seu inglês técnico está em qual nível? A) Básico B) Funcional C) Fluente D) Que inglês?'},
-        {pt:'Frame 2 — Inglês geral e inglês técnico são habilidades distintas.'},
-        {pt:'Frame 3 — Para entrevistas técnicas, você precisa de inglês específico.'},
-        {pt:'Frame 4 — "Tell me about a time you had a conflict with a teammate." Você sabe responder?'},
-        {pt:'Frame 5 — Tô preparando um conteúdo específico sobre inglês técnico pra devs.'},
-        {pt:'Frame 6 — CTA: Manda "DEVS" aqui pra receber quando sair! 👇'}
-      ], cta:'Manda "DEVS" aqui! 👇'}
-    },
-    convert:{
-      reel:{ format:'CO', hook:'O que mais me ajudou a avançar em tech não foi um curso. Foi o inglês.', lines:[
-        {pt:'Toda documentação, Stack Overflow, GitHub, reuniões internacionais — inglês.'},
-        {pt:'Quem domina inglês técnico tem acesso ao mercado global. Quem não domina fica no local.'},
-        {pt:'Eu te ensino inglês com foco em tech no Fluency Connect.'}
-      ], cta:'Link na bio pra saber mais.'},
-      carousel:{ format:'CA', hook:'Por que inglês é o investimento mais importante que um dev pode fazer 💡', lines:[
-        {pt:'Slide 1 — Hook: "Inglês não é diferencial pra devs. É pré-requisito."'},
-        {pt:'Slide 2 — Stack Overflow: inglês. GitHub: inglês. Docs: inglês. Reuniões internacionais: inglês.'},
-        {pt:'Slide 3 — Salário dev local: R$ 4–10k. Salário dev internacional: R$ 15–40k.'},
-        {pt:'Slide 4 — A diferença? Inglês técnico fluente.'},
-        {pt:'Slide 5 — No Fluency Connect ensinamos inglês com foco em tech.'},
-        {pt:'Slide 6 — Vocabulário técnico, entrevistas, comunicação em times internacionais.'},
-        {pt:'Slide 7 — Desenvolvido por professor nativo que estudou tech nos EUA.'},
-        {pt:'Slide 8 — CTA: Link na bio pra entrar na próxima turma!'}
-      ], cta:'Link na bio!'},
-      story:{ format:'SO', hook:'Dev: inglês está te segurando? Tenho algo específico pra você. 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Você é dev mas o inglês te segura? Isso é mais comum que você pensa. 👇"'},
-        {pt:'Frame 2 — Já trabalhei com devs que são excelentes tecnicamente mas não crescem por causa do inglês.'},
-        {pt:'Frame 3 — No Fluency Connect temos uma trilha específica pra devs.'},
-        {pt:'Frame 4 — Vocabulário técnico + entrevistas + comunicação em times remotos.'},
-        {pt:'Frame 5 — Com Michael como professor — americano que estudou tech nos EUA.'},
-        {pt:'Frame 6 — CTA: Manda "TECH" aqui e te mando os detalhes da trilha! 👇'}
-      ], cta:'Manda "TECH" aqui! 👇'}
-    }
+  title:'Como Penso em Dois Idiomas',
+  sub:'O que acontece no cérebro de um bilíngue — e como acelera o aprendizado',
+  scripts:{
+    ST:{ goal:'attract', hook:'Tem momentos que não sei em qual idioma estou pensando. E isso é estranho de explicar.', stakes:'Quando comecei a sonhar em português, percebi que algo tinha mudado. Não era mais tradução — era fluência.', climax:'A virada aconteceu quando parei de traduzir e comecei a pensar diretamente no idioma.', lesson:'Fluência real começa quando você para de traduzir. E isso acontece mais rápido do que você pensa.', cta:'Me segue pra mais sobre como o cérebro aprende idiomas.' },
+    CO:{ goal:'attract', hook:'Aprender idioma traduzindo vs pensar no idioma. A diferença é enorme.', wrong:'Traduzir tudo do português pro inglês na cabeça antes de falar. Lento e cansativo.', right:'Criar associações diretas — palavra → imagem → emoção — sem passar pelo português.', why:'É assim que crianças aprendem. E é assim que adultos aceleram o processo.', cta:'Salva e tenta isso na próxima vez que estudar inglês.' },
+    AT:{ goal:'position', hook:'Como americano que aprendeu português como adulto, entendo exatamente o que acontece no seu cérebro.', experience:'Passei por todas as fases — tradução constante, mistura de idiomas, e finalmente o pensamento direto.', observation:'Alunos que chegam mais rápido à fluência são os que criam imagens e contextos, não listas de vocabulário.', insight:'O cérebro não armazena tradução — armazena contexto. É assim que o Fluency Connect ensina.', cta:'Conhece o método. Link na bio.' },
+    ED:{ goal:'nurture', hook:'3 técnicas pra começar a pensar em inglês — sem traduzir.', problem:'Traduzir constantemente cria um gargalo que limita sua velocidade de fala.', solution:'1. Associa palavras a imagens, não a traduções. 2. Nomeia objetos ao redor em inglês mentalmente. 3. Quando assistir série, pensa nos personagens, não nas legendas.', practice:'Hoje: escolhe 10 objetos da sua casa e pensa o nome em inglês sem olhar a tradução.', cta:'Salva e me conta quais você não sabia.' },
+    SE:{ goal:'convert', hook:'Série: Mente Bilíngue #1 — Como o cérebro processa dois idiomas.', episode:'Nessa série vou explorar a neurociência por trás do aprendizado de idiomas — de forma prática.', lesson:'Hoje: por que o cérebro adulto aprende diferente do infantil — e como usar isso a seu favor.', preview:'No próximo: o exercício de imersão mental que acelera a fluência.', cta:'Salva a série e me segue.' },
+    CA:{ goal:'nurture', hook:'O que acontece no cérebro quando você aprende um segundo idioma 🧠', slide2:'Fase 1: Tradução. Você ouve inglês → traduz pro português → processa → responde em português → traduz → fala.', slide3:'Fase 2: Associação. Você ouve inglês → associa a imagens e contextos → responde mais rápido.', slide4:'Fase 3: Fluência. Você pensa diretamente no idioma. Sem etapa intermediária.', slide5:'Como acelerar a fase 2→3: immersão com contexto emocional. Séries, música, conversas reais.', slide6:'O truque: cria memórias em inglês. Não vocabulário — memórias. \"Coffee\" deve evocar cheiro e manhã, não \"café\".', slide7:'É exatamente assim que o Fluency Connect estrutura o aprendizado.', cta:'Salva esse carrossel. E segue o @FluencyConnect pra mais.' },
+    SO:{ goal:'nurture', hook:'Você ainda traduz tudo na cabeça antes de falar inglês? 🧠', frame2:'Isso é normal no começo. Mas há um ponto em que a tradução vira gargalo.', frame3:'A transição acontece quando você cria associações diretas — palavra → imagem → emoção.', frame4:'Exercício: por 10 minutos, nomeia objetos ao redor em inglês. Sem traduzir. Só associa.', frame5:'Você tenta isso hoje?', cta:'Me conta aqui 👇 E me segue pra mais sobre como o cérebro aprende idiomas.' }
   }
 },
+// ── P3: TECH #2 ───────────────────────────────────────────
 { id:5, pillar:'p3', tipo:'regular', num:2,
-  title:'Xadrez como Ferramenta Mental',
-  sub:'O que xadrez, programação e inglês têm em comum',
-  versions:{
-    attract:{
-      reel:{ format:'ST', hook:'O xadrez me ensinou mais sobre programação do que qualquer curso.', lines:[
-        {pt:'No xadrez você analisa o estado atual, prevê consequências, planeja movimentos à frente.'},
-        {pt:'Na programação você faz exatamente isso. Analisar, prever, escolher a melhor solução.'},
-        {pt:'Joguei xadrez por anos sem saber que estava treinando minha mente pra programar.'}
-      ], cta:'Você joga xadrez? Me conta nos comentários.'},
-      carousel:{ format:'CA', hook:'Por que todo dev deveria aprender xadrez ♟️', lines:[
-        {pt:'Slide 1 — Hook: "Xadrez me deixou um dev melhor. Sem exagero."'},
-        {pt:'Slide 2 — O que xadrez treina: análise de estado atual, previsão de consequências.'},
-        {pt:'Slide 3 — O que programação exige: análise de problema, previsão de comportamento.'},
-        {pt:'Slide 4 — Xadrez também treina: foco prolongado, paciência, regulação emocional.'},
-        {pt:'Slide 5 — Essas são as habilidades que diferenciam um dev mediano de um excelente.'},
-        {pt:'Slide 6 — Bônus: chess.com é gratuito. Sem desculpa pra não começar.'},
-        {pt:'Slide 7 — Você joga xadrez? Me conta 👇'},
-        {pt:'Slide 8 — CTA: Salva e começa uma partida hoje!'}
-      ], cta:'Salva e começa hoje!'},
-      story:{ format:'SO', hook:'Você joga xadrez? [Enquete] 👇', lines:[
-        {pt:'Frame 1 — Enquete: Você joga xadrez? A) Sim frequentemente B) Às vezes C) Aprendi mas parei D) Nunca'},
-        {pt:'Frame 2 — Interessante: a maioria dos devs que conheço joga ou jogou xadrez.'},
-        {pt:'Frame 3 — Não é coincidência. As habilidades cognitivas se transferem.'},
-        {pt:'Frame 4 — Raciocínio lógico, análise de padrões, planejamento — xadrez e programação usam o mesmo músculo mental.'},
-        {pt:'Frame 5 — Tô postando um reel sobre isso amanhã. Vai valer a pena ver.'},
-        {pt:'Frame 6 — CTA: Me segue pra não perder! 🔔'}
-      ], cta:'Me segue! 🔔'}
-    },
-    nurture:{
-      reel:{ format:'ED', hook:'3 princípios do xadrez que se aplicam à programação e à vida.', lines:[
-        {pt:'1. Controle do centro: foca no essencial, não na periferia.'},
-        {pt:'2. Desenvolve antes de atacar: prepara seus recursos antes de executar.'},
-        {pt:'3. Pensa antes de agir: cada decisão tem consequências.'}
-      ], cta:'Salva e aplica o princípio do xadrez hoje.'},
-      carousel:{ format:'CA', hook:'5 lições do xadrez que melhoram seu código (e sua vida) ♟️💻', lines:[
-        {pt:'Slide 1 — Hook: "5 lições que o xadrez me ensinou sobre programação."'},
-        {pt:'Slide 2 — Lição 1: Controle o centro — priorize o que é essencial.'},
-        {pt:'Slide 3 — Lição 2: Desenvolva antes de atacar — prepare antes de executar.'},
-        {pt:'Slide 4 — Lição 3: Pense 3 movimentos à frente — preveja consequências no código.'},
-        {pt:'Slide 5 — Lição 4: Saiba quando sacrificar — às vezes refatorar agora vale o custo.'},
-        {pt:'Slide 6 — Lição 5: Aprenda com as derrotas — cada bug é uma lição.'},
-        {pt:'Slide 7 — Qual dessas você mais usa no seu trabalho? 👇'},
-        {pt:'Slide 8 — CTA: Salva e aplica uma dessas lições hoje!'}
-      ], cta:'Salva e aplica hoje!'},
-      story:{ format:'SO', hook:'Teste de raciocínio lógico rápido 🧩 👇', lines:[
-        {pt:'Frame 1 — Gancho: "Teste de raciocínio lógico em 5 segundos. Você consegue? 👇"'},
-        {pt:'Frame 2 — [Problema simples de xadrez ou lógica]'},
-        {pt:'Frame 3 — Resposta: [solução]'},
-        {pt:'Frame 4 — Raciocínio lógico se treina. Xadrez é uma das melhores formas.'},
-        {pt:'Frame 5 — E esse mesmo raciocínio se aplica a programação, idiomas e decisões diárias.'},
-        {pt:'Frame 6 — CTA: Me conta quanto tempo levou pra resolver! 👇'}
-      ], cta:'Me conta! 👇'}
-    },
-    position:{
-      reel:{ format:'AT', hook:'Como o xadrez desenvolve habilidades cognitivas que se transferem pra tech.', lines:[
-        {pt:'Memória de trabalho: no xadrez você mantém várias sequências na cabeça ao mesmo tempo.'},
-        {pt:'Raciocínio condicional: "se eu faço X, ele faz Y, então eu faço Z." É o que programadores fazem.'},
-        {pt:'Regulação emocional: aprender a perder sem se desintegrar. Habilidade escassa e valiosa.'}
-      ], cta:'Me segue pra mais sobre desenvolvimento cognitivo e tech.'},
-      carousel:{ format:'CA', hook:'A ciência por trás de jogar xadrez e escrever código melhor 🧠', lines:[
-        {pt:'Slide 1 — Hook: "Por que jogadores de xadrez se tornam programmers melhores? Tem ciência."'},
-        {pt:'Slide 2 — Memória de trabalho: xadrez treina manter múltiplos cenários em mente simultaneamente.'},
-        {pt:'Slide 3 — Programação exige o mesmo: variáveis de estado, fluxos, edge cases.'},
-        {pt:'Slide 4 — Raciocínio condicional: if-then-else é estrutura do xadrez e do código.'},
-        {pt:'Slide 5 — Regulação emocional: não entra em pânico quando algo quebra em produção.'},
-        {pt:'Slide 6 — Estudos mostram: crianças que jogam xadrez têm melhor desempenho em matemática.'},
-        {pt:'Slide 7 — As habilidades são as mesmas. O contexto é diferente.'},
-        {pt:'Slide 8 — CTA: Salva e joga uma partida hoje!'}
-      ], cta:'Salva e joga hoje!'},
-      story:{ format:'SO', hook:'Sabia que xadrez e programação usam o mesmo músculo mental? 🧠', lines:[
-        {pt:'Frame 1 — Gancho: "Xadrez e programação usam o mesmo músculo mental. Explico."'},
-        {pt:'Frame 2 — Os dois exigem: análise, previsão, raciocínio condicional e paciência.'},
-        {pt:'Frame 3 — Não é coincidência que tantos devs jogam ou jogaram xadrez.'},
-        {pt:'Frame 4 — Tô postando um carrossel sobre isso amanhã com a ciência por trás.'},
-        {pt:'Frame 5 — Vai ser bom. Prometo.'},
-        {pt:'Frame 6 — CTA: Me segue pra não perder! 🔔'}
-      ], cta:'Me segue! 🔔'}
-    },
-    convert:{
-      reel:{ format:'CO', hook:'Xadrez, inglês e programação têm um denominador comum: método e prática deliberada.', lines:[
-        {pt:'Não é talento. É sistema. Os três exigem paciência, consistência e aprendizado estruturado.'},
-        {pt:'É com essa mentalidade que ensinamos inglês no Fluency Connect.'},
-        {pt:'Método claro. Prática constante. Progresso real.'}
-      ], cta:'Link na bio pra conhecer o método.'},
-      carousel:{ format:'CA', hook:'O que xadrez me ensinou sobre aprender inglês rápido ♟️🗣️', lines:[
-        {pt:'Slide 1 — Hook: "Aprendo xadrez e inglês da mesma forma. Aqui como."'},
-        {pt:'Slide 2 — Os dois requerem prática deliberada, não prática casual.'},
-        {pt:'Slide 3 — Prática deliberada: foco em pontos fracos específicos. Não na zona de conforto.'},
-        {pt:'Slide 4 — No xadrez: estuda aberturas, táticas e finais separadamente.'},
-        {pt:'Slide 5 — No inglês: trabalha speaking, pronúncia e vocabulário separadamente.'},
-        {pt:'Slide 6 — Resultado: progresso muito mais rápido do que estudar aleatoriamente.'},
-        {pt:'Slide 7 — No Fluency Connect usamos esse princípio em cada aula.'},
-        {pt:'Slide 8 — CTA: Link na bio pra conhecer o método!'}
-      ], cta:'Link na bio!'},
-      story:{ format:'SO', hook:'Qual das 3 você quer melhorar: xadrez, inglês ou programação? 👇', lines:[
-        {pt:'Frame 1 — Enquete: O que você quer dominar em 2025? A) Inglês B) Programação C) Xadrez D) Os 3'},
-        {pt:'Frame 2 — Se você votou Inglês: tenho um método específico pra te ajudar.'},
-        {pt:'Frame 3 — Fluency Connect: inglês de americano nativo, com método de prática deliberada.'},
-        {pt:'Frame 4 — Não é mais um curso. É um sistema que funciona.'},
-        {pt:'Frame 5 — Próxima turma abrindo em breve.'},
-        {pt:'Frame 6 — CTA: Manda "MÉTODO" aqui pra eu te enviar os detalhes! 👇'}
-      ], cta:'Manda "MÉTODO" aqui! 👇'}
-    }
+  title:'Disciplina vs Motivação no Aprendizado',
+  sub:'Por que esperar motivação é o maior erro de quem aprende inglês',
+  scripts:{
+    ST:{ goal:'attract', hook:'Teve um período que não queria estudar português. Mas continuei. E foi quando mais aprendi.', stakes:'Achava que precisava estar motivado pra progredir. Aprendi que motivação é consequência, não condição.', climax:'O dia que parei de esperar vontade e criei sistema foi o dia que meu português decolou.', lesson:'Disciplina cria resultado. Resultado cria motivação. Não o contrário.', cta:'Me segue pra mais sobre aprendizado com consistência.' },
+    CO:{ goal:'attract', hook:'Esperar motivação vs criar sistema. Qual realmente funciona no aprendizado de inglês?', wrong:'Esperar o dia que você \"vai estar com vontade\" de estudar inglês. Esse dia raramente chega.', right:'Criar um bloco fixo de 20 minutos por dia — independente de motivação. Sistema bate sentimento.', why:'Motivação é volátil. Sistema é estável. Progresso consistente vem de hábito, não de inspiração.', cta:'Salva pra quando bater a preguiça de estudar.' },
+    AT:{ goal:'position', hook:'Aprendi português com sistema, não com motivação. E ensinei centenas de alunos com o mesmo princípio.', experience:'Nos dias que menos queria falar português, forçava uma conversa de 10 minutos. Sempre.', observation:'Alunos que criam rotina fixa evoluem consistentemente. Alunos motivados evoluem em rajadas — e regridem.', insight:'No Fluency Connect o método é baseado em hábito diário mínimo — não em intensidade esporádica.', cta:'Conhece o método. Link na bio.' },
+    ED:{ goal:'nurture', hook:'Como criar uma rotina de inglês que você realmente mantém — sem depender de motivação.', problem:'A maioria estuda inglês em rajadas — muito nos bons dias, nada nos ruins. Isso não cria fluência.', solution:'Sistema mínimo: 20 minutos por dia, sempre no mesmo horário. Divide em: 7 min listening, 7 min speaking, 6 min vocabulário em contexto.', practice:'Hoje: define o horário fixo dos seus 20 minutos de inglês. Bloqueia na agenda agora.', cta:'Salva e me conta qual horário você escolheu.' },
+    SE:{ goal:'convert', hook:'Série: Sistema de Aprendizado #1 — Por que motivação é armadilha.', episode:'Nessa série vou mostrar o sistema exato de 20 minutos por dia que usamos no Fluency Connect.', lesson:'Aula 1: o paradoxo da motivação — por que esperar vontade garante que você nunca vai aprender.', preview:'No próximo: como estruturar os 20 minutos de forma que maximize o aprendizado.', cta:'Salva a série e me segue.' },
+    CA:{ goal:'nurture', hook:'Por que motivação é o pior fundamento pra aprender inglês 📉', slide2:'Motivação é uma emoção. Emoções são voláteis. Você não pode construir fluência em cima de volatilidade.', slide3:'Sistema é diferente: 20 minutos todo dia, no mesmo horário, independente de como você se sente.', slide4:'O paradoxo: motivação vem do progresso. Progresso vem do sistema. Você não precisa de motivação pra começar o sistema.', slide5:'20 min por dia = 7.300 min por ano = mais de 120 horas de prática focada.', slide6:'Dividido em: 7 min listening + 7 min speaking + 6 min vocabulário em contexto.', slide7:'Simples. Consistente. Funciona. É a base do método Fluency Connect.', cta:'Salva esse carrossel. Me manda INGLÊS no WhatsApp pro guia completo.' },
+    SO:{ goal:'nurture', hook:'Você estuda inglês só quando tem vontade? Esse é o problema. 👇', frame2:'Motivação é consequência do progresso — não condição pra ele.', frame3:'Sistema de 20 minutos por dia, no mesmo horário, bate qualquer sessão intensa esporádica.', frame4:'Hoje: qual é o horário fixo dos seus 20 minutos? Define agora.', frame5:'Me conta aqui o horário que você escolheu.', cta:'E me segue pra mais sobre aprendizado com consistência. 💪' }
   }
 }
 ];
-
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
-let TOPICS = JSON.parse(localStorage.getItem('mic_topics_v4') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TOPICS));
+let TOPICS = JSON.parse(localStorage.getItem('mic_topics_v5') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TOPICS));
 let recorded = JSON.parse(localStorage.getItem('mic_rec_v4') || '{}');  // { topicId_version_fmt: bool }
 let dates    = JSON.parse(localStorage.getItem('mic_dates_v4') || '{}'); // { topicId_version_fmt: {rec,post} }
 let notes    = JSON.parse(localStorage.getItem('mic_notes_v4') || '{}'); // { topicId: string }
@@ -1348,7 +918,7 @@ let metricFilter = 'all';
 let pendingInlineEdits = {};
 let editingLogId = null;
 
-function saveTopics()   { localStorage.setItem('mic_topics_v4', JSON.stringify(TOPICS)); }
+function saveTopics() { localStorage.setItem('mic_topics_v5', JSON.stringify(TOPICS)); }
 function saveRecorded() { localStorage.setItem('mic_rec_v4', JSON.stringify(recorded)); }
 function saveDates()    { localStorage.setItem('mic_dates_v4', JSON.stringify(dates)); }
 function saveNotesSt()  { localStorage.setItem('mic_notes_v4', JSON.stringify(notes)); }
@@ -1578,56 +1148,81 @@ function renderFormatTabs() {
 }
 
 function renderModalBody(t, version, fmt) {
-  const td   = getTopicData(t);
-  const ver  = t.versions[version];
-  if(!ver||!ver[fmt]) return;
-  const sc   = ver[fmt];
+  const td = getTopicData(t);
   const done = isRecorded(t.id, version, fmt);
-  const ek   = `${t.id}_${version}_${fmt}`;
-  const ev   = (edits[ek])||{};
-  const hook = ev.hook!==undefined ? ev.hook : sc.hook;
-  const lines = sc.lines.map((l,i)=>({...l, pt: ev.lines&&ev.lines[i]!==undefined?ev.lines[i]:l.pt}));
-  const cta  = ev.cta!==undefined ? ev.cta : sc.cta;
-
-  const fmtColors={reel:'var(--green)',carousel:'#e0a030',story:'#5b8dee'};
+  const scriptKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : JOB_TO_SCRIPT[version];
+  if (!t.scripts) t.scripts = {};
+  if (!t.scripts[scriptKey]) t.scripts[scriptKey] = { goal: version };
+  const sc = t.scripts[scriptKey];
+  const st = SCRIPT_TYPES[scriptKey] || {};
+  const fmtColors = { reel:'var(--green)', carousel:'#e0a030', story:'#5b8dee' };
   const fmtColor = fmtColors[fmt];
 
-  if(editMode){
-    document.getElementById('modal-body').innerHTML=`
+  if (editMode) {
+    let html = `
       <div class="edit-field-group"><div class="edit-label">Título do tópico</div><textarea class="editable-field title-field" id="edit-title" rows="2">${escH(td.title)}</textarea></div>
-      <div class="edit-field-group"><div class="edit-label">Subtítulo</div><textarea class="editable-field" id="edit-sub" rows="2">${escH(td.sub)}</textarea></div>
-      <div class="edit-field-group"><div class="edit-label" style="color:${fmtColor}">🪝 Hook</div><textarea class="editable-field" id="edit-hook" rows="3">${escH(hook)}</textarea></div>
-      <div class="edit-label" style="margin-bottom:6px">Linhas do script</div>
-      ${lines.map((l,i)=>`
-        <div class="edit-field-group">
-          <div class="edit-label" style="color:#5b8dee;margin-bottom:4px">🎙️ Michael — Linha ${i+1}</div>
-          <textarea class="editable-field" id="edit-line-${i}" rows="3">${escH(l.pt)}</textarea>
-        </div>`).join('')}
-      <div class="edit-field-group"><div class="edit-label">📣 CTA</div><textarea class="editable-field" id="edit-cta" rows="2">${escH(cta)}</textarea></div>
-      <button class="save-edits-btn" onclick="saveModalEdits(${t.id},'${version}','${fmt}',${lines.length})">💾 Salvar alterações</button>
-      ${isTopicEdited(t.id)?`<button class="reset-edits-btn" onclick="resetTopicEdits(${t.id})">🗑 Restaurar originais deste tópico</button>`:''}`;
+      <div class="edit-field-group"><div class="edit-label">Subtítulo</div><textarea class="editable-field" id="edit-sub" rows="2">${escH(td.sub)}</textarea></div>`;
+    (st.fields || []).forEach((field, i) => {
+      html += `<div class="edit-field-group">
+        <div class="edit-label" style="color:${fmtColor}">${st.labels?.[i] || field}</div>
+        <textarea class="editable-field" id="mic-edit-${field}" rows="3">${escH(sc[field] || '')}</textarea>
+      </div>`;
+    });
+    html += `<button class="save-edits-btn" onclick="saveMicModalEdits(${t.id},'${version}','${fmt}','${scriptKey}')">💾 Salvar alterações</button>`;
+    document.getElementById('modal-body').innerHTML = html;
   } else {
-    document.getElementById('modal-body').innerHTML=`
+    const hook = sc.hook || '';
+    let html = `
       <div class="script-meta">
         <span class="badge badge-${version}">${JOB_LABELS[version]}</span>
         <span class="badge badge-${fmt}">${FMT_LABELS[fmt]}</span>
-        <span class="badge badge-fmt">• ${sc.format} — ${FORMAT_NAMES[sc.format]||sc.format}</span>
-        ${isTopicEdited(t.id)?'<span class="edited-badge">✏️ Editado</span>':''}
-      </div>
-      <div class="hook-box"><div class="hook-label">Hook</div>${escH(hook)}</div>
-      <div class="script-section">
-        <div class="script-section-label">Script — ${FMT_LABELS[fmt]}</div>
-        ${lines.map(l=>`<div class="script-line"><div class="line-speaker">🎙️ Michael</div><div class="line-pt">${escH(l.pt)}</div></div>`).join('')}
-      </div>
-      <div class="cta-box"><div class="cta-label">Call to Action</div>${escH(cta)}</div>
-      <button class="record-btn ${done?'recorded':''}" onclick="toggleRecBtn(${t.id},'${version}','${fmt}')">
-        ${done?'✅ Marcado como gravado — clique para desmarcar':'🔴 Marcar como gravado'}
+        <span class="badge badge-fmt">• ${scriptKey}</span>
+      </div>`;
+    if (hook) html += `<div class="hook-box"><div class="hook-label">Hook</div>${escH(hook)}</div>`;
+    html += `<div class="script-section"><div class="script-section-label">Script — ${st.label || scriptKey}</div>`;
+    (st.fields || []).filter(f => f !== 'hook').forEach((field, i) => {
+      const val = sc[field] || '';
+      const label = (st.labels || [])[i + 1] || field;
+      if (!val) return;
+      html += `<div class="script-line">
+        <div class="line-speaker" style="color:${fmtColor}">${label}</div>
+        <div class="line-pt">${escH(val)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+    if (sc.cta) html += `<div class="cta-box"><div class="cta-label">Call to Action</div>${escH(sc.cta)}</div>`;
+    html += `
+      <button class="record-btn ${done ? 'recorded' : ''}" onclick="toggleRecBtn(${t.id},'${version}','${fmt}')">
+        ${done ? '✅ Marcado como gravado — clique para desmarcar' : '🔴 Marcar como gravado'}
       </button>
       <button style="width:100%;margin-top:6px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .2s"
         onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'"
         onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'"
         onclick="openLogModal(null,'${version}','${fmt}')">📊 Logar métricas deste post</button>`;
+    document.getElementById('modal-body').innerHTML = html;
   }
+}
+
+function saveMicModalEdits(topicId, version, fmt, scriptKey) {
+  const t = TOPICS.find(x => x.id === topicId);
+  if (!t) return;
+  const title = document.getElementById('edit-title')?.value.trim();
+  const sub   = document.getElementById('edit-sub')?.value.trim();
+  if (!edits[topicId]) edits[topicId] = {};
+  if (title) edits[topicId].title = title;
+  if (sub)   edits[topicId].sub   = sub;
+  const st = SCRIPT_TYPES[scriptKey] || {};
+  if (!t.scripts) t.scripts = {};
+  if (!t.scripts[scriptKey]) t.scripts[scriptKey] = { goal: version };
+  (st.fields || []).forEach(field => {
+    const el = document.getElementById('mic-edit-' + field);
+    if (el) t.scripts[scriptKey][field] = el.value.trim();
+  });
+  saveEdits();
+  saveTopics();
+  const btn = document.querySelector('.save-edits-btn');
+  if (btn) { btn.textContent = '✅ Salvo!'; btn.style.background = 'var(--green-dim)'; setTimeout(() => { btn.textContent = '💾 Salvar alterações'; btn.style.background = ''; }, 1600); }
+  renderGrid();
 }
 
 function toggleRecBtn(topicId, version, fmt) {
@@ -1641,32 +1236,6 @@ function toggleEditMode() {
   btn.classList.toggle('active', editMode);
   btn.textContent = editMode ? '👁 Ver Script' : '✏️ Editar';
   renderModalBody(activeModalTopic, activeModalVersion, activeModalFormat);
-}
-
-function saveModalEdits(topicId, version, fmt, lineCount) {
-  const title = document.getElementById('edit-title')?.value.trim();
-  const sub   = document.getElementById('edit-sub')?.value.trim();
-  const hook  = document.getElementById('edit-hook')?.value.trim();
-  const cta   = document.getElementById('edit-cta')?.value.trim();
-  if(!edits[topicId]) edits[topicId]={};
-  if(title!==undefined) edits[topicId].title=title;
-  if(sub!==undefined)   edits[topicId].sub=sub;
-  const ek=`${topicId}_${version}_${fmt}`;
-  if(!edits[ek]) edits[ek]={};
-  if(hook!==undefined) edits[ek].hook=hook;
-  if(cta!==undefined)  edits[ek].cta=cta;
-  const lines=[];
-  for(let i=0;i<lineCount;i++){
-    const el=document.getElementById(`edit-line-${i}`);
-    lines.push(el?el.value.trim():'');
-  }
-  edits[ek].lines=lines;
-  saveEdits();
-  document.getElementById('edited-badge').style.display='inline-block';
-  const btn=document.querySelector('.save-edits-btn');
-  if(btn){btn.textContent='✅ Salvo!';btn.style.background='#17a07f';setTimeout(()=>{btn.textContent='💾 Salvar alterações';btn.style.background='';},1600);}
-  renderGrid();
-  updatePillarProgress();
 }
 
 function resetTopicEdits(topicId) {
