@@ -654,6 +654,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <button class="nav-tab" onclick="showPage('scripts',this)">📋 Scripts</button>
     <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
     <button class="nav-tab" onclick="showPage('repurpose',this)">♻️ Repurpose</button>
+    <button class="nav-tab" onclick="showPage('calendar',this)">📅 Calendário</button>
   </nav>
   <div class="header-right">
     <span class="progress-text">Gravados: <strong id="recCount">0</strong>/180</span>
@@ -710,6 +711,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   </div>
 
   <div class="topic-grid" id="topicGrid"></div>
+
+  <!-- SERIES SECTION -->
+  <div id="seriesSection" style="margin-top:28px;display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--nurture);">🎬 Séries de Conteúdo</div>
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+      <button onclick="toggleSeriesSection()" id="seriesToggleBtn" style="background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;">▼ Recolher</button>
+    </div>
+    <div class="topic-grid" id="seriesGrid"></div>
+  </div>
 </div>
 
 <!-- ════════════════ SCHEDULE PAGE ════════════════ -->
@@ -740,8 +751,129 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <!-- ════════════════ GUIDE PAGE ════════════════ -->
 <div class="page" id="page-guide">
   <div class="section-title">Guia de Formatos de Roteiro</div>
-  <div class="section-desc">Cada tópico gera 5 vídeos usando esses formatos. Clique num tópico para escrever o roteiro diretamente.</div>
+  <div class="section-desc">Estrutura de cada formato — Reel, Carrossel e Story.</div>
+
+  <!-- Format hero cards -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
+    <div style="background:rgba(212,83,126,.1);border:1px solid rgba(212,83,126,.25);border-radius:12px;padding:16px 18px;">
+      <div style="font-size:22px;margin-bottom:4px;">🎬</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;">Reel</div>
+      <div style="font-size:11px;color:var(--muted2);line-height:1.5;margin-top:4px;">Alcance e novos seguidores. 5 formatos de roteiro (ST/DD/AT/ED/SR). Postado todos os dias.</div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--p1);margin-top:8px;">7×/semana · 9h ou 19h</div>
+    </div>
+    <div style="background:rgba(224,152,64,.1);border:1px solid rgba(224,152,64,.25);border-radius:12px;padding:16px 18px;">
+      <div style="font-size:22px;margin-bottom:4px;">🖼️</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;">Carrossel</div>
+      <div style="font-size:11px;color:var(--muted2);line-height:1.5;margin-top:4px;">Saves e retenção. Slide 1 = hook, slides 2–7 = conteúdo, slide final = CTA.</div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--p2);margin-top:8px;">7×/semana · 13h</div>
+    </div>
+    <div style="background:rgba(91,168,138,.1);border:1px solid rgba(91,168,138,.25);border-radius:12px;padding:16px 18px;">
+      <div style="font-size:22px;margin-bottom:4px;">📲</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;">Stories</div>
+      <div style="font-size:11px;color:var(--muted2);line-height:1.5;margin-top:4px;">Proximidade e engajamento. Rotação de 6 tipos por semana. Liga o reel ao WhatsApp.</div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--p3);margin-top:8px;">7×/semana · 21h</div>
+    </div>
+  </div>
+
+  <!-- Section: Reel formats -->
+  <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+    🎬 Formatos de Reel
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
   <div class="guide-grid" id="guideGrid"></div>
+
+  <!-- Section: Carousel -->
+  <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px;">
+    🖼 Estrutura do Carrossel
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--p2);"></div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--p2);margin-bottom:3px;">CA</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;margin-bottom:2px;">Carrossel</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Objetivo: Nutrir / Posicionar</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p2);">1</div><div class="gc-steptext"><strong>Slide 1 — Hook (capa):</strong> Frase impactante que para o scroll. 1 linha.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p2);">2</div><div class="gc-steptext"><strong>Slide 2 — Problema:</strong> Faz sentir visto. 2–3 linhas.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p2);">3</div><div class="gc-steptext"><strong>Slides 3–5 — Corpo:</strong> Entrega o valor. 1 ponto por slide.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p2);">4</div><div class="gc-steptext"><strong>Slides 6–7 — Resolução:</strong> Payoff ou insight. 2–3 linhas.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p2);">5</div><div class="gc-steptext"><strong>Slide 8 — CTA:</strong> Uma ação. 1 frase + trigger WhatsApp.</div></div>
+      </div>
+      <div class="gc-example" style="margin-top:14px;">
+        <div class="gc-ex-label">Regra de ouro</div>
+        <div class="gc-ex-line">Cada slide tem um job. O leitor pode parar em qualquer slide e ainda ter valor.</div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;">
+      <div style="font-size:11px;font-weight:700;color:var(--p2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;">Tipos de Carrossel por Job</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--attract);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Atrair → Visual Story</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.55;">6 slides. Conta a história visualmente. Hook emocional na capa. Sem produto.</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--nurture);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Nutrir → Tutorial Slides</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.55;">7 slides. Ensina passo a passo. Cada slide = 1 instrução. CTA: salva.</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--position);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Posicionar → Prova + Método</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.55;">6 slides. Mostra resultado de aluno ou metodologia. CTA: link na bio.</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--convert);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Converter → Série Visual</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.55;">5 slides. Apresenta como episódio. CTA: palavra de ativação WhatsApp.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Story -->
+  <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:28px 0 14px;display:flex;align-items:center;gap:10px;">
+    ⭕ Estrutura dos Stories
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--p3);"></div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--p3);margin-bottom:3px;">SO</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;margin-bottom:2px;">Story</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Objetivo: Nutrir / Converter</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p3);">1</div><div class="gc-steptext"><strong>Frame 1 — Gancho:</strong> Para o auto-tap. Pergunta ou frase de impacto.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p3);">2</div><div class="gc-steptext"><strong>Frame 2 — Contexto:</strong> O que é, por que importa. 1–2 linhas.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p3);">3</div><div class="gc-steptext"><strong>Frames 3–4 — Conteúdo:</strong> A dica, o bastidor, a opinião. Direto.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p3);">4</div><div class="gc-steptext"><strong>Frame 5 — Reflexão:</strong> Pergunta de engajamento ou prova.</div></div>
+        <div class="gc-step"><div class="gc-stepnum" style="background:var(--p3);">5</div><div class="gc-steptext"><strong>Frame 6 — CTA:</strong> Sticker de resposta / link WhatsApp / arrasta pra cima.</div></div>
+      </div>
+      <div class="gc-example" style="margin-top:14px;">
+        <div class="gc-ex-label">Regra de ouro</div>
+        <div class="gc-ex-line">Máximo 7 palavras por frame. A imagem ou vídeo carrega o peso — o texto só pontua.</div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;">
+      <div style="font-size:11px;font-weight:700;color:var(--p3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;">Rotação Semanal de Stories</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted2);line-height:1.7;">
+        <div><strong style="color:var(--text);">Seg:</strong> BTS — bastidores da gravação do reel do dia</div>
+        <div><strong style="color:var(--text);">Ter:</strong> Tópico — reposta o reel + pergunta de engajamento</div>
+        <div><strong style="color:var(--text);">Qua:</strong> Pessoal — gêmeas, Michael, momento da vida</div>
+        <div><strong style="color:var(--text);">Qui:</strong> Enquete — pergunta sobre inglês ou tema da semana</div>
+        <div><strong style="color:var(--text);">Sex:</strong> Venda — CTA direto pro WhatsApp (VOCABULÁRIO ou ESTRATÉGIA)</div>
+        <div><strong style="color:var(--text);">Sáb:</strong> Q&A — responde perguntas sobre inglês, vida, gêmeas</div>
+        <div><strong style="color:var(--text);">Dom:</strong> Crescimento pessoal — leitura, francês, estudo, reflexão</div>
+      </div>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+        <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--attract);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Atrair → Poll Hook</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.55;">6 stories. Enquete + bastidor. Termina com pergunta aberta.</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--convert);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Converter → Oferta Direta</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.55;">6 stories. Apresenta produto ou ebook. CTA com link ou palavra WhatsApp.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ════════════════ ECO PAGE ════════════════ -->
@@ -874,10 +1006,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     </div>
     <div class="eco-rule"><strong>Regra de collab:</strong> nunca postem o mesmo vídeo no mesmo dia nos dois perfis. Se gravaram juntos, ele posta quarta, você posta sexta — ou vice-versa. O mesmo conteúdo aparece duas vezes no feed de quem segue ambos, em momentos diferentes, sem parecer spam.</div>
   </div>
+</div>
 
-  <div style="height:1px;background:var(--border);margin:24px 0;"></div>
-  <div class="section-title" style="font-size:18px;margin-bottom:4px;">Calendário de Posts</div>
-  <div class="section-desc">Clique num dia para adicionar post</div>
+<!-- ════════════════ CALENDAR PAGE ════════════════ -->
+<div class="page" id="page-calendar">
+  <div class="section-title">📅 Calendário de Posts</div>
+  <div class="section-desc">Clique num dia para adicionar um post. Posts com data de postagem nos tópicos aparecem automaticamente.</div>
 
   <!-- ACCOUNT SWITCHER -->
   <div class="eco-accounts" id="ecoAccounts">
@@ -913,7 +1047,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <div class="cal-legend" id="calLegend"></div>
   </div>
 
-  <!-- CALENDAR -->
+  <!-- CALENDAR GRID -->
   <div class="cal-grid" id="calGrid"></div>
 </div>
 
@@ -1570,29 +1704,64 @@ function renderGrid() {
     }
     return true;
   });
+
+  const regular = filtered.filter(t => t.type !== 'serie');
+  const series  = filtered.filter(t => t.type === 'serie');
+
   document.getElementById('fcount').textContent = filtered.length + ' tópicos';
-  document.getElementById('topicGrid').innerHTML = filtered.map(t => {
-    const isRec = !!state.recorded[t.id];
-    const goalsSet = [...new Set(TYPE_KEYS.map(k => t.scripts[k] ? t.scripts[k].goal : null).filter(Boolean))];
-    const fmts = getFmtRec(t.id);
-    const allFmtsDone = fmts.reel && fmts.carousel && fmts.story;
-    const hasNotes = !!getTopicNotes(t.id);
-    return `<div class="topic-card ${t.pillar}${isRec || allFmtsDone ? ' recorded' : ''}" data-id="${t.id}" onclick="openModal(${t.id})">
-      ${(isRec||allFmtsDone) ? '<div class="card-rec-dot">✓</div>' : ''}
-      <div class="card-top">
-        <div class="card-num">T${String(t.num).padStart(2,'0')}${hasNotes ? '<span class=\'card-notes-dot\'></span>' : ''}</div>
-        <div class="card-badges">${goalsSet.map(g => `<span class="badge badge-${g}">${GOAL_LABELS[g]}</span>`).join('')}</div>
-      </div>
-      <div class="card-title">${t.title}</div>
-      <div class="card-hook">${t.scripts.ST.hook}</div>
-      <div class="card-fmt-indicators">
-        <div class="cfi${fmts.reel?' done':''}" title="Reel">R</div>
-        <div class="cfi${fmts.carousel?' done':''}" title="Carrossel">C</div>
-        <div class="cfi${fmts.story?' done':''}" title="Story">S</div>
-      </div>
-    </div>`;
-  }).join('') || '<div style="padding:40px;text-align:center;color:var(--muted)">Nenhum tópico encontrado</div>';
+
+  document.getElementById('topicGrid').innerHTML = regular.map(t => buildTopicCard(t)).join('')
+    || '<div style="padding:40px;text-align:center;color:var(--muted)">Nenhum tópico encontrado</div>';
+
+  const seriesSection = document.getElementById('seriesSection');
+  const seriesGrid    = document.getElementById('seriesGrid');
+  if (series.length > 0) {
+    seriesSection.style.display = 'block';
+    seriesGrid.innerHTML = series.map(t => buildTopicCard(t)).join('');
+    // Update label count
+    const lbl = seriesSection.querySelector('[style*="color:var(--nurture)"]');
+    if (lbl) lbl.textContent = `🎬 Séries de Conteúdo — ${series.length} tópico${series.length !== 1 ? 's' : ''}`;
+  } else {
+    seriesSection.style.display = 'none';
+  }
+
   updatePillarProgress();
+}
+
+let seriesSectionCollapsed = false;
+
+function toggleSeriesSection() {
+  seriesSectionCollapsed = !seriesSectionCollapsed;
+  const grid = document.getElementById('seriesGrid');
+  const btn  = document.getElementById('seriesToggleBtn');
+  grid.style.display = seriesSectionCollapsed ? 'none' : '';
+  btn.textContent = seriesSectionCollapsed ? '▶ Expandir' : '▼ Recolher';
+}
+
+function buildTopicCard(t) {
+  const isRec = !!state.recorded[t.id];
+  const goalsSet = [...new Set(TYPE_KEYS.map(k => t.scripts[k] ? t.scripts[k].goal : null).filter(Boolean))];
+  const fmts = getFmtRec(t.id);
+  const allFmtsDone = fmts.reel && fmts.carousel && fmts.story;
+  const hasNotes = !!getTopicNotes(t.id);
+  const isSerie = t.type === 'serie';
+  return `<div class="topic-card ${t.pillar}${isRec || allFmtsDone ? ' recorded' : ''}" data-id="${t.id}" onclick="openModal(${t.id})">
+    ${(isRec||allFmtsDone) ? '<div class="card-rec-dot">✓</div>' : ''}
+    <div class="card-top">
+      <div class="card-num">T${String(t.num).padStart(2,'0')}${hasNotes ? '<span class=\'card-notes-dot\'></span>' : ''}</div>
+      <div class="card-badges">
+        ${isSerie ? '<span class="badge" style="background:rgba(155,126,212,.15);color:var(--nurture);font-size:9px;">SÉRIE</span>' : ''}
+        ${goalsSet.map(g => `<span class="badge badge-${g}">${GOAL_LABELS[g]}</span>`).join('')}
+      </div>
+    </div>
+    <div class="card-title">${t.title}</div>
+    <div class="card-hook">${t.scripts.ST ? t.scripts.ST.hook : ''}</div>
+    <div class="card-fmt-indicators">
+      <div class="cfi${fmts.reel?' done':''}" title="Reel">R</div>
+      <div class="cfi${fmts.carousel?' done':''}" title="Carrossel">C</div>
+      <div class="cfi${fmts.story?' done':''}" title="Story">S</div>
+    </div>
+  </div>`;
 }
 
 function updatePillarProgress() {
@@ -2375,6 +2544,7 @@ function showPage(id, btn) {
   if (id === 'metrics') renderMetrics();
   if (id === 'generator') initGeneratorPage();
   if (id === 'scripts') sabSpRender();
+  if (id === 'calendar') { renderCalLegend(); renderCalendar(); updateAccountStats(); }
 }
 // Pillars page needs no special init - static content
 
