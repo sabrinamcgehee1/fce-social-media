@@ -389,6 +389,42 @@ select.at-inp{cursor:pointer;}
 .mic-ai-gen-btn{padding:8px 18px;background:var(--green);border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:#000;cursor:pointer;}
 .mic-ai-gen-btn:disabled{opacity:.5;cursor:not-allowed;}
 .mic-ai-status{font-size:11px;color:var(--muted2);margin-top:8px;min-height:16px;}
+/* ── SCRIPTS PAGE ── */
+.mic-sp-filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;}
+.mic-sp-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.mic-sp-card[data-v="attract"]{border-left:3px solid var(--attract);}
+.mic-sp-card[data-v="nurture"]{border-left:3px solid var(--nurture);}
+.mic-sp-card[data-v="position"]{border-left:3px solid var(--position);}
+.mic-sp-card[data-v="convert"]{border-left:3px solid var(--convert);}
+.mic-sp-head{padding:12px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none;transition:background .15s;}
+.mic-sp-head:hover{background:rgba(255,255,255,.025);}
+.mic-sp-num{font-size:20px;font-weight:900;line-height:1;width:28px;flex-shrink:0;}
+.mic-sp-info{flex:1;min-width:0;}
+.mic-sp-title{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mic-sp-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mic-sp-badges{display:flex;gap:4px;align-items:center;flex-shrink:0;}
+.mic-sp-chev{font-size:11px;color:var(--muted);flex-shrink:0;transition:transform .22s;}
+.mic-sp-chev.open{transform:rotate(180deg);}
+.mic-sp-body{display:none;padding:0 18px 18px;}
+.mic-sp-body.open{display:block;}
+.mic-sp-hook{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px;}
+.mic-sp-hook-lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;}
+.mic-sp-hook-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.5;font-style:italic;}
+.mic-sp-fields{display:flex;flex-direction:column;gap:0;}
+.mic-sp-field-row{display:grid;grid-template-columns:100px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);align-items:start;}
+.mic-sp-field-row:last-child{border-bottom:none;}
+.mic-sp-field-lbl{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding-top:3px;color:var(--muted);}
+.mic-sp-field-val{font-size:13px;font-weight:500;color:var(--text);line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+.mic-sp-field-val.empty{color:var(--muted);font-style:italic;font-size:11px;}
+.mic-sp-fmt-hdr{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:14px 0 8px;display:flex;align-items:center;gap:8px;}
+.mic-sp-fmt-hdr::after{content:'';flex:1;height:1px;background:var(--border);}
+.mic-sp-open-btn{display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .2s;}
+.mic-sp-open-btn:hover{border-color:var(--green);color:var(--green);}
+.mic-sp-pillar-lbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:28px;}
+.mic-sp-pillar-lbl:first-child{margin-top:0;}
+.mic-sp-pillar-bar{flex:1;height:1px;background:var(--border);}
+.mic-sp-stat{font-size:12px;color:var(--muted);}
+.mic-sp-stat strong{color:var(--green);font-size:16px;font-weight:800;margin-right:3px;}
 </style>
 </head>
 <body>
@@ -547,6 +583,238 @@ select.at-inp{cursor:pointer;}
       <button onclick="saveMicGenSettings()" style="padding:10px;background:var(--green);border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#000;cursor:pointer;">💾 Salvar</button>
     </div>
   </div>
+</div>
+
+<!-- ═══════ REPURPOSE PAGE ═══════ -->
+<div class="page" id="page-repurpose">
+  <div class="section-title">♻️ Repurpose — 1 Tópico → 12 Peças</div>
+  <div class="section-desc">Um tópico central. Quatro ângulos. Três formatos. Doze peças de conteúdo.</div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🧱 O Sistema 1 Tópico → 4 Conteúdos</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.8;">Um tópico central permanece o mesmo em todos os 4 conteúdos. O que muda é <strong style="color:var(--text)">para quem você está falando</strong> e <strong style="color:var(--text)">o que você quer que ele sinta ou faça.</strong></div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">📐 Passo 1 — Identificar o Core do Tópico</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:12px;">Extraia 3 coisas da ideia original:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--p1);margin-bottom:4px;">Hook emocional</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">A dor ou o desejo que conecta com a audiência</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--p2);margin-bottom:4px;">Lição</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">O que mudou, o que você aprendeu como americano no Brasil</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--p3);margin-bottom:4px;">Prova</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">Quem viveu isso — você, a Sabrina ou um aluno do FC</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;">🎯 Passo 2 — Cada tipo tem um job</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Tipo</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Job</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">O que o público sente</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Formato</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--attract);">Atrair</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Para o scroll. Perspectiva do gringo.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Isso aconteceu comigo também"</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Storytelling (ST)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--nurture);">Nutrir</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Ensina o porquê. Constrói confiança.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Eu não sabia disso. Quero mais."</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Educational (ED)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--position);">Posicionar</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Autoridade de nativo. Liga ao FC.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Ele entende de verdade."</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Authority (AT)</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 12px;font-weight:700;color:var(--convert);">Converter</td>
+            <td style="padding:10px 12px;color:var(--muted2);">CTA direto. @FluencyConnect.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Eu preciso disso. Como começo?"</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Series (SE)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🎬 Passo 3 — Reescreva pelo mesmo ângulo</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">Não crie 4 histórias diferentes — <strong style="color:var(--text)">mude o ângulo da câmera</strong> na mesma história.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="background:var(--bg3);border-left:3px solid var(--attract);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--attract);margin-bottom:6px;">Atrair → Storytelling</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Perspectiva pessoal do Michael. Sem produto. Termina com pergunta ao público brasileiro.</div>
+      </div>
+      <div style="background:var(--bg3);border-left:3px solid var(--nurture);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--nurture);margin-bottom:6px;">Nutrir → Educational</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Hook + contexto cultural + 3 passos + dica prática. CTA: salvar.</div>
+      </div>
+      <div style="background:var(--bg3);border-left:3px solid var(--position);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--position);margin-bottom:6px;">Posicionar → Authority</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Hook de credencial de nativo + experiência + insight. CTA: link na bio / @FluencyConnect.</div>
+      </div>
+      <div style="background:var(--bg3);border-left:3px solid var(--convert);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--convert);margin-bottom:6px;">Converter → Series Ep.1</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Enquadra como série. Preview do Ep.2. CTA: segue ou manda mensagem pro @FluencyConnect.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;">📊 Sistema 1 Tópico → 12 Peças</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Tipo</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">🎬 Reel</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">🖼 Carrossel</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">⭕ Story</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--attract);">Atrair</td>
+            <td style="padding:10px 12px;color:var(--muted2);">ST — Storytelling</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Visual Story (6 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Poll hook (6 stories)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--nurture);">Nutrir</td>
+            <td style="padding:10px 12px;color:var(--muted2);">ED — Educational</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Tutorial slides (7 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Quick tips → feed</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--position);">Posicionar</td>
+            <td style="padding:10px 12px;color:var(--muted2);">AT — Authority</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Prova + Método (6 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Bold opinion (6 stories)</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 12px;font-weight:700;color:var(--convert);">Converter</td>
+            <td style="padding:10px 12px;color:var(--muted2);">SE — Series Ep.1</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Série visual (5 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Oferta direta (6 stories)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🖼 Estrutura do Carrossel</div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;line-height:1.6;"><strong style="color:var(--text)">Regra:</strong> cada slide tem um job. O leitor pode parar em qualquer slide e ainda ter valor.</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#e0a030;min-width:60px;">Slide 1</span><span style="color:var(--muted2);">Capa — Para o scroll. 1 frase forte.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#e0a030;min-width:60px;">Slide 2</span><span style="color:var(--muted2);">Problema/Hook — Faz sentir visto.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#e0a030;min-width:60px;">Slides 3–5</span><span style="color:var(--muted2);">Corpo — 1 ponto por slide.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#e0a030;min-width:60px;">Slides 6–7</span><span style="color:var(--muted2);">Resolução — Payoff ou insight.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#e0a030;min-width:60px;">Último</span><span style="color:var(--muted2);">CTA — @FluencyConnect ou WhatsApp.</span></div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">⭕ Estrutura do Story</div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;line-height:1.6;"><strong style="color:var(--text)">Regra:</strong> máximo 7 palavras por story. A imagem carrega o peso.</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#5b8dee;min-width:60px;">Story 1</span><span style="color:var(--muted2);">Interrupção — Para o auto-tap.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#5b8dee;min-width:60px;">Story 2</span><span style="color:var(--muted2);">Tensão — Puxa pra dentro.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#5b8dee;min-width:60px;">Stories 3–4</span><span style="color:var(--muted2);">Meio — Entrega rápido.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#5b8dee;min-width:60px;">Story 5</span><span style="color:var(--muted2);">Virada — Surpresa ou payoff.</span></div>
+        <div style="display:flex;gap:10px;font-size:12px;"><span style="font-weight:700;color:#5b8dee;min-width:60px;">Story 6</span><span style="color:var(--muted2);">CTA — Uma ação, um tap.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">⚙️ Regra de Produção</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
+        <span style="background:var(--p1);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">1</span>
+        <span><strong style="color:var(--text)">Filme os 4 reels</strong> em batch day — mesma roupa, mesma locação, mesma energia.</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
+        <span style="background:var(--p2);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">2</span>
+        <span><strong style="color:var(--text)">Monte os 4 carrosseis</strong> a partir dos scripts — o texto já está escrito no modal.</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
+        <span style="background:var(--p3);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">3</span>
+        <span><strong style="color:var(--text)">Monte os 4 Stories por último</strong> — são os mais curtos e o copy vem das capas dos carrosseis.</span>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.7;padding:12px 14px;background:var(--bg3);border-radius:8px;">
+      O conteúdo de carrossel e story é quase todo reciclado dos scripts de reel. Você não está escrevendo conteúdo novo — está <strong style="color:var(--text)">reformatando o que já escreveu.</strong>
+    </div>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🃏 Production Card</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:12px;color:var(--muted2);line-height:2.2;background:var(--bg3);border-radius:8px;padding:14px 18px;">
+      TÓPICO: ___________________<br>
+      PILAR: ___________________<br>
+      CORE EMOCIONAL: ___________________<br>
+      PROVA (quem — Michael, Sabrina, aluno): ___________________<br><br>
+      <strong style="color:var(--text)">REEL</strong> → ATRAIR: ST &nbsp;|&nbsp; NUTRIR: ED &nbsp;|&nbsp; POSICIONAR: AT &nbsp;|&nbsp; CONVERTER: SE<br>
+      <strong style="color:var(--text)">CARROSSEL</strong> → ATRAIR: Visual &nbsp;|&nbsp; NUTRIR: Tutorial &nbsp;|&nbsp; POSICIONAR: Prova &nbsp;|&nbsp; CONVERTER: Série<br>
+      <strong style="color:var(--text)">STORY</strong> → ATRAIR: Poll &nbsp;|&nbsp; NUTRIR: Tips→feed &nbsp;|&nbsp; POSICIONAR: Opinião &nbsp;|&nbsp; CONVERTER: Oferta
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCRIPTS PAGE ═══════ -->
+<div class="page" id="page-scripts">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+    <div>
+      <div class="section-title">Scripts Completos</div>
+      <div class="section-desc">Expanda qualquer card para ver os campos. Clique em "Editar no Modal" para editar inline.</div>
+    </div>
+  </div>
+
+  <div class="mic-sp-filter-bar">
+    <button class="filter-btn active" id="mic-ssp-all" onclick="micSpSetFilter('all')">Todos</button>
+    <button class="filter-btn p1" id="mic-ssp-p1" onclick="micSpSetFilter('p1')">🌎 Americano</button>
+    <button class="filter-btn p2" id="mic-ssp-p2" onclick="micSpSetFilter('p2')">🎙️ Idiomas</button>
+    <button class="filter-btn p3" id="mic-ssp-p3" onclick="micSpSetFilter('p3')">⚡ Tech</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn attract" id="mic-ssp-attract" onclick="micSpSetFilter('attract')">Atrair</button>
+    <button class="filter-btn nurture" id="mic-ssp-nurture" onclick="micSpSetFilter('nurture')">Nutrir</button>
+    <button class="filter-btn position" id="mic-ssp-position" onclick="micSpSetFilter('position')">Posicionar</button>
+    <button class="filter-btn convert" id="mic-ssp-convert" onclick="micSpSetFilter('convert')">Converter</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" id="mic-ssp-serie" onclick="micSpSetFilter('serie')">🎬 Séries</button>
+    <div class="filter-sep"></div>
+    <div style="position:relative;margin-left:auto;">
+      <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none;">🔍</span>
+      <input type="text" id="mic-ssp-search" placeholder="Buscar tópico..." oninput="micSpRender()" style="background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 14px 5px 30px;font-size:12px;font-weight:600;font-family:'Nunito',sans-serif;color:var(--text);outline:none;width:180px;transition:border-color .2s;">
+    </div>
+    <div style="display:flex;gap:6px;">
+      <button class="filter-btn" onclick="micSpExpandAll()">📂 Expandir</button>
+      <button class="filter-btn" onclick="micSpCollapseAll()">📁 Recolher</button>
+    </div>
+  </div>
+
+  <div id="mic-ssp-stats" style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:16px;"></div>
+  <div id="mic-ssp-grid"></div>
 </div>
 
 <!-- ═══════ CALENDAR PAGE ═══════ -->
@@ -1073,6 +1341,7 @@ function showPage(id, btn) {
   if(id==='guide')renderGuide();
   if(id==='metrics')renderMetrics();
   if(id==='generator'){initMicGeneratorPage();}
+  if(id==='scripts'){micSpRender();}
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2169,6 +2438,158 @@ function saveMicGenSettings() {
   const key = document.getElementById('mic-api-key-inp').value.trim();
   if (key) localStorage.setItem('mic_api_key', key);
   closeMicGenSettings();
+}
+// ═══════════════════════════════════════════════════════════
+// SCRIPTS PAGE
+// ═══════════════════════════════════════════════════════════
+let micSpFilter    = 'all';
+let micSpOpenCards = new Set();
+
+const MIC_PILLAR_COLORS = { p1:'var(--p1)', p2:'var(--p2)', p3:'var(--p3)' };
+const MIC_PILLAR_FULL   = { p1:'🌎 P1 — Americano no Brasil', p2:'🎙️ P2 — Idiomas & Aprendizado', p3:'⚡ P3 — Tech · Lógica · Disciplina' };
+const MIC_JOB_LABELS    = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+const MIC_FMT_ICONS     = { reel:'🎬 Reel', carousel:'🖼 Carrossel', story:'⭕ Story' };
+
+function micSpSetFilter(f) {
+  micSpFilter = f;
+  ['all','p1','p2','p3','attract','nurture','position','convert','serie'].forEach(id => {
+    const btn = document.getElementById('mic-ssp-' + id);
+    if (btn) btn.classList.toggle('active', id === f);
+  });
+  micSpRender();
+}
+
+function micSpMatches(topic, job) {
+  if (micSpFilter === 'serie' && topic.tipo !== 'serie') return false;
+  if (['p1','p2','p3'].includes(micSpFilter) && topic.pillar !== micSpFilter) return false;
+  if (['attract','nurture','position','convert'].includes(micSpFilter) && micSpFilter !== job) return false;
+  const q = (document.getElementById('mic-ssp-search')?.value || '').toLowerCase();
+  if (q && !(getTopicData(topic).title + ' ' + (topic.sub||'')).toLowerCase().includes(q)) return false;
+  return true;
+}
+
+function micSpRender() {
+  const grid = document.getElementById('mic-ssp-grid');
+  if (!grid) return;
+  const pillars = ['p1','p2','p3'];
+  let totalVisible = 0;
+
+  const html = pillars.map(p => {
+    const cards = [];
+    TOPICS.filter(t => t.pillar === p).forEach(t => {
+      MIC_JOBS.forEach(job => {
+        if (!micSpMatches(t, job)) return;
+        cards.push(micSpCard(t, job));
+        totalVisible++;
+      });
+    });
+    if (!cards.length) return '';
+    return `<div>
+      <div class="mic-sp-pillar-lbl" style="color:${MIC_PILLAR_COLORS[p]}">
+        ${MIC_PILLAR_FULL[p]}
+        <div class="mic-sp-pillar-bar"></div>
+        <span style="font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;">${cards.length} script${cards.length !== 1 ? 's' : ''}</span>
+      </div>
+      ${cards.join('')}
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = html || '<div style="padding:40px;text-align:center;color:var(--muted);">Nenhum script encontrado.</div>';
+
+  const statsEl = document.getElementById('mic-ssp-stats');
+  if (statsEl) {
+    const total   = TOPICS.length * 4;
+    const written = TOPICS.reduce((acc, t) =>
+      acc + MIC_JOBS.filter(job => {
+        const key = JOB_TO_SCRIPT[job];
+        const sc  = (t.scripts || {})[key] || {};
+        return (SCRIPT_TYPES[key]?.fields || []).some(f => (sc[f] || '').trim().length > 0);
+      }).length, 0);
+    statsEl.innerHTML = `
+      <div class="mic-sp-stat"><strong>${totalVisible}</strong>visíveis</div>
+      <div class="mic-sp-stat"><strong>${total}</strong>total</div>
+      <div class="mic-sp-stat"><strong>${written}</strong>com script</div>
+      <div class="mic-sp-stat"><strong>${total - written}</strong>em branco</div>`;
+  }
+
+  micSpOpenCards.forEach(key => {
+    const body = document.getElementById('mic-spb-' + key);
+    const chev = document.getElementById('mic-spc-' + key);
+    if (body) body.classList.add('open');
+    if (chev) chev.classList.add('open');
+  });
+}
+
+function micSpCard(t, job) {
+  const key      = t.id + '-' + job;
+  const pillarC  = MIC_PILLAR_COLORS[t.pillar];
+  const td       = getTopicData(t);
+  const typeKey  = JOB_TO_SCRIPT[job];
+  const sc       = (t.scripts || {})[typeKey] || {};
+  const st       = SCRIPT_TYPES[typeKey] || {};
+  const hook     = sc.hook || '';
+  const done     = isRecorded(t.id, job, 'reel') || isRecorded(t.id, job, 'carousel') || isRecorded(t.id, job, 'story');
+
+  let formatsHtml = '';
+  MIC_FMTS.forEach(fmt => {
+    const fmtKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : typeKey;
+    const fmtSc  = (t.scripts || {})[fmtKey] || {};
+    const fmtSt  = SCRIPT_TYPES[fmtKey] || {};
+    formatsHtml += `<div class="mic-sp-fmt-hdr">${MIC_FMT_ICONS[fmt]}</div>`;
+    formatsHtml += '<div class="mic-sp-fields">';
+    (fmtSt.fields || []).forEach((f, i) => {
+      const val = (fmtSc[f] || '').trim();
+      formatsHtml += `<div class="mic-sp-field-row">
+        <span class="mic-sp-field-lbl">${fmtSt.labels?.[i] || f}</span>
+        <span class="mic-sp-field-val${val ? '' : ' empty'}">${val || '— não escrito ainda'}</span>
+      </div>`;
+    });
+    formatsHtml += '</div>';
+  });
+
+  return `<div class="mic-sp-card" data-v="${job}">
+    <div class="mic-sp-head" onclick="micSpToggle('${key}')">
+      <div class="mic-sp-num" style="color:${pillarC}">${String(t.id).padStart(2,'0')}</div>
+      <div class="mic-sp-info">
+        <div class="mic-sp-title">${td.title}</div>
+        <div class="mic-sp-sub">${td.sub || ''}</div>
+      </div>
+      <div class="mic-sp-badges">
+        ${t.tipo === 'serie' ? '<span class="badge" style="background:rgba(230,126,34,.15);color:var(--convert);">SÉRIE</span>' : ''}
+        <span class="badge badge-${job}">${MIC_JOB_LABELS[job]}</span>
+        ${done ? '<span class="badge badge-attract" style="background:rgba(29,185,148,.15);color:var(--green);">✅</span>' : ''}
+      </div>
+      <div class="mic-sp-chev" id="mic-spc-${key}">▼</div>
+    </div>
+    <div class="mic-sp-body" id="mic-spb-${key}">
+      ${hook ? `<div class="mic-sp-hook"><div class="mic-sp-hook-lbl">Hook</div><div class="mic-sp-hook-text">${hook}</div></div>` : ''}
+      ${formatsHtml}
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
+        <button class="mic-sp-open-btn" onclick="openModal(${t.id},'${job}','reel')">✏️ Editar no Modal</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function micSpToggle(key) {
+  const body = document.getElementById('mic-spb-' + key);
+  const chev = document.getElementById('mic-spc-' + key);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', open);
+  if (open) micSpOpenCards.add(key); else micSpOpenCards.delete(key);
+}
+
+function micSpExpandAll() {
+  document.querySelectorAll('.mic-sp-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.mic-sp-chev').forEach(c => c.classList.add('open'));
+  TOPICS.forEach(t => MIC_JOBS.forEach(j => micSpOpenCards.add(t.id + '-' + j)));
+}
+
+function micSpCollapseAll() {
+  document.querySelectorAll('.mic-sp-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.mic-sp-chev').forEach(c => c.classList.remove('open'));
+  micSpOpenCards.clear();
 }
 </script>
 </body>
