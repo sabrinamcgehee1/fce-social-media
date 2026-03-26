@@ -590,6 +590,53 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   .ai-generate-btn:hover{opacity:.85;}
   .ai-generate-btn:disabled{opacity:.5;cursor:not-allowed;}
   .ai-status{font-size:11px;color:var(--muted2);margin-top:8px;min-height:16px;line-height:1.5;}
+  /* ── SCRIPTS PAGE ── */
+  /* ── SCRIPTS PAGE ── */
+  .sp-add-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--bg2);border:1px dashed var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .sp-add-btn:hover{border-color:var(--p3);color:var(--p3);}
+  .sp-expand-btns{display:flex;gap:6px;}
+  .sp-no-results{padding:40px;text-align:center;color:var(--muted);font-size:13px;}
+  .sp-filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;}
+  .sp-stats{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+  .sp-stat{font-size:12px;color:var(--muted);}
+  .sp-stat strong{color:var(--p3);font-size:16px;font-weight:900;margin-right:3px;}
+  .sp-search{position:relative;margin-left:auto;}
+  .sp-search-inp{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 14px 5px 30px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;width:180px;transition:border-color .2s;}
+  .sp-search-inp:focus{border-color:var(--p3);}
+  .sp-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none;}
+  .sp-pillar-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:28px;}
+  .sp-pillar-label:first-child{margin-top:0;}
+  .sp-pillar-bar{flex:1;height:1px;background:var(--border);}
+  .sp-pillar-count{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .sp-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .sp-card[data-v="attract"]{border-left:3px solid var(--attract);}
+  .sp-card[data-v="nurture"]{border-left:3px solid var(--nurture);}
+  .sp-card[data-v="position"]{border-left:3px solid var(--position);}
+  .sp-card[data-v="convert"]{border-left:3px solid var(--convert);}
+  .sp-card-head{padding:12px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none;transition:background .15s;}
+  .sp-card-head:hover{background:rgba(255,255,255,.025);}
+  .sp-card-num{font-size:20px;font-weight:900;line-height:1;width:28px;flex-shrink:0;}
+  .sp-card-info{flex:1;min-width:0;}
+  .sp-card-title{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sp-card-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sp-card-badges{display:flex;gap:4px;align-items:center;flex-shrink:0;}
+  .sp-chevron{font-size:11px;color:var(--muted);flex-shrink:0;transition:transform .22s;}
+  .sp-chevron.open{transform:rotate(180deg);}
+  .sp-card-body{display:none;padding:0 18px 18px;}
+  .sp-card-body.open{display:block;}
+  .sp-hook{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px;}
+  .sp-hook-lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;}
+  .sp-hook-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.5;font-style:italic;}
+  .sp-fields-grid{display:flex;flex-direction:column;gap:0;}
+  .sp-field-row{display:grid;grid-template-columns:100px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);align-items:start;}
+  .sp-field-row:last-child{border-bottom:none;}
+  .sp-field-lbl{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding-top:3px;line-height:1.4;color:var(--muted);}
+  .sp-field-val{font-size:13px;font-weight:500;color:var(--text);line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+  .sp-field-val.empty{color:var(--muted);font-style:italic;font-size:11px;}
+  .sp-fmt-header{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:14px 0 8px;display:flex;align-items:center;gap:8px;}
+  .sp-fmt-header::after{content:'';flex:1;height:1px;background:var(--border);}
+  .sp-open-btn{display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .2s;}
+  .sp-open-btn:hover{border-color:var(--p3);color:var(--p3);}
 </style>
 </head>
 <body>
@@ -604,6 +651,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <button class="nav-tab" onclick="showPage('formats',this)">📱 Formatos</button>
     <button class="nav-tab" onclick="showPage('pillars',this)">⭐ Pilares</button>
     <button class="nav-tab" onclick="showPage('metrics',this)">📊 Métricas</button>
+    <button class="nav-tab" onclick="showPage('scripts',this)">📋 Scripts</button>
     <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
     <button class="nav-tab" onclick="showPage('repurpose',this)">♻️ Repurpose</button>
   </nav>
@@ -2326,10 +2374,11 @@ function showPage(id, btn) {
   if (id === 'formats') initFormats();
   if (id === 'metrics') renderMetrics();
   if (id === 'generator') initGeneratorPage();
+  if (id === 'scripts') sabSpRender();
 }
 // Pillars page needs no special init - static content
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeFmtMo(); closeLogModal(); closeNewTopicModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeFmtMo(); closeLogModal(); closeNewTopicModal(); closeSabAddScript(); } });
 
 
 // ═══════════════════════════════════════════════
@@ -3612,6 +3661,250 @@ Nenhum texto fora do JSON.`;
   // Refresh current view
   renderModalBody(t);
 }
+// ═══════════════════════════════════════════════════
+// SCRIPTS PAGE
+// ═══════════════════════════════════════════════════
+let sabSpFilter   = 'all';
+let sabSpOpenCards = new Set();
+
+const SAB_PILLAR_COLORS = { p1:'var(--p1)', p2:'var(--p2)', p3:'var(--p3)' };
+const SAB_PILLAR_FULL   = { p1:'💗 Pilar 1 — Nossa Vida', p2:'🟡 Pilar 2 — Inglês Real', p3:'🟢 Pilar 3 — Mulher que Constrói' };
+const SAB_JOB_LABELS    = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+const SAB_FMT_LABELS    = { reel:'🎬 Reel', carousel:'🖼 Carrossel', story:'⭕ Story' };
+const SAB_JOBS          = ['attract','nurture','position','convert'];
+const SAB_FMTS          = ['reel','carousel','story'];
+
+function sabSpSetFilter(f) {
+  sabSpFilter = f;
+  ['all','p1','p2','p3','attract','nurture','position','convert','serie'].forEach(id => {
+    const btn = document.getElementById('ssp-btn-'+id);
+    if (btn) btn.classList.toggle('active', id === f);
+  });
+  sabSpRender();
+}
+
+function sabSpMatches(topic, job) {
+  if (sabSpFilter === 'serie' && topic.type !== 'serie') return false;
+  if (['p1','p2','p3'].includes(sabSpFilter) && topic.pillar !== sabSpFilter) return false;
+  if (SAB_JOBS.includes(sabSpFilter) && sabSpFilter !== job) return false;
+  const q = (document.getElementById('ssp-search')?.value || '').toLowerCase();
+  if (q && !(topic.title + ' ' + (topic.sub||'')).toLowerCase().includes(q)) return false;
+  return true;
+}
+
+function sabSpRender() {
+  const grid = document.getElementById('ssp-grid');
+  if (!grid) return;
+  const pillars = ['p1','p2','p3'];
+  let totalVisible = 0;
+
+  const html = pillars.map(p => {
+    const cards = [];
+    state.topics.filter(t => t.pillar === p).forEach(t => {
+      SAB_JOBS.forEach(job => {
+        if (!sabSpMatches(t, job)) return;
+        cards.push(sabSpCard(t, job));
+        totalVisible++;
+      });
+    });
+    if (!cards.length) return '';
+    return `<div>
+      <div class="sp-pillar-label" style="color:${SAB_PILLAR_COLORS[p]}">
+        ${SAB_PILLAR_FULL[p]}
+        <div class="sp-pillar-bar"></div>
+        <span class="sp-pillar-count">${cards.length} script${cards.length !== 1 ? 's' : ''}</span>
+      </div>
+      ${cards.join('')}
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = html || '<div class="sp-no-results">Nenhum script encontrado.</div>';
+
+  const statsEl = document.getElementById('ssp-stats');
+  if (statsEl) {
+    const total = state.topics.length * 4;
+    const written = state.topics.reduce((acc, t) =>
+      acc + SAB_JOBS.filter(job => {
+        const typeKey = JOB_TO_TYPE[job];
+        const sc = t.scripts?.[typeKey] || {};
+        const st = SCRIPT_TYPES[typeKey] || {};
+        return (st.fields || []).some(f => (sc[f] || '').trim().length > 0);
+      }).length, 0);
+    statsEl.innerHTML = `
+      <div class="sp-stat"><strong>${totalVisible}</strong> visíveis</div>
+      <div class="sp-stat"><strong>${total}</strong> total</div>
+      <div class="sp-stat"><strong>${written}</strong> com script escrito</div>
+      <div class="sp-stat"><strong>${total - written}</strong> em branco</div>`;
+  }
+
+  sabSpOpenCards.forEach(key => {
+    const body = document.getElementById('sspb-'+key);
+    const chev = document.getElementById('sspc-'+key);
+    if (body) body.classList.add('open');
+    if (chev) chev.classList.add('open');
+  });
+}
+
+function sabSpCard(t, job) {
+  const key = t.id + '-' + job;
+  const pillarC = SAB_PILLAR_COLORS[t.pillar];
+  const typeKey = JOB_TO_TYPE[job];
+  const sc = t.scripts?.[typeKey] || {};
+  const st = SCRIPT_TYPES[typeKey] || {};
+  const hook = sc.hook || '';
+
+  let formatsHtml = '';
+  SAB_FMTS.forEach(fmt => {
+    const fmtTypeKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : typeKey;
+    const fmtSc = t.scripts?.[fmtTypeKey] || {};
+    const fmtSt = SCRIPT_TYPES[fmtTypeKey] || {};
+    formatsHtml += `<div class="sp-fmt-header">${SAB_FMT_LABELS[fmt]}</div>`;
+    formatsHtml += '<div class="sp-fields-grid">';
+    (fmtSt.fields || []).forEach((f, i) => {
+      const val = (fmtSc[f] || '').trim();
+      formatsHtml += `<div class="sp-field-row">
+        <span class="sp-field-lbl">${fmtSt.labels?.[i] || f}</span>
+        <span class="sp-field-val${val ? '' : ' empty'}">${val || '— não escrito ainda'}</span>
+      </div>`;
+    });
+    formatsHtml += '</div>';
+  });
+
+  return `<div class="sp-card" data-v="${job}">
+    <div class="sp-card-head" onclick="sabSpToggle('${key}')">
+      <div class="sp-card-num" style="color:${pillarC}">${String(t.id).padStart(2,'0')}</div>
+      <div class="sp-card-info">
+        <div class="sp-card-title">${t.title}</div>
+        <div class="sp-card-sub">${t.sub || ''}</div>
+      </div>
+      <div class="sp-card-badges">
+        ${t.type === 'serie' ? '<span class="badge" style="background:rgba(155,126,212,.15);color:var(--nurture)">SÉRIE</span>' : ''}
+        <span class="badge badge-${job}">${SAB_JOB_LABELS[job]}</span>
+      </div>
+      <div class="sp-chevron" id="sspc-${key}">▼</div>
+    </div>
+    <div class="sp-card-body" id="sspb-${key}">
+      ${hook ? `<div class="sp-hook"><div class="sp-hook-lbl">Hook</div><div class="sp-hook-text">${hook}</div></div>` : ''}
+      ${formatsHtml}
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
+        <button class="sp-open-btn" onclick="openModal(${t.id});setTimeout(()=>switchJob('${job}'),100)">✏️ Editar no Modal</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function sabSpToggle(key) {
+  const body = document.getElementById('sspb-'+key);
+  const chev = document.getElementById('sspc-'+key);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', open);
+  if (open) sabSpOpenCards.add(key); else sabSpOpenCards.delete(key);
+}
+
+function sabSpExpandAll() {
+  document.querySelectorAll('#ssp-grid .sp-card-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('#ssp-grid .sp-chevron').forEach(c => c.classList.add('open'));
+  state.topics.forEach(t => SAB_JOBS.forEach(j => sabSpOpenCards.add(t.id+'-'+j)));
+}
+
+function sabSpCollapseAll() {
+  document.querySelectorAll('#ssp-grid .sp-card-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('#ssp-grid .sp-chevron').forEach(c => c.classList.remove('open'));
+  sabSpOpenCards.clear();
+}
+
+// ── ADD SCRIPT MODAL ──────────────────────────────
+function openSabAddScript() {
+  const sel = document.getElementById('sas-topic');
+  if (sel.options.length <= 1) {
+    state.topics.forEach(t => {
+      const o = document.createElement('option');
+      o.value = t.id;
+      o.textContent = `${t.id}. ${t.title}`;
+      sel.appendChild(o);
+    });
+  }
+  refreshSabAddScript();
+  document.getElementById('sab-add-script-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSabAddScript() {
+  document.getElementById('sab-add-script-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function refreshSabAddScript() {
+  const tid = parseInt(document.getElementById('sas-topic').value);
+  const job = document.getElementById('sas-version').value;
+  const fmt = document.getElementById('sas-format').value;
+  const body = document.getElementById('sas-body');
+
+  if (!tid) {
+    body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">Selecione um tópico para começar a escrever.</div>';
+    return;
+  }
+
+  const t = getTopic(tid);
+  if (!t) return;
+  const typeKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : JOB_TO_TYPE[job];
+  const st = SCRIPT_TYPES[typeKey] || {};
+  if (!t.scripts[typeKey]) t.scripts[typeKey] = { goal: job };
+  const sc = t.scripts[typeKey];
+
+  const JOB_COLORS = { attract:'var(--p1)', nurture:'#b57fe0', position:'#6aade0', convert:'#e8a060' };
+  const jc = fmt === 'carousel' ? '#e0a030' : fmt === 'story' ? '#5b8dee' : JOB_COLORS[job];
+
+  let html = `<div style="display:flex;align-items:center;gap:10px;padding:10px 0 14px;margin-bottom:4px;border-bottom:1px solid var(--border);">
+    <span style="font-size:18px;">${fmt === 'carousel' ? '🖼' : fmt === 'story' ? '⭕' : '🎬'}</span>
+    <span style="font-size:13px;font-weight:700;color:var(--text);">${st.label || typeKey}</span>
+    <span style="font-size:11px;color:var(--muted);">· ${t.title}</span>
+  </div><div class="script-fields">`;
+
+  (st.fields || []).forEach((field, i) => {
+    const label = st.labels?.[i] || field;
+    const placeholder = st.placeholders?.[i] || '';
+    const value = sc[field] || '';
+    const isHook = field === 'hook';
+    const isCta = field === 'cta';
+    const isEmpty = !value;
+    html += `<div class="field-row">
+      <div class="field-label"><span class="lbl-color" style="background:${jc}"></span>${label}</div>
+      <div class="field-input${isHook?' hook-field':''}${isCta?' cta-field':''}${isEmpty?' empty-field':''}"
+        ${isHook ? `style="border-left-color:${jc}"` : ''}
+        contenteditable="true" spellcheck="false"
+        data-tid="${tid}" data-typekey="${typeKey}" data-field="${field}" data-placeholder="${placeholder}"
+        onfocus="onSasFieldFocus(this)" onblur="onSasFieldBlur(this)" oninput="onFieldInput(this)"
+      >${value || placeholder}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function onSasFieldFocus(el) {
+  if (el.classList.contains('empty-field')) { el.textContent = ''; el.classList.remove('empty-field'); }
+}
+
+function onSasFieldBlur(el) {
+  const val = el.textContent.trim();
+  const placeholder = el.dataset.placeholder;
+  if (!val) { el.textContent = placeholder; el.classList.add('empty-field'); return; }
+  const tid = parseInt(el.dataset.tid);
+  const typeKey = el.dataset.typekey;
+  const field = el.dataset.field;
+  const t = getTopic(tid);
+  if (t) { if (!t.scripts[typeKey]) t.scripts[typeKey] = {}; t.scripts[typeKey][field] = val; saveState(); }
+}
+
+function saveSabAddScript() {
+  const btn = document.getElementById('sas-save-btn');
+  btn.textContent = '✅ Salvo!';
+  setTimeout(() => btn.textContent = '💾 Salvar Script', 1500);
+  if (document.getElementById('page-scripts')?.classList.contains('active')) sabSpRender();
+}
 </script>
 
 
@@ -4146,6 +4439,94 @@ Nenhum texto fora do JSON.`;
   </div>
 </div>
 
+<!-- ════════════════ SCRIPTS PAGE ════════════════ -->
+<div class="page" id="page-scripts">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+    <div>
+      <div class="section-title">Scripts Completos</div>
+      <div class="section-desc">Expanda qualquer card para ver os campos. Clique em "Editar no Modal" para editar inline.</div>
+    </div>
+    <button onclick="openSabAddScript()" style="display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--bg2);border:1px dashed var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='var(--p3)';this.style.color='var(--p3)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">＋ Adicionar / Escrever Script</button>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="sp-filter-bar">
+    <button class="filter-btn active" id="ssp-btn-all" onclick="sabSpSetFilter('all')">Todos</button>
+    <button class="filter-btn p1" id="ssp-btn-p1" onclick="sabSpSetFilter('p1')">P1 Nossa Vida</button>
+    <button class="filter-btn p2" id="ssp-btn-p2" onclick="sabSpSetFilter('p2')">P2 Inglês Real</button>
+    <button class="filter-btn p3" id="ssp-btn-p3" onclick="sabSpSetFilter('p3')">P3 Mulher</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn attract" id="ssp-btn-attract" onclick="sabSpSetFilter('attract')">Atrair</button>
+    <button class="filter-btn nurture" id="ssp-btn-nurture" onclick="sabSpSetFilter('nurture')">Nutrir</button>
+    <button class="filter-btn position" id="ssp-btn-position" onclick="sabSpSetFilter('position')">Posicionar</button>
+    <button class="filter-btn convert" id="ssp-btn-convert" onclick="sabSpSetFilter('convert')">Converter</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" id="ssp-btn-serie" onclick="sabSpSetFilter('serie')">🎬 Séries</button>
+    <div class="filter-sep"></div>
+    <div class="sp-search">
+      <span class="sp-search-icon">🔍</span>
+      <input type="text" class="sp-search-inp" id="ssp-search" placeholder="Buscar tópico..." oninput="sabSpRender()">
+    </div>
+    <div class="sp-expand-btns" style="display:flex;gap:6px;">
+      <button class="filter-btn" onclick="sabSpExpandAll()">📂 Expandir Todos</button>
+      <button class="filter-btn" onclick="sabSpCollapseAll()">📁 Recolher</button>
+    </div>
+  </div>
+
+  <div class="sp-stats" id="ssp-stats"></div>
+  <div id="ssp-grid"></div>
+</div>
+
+<!-- ════════════════ ADD SCRIPT MODAL ════════════════ -->
+<div class="modal-overlay" id="sab-add-script-overlay" onclick="if(event.target===this)closeSabAddScript()">
+<div class="modal" style="max-width:680px">
+  <div class="modal-header">
+    <div style="flex:1;min-width:0">
+      <div class="modal-title">＋ Adicionar / Escrever Script</div>
+      <div class="modal-sub">Selecione o tópico, versão e formato para começar a escrever.</div>
+    </div>
+    <button class="modal-close" onclick="closeSabAddScript()">✕</button>
+  </div>
+
+  <!-- Selectors -->
+  <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+    <div>
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;">Tópico</div>
+      <select id="sas-topic" onchange="refreshSabAddScript()" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:11px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;">
+        <option value="">— Seleciona —</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;">Versão (Job)</div>
+      <select id="sas-version" onchange="refreshSabAddScript()" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:11px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;">
+        <option value="attract">Atrair</option>
+        <option value="nurture">Nutrir</option>
+        <option value="position">Posicionar</option>
+        <option value="convert">Converter</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;">Formato</div>
+      <select id="sas-format" onchange="refreshSabAddScript()" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:11px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;">
+        <option value="reel">🎬 Reel</option>
+        <option value="carousel">🖼 Carrossel</option>
+        <option value="story">⭕ Story</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Fields body -->
+  <div class="modal-body" id="sas-body" style="min-height:200px;">
+    <div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">Selecione um tópico para começar a escrever.</div>
+  </div>
+
+  <!-- Footer -->
+  <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <button onclick="saveSabAddScript()" id="sas-save-btn" style="padding:9px 24px;background:var(--p3);border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#000;cursor:pointer;">💾 Salvar Script</button>
+    <span style="font-size:10px;color:var(--muted);">💾 Salvo automaticamente</span>
+  </div>
+</div>
+</div>
 
 <!-- NEW TOPIC MODAL -->
 <div class="new-topic-modal-ov" id="newTopicModalOv" onclick="closeNewTopicOut(event)">
