@@ -25,17 +25,28 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 .nav-inner{display:flex;align-items:center;gap:0;padding:0 22px;}
 .brand{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);padding:14px 0;margin-right:18px;white-space:nowrap;border-right:1px solid var(--border);padding-right:18px;}
 .brand em{color:var(--rose);font-style:italic;}
-.tabs{display:flex;overflow-x:auto;scrollbar-width:none;gap:2px;}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{padding:14px 15px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;font-family:'Outfit',sans-serif;}
-.tab:hover{color:var(--text);}
-.tab.active{color:var(--text);border-bottom-color:var(--rose);}
-.tab.t2.active{border-bottom-color:var(--gold);}
-.tab.t3.active{border-bottom-color:var(--sage);}
-.tab.t4.active{border-bottom-color:var(--sky);}
-.tab.t5.active{border-bottom-color:var(--lilac);}
-.tab.t6.active{border-bottom-color:var(--rose);}
-.tab.t7.active{border-bottom-color:var(--gold);}
+/* NAV DROPDOWN */
+.nav-menu-wrap{position:relative;}
+.nav-menu-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:var(--text);transition:all .2s;white-space:nowrap;}
+.nav-menu-btn:hover{border-color:var(--rose);color:var(--rose);}
+.nav-menu-arrow{font-size:11px;color:var(--muted);transition:transform .2s;}
+.nav-menu-arrow.open{transform:rotate(180deg);}
+.nav-dropdown{position:absolute;top:calc(100% + 8px);left:0;background:rgba(13,13,15,0.98);border:1px solid var(--border2);border-radius:12px;padding:8px;display:none;flex-direction:column;gap:2px;min-width:200px;z-index:300;backdrop-filter:blur(20px);box-shadow:0 16px 48px rgba(0,0,0,.6);}
+.nav-dropdown.open{display:flex;}
+.tab{padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:none;border:none;cursor:pointer;border-radius:7px;border-left:2px solid transparent;transition:all .15s;white-space:nowrap;font-family:'Outfit',sans-serif;text-align:left;width:100%;}
+.tab:hover{color:var(--text);background:var(--bg3);}
+.tab.active{color:var(--text);background:var(--bg3);border-left-color:var(--rose);}
+.tab.t2.active{border-left-color:var(--gold);}
+.tab.t3.active{border-left-color:var(--sage);}
+.tab.t4.active{border-left-color:var(--sky);}
+.tab.t5.active{border-left-color:var(--lilac);}
+.tab.t6.active{border-left-color:var(--rose);}
+.tab.t7.active{border-left-color:var(--gold);}
+.tab.t8.active{border-left-color:#3dbf8a;}
+.tab.t9.active{border-left-color:var(--lilac);}
+.tab.t10.active{border-left-color:var(--sky);}
+.tab.t11.active{border-left-color:var(--gold);}
+.tab.t12.active{border-left-color:var(--rose);}
 
 /* PAGES */
 .page{display:none;padding:28px 24px;max-width:980px;margin:0 auto;}
@@ -310,20 +321,26 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 <nav class="nav">
   <div class="nav-inner">
     <div class="brand">Sabrina <em>Sistema</em></div>
-    <div class="tabs">
-      <button class="tab active" onclick="goPage('diario',this)">📋 Diário</button>
-      <button class="tab t2" onclick="goPage('semana',this)">🗓 Semana</button>
-      <button class="tab t3" onclick="goPage('meses',this)">📆 9 Meses</button>
-      <button class="tab t4" onclick="goPage('livros',this)">📚 Livros</button>
-      <button class="tab t5" onclick="goPage('sites',this)">🔍 Sites</button>
-      <button class="tab t6" onclick="goPage('substack',this)">✍️ Substack</button>
-      <button class="tab t7" onclick="goPage('pipeline',this)">🔄 Pipeline</button>
-      <button class="tab t3" onclick="goPage('skills',this)">🚀 Habilidades</button>
-      <button class="tab t8" onclick="goPage('inspiracao',this)">✨ Inspiração</button>
-      <button class="tab t9" onclick="goPage('criadores',this)">🎬 Criadores</button>
-      <button class="tab t10" onclick="goPage('podcasts',this)">🎧 Podcasts</button>
-      <button class="tab t11" onclick="goPage('essayvideos',this)">📺 Essay Videos</button>
-      <button class="tab t12" onclick="goPage('apps',this)">📱 Apps</button>
+    <div class="nav-menu-wrap">
+      <button class="nav-menu-btn" onclick="toggleNavMenu()" id="navMenuBtn">
+        <span id="navMenuLabel">📋 Diário</span>
+        <span class="nav-menu-arrow" id="navMenuArrow">▾</span>
+      </button>
+      <div class="nav-dropdown" id="navDropdown">
+        <button class="tab active" data-page="diario" onclick="goPage('diario',this)">📋 Diário</button>
+        <button class="tab t2" data-page="semana" onclick="goPage('semana',this)">🗓 Semana</button>
+        <button class="tab t3" data-page="meses" onclick="goPage('meses',this)">📆 9 Meses</button>
+        <button class="tab t4" data-page="livros" onclick="goPage('livros',this)">📚 Livros</button>
+        <button class="tab t5" data-page="sites" onclick="goPage('sites',this)">🔍 Sites</button>
+        <button class="tab t6" data-page="substack" onclick="goPage('substack',this)">✍️ Substack</button>
+        <button class="tab t7" data-page="pipeline" onclick="goPage('pipeline',this)">🔄 Pipeline</button>
+        <button class="tab t3" data-page="skills" onclick="goPage('skills',this)">🚀 Habilidades</button>
+        <button class="tab t8" data-page="inspiracao" onclick="goPage('inspiracao',this)">✨ Inspiração</button>
+        <button class="tab t9" data-page="criadores" onclick="goPage('criadores',this)">🎬 Criadores</button>
+        <button class="tab t10" data-page="podcasts" onclick="goPage('podcasts',this)">🎧 Podcasts</button>
+        <button class="tab t11" data-page="essayvideos" onclick="goPage('essayvideos',this)">📺 Essay Videos</button>
+        <button class="tab t12" data-page="apps" onclick="goPage('apps',this)">📱 Apps</button>
+      </div>
     </div>
   </div>
 </nav>
@@ -2327,8 +2344,29 @@ function goPage(id, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   btn.classList.add('active');
+  // Update the menu button label
+  document.getElementById('navMenuLabel').textContent = btn.textContent.trim();
+  // Close the dropdown
+  document.getElementById('navDropdown').classList.remove('open');
+  document.getElementById('navMenuArrow').classList.remove('open');
   window.scrollTo({top: document.querySelector('.nav').offsetHeight, behavior:'smooth'});
 }
+
+function toggleNavMenu() {
+  const dropdown = document.getElementById('navDropdown');
+  const arrow    = document.getElementById('navMenuArrow');
+  const isOpen   = dropdown.classList.toggle('open');
+  arrow.classList.toggle('open', isOpen);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.querySelector('.nav-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navMenuArrow').classList.remove('open');
+  }
+});
 function chk(el) {
   el.classList.toggle('done');
   try {
