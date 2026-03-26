@@ -1629,6 +1629,22 @@ PROVA (quem): ___________________<br><br>
   <div class="format-tabs" id="format-tabs"></div>
   <div class="modal-body" id="modal-body"></div>
   <div id="modal-ai-panel-container"></div>
+  <div id="main-rec-notes-bar" style="padding:10px 22px;border-top:1px solid var(--border);">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">📝 Notas de Gravação <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);">— local, roupa, iluminação, referências</span></div>
+    <textarea id="main-rec-notes" rows="2" placeholder="Ex: Gravar no escritório, blusa bege. Luz natural da janela esquerda. Referência: vídeo X..." oninput="saveRecNotes(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text);font-family:inherit;resize:vertical;outline:none;line-height:1.6;box-sizing:border-box;"></textarea>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px;">💾 Salvo automaticamente por tópico</div>
+  </div>
+  <div class="modal-dates-bar" id="main-modal-dates-bar">
+    <div class="date-group">
+      <div class="date-lbl">🎬 Gravação</div>
+      <input type="date" class="date-inp" id="main-date-rec" onchange="saveMainDateField('rec',this.value)">
+    </div>
+    <div class="date-group">
+      <div class="date-lbl">📤 Postagem</div>
+      <input type="date" class="date-inp" id="main-date-post" onchange="saveMainDateField('post',this.value)">
+    </div>
+    <button class="push-cal-btn" id="main-push-cal-btn" onclick="pushMainToCalendar()">📅 Enviar pro Calendário</button>
+  </div>
   <div class="modal-footer">
     <button class="record-btn" id="record-btn" onclick="toggleRecorded()">✓ Marcar como gravado</button>
     <span class="save-note">💾 Auto-salvo</span>
@@ -1944,6 +1960,8 @@ function openModal(tid,ver='attract'){
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
   loadDateFields();
+  loadMainDateFields();
+  loadRecNotes();
 }
 function renderModalTabs(){
   document.getElementById('modal-tabs').innerHTML=VERSIONS.map(v=>`<button class="modal-tab ${v}${v===appState.modalVersion?' active':''}" onclick="switchModalVersion('${v}')">${VERSION_LABELS[v]}</button>`).join('');
@@ -1958,6 +1976,8 @@ function switchModalVersion(v){
   document.getElementById('modal-ai-panel-container').innerHTML='';
   renderModalTabs(); renderFormatTabs(); renderModalBody(); updateRecordBtn();
   loadDateFields();
+  loadMainDateFields();
+  loadRecNotes();
 }
 function switchModalFormat(f){
   appState.modalFormat=f;
@@ -2371,6 +2391,63 @@ function saveDateField(field, val){
   const btn=document.getElementById('push-cal-btn');
   if(btn){ btn.classList.remove('pushed'); btn.textContent='📅 Enviar pro Calendário'; }
   saveDates();
+}
+
+function saveMainDateField(field, val){
+  const t=appState.modalTopic;
+  if(!t) return;
+  const k=dateKey(t.id, appState.modalVersion);
+  if(!topicDates[k]) topicDates[k]={};
+  topicDates[k][field]=val;
+  topicDates[k].pushedToCalendar=false;
+  const btn=document.getElementById('main-push-cal-btn');
+  if(btn){ btn.classList.remove('pushed'); btn.textContent='📅 Enviar pro Calendário'; }
+  saveDates();
+}
+
+function loadMainDateFields(){
+  const t=appState.modalTopic;
+  if(!t) return;
+  const saved=topicDates[dateKey(t.id, appState.modalVersion)]||{};
+  const recEl=document.getElementById('main-date-rec');
+  const postEl=document.getElementById('main-date-post');
+  if(recEl) recEl.value=saved.rec||'';
+  if(postEl) postEl.value=saved.post||'';
+  const btn=document.getElementById('main-push-cal-btn');
+  if(btn){ btn.classList.toggle('pushed',!!saved.pushedToCalendar); btn.textContent=saved.pushedToCalendar?'✅ No Calendário':'📅 Enviar pro Calendário'; }
+}
+
+function pushMainToCalendar(){
+  const t=appState.modalTopic;
+  if(!t) return;
+  const k=dateKey(t.id, appState.modalVersion);
+  const postDate=(topicDates[k]||{}).post;
+  if(!postDate){ alert('Defina uma data de postagem primeiro.'); return; }
+  pushTopicToCalendar(t.id, appState.modalVersion, postDate);
+  if(!topicDates[k]) topicDates[k]={};
+  topicDates[k].pushedToCalendar=true;
+  saveDates();
+  const btn=document.getElementById('main-push-cal-btn');
+  if(btn){ btn.classList.add('pushed'); btn.textContent='✅ No Calendário'; }
+}
+
+// ═══════════════════════════════════════════════════
+// RECORDING NOTES
+// ═══════════════════════════════════════════════════
+let recNotes = JSON.parse(localStorage.getItem('fc8_recnotes')||'{}');
+
+function saveRecNotes(val){
+  const t=appState.modalTopic;
+  if(!t) return;
+  recNotes[t.id]=val;
+  localStorage.setItem('fc8_recnotes', JSON.stringify(recNotes));
+}
+
+function loadRecNotes(){
+  const t=appState.modalTopic;
+  if(!t) return;
+  const el=document.getElementById('main-rec-notes');
+  if(el) el.value=recNotes[t.id]||'';
 }
 
 function pushCurrentToCalendar(){
