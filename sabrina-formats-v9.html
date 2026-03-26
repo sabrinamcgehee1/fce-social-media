@@ -580,6 +580,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   .card-fmt-indicators { display:flex; gap:4px; margin-top:5px; }
   .cfi { width:18px; height:18px; border-radius:4px; font-size:9px; font-weight:900; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); background:var(--bg3); color:var(--muted2); }
   .cfi.done { background:rgba(29,185,148,0.15); border-color:var(--green); color:var(--green); }
+  /* ── MODAL AI PANEL ── */
+  .ai-panel{background:var(--bg3);border-bottom:1px solid var(--border);padding:14px 20px;}
+  .ai-panel-title{font-size:11px;font-weight:700;color:var(--p3);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.06em;}
+  .ai-checkboxes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .ai-checkbox-item{display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--muted2);cursor:pointer;}
+  .ai-checkbox-item input{accent-color:var(--p3);cursor:pointer;}
+  .ai-generate-btn{padding:8px 18px;background:var(--p3);border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#000;cursor:pointer;transition:opacity .2s;}
+  .ai-generate-btn:hover{opacity:.85;}
+  .ai-generate-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .ai-status{font-size:11px;color:var(--muted2);margin-top:8px;min-height:16px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -595,6 +605,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <button class="nav-tab" onclick="showPage('pillars',this)">⭐ Pilares</button>
     <button class="nav-tab" onclick="showPage('metrics',this)">📊 Métricas</button>
     <button class="nav-tab" onclick="showPage('generator',this)">✨ Generator</button>
+    <button class="nav-tab" onclick="showPage('repurpose',this)">♻️ Repurpose</button>
   </nav>
   <div class="header-right">
     <span class="progress-text">Gravados: <strong id="recCount">0</strong>/180</span>
@@ -929,8 +940,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
       <div class="modal-title" id="mTitle" contenteditable="true" spellcheck="false"></div>
       <div class="modal-sub" id="mSub"></div>
     </div>
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="modalAiBtn" onclick="openModalAIPanel()" style="padding:6px 14px;background:transparent;border:1px solid rgba(91,168,138,.4);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--p3);cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(91,168,138,.1)'" onmouseout="this.style.background='transparent'">✨ Gerar</button>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
   </div>
+
+  <!-- AI Panel -->
+  <div id="modal-ai-panel-container"></div>
 
   <!-- Job tabs (ATRAIR / NUTRIR / POSICIONAR / CONVERTER) -->
   <div class="modal-job-tabs" id="modalJobTabs"></div>
@@ -1859,6 +1876,8 @@ function changeGoal(g) {
 }
 
 function closeModal() {
+  modalAiPanelOpen = false;
+  document.getElementById('modal-ai-panel-container').innerHTML = '';
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
@@ -3429,6 +3448,170 @@ function saveGenSettings() {
   if (key) localStorage.setItem('sab_api_key', key);
   closeGenSettings();
 }
+// ═══════════════════════════════════════════════════
+// MODAL INLINE AI GENERATOR
+// ═══════════════════════════════════════════════════
+let modalAiPanelOpen = false;
+
+function openModalAIPanel() {
+  modalAiPanelOpen = !modalAiPanelOpen;
+  const container = document.getElementById('modal-ai-panel-container');
+  if (!modalAiPanelOpen) { container.innerHTML = ''; return; }
+
+  const JOB_LABELS = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+  const FMT_LABELS = { reel:'🎬 Reel', carousel:'🖼 Carrossel', story:'⭕ Story' };
+  const JOBS = ['attract','nurture','position','convert'];
+  const FMTS = ['reel','carousel','story'];
+
+  const srcJob = state.currentJob;
+  const srcFmt = state.currentFmt;
+  const srcKey = `${srcJob}_${srcFmt}`;
+
+  const cbHtml = JOBS.map(j => FMTS.map(f => {
+    const key = `${j}_${f}`;
+    const isSrc = key === srcKey;
+    return `<label class="ai-checkbox-item">
+      <input type="checkbox" id="sab_aicb_${key}" ${isSrc ? 'disabled' : 'checked'}>
+      ${JOB_LABELS[j]} · ${FMT_LABELS[f]}${isSrc ? ' <em style="color:var(--muted);font-style:normal">(origem)</em>' : ''}
+    </label>`;
+  }).join('')).join('');
+
+  container.innerHTML = `
+    <div class="ai-panel">
+      <div class="ai-panel-title">✨ Gerar com IA — fonte: ${JOB_LABELS[srcJob]} · ${FMT_LABELS[srcFmt]}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Selecione as peças a gerar. O script de origem será usado como referência.</div>
+      <div class="ai-checkboxes">${cbHtml}</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button class="ai-generate-btn" id="sab-ai-gen-btn" onclick="runModalAIGenerate()">✨ Gerar Selecionados</button>
+        <button onclick="sabAiToggleAll()" style="background:none;border:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;">☑ Todos / Nenhum</button>
+      </div>
+      <div class="ai-status" id="sab-ai-status"></div>
+    </div>`;
+}
+
+function sabAiToggleAll() {
+  const boxes = document.querySelectorAll('[id^="sab_aicb_"]:not(:disabled)');
+  const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+  boxes.forEach(b => b.checked = anyUnchecked);
+}
+
+function setSabAIStatus(msg) {
+  const el = document.getElementById('sab-ai-status');
+  if (el) el.textContent = msg;
+}
+
+async function runModalAIGenerate() {
+  const apiKey = localStorage.getItem('sab_api_key') || '';
+  if (!apiKey) { setSabAIStatus('⚠️ Configure sua API key — botão ⚙️ API Key no topo.'); openGenSettings(); return; }
+
+  const t = getTopic(state.currentId);
+  if (!t) return;
+
+  const srcJob = state.currentJob;
+  const srcFmt = state.currentFmt;
+  const srcTypeKey = srcFmt === 'carousel' ? 'CA' : srcFmt === 'story' ? 'SO' : JOB_TO_TYPE[srcJob];
+  const srcScript = t.scripts[srcTypeKey] || {};
+  const srcType = SCRIPT_TYPES[srcTypeKey] || {};
+  const srcContent = (srcType.fields || [])
+    .map((f, i) => srcScript[f] ? `${srcType.labels[i]}: ${srcScript[f]}` : '')
+    .filter(Boolean).join('\n');
+
+  if (!srcContent.trim()) { setSabAIStatus('⚠️ Escreva o script de origem primeiro.'); return; }
+
+  const JOBS = ['attract','nurture','position','convert'];
+  const FMTS = ['reel','carousel','story'];
+  const toGenerate = [];
+  JOBS.forEach(j => FMTS.forEach(f => {
+    const cb = document.getElementById(`sab_aicb_${j}_${f}`);
+    if (cb && cb.checked && !cb.disabled) toGenerate.push({ job: j, fmt: f });
+  }));
+
+  if (!toGenerate.length) { setSabAIStatus('⚠️ Selecione pelo menos uma peça.'); return; }
+
+  const btn = document.getElementById('sab-ai-gen-btn');
+  btn.disabled = true;
+  let done = 0;
+
+  const JOB_LABELS = { attract:'Atrair', nurture:'Nutrir', position:'Posicionar', convert:'Converter' };
+  const FMT_LABELS = { reel:'Reel', carousel:'Carrossel', story:'Story' };
+  const typeGuide = {
+    attract: 'ATRAIR: Para o scroll, faz sentir identificado, SEM menção de produto. Termina com pergunta emocional.',
+    nurture: 'NUTRIR: Ensina o porquê, dá valor real, passos práticos. Termina com "Salva esse vídeo".',
+    position:'POSICIONAR: Mostra autoridade, pode ligar ao Fluency Connect. Termina com "Link na bio".',
+    convert: 'CONVERTER: CTA direto, um produto ou ação, palavra de ativação WhatsApp se aplicável.'
+  };
+  const fmtGuide = {
+    reel:     'Reel/Vídeo curto (30–90s). Script linha a linha.',
+    carousel: 'Carrossel Instagram. Cada campo = um slide. Hook forte no primeiro.',
+    story:    'Story sequencial. Máx 7 palavras por frame. Sticker de CTA no último.'
+  };
+
+  for (const { job, fmt } of toGenerate) {
+    const targetTypeKey = fmt === 'carousel' ? 'CA' : fmt === 'story' ? 'SO' : JOB_TO_TYPE[job];
+    const targetType = SCRIPT_TYPES[targetTypeKey] || {};
+    setSabAIStatus(`⏳ Gerando ${done + 1}/${toGenerate.length}: ${JOB_LABELS[job]} · ${FMT_LABELS[fmt]}...`);
+
+    const fieldList = (targetType.fields || [])
+      .map((f, i) => `- "${f}": ${targetType.labels?.[i] || f} (ex: ${targetType.placeholders?.[i]?.split('...')[0] || ''})`)
+      .join('\n');
+
+    const prompt = `Você é especialista em criação de conteúdo para a Sabrina — brasileira que viveu 8 anos nos EUA, casada com um americano (Michael), mãe de gêmeas bilíngues, co-fundadora do Fluency Connect. Público: mulheres brasileiras 25–40 anos. Idioma: português brasileiro.
+
+TÓPICO: "${t.title}"
+Subtítulo: "${t.sub || ''}"
+Pilar: ${PILLAR_NAMES[t.pillar] || t.pillar}
+
+SCRIPT DE ORIGEM (${JOB_LABELS[srcJob]} · ${FMT_LABELS[srcFmt]}):
+${srcContent}
+
+TAREFA: Reescreva esse conteúdo como ${JOB_LABELS[job]} · ${FMT_LABELS[fmt]}
+
+Diretrizes do tipo ${job.toUpperCase()}:
+${typeGuide[job]}
+
+Diretrizes do formato ${fmt.toUpperCase()}:
+${fmtGuide[fmt]}
+
+Regra chave: Não invente nova história. USE O MESMO NÚCLEO EMOCIONAL do script de origem — mude apenas o ângulo e o objetivo.
+
+Responda APENAS em JSON válido com estes campos exatos:
+{
+${fieldList}
+}
+
+Nenhum texto fora do JSON.`;
+
+    try {
+      const res = await fetch('https://anthropic-proxy.sabrinamcgehee1.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+      const data = await res.json();
+      const text = data.content.map(c => c.text || '').join('');
+      const clean = text.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+
+      // Apply to topic scripts
+      if (!t.scripts[targetTypeKey]) t.scripts[targetTypeKey] = { goal: job };
+      (targetType.fields || []).forEach(f => {
+        if (parsed[f]) t.scripts[targetTypeKey][f] = parsed[f];
+      });
+      saveState();
+      done++;
+    } catch (err) {
+      setSabAIStatus(`❌ Erro: ${err.message}`);
+      btn.disabled = false;
+      return;
+    }
+  }
+
+  setSabAIStatus(`✅ ${done} peça(s) geradas e salvas! Clique nas abas para ver.`);
+  btn.disabled = false;
+  // Refresh current view
+  renderModalBody(t);
+}
 </script>
 
 
@@ -3710,6 +3893,234 @@ function saveGenSettings() {
   <div id="gen-results-wrap">
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);">✨ Scripts Gerados</div>
     <div id="gen-results" style="font-size:12px;color:var(--muted);font-style:italic;">Os scripts gerados aparecerão aqui.<br>Seleciona um tópico e as peças que quer gerar.</div>
+  </div>
+</div>
+
+<!-- ════════════════ REPURPOSE PAGE ════════════════ -->
+<div class="page" id="page-repurpose">
+  <div class="section-title">♻️ Repurpose — 1 Tópico → 12 Peças</div>
+  <div class="section-desc">Um tópico central. Quatro ângulos. Três formatos. Doze peças de conteúdo.</div>
+
+  <!-- SYSTEM OVERVIEW -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🧱 O Sistema 1 Tópico → 4 Conteúdos</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.8;">
+      Um tópico central permanece o mesmo em todos os 4 conteúdos. O que muda é <strong style="color:var(--text)">para quem você está falando</strong> e <strong style="color:var(--text)">o que você quer que ele sinta ou faça.</strong>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">📐 Passo 1 — Identificar o Core do Tópico</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.8;">Extraia 3 coisas da ideia original:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;">
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p1);margin-bottom:4px;">Hook emocional</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">A dor ou o desejo que conecta com a audiência</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p2);margin-bottom:4px;">Lição</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">O que mudou, o que você aprendeu</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p3);margin-bottom:4px;">Prova</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">Quem viveu isso — você, Michael ou um aluno</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 — JOB TABLE -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;">🎯 Passo 2 — Cada tipo tem um job</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Tipo</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Job</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">O que o público sente</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Formato</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--p1);">Atrair</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Para o scroll. Faz sentir visto.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Isso aconteceu comigo também"</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Storytelling (ST)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:#b57fe0;">Nutrir</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Ensina o porquê. Constrói confiança.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Eu não sabia disso. Quero mais."</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Educational (ED)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:#6aade0;">Posicionar</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Mostra o método. Liga ao FC.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Elas entendem de verdade."</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Authority (AT)</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 12px;font-weight:700;color:#e8a060;">Converter</td>
+            <td style="padding:10px 12px;color:var(--muted2);">CTA direto. Um produto. Uma ação.</td>
+            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Eu preciso disso. Como compro?"</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Series (SR)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🎬 Passo 3 — Reescreva pelo mesmo ângulo</div>
+    <div style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">
+      Não crie 4 histórias diferentes — <strong style="color:var(--text)">mude o ângulo da câmera</strong> na mesma história.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="background:var(--bg3);border-left:3px solid var(--p1);border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p1);margin-bottom:6px;">Atrair → Storytelling</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Leve com o momento mais emocional. Sem produto. Termina com pergunta.</div>
+      </div>
+      <div style="background:var(--bg3);border-left:3px solid #b57fe0;border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#b57fe0;margin-bottom:6px;">Nutrir → Educational</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Hook + Por que acontece + 3 passos + dica prática. CTA: salvar.</div>
+      </div>
+      <div style="background:var(--bg3);border-left:3px solid #6aade0;border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6aade0;margin-bottom:6px;">Posicionar → Authority</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Hook de credencial + experiência + observação em alunos + insight. CTA: link na bio.</div>
+      </div>
+      <div style="background:var(--bg3);border-left:3px solid #e8a060;border-radius:8px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#e8a060;margin-bottom:6px;">Converter → Series Ep.1</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Enquadra como série. Termina com preview do Ep.2. CTA: palavra de ativação WhatsApp.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12 PIECES TABLE -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;">📊 Sistema 1 Tópico → 12 Peças</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Tipo</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">🎬 Reel</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">🖼 Carrossel</th>
+            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">⭕ Story</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:var(--p1);">Atrair</td>
+            <td style="padding:10px 12px;color:var(--muted2);">ST — Storytelling</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Visual Story (6 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Poll hook (6 stories)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:#b57fe0;">Nutrir</td>
+            <td style="padding:10px 12px;color:var(--muted2);">ED — Educational</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Tutorial slides (7 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Quick tips → feed</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 12px;font-weight:700;color:#6aade0;">Posicionar</td>
+            <td style="padding:10px 12px;color:var(--muted2);">AT — Authority</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Prova + Método (6 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Bold opinion (6 stories)</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 12px;font-weight:700;color:#e8a060;">Converter</td>
+            <td style="padding:10px 12px;color:var(--muted2);">SR — Série Ep.1</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Série visual (5 slides)</td>
+            <td style="padding:10px 12px;color:var(--muted2);">Oferta direta (6 stories)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CAROUSEL STRUCTURE -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🖼 Estrutura do Carrossel</div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;line-height:1.6;"><strong style="color:var(--text)">Regra:</strong> cada slide tem um job. O leitor pode parar em qualquer slide e ainda ter valor.</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slide 1</span><span style="color:var(--muted2);">Capa — Para o scroll. 1 frase forte.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slide 2</span><span style="color:var(--muted2);">Problema/Hook — Faz sentir visto. 2–3 linhas.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slides 3–5</span><span style="color:var(--muted2);">Corpo — Entrega o valor. 1 ponto por slide.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slides 6–7</span><span style="color:var(--muted2);">Resolução — Payoff ou insight. 2–3 linhas.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p2);min-width:60px;">Último</span><span style="color:var(--muted2);">CTA — Uma ação. 1 frase + trigger WhatsApp.</span>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">⭕ Estrutura do Story</div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;line-height:1.6;"><strong style="color:var(--text)">Regra:</strong> máximo 7 palavras por story. A imagem/vídeo carrega o peso.</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 1</span><span style="color:var(--muted2);">Interrupção — Para o auto-tap.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 2</span><span style="color:var(--muted2);">Tensão — Puxa pra dentro.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p3);min-width:60px;">Stories 3–4</span><span style="color:var(--muted2);">Meio — Entrega rápido.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 5</span><span style="color:var(--muted2);">Virada — Surpresa ou payoff.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
+          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 6</span><span style="color:var(--muted2);">CTA — Uma ação, um tap.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTION RULES -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">⚙️ Regra de Produção</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
+        <span style="background:var(--p1);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">1</span>
+        <span><strong style="color:var(--text)">Filme os 4 reels</strong> em batch day — mesma roupa, mesma locação, mesma energia.</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
+        <span style="background:var(--p2);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">2</span>
+        <span><strong style="color:var(--text)">Monte os 4 carrosseis</strong> a partir dos scripts — o texto já está escrito no modal.</span>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
+        <span style="background:var(--p3);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">3</span>
+        <span><strong style="color:var(--text)">Monte os 4 Stories por último</strong> — são os mais curtos e o copy vem das capas dos carrosseis.</span>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.7;padding:12px 14px;background:var(--bg3);border-radius:8px;">
+      O conteúdo de carrossel e story é quase todo reciclado dos scripts de reel. Você não está escrevendo conteúdo novo — está <strong style="color:var(--text)">reformatando o que já escreveu.</strong>
+    </div>
+  </div>
+
+  <!-- PRODUCTION CARD -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🃏 Production Card</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted2);line-height:2.2;background:var(--bg3);border-radius:8px;padding:14px 18px;">
+      TÓPICO: ___________________<br>
+      PILAR: ___________________<br>
+      CORE EMOCIONAL: ___________________<br>
+      PROVA (quem — Sabrina, Michael, aluno): ___________________<br><br>
+      <strong style="color:var(--text)">REEL</strong> → ATRAIR: ST &nbsp;|&nbsp; NUTRIR: ED &nbsp;|&nbsp; POSICIONAR: AT &nbsp;|&nbsp; CONVERTER: SR<br>
+      <strong style="color:var(--text)">CARROSSEL</strong> → ATRAIR: Visual &nbsp;|&nbsp; NUTRIR: Tutorial &nbsp;|&nbsp; POSICIONAR: Prova &nbsp;|&nbsp; CONVERTER: Série<br>
+      <strong style="color:var(--text)">STORY</strong> → ATRAIR: Poll &nbsp;|&nbsp; NUTRIR: Tips→feed &nbsp;|&nbsp; POSICIONAR: Opinião &nbsp;|&nbsp; CONVERTER: Oferta
+    </div>
   </div>
 </div>
 
