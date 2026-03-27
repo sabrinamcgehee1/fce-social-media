@@ -425,6 +425,40 @@ select.at-inp{cursor:pointer;}
 .mic-sp-pillar-bar{flex:1;height:1px;background:var(--border);}
 .mic-sp-stat{font-size:12px;color:var(--muted);}
 .mic-sp-stat strong{color:var(--green);font-size:16px;font-weight:800;margin-right:3px;}
+/* ── REPURPOSE PAGE ── */
+.mic-repurpose-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:900px){.mic-repurpose-layout{grid-template-columns:1fr;}}
+.mic-repurpose-doc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:sticky;top:60px;max-height:calc(100vh - 100px);overflow-y:auto;}
+.mic-repurpose-doc::-webkit-scrollbar{width:3px;}
+.mic-repurpose-doc::-webkit-scrollbar-thumb{background:var(--border);}
+.mic-repurpose-doc-inner{padding:20px;}
+.mic-doc-section{margin-bottom:24px;}
+.mic-doc-section-title{font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.mic-doc-section-body{font-size:12px;color:var(--muted2);line-height:1.75;}
+.mic-doc-section-body strong{color:var(--text);}
+.mic-doc-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:11px;}
+.mic-doc-table th{background:var(--bg3);color:var(--muted);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.mic-doc-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:top;line-height:1.5;}
+.mic-doc-table td strong{color:var(--text);}
+.mic-doc-table tr:last-child td{border-bottom:none;}
+.mic-doc-code{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--muted2);line-height:1.7;margin:8px 0;font-family:monospace;}
+.mic-doc-code strong{color:var(--green);}
+.mic-prod-cards-panel{display:flex;flex-direction:column;gap:14px;}
+.mic-prod-topic-selector{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.mic-prod-topic-selector label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:6px;}
+.mic-prod-topic-selector select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;padding:8px 10px;cursor:pointer;outline:none;}
+.mic-prod-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.mic-prod-card-header{padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);}
+.mic-prod-card-title{font-size:12px;font-weight:800;color:var(--text);}
+.mic-prod-card-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:600px){.mic-prod-card-body{grid-template-columns:1fr;}}
+.mic-prod-field{display:flex;flex-direction:column;gap:4px;}
+.mic-prod-field.full{grid-column:1/-1;}
+.mic-prod-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.mic-prod-input{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'Nunito',sans-serif;font-size:12px;color:var(--text);outline:none;resize:none;transition:border .2s;line-height:1.5;}
+.mic-prod-input:focus{border-color:var(--green);}
+.mic-prod-save-btn{margin:0 16px 14px;width:calc(100% - 32px);padding:8px;background:var(--green);border:none;border-radius:6px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:#000;cursor:pointer;transition:opacity .2s;}
+.mic-prod-save-btn:hover{opacity:.85;}
 </style>
 </head>
 <body>
@@ -570,6 +604,139 @@ select.at-inp{cursor:pointer;}
   <div>
     <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);">✨ Scripts Gerados</div>
     <div id="mic-gen-results" style="font-size:12px;color:var(--muted);font-style:italic;">Os scripts gerados aparecerão aqui.</div>
+  </div>
+</div>
+
+<!-- ═══════ REPURPOSE PAGE ═══════ -->
+<div class="page" id="page-repurpose">
+  <div class="section-title">♻️ Repurpose Strategy</div>
+  <div class="section-desc">Referência do método 1 tópico → 12 peças + production card por tópico.</div>
+
+  <div class="mic-repurpose-layout">
+
+    <!-- LEFT: Strategy Doc -->
+    <div class="mic-repurpose-doc">
+      <div class="mic-repurpose-doc-inner">
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">🧱 O Sistema 1 Tópico → 4 Conteúdos</div>
+          <div class="mic-doc-section-body">Um tópico central permanece o mesmo em todos os 4 conteúdos. O que muda é <strong>para quem você está falando</strong> e <strong>o que você quer que ele sinta ou faça.</strong></div>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">📐 Passo 1 — Identificar o Core do Tópico</div>
+          <div class="mic-doc-section-body">Extraia 3 coisas da ideia original:</div>
+          <div class="mic-doc-code">
+            <strong>Hook emocional</strong> — a dor ou o desejo<br>
+            <strong>Lição</strong> — o que mudou<br>
+            <strong>Prova</strong> — quem viveu isso (Michael, Sabrina, aluno)
+          </div>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">🎯 Passo 2 — Cada tipo tem um job</div>
+          <table class="mic-doc-table">
+            <thead><tr><th>Tipo</th><th>Job</th><th>O que o público sente</th><th>Formato</th></tr></thead>
+            <tbody>
+              <tr><td><strong style="color:var(--attract)">Atrair</strong></td><td>Para o scroll. Perspectiva do gringo.</td><td>"Isso aconteceu comigo também"</td><td>Storytelling (ST)</td></tr>
+              <tr><td><strong style="color:var(--nurture)">Nutrir</strong></td><td>Ensina o porquê. Constrói confiança.</td><td>"Eu não sabia disso. Quero mais."</td><td>Educational (ED)</td></tr>
+              <tr><td><strong style="color:var(--position)">Posicionar</strong></td><td>Autoridade de nativo. Liga ao FC.</td><td>"Ele entende de verdade."</td><td>Authority (AT)</td></tr>
+              <tr><td><strong style="color:var(--convert)">Converter</strong></td><td>CTA direto. @FluencyConnect.</td><td>"Eu preciso disso. Como começo?"</td><td>Series (SE)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">🎬 Passo 3 — Reescreva pelo mesmo ângulo</div>
+          <div class="mic-doc-section-body">
+            Não crie 4 histórias diferentes — <strong>mude o ângulo da câmera</strong> na mesma história.<br><br>
+            <strong>Atrair → Storytelling:</strong> Perspectiva pessoal do Michael. Sem produto. Termina com pergunta ao público.<br><br>
+            <strong>Nutrir → Educational:</strong> Hook + contexto cultural + 3 passos + dica prática. CTA: salvar.<br><br>
+            <strong>Posicionar → Authority:</strong> Hook de credencial de nativo + experiência + insight. CTA: link na bio / @FluencyConnect.<br><br>
+            <strong>Converter → Series Ep.1:</strong> Enquadra como série. Preview do Ep.2. CTA: segue ou manda mensagem pro @FluencyConnect.
+          </div>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">📊 Sistema 1 Tópico → 12 Peças</div>
+          <table class="mic-doc-table">
+            <thead><tr><th>Tipo</th><th>Reel</th><th>Carrossel</th><th>Story</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--attract)">Atrair</td><td>ST — Storytelling</td><td>Visual Story (6 slides)</td><td>Poll hook (6 stories)</td></tr>
+              <tr><td style="color:var(--nurture)">Nutrir</td><td>ED — Educational</td><td>Tutorial slides (7 slides)</td><td>Quick tips → feed</td></tr>
+              <tr><td style="color:var(--position)">Posicionar</td><td>AT — Authority</td><td>Proof/Method (6 slides)</td><td>Bold opinion (6 stories)</td></tr>
+              <tr><td style="color:var(--convert)">Converter</td><td>SE — Series Ep.1</td><td>Série visual (5 slides)</td><td>Oferta direta (6 stories)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">🖼 Estrutura do Carrossel</div>
+          <div class="mic-doc-section-body"><strong>Regra:</strong> cada slide tem um job. O leitor pode parar em qualquer slide e ainda ter valor.</div>
+          <table class="mic-doc-table">
+            <thead><tr><th>Slide</th><th>Nome</th><th>Job</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Capa</td><td>Para o scroll — 1 frase forte</td></tr>
+              <tr><td>2</td><td>Problema/Hook</td><td>Faz sentir visto — 2–3 linhas</td></tr>
+              <tr><td>3–5</td><td>Corpo</td><td>Entrega o valor — 1 ponto por slide</td></tr>
+              <tr><td>6–7</td><td>Resolução</td><td>Payoff ou insight — 2–3 linhas</td></tr>
+              <tr><td>Último</td><td>CTA</td><td>Uma ação — @FluencyConnect ou WhatsApp</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">⭕ Estrutura do Story</div>
+          <div class="mic-doc-section-body"><strong>Regra:</strong> máximo 7 palavras por frame. A imagem/vídeo carrega o peso.</div>
+          <table class="mic-doc-table">
+            <thead><tr><th>Frame</th><th>Nome</th><th>Job</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Interrupção</td><td>Para o auto-tap</td></tr>
+              <tr><td>2</td><td>Tensão</td><td>Puxa pra dentro</td></tr>
+              <tr><td>3–4</td><td>Meio</td><td>Entrega rápido</td></tr>
+              <tr><td>5</td><td>Virada</td><td>Surpresa ou payoff</td></tr>
+              <tr><td>6</td><td>CTA</td><td>Uma ação, um tap</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">⚙️ Regra de Produção</div>
+          <div class="mic-doc-code">
+            1. <strong>Filme os 4 reels</strong> em batch day<br>
+            2. <strong>Monte os 4 carrosseis</strong> a partir dos scripts (texto já está escrito)<br>
+            3. <strong>Monte os 4 Stories por último</strong> — são os mais curtos e o copy vem das capas dos carrosseis
+          </div>
+          <div class="mic-doc-section-body" style="margin-top:8px">O conteúdo de carrossel e story é quase todo reciclado dos scripts de reel. Você não está escrevendo conteúdo novo — está <strong>reformatando o que já escreveu.</strong></div>
+        </div>
+
+        <div class="mic-doc-section">
+          <div class="mic-doc-section-title">🃏 Production Card</div>
+          <div class="mic-doc-code">
+TÓPICO: ___________________<br>
+PILAR: ___________________<br>
+CORE EMOCIONAL: ___________________<br>
+PROVA (quem): ___________________<br><br>
+<strong>REEL</strong>      → ATRAIR: ST | NUTRIR: ED | POSICIONAR: AT | CONVERTER: SE<br>
+<strong>CARROSSEL</strong> → ATRAIR: Visual | NUTRIR: Tutorial | POSICIONAR: Prova | CONVERTER: Série<br>
+<strong>STORY</strong>     → ATRAIR: Poll | NUTRIR: Tips→feed | POSICIONAR: Opinião | CONVERTER: Oferta
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Fillable Production Cards -->
+    <div class="mic-prod-cards-panel">
+      <div class="mic-prod-topic-selector">
+        <label>Tópico</label>
+        <select id="mic-prod-topic-sel" onchange="micRenderProdCard()">
+          <option value="">— Seleciona um tópico —</option>
+        </select>
+      </div>
+      <div id="mic-prod-card-container"></div>
+    </div>
+
   </div>
 </div>
 
@@ -1354,6 +1521,7 @@ function showPage(id, btn) {
   if(id==='guide')renderGuide();
   if(id==='metrics')renderMetrics();
   if(id==='generator'){initMicGeneratorPage();}
+  if(id==='repurpose'){initMicRepurposePage();}
   if(id==='scripts'){micSpRender();}
 }
 
@@ -2641,6 +2809,74 @@ function micSpCollapseAll() {
   document.querySelectorAll('.mic-sp-body').forEach(b => b.classList.remove('open'));
   document.querySelectorAll('.mic-sp-chev').forEach(c => c.classList.remove('open'));
   micSpOpenCards.clear();
+}
+
+// ═══════════════════════════════════════════════════════════
+// REPURPOSE — PRODUCTION CARDS
+// ═══════════════════════════════════════════════════════════
+let micProdCards = JSON.parse(localStorage.getItem('mic_prodcards') || '{}');
+function saveMicProd() { localStorage.setItem('mic_prodcards', JSON.stringify(micProdCards)); }
+
+function initMicRepurposePage() {
+  const sel = document.getElementById('mic-prod-topic-sel');
+  if (sel.options.length > 1) return;
+  TOPICS.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t.id;
+    o.textContent = `${t.id}. ${getTopicData(t).title}`;
+    sel.appendChild(o);
+  });
+}
+
+function micRenderProdCard() {
+  const tid = parseInt(document.getElementById('mic-prod-topic-sel').value);
+  const container = document.getElementById('mic-prod-card-container');
+  if (!tid) { container.innerHTML = ''; return; }
+  const t = TOPICS.find(x => x.id === tid);
+  if (!t) return;
+  const saved = micProdCards[tid] || {};
+  const fields = [
+    { key:'pillar',       label:'Pilar',                  ph:'P1 / P2 / P3',                            full:false },
+    { key:'core',         label:'Core Emocional',         ph:'A dor ou desejo central...',               full:false },
+    { key:'proof',        label:'Prova (quem viveu)',      ph:'Michael / Sabrina / aluno...',             full:false },
+    { key:'hook',         label:'Hook Emocional',         ph:'A frase que para o scroll...',             full:false },
+    { key:'lesson',       label:'Lição Central',          ph:'O que mudou / o que aprenderam...',        full:true  },
+    { key:'attract_cta',  label:'CTA Atrair',             ph:'Pergunta emocional sem produto...',        full:false },
+    { key:'nurture_cta',  label:'CTA Nutrir',             ph:'Salva esse vídeo / manda pra alguém...',   full:false },
+    { key:'position_cta', label:'CTA Posicionar',         ph:'Link na bio / @FluencyConnect...',         full:false },
+    { key:'convert_cta',  label:'CTA Converter',          ph:'Segue @FluencyConnect / manda mensagem...', full:false },
+    { key:'notes',        label:'Notas de Produção',      ph:'Locação, figurino, referências...',        full:true  }
+  ];
+  let html = `<div class="mic-prod-card">
+    <div class="mic-prod-card-header"><div class="mic-prod-card-title">📋 ${getTopicData(t).title}</div></div>
+    <div class="mic-prod-card-body">`;
+  fields.forEach(f => {
+    html += `<div class="mic-prod-field${f.full ? ' full' : ''}">
+      <div class="mic-prod-label">${f.label}</div>
+      <textarea class="mic-prod-input" rows="${f.full ? 3 : 2}" placeholder="${f.ph}"
+        data-field="${f.key}"
+        onchange="micSaveProdField(${tid},'${f.key}',this.value)"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+      >${saved[f.key] || ''}</textarea>
+    </div>`;
+  });
+  html += `</div>
+    <button class="mic-prod-save-btn" onclick="micSaveProdCard(${tid})">💾 Salvar Production Card</button>
+  </div>`;
+  container.innerHTML = html;
+  container.querySelectorAll('textarea').forEach(ta => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
+}
+
+function micSaveProdField(tid, field, val) {
+  if (!micProdCards[tid]) micProdCards[tid] = {};
+  micProdCards[tid][field] = val;
+  saveMicProd();
+}
+
+function micSaveProdCard(tid) {
+  document.querySelectorAll('#mic-prod-card-container textarea').forEach(f => micSaveProdField(tid, f.dataset.field, f.value));
+  const btn = document.querySelector('.mic-prod-save-btn');
+  if (btn) { btn.textContent = '✅ Salvo!'; setTimeout(() => btn.textContent = '💾 Salvar Production Card', 1500); }
 }
 </script>
 </body>

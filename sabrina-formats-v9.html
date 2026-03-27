@@ -637,6 +637,40 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   .sp-fmt-header::after{content:'';flex:1;height:1px;background:var(--border);}
   .sp-open-btn{display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .2s;}
   .sp-open-btn:hover{border-color:var(--p3);color:var(--p3);}
+  /* ── REPURPOSE PAGE ── */
+.sab-repurpose-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:900px){.sab-repurpose-layout{grid-template-columns:1fr;}}
+.sab-repurpose-doc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:sticky;top:60px;max-height:calc(100vh - 100px);overflow-y:auto;}
+.sab-repurpose-doc::-webkit-scrollbar{width:3px;}
+.sab-repurpose-doc::-webkit-scrollbar-thumb{background:var(--border);}
+.sab-repurpose-doc-inner{padding:20px;}
+.sab-doc-section{margin-bottom:24px;}
+.sab-doc-section-title{font-size:13px;font-weight:700;color:var(--p3);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.sab-doc-section-body{font-size:12px;color:var(--muted2);line-height:1.75;}
+.sab-doc-section-body strong{color:var(--text);}
+.sab-doc-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:11px;}
+.sab-doc-table th{background:var(--bg3);color:var(--muted);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.sab-doc-table td{padding:7px 10px;border-bottom:1px solid var(--border2);color:var(--muted2);vertical-align:top;line-height:1.5;}
+.sab-doc-table td strong{color:var(--text);}
+.sab-doc-table tr:last-child td{border-bottom:none;}
+.sab-doc-code{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--muted2);line-height:1.7;margin:8px 0;font-family:monospace;}
+.sab-doc-code strong{color:var(--p3);}
+.sab-prod-cards-panel{display:flex;flex-direction:column;gap:14px;}
+.sab-prod-topic-selector{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.sab-prod-topic-selector label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:6px;}
+.sab-prod-topic-selector select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 10px;cursor:pointer;outline:none;}
+.sab-prod-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.sab-prod-card-header{padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);}
+.sab-prod-card-title{font-size:12px;font-weight:800;color:var(--text);}
+.sab-prod-card-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:600px){.sab-prod-card-body{grid-template-columns:1fr;}}
+.sab-prod-field{display:flex;flex-direction:column;gap:4px;}
+.sab-prod-field.full{grid-column:1/-1;}
+.sab-prod-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.sab-prod-input{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);outline:none;resize:none;transition:border .2s;line-height:1.5;}
+.sab-prod-input:focus{border-color:var(--p3);}
+.sab-prod-save-btn{margin:0 16px 14px;width:calc(100% - 32px);padding:8px;background:var(--p3);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#000;cursor:pointer;transition:opacity .2s;}
+.sab-prod-save-btn:hover{opacity:.85;}
 </style>
 </head>
 <body>
@@ -2543,6 +2577,7 @@ function showPage(id, btn) {
   if (id === 'formats') initFormats();
   if (id === 'metrics') renderMetrics();
   if (id === 'generator') initGeneratorPage();
+  if (id === 'repurpose') initSabRepurposePage();
   if (id === 'scripts') sabSpRender();
   if (id === 'calendar') { renderCalLegend(); renderCalendar(); updateAccountStats(); }
 }
@@ -4075,6 +4110,74 @@ function saveSabAddScript() {
   setTimeout(() => btn.textContent = '💾 Salvar Script', 1500);
   if (document.getElementById('page-scripts')?.classList.contains('active')) sabSpRender();
 }
+
+// ═══════════════════════════════════════════════════
+// REPURPOSE — PRODUCTION CARDS
+// ═══════════════════════════════════════════════════
+let sabProdCards = JSON.parse(localStorage.getItem('sab_prodcards') || '{}');
+function saveSabProd() { localStorage.setItem('sab_prodcards', JSON.stringify(sabProdCards)); }
+
+function initSabRepurposePage() {
+  const sel = document.getElementById('sab-prod-topic-sel');
+  if (sel.options.length > 1) return;
+  state.topics.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t.id;
+    o.textContent = `${t.id}. ${t.title}`;
+    sel.appendChild(o);
+  });
+}
+
+function sabRenderProdCard() {
+  const tid = parseInt(document.getElementById('sab-prod-topic-sel').value);
+  const container = document.getElementById('sab-prod-card-container');
+  if (!tid) { container.innerHTML = ''; return; }
+  const t = state.topics.find(x => x.id === tid);
+  if (!t) return;
+  const saved = sabProdCards[tid] || {};
+  const fields = [
+    { key:'pillar',       label:'Pilar',                  ph:'P1 / P2 / P3',                          full:false },
+    { key:'core',         label:'Core Emocional',         ph:'A dor ou desejo central...',             full:false },
+    { key:'proof',        label:'Prova (quem viveu)',      ph:'Sabrina / Michael / aluno...',           full:false },
+    { key:'hook',         label:'Hook Emocional',         ph:'A frase que para o scroll...',           full:false },
+    { key:'lesson',       label:'Lição Central',          ph:'O que mudou / o que aprenderam...',      full:true  },
+    { key:'attract_cta',  label:'CTA Atrair',             ph:'Pergunta emocional sem produto...',      full:false },
+    { key:'nurture_cta',  label:'CTA Nutrir',             ph:'Salva esse vídeo / manda pra alguém...', full:false },
+    { key:'position_cta', label:'CTA Posicionar',         ph:'Link na bio / segue pra mais...',        full:false },
+    { key:'convert_cta',  label:'CTA Converter',          ph:'Manda ESTRATÉGIA ou VOCABULÁRIO...',     full:false },
+    { key:'notes',        label:'Notas de Produção',      ph:'Locação, figurino, referências...',      full:true  }
+  ];
+  let html = `<div class="sab-prod-card">
+    <div class="sab-prod-card-header"><div class="sab-prod-card-title">📋 ${t.title}</div></div>
+    <div class="sab-prod-card-body">`;
+  fields.forEach(f => {
+    html += `<div class="sab-prod-field${f.full ? ' full' : ''}">
+      <div class="sab-prod-label">${f.label}</div>
+      <textarea class="sab-prod-input" rows="${f.full ? 3 : 2}" placeholder="${f.ph}"
+        data-field="${f.key}"
+        onchange="sabSaveProdField(${tid},'${f.key}',this.value)"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+      >${saved[f.key] || ''}</textarea>
+    </div>`;
+  });
+  html += `</div>
+    <button class="sab-prod-save-btn" onclick="sabSaveProdCard(${tid})">💾 Salvar Production Card</button>
+  </div>`;
+  container.innerHTML = html;
+  container.querySelectorAll('textarea').forEach(ta => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
+}
+
+function sabSaveProdField(tid, field, val) {
+  if (!sabProdCards[tid]) sabProdCards[tid] = {};
+  sabProdCards[tid][field] = val;
+  saveSabProd();
+}
+
+function sabSaveProdCard(tid) {
+  document.querySelectorAll('#sab-prod-card-container textarea').forEach(f => sabSaveProdField(tid, f.dataset.field, f.value));
+  const btn = document.querySelector('.sab-prod-save-btn');
+  if (btn) { btn.textContent = '✅ Salvo!'; setTimeout(() => btn.textContent = '💾 Salvar Production Card', 1500); }
+}
 </script>
 
 
@@ -4359,231 +4462,135 @@ function saveSabAddScript() {
   </div>
 </div>
 
-<!-- ════════════════ REPURPOSE PAGE ════════════════ -->
 <div class="page" id="page-repurpose">
-  <div class="section-title">♻️ Repurpose — 1 Tópico → 12 Peças</div>
-  <div class="section-desc">Um tópico central. Quatro ângulos. Três formatos. Doze peças de conteúdo.</div>
+  <div class="section-title">♻️ Repurpose Strategy</div>
+  <div class="section-desc">Referência do método 1 tópico → 12 peças + production card por tópico.</div>
 
-  <!-- SYSTEM OVERVIEW -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🧱 O Sistema 1 Tópico → 4 Conteúdos</div>
-    <div style="font-size:13px;color:var(--muted2);line-height:1.8;">
-      Um tópico central permanece o mesmo em todos os 4 conteúdos. O que muda é <strong style="color:var(--text)">para quem você está falando</strong> e <strong style="color:var(--text)">o que você quer que ele sinta ou faça.</strong>
-    </div>
-  </div>
+  <div class="sab-repurpose-layout">
 
-  <!-- STEP 1 -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">📐 Passo 1 — Identificar o Core do Tópico</div>
-    <div style="font-size:13px;color:var(--muted2);line-height:1.8;">Extraia 3 coisas da ideia original:</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;">
-      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p1);margin-bottom:4px;">Hook emocional</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">A dor ou o desejo que conecta com a audiência</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p2);margin-bottom:4px;">Lição</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">O que mudou, o que você aprendeu</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p3);margin-bottom:4px;">Prova</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6;">Quem viveu isso — você, Michael ou um aluno</div>
-      </div>
-    </div>
-  </div>
+    <!-- LEFT: Strategy Doc -->
+    <div class="sab-repurpose-doc">
+      <div class="sab-repurpose-doc-inner">
 
-  <!-- STEP 2 — JOB TABLE -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;">🎯 Passo 2 — Cada tipo tem um job</div>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:12px;">
-        <thead>
-          <tr>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Tipo</th>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Job</th>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">O que o público sente</th>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Formato</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px 12px;font-weight:700;color:var(--p1);">Atrair</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Para o scroll. Faz sentir visto.</td>
-            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Isso aconteceu comigo também"</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Storytelling (ST)</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px 12px;font-weight:700;color:#b57fe0;">Nutrir</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Ensina o porquê. Constrói confiança.</td>
-            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Eu não sabia disso. Quero mais."</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Educational (ED)</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px 12px;font-weight:700;color:#6aade0;">Posicionar</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Mostra o método. Liga ao FC.</td>
-            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Elas entendem de verdade."</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Authority (AT)</td>
-          </tr>
-          <tr>
-            <td style="padding:10px 12px;font-weight:700;color:#e8a060;">Converter</td>
-            <td style="padding:10px 12px;color:var(--muted2);">CTA direto. Um produto. Uma ação.</td>
-            <td style="padding:10px 12px;color:var(--muted2);font-style:italic;">"Eu preciso disso. Como compro?"</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Series (SR)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">🧱 O Sistema 1 Tópico → 4 Conteúdos</div>
+          <div class="sab-doc-section-body">Um tópico central permanece o mesmo em todos os 4 conteúdos. O que muda é <strong>para quem você está falando</strong> e <strong>o que você quer que ele sinta ou faça.</strong></div>
+        </div>
 
-  <!-- STEP 3 -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🎬 Passo 3 — Reescreva pelo mesmo ângulo</div>
-    <div style="font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">
-      Não crie 4 histórias diferentes — <strong style="color:var(--text)">mude o ângulo da câmera</strong> na mesma história.
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div style="background:var(--bg3);border-left:3px solid var(--p1);border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--p1);margin-bottom:6px;">Atrair → Storytelling</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Leve com o momento mais emocional. Sem produto. Termina com pergunta.</div>
-      </div>
-      <div style="background:var(--bg3);border-left:3px solid #b57fe0;border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#b57fe0;margin-bottom:6px;">Nutrir → Educational</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Hook + Por que acontece + 3 passos + dica prática. CTA: salvar.</div>
-      </div>
-      <div style="background:var(--bg3);border-left:3px solid #6aade0;border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6aade0;margin-bottom:6px;">Posicionar → Authority</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Hook de credencial + experiência + observação em alunos + insight. CTA: link na bio.</div>
-      </div>
-      <div style="background:var(--bg3);border-left:3px solid #e8a060;border-radius:8px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#e8a060;margin-bottom:6px;">Converter → Series Ep.1</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.65;">Enquadra como série. Termina com preview do Ep.2. CTA: palavra de ativação WhatsApp.</div>
-      </div>
-    </div>
-  </div>
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">📐 Passo 1 — Identificar o Core do Tópico</div>
+          <div class="sab-doc-section-body">Extraia 3 coisas da ideia original:</div>
+          <div class="sab-doc-code">
+            <strong>Hook emocional</strong> — a dor ou o desejo<br>
+            <strong>Lição</strong> — o que mudou<br>
+            <strong>Prova</strong> — quem viveu isso (Sabrina, Michael, aluno)
+          </div>
+        </div>
 
-  <!-- 12 PIECES TABLE -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;">📊 Sistema 1 Tópico → 12 Peças</div>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:12px;">
-        <thead>
-          <tr>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">Tipo</th>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">🎬 Reel</th>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">🖼 Carrossel</th>
-            <th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);">⭕ Story</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px 12px;font-weight:700;color:var(--p1);">Atrair</td>
-            <td style="padding:10px 12px;color:var(--muted2);">ST — Storytelling</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Visual Story (6 slides)</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Poll hook (6 stories)</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px 12px;font-weight:700;color:#b57fe0;">Nutrir</td>
-            <td style="padding:10px 12px;color:var(--muted2);">ED — Educational</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Tutorial slides (7 slides)</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Quick tips → feed</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px 12px;font-weight:700;color:#6aade0;">Posicionar</td>
-            <td style="padding:10px 12px;color:var(--muted2);">AT — Authority</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Prova + Método (6 slides)</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Bold opinion (6 stories)</td>
-          </tr>
-          <tr>
-            <td style="padding:10px 12px;font-weight:700;color:#e8a060;">Converter</td>
-            <td style="padding:10px 12px;color:var(--muted2);">SR — Série Ep.1</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Série visual (5 slides)</td>
-            <td style="padding:10px 12px;color:var(--muted2);">Oferta direta (6 stories)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">🎯 Passo 2 — Cada tipo tem um job</div>
+          <table class="sab-doc-table">
+            <thead><tr><th>Tipo</th><th>Job</th><th>O que o público sente</th><th>Formato</th></tr></thead>
+            <tbody>
+              <tr><td><strong style="color:var(--p1)">Atrair</strong></td><td>Para o scroll. Faz sentir visto.</td><td>"Isso aconteceu comigo também"</td><td>Storytelling</td></tr>
+              <tr><td><strong style="color:#b57fe0">Nutrir</strong></td><td>Ensina o porquê. Constrói confiança.</td><td>"Eu não sabia disso. Quero mais."</td><td>Educational / Series</td></tr>
+              <tr><td><strong style="color:#6aade0">Posicionar</strong></td><td>Mostra o método. Liga ao FC.</td><td>"Elas entendem de verdade."</td><td>Authority / Educational</td></tr>
+              <tr><td><strong style="color:#e8a060">Converter</strong></td><td>CTA direto. Um produto. Uma ação.</td><td>"Eu preciso disso. Como compro?"</td><td>Series</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-  <!-- CAROUSEL STRUCTURE -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🖼 Estrutura do Carrossel</div>
-      <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;line-height:1.6;"><strong style="color:var(--text)">Regra:</strong> cada slide tem um job. O leitor pode parar em qualquer slide e ainda ter valor.</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slide 1</span><span style="color:var(--muted2);">Capa — Para o scroll. 1 frase forte.</span>
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">🎬 Passo 3 — Reescreva pelo mesmo ângulo</div>
+          <div class="sab-doc-section-body">
+            Não crie 4 histórias diferentes — <strong>mude o ângulo da câmera</strong> na mesma história.<br><br>
+            <strong>Atrair → Storytelling:</strong> Leve com o momento mais emocional. Sem produto. Termina com pergunta.<br><br>
+            <strong>Nutrir → Educational:</strong> Hook + Por que acontece + 3 passos + dica prática. CTA: salvar.<br><br>
+            <strong>Posicionar → Authority:</strong> Hook de credencial + experiência + observação em alunos + insight. CTA: link na bio.<br><br>
+            <strong>Converter → Series Ep.1:</strong> Enquadra como série. Termina com preview do Ep.2. CTA: palavra de ativação WhatsApp.
+          </div>
         </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slide 2</span><span style="color:var(--muted2);">Problema/Hook — Faz sentir visto. 2–3 linhas.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slides 3–5</span><span style="color:var(--muted2);">Corpo — Entrega o valor. 1 ponto por slide.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p2);min-width:60px;">Slides 6–7</span><span style="color:var(--muted2);">Resolução — Payoff ou insight. 2–3 linhas.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p2);min-width:60px;">Último</span><span style="color:var(--muted2);">CTA — Uma ação. 1 frase + trigger WhatsApp.</span>
-        </div>
-      </div>
-    </div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">⭕ Estrutura do Story</div>
-      <div style="font-size:11px;color:var(--muted2);margin-bottom:10px;line-height:1.6;"><strong style="color:var(--text)">Regra:</strong> máximo 7 palavras por story. A imagem/vídeo carrega o peso.</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 1</span><span style="color:var(--muted2);">Interrupção — Para o auto-tap.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 2</span><span style="color:var(--muted2);">Tensão — Puxa pra dentro.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p3);min-width:60px;">Stories 3–4</span><span style="color:var(--muted2);">Meio — Entrega rápido.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 5</span><span style="color:var(--muted2);">Virada — Surpresa ou payoff.</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;">
-          <span style="font-weight:700;color:var(--p3);min-width:60px;">Story 6</span><span style="color:var(--muted2);">CTA — Uma ação, um tap.</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- PRODUCTION RULES -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">⚙️ Regra de Produção</div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
-        <span style="background:var(--p1);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">1</span>
-        <span><strong style="color:var(--text)">Filme os 4 reels</strong> em batch day — mesma roupa, mesma locação, mesma energia.</span>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
-        <span style="background:var(--p2);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">2</span>
-        <span><strong style="color:var(--text)">Monte os 4 carrosseis</strong> a partir dos scripts — o texto já está escrito no modal.</span>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted2);">
-        <span style="background:var(--p3);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;margin-top:2px;">3</span>
-        <span><strong style="color:var(--text)">Monte os 4 Stories por último</strong> — são os mais curtos e o copy vem das capas dos carrosseis.</span>
-      </div>
-    </div>
-    <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.7;padding:12px 14px;background:var(--bg3);border-radius:8px;">
-      O conteúdo de carrossel e story é quase todo reciclado dos scripts de reel. Você não está escrevendo conteúdo novo — está <strong style="color:var(--text)">reformatando o que já escreveu.</strong>
-    </div>
-  </div>
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">📊 Sistema 1 Tópico → 12 Peças</div>
+          <table class="sab-doc-table">
+            <thead><tr><th>Tipo</th><th>Reel</th><th>Carrossel</th><th>Story</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--p1)">Atrair</td><td>ST — Storytelling</td><td>Visual Story (6 slides)</td><td>Poll hook (6 stories)</td></tr>
+              <tr><td style="color:#b57fe0">Nutrir</td><td>ED — Educational</td><td>Tutorial slides (7 slides)</td><td>Quick tips → feed</td></tr>
+              <tr><td style="color:#6aade0">Posicionar</td><td>AT — Authority</td><td>Proof/Method (6 slides)</td><td>Bold opinion (6 stories)</td></tr>
+              <tr><td style="color:#e8a060">Converter</td><td>SR — Série Ep.1</td><td>Série visual (5 slides)</td><td>Oferta direta (6 stories)</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-  <!-- PRODUCTION CARD -->
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">🃏 Production Card</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted2);line-height:2.2;background:var(--bg3);border-radius:8px;padding:14px 18px;">
-      TÓPICO: ___________________<br>
-      PILAR: ___________________<br>
-      CORE EMOCIONAL: ___________________<br>
-      PROVA (quem — Sabrina, Michael, aluno): ___________________<br><br>
-      <strong style="color:var(--text)">REEL</strong> → ATRAIR: ST &nbsp;|&nbsp; NUTRIR: ED &nbsp;|&nbsp; POSICIONAR: AT &nbsp;|&nbsp; CONVERTER: SR<br>
-      <strong style="color:var(--text)">CARROSSEL</strong> → ATRAIR: Visual &nbsp;|&nbsp; NUTRIR: Tutorial &nbsp;|&nbsp; POSICIONAR: Prova &nbsp;|&nbsp; CONVERTER: Série<br>
-      <strong style="color:var(--text)">STORY</strong> → ATRAIR: Poll &nbsp;|&nbsp; NUTRIR: Tips→feed &nbsp;|&nbsp; POSICIONAR: Opinião &nbsp;|&nbsp; CONVERTER: Oferta
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">🖼 Estrutura do Carrossel</div>
+          <div class="sab-doc-section-body"><strong>Regra:</strong> cada slide tem um job. O leitor pode parar em qualquer slide e ainda ter valor.</div>
+          <table class="sab-doc-table">
+            <thead><tr><th>Slide</th><th>Nome</th><th>Job</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Capa</td><td>Para o scroll — 1 frase forte</td></tr>
+              <tr><td>2</td><td>Problema/Hook</td><td>Faz sentir visto — 2–3 linhas</td></tr>
+              <tr><td>3–5</td><td>Corpo</td><td>Entrega o valor — 1 ponto por slide</td></tr>
+              <tr><td>6–7</td><td>Resolução</td><td>Payoff ou insight — 2–3 linhas</td></tr>
+              <tr><td>Último</td><td>CTA</td><td>Uma ação — 1 frase + trigger WhatsApp</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">⭕ Estrutura do Story</div>
+          <div class="sab-doc-section-body"><strong>Regra:</strong> máximo 7 palavras por frame. A imagem/vídeo carrega o peso.</div>
+          <table class="sab-doc-table">
+            <thead><tr><th>Frame</th><th>Nome</th><th>Job</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Interrupção</td><td>Para o auto-tap</td></tr>
+              <tr><td>2</td><td>Tensão</td><td>Puxa pra dentro</td></tr>
+              <tr><td>3–4</td><td>Meio</td><td>Entrega rápido</td></tr>
+              <tr><td>5</td><td>Virada</td><td>Surpresa ou payoff</td></tr>
+              <tr><td>6</td><td>CTA</td><td>Uma ação, um tap</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">⚙️ Regra de Produção</div>
+          <div class="sab-doc-code">
+            1. <strong>Filme os 4 reels</strong> em batch day<br>
+            2. <strong>Monte os 4 carrosseis</strong> a partir dos scripts (texto já está escrito)<br>
+            3. <strong>Monte os 4 Stories por último</strong> — são os mais curtos e o copy vem das capas dos carrosseis
+          </div>
+          <div class="sab-doc-section-body" style="margin-top:8px">O conteúdo de carrossel e story é quase todo reciclado dos scripts de reel. Você não está escrevendo conteúdo novo — está <strong>reformatando o que já escreveu.</strong></div>
+        </div>
+
+        <div class="sab-doc-section">
+          <div class="sab-doc-section-title">🃏 Production Card</div>
+          <div class="sab-doc-code">
+TÓPICO: ___________________<br>
+PILAR: ___________________<br>
+CORE EMOCIONAL: ___________________<br>
+PROVA (quem): ___________________<br><br>
+<strong>REEL</strong>      → ATRAIR: ST | NUTRIR: ED | POSICIONAR: AT | CONVERTER: SR<br>
+<strong>CARROSSEL</strong> → ATRAIR: Visual | NUTRIR: Tutorial | POSICIONAR: Prova | CONVERTER: Série<br>
+<strong>STORY</strong>     → ATRAIR: Poll | NUTRIR: Tips→feed | POSICIONAR: Opinião | CONVERTER: Oferta
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- RIGHT: Fillable Production Cards -->
+    <div class="sab-prod-cards-panel">
+      <div class="sab-prod-topic-selector">
+        <label>Tópico</label>
+        <select id="sab-prod-topic-sel" onchange="sabRenderProdCard()">
+          <option value="">— Seleciona um tópico —</option>
+        </select>
+      </div>
+      <div id="sab-prod-card-container"></div>
+    </div>
+
   </div>
 </div>
 
