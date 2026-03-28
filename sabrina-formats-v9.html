@@ -671,6 +671,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .sab-prod-input:focus{border-color:var(--p3);}
 .sab-prod-save-btn{margin:0 16px 14px;width:calc(100% - 32px);padding:8px;background:var(--p3);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#000;cursor:pointer;transition:opacity .2s;}
 .sab-prod-save-btn:hover{opacity:.85;}
+/* ── SERIES SECTION HEADER ── */
+.series-section-header{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid rgba(155,126,212,.25);border-radius:10px;padding:14px 18px;cursor:pointer;transition:all .2s;}
+.series-section-header:hover{border-color:var(--nurture);}
 </style>
 </head>
 <body>
@@ -746,14 +749,22 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 
   <div class="topic-grid" id="topicGrid"></div>
 
-  <!-- SERIES SECTION -->
+<!-- SERIES SECTION -->
   <div id="seriesSection" style="margin-top:28px;display:none;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--nurture);">🎬 Séries de Conteúdo</div>
-      <div style="flex:1;height:1px;background:var(--border);"></div>
-      <button onclick="toggleSeriesSection()" id="seriesToggleBtn" style="background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;">▼ Recolher</button>
+    <div class="series-section-header" onclick="toggleSeriesSection()">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">🎬</span>
+        <div>
+          <div style="font-size:14px;font-weight:900;color:var(--text)">Séries de Conteúdo</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:1px" id="seriesSubtitle">episódios com estrutura própria e CTA de conversão</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onclick="event.stopPropagation();openNewSeriesModal()" style="background:var(--nurture);color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">＋ Nova Série</button>
+        <span id="seriesChevron" style="font-size:12px;color:var(--muted);transition:transform .25s;display:inline-block;">▼</span>
+      </div>
     </div>
-    <div class="topic-grid" id="seriesGrid"></div>
+    <div class="topic-grid" id="seriesGrid" style="padding-top:14px"></div>
   </div>
 </div>
 
@@ -1767,9 +1778,9 @@ let seriesSectionCollapsed = false;
 function toggleSeriesSection() {
   seriesSectionCollapsed = !seriesSectionCollapsed;
   const grid = document.getElementById('seriesGrid');
-  const btn  = document.getElementById('seriesToggleBtn');
+  const chev = document.getElementById('seriesChevron');
   grid.style.display = seriesSectionCollapsed ? 'none' : '';
-  btn.textContent = seriesSectionCollapsed ? '▶ Expandir' : '▼ Recolher';
+  if (chev) chev.style.transform = seriesSectionCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
 }
 
 function buildTopicCard(t) {
@@ -3055,8 +3066,10 @@ function openNewTopicModal() {
   document.getElementById('ntm-notes').value = '';
   document.getElementById('ntm-pillar').value = 'p1';
   document.getElementById('ntm-goal').value = 'attract';
+  document.getElementById('ntm-is-serie').checked = false;
   document.getElementById('newTopicModalOv').classList.add('open');
 }
+function openNewSeriesModal() { openNewTopicModal(true); }
 function closeNewTopicModal() {
   document.getElementById('newTopicModalOv').classList.remove('open');
 }
@@ -3078,11 +3091,13 @@ function saveNewTopic() {
   const pillarTopics = state.topics.filter(t => t.pillar === pillar);
   const maxNum = Math.max(...pillarTopics.map(t => t.num), 0);
 
+  const isSerie = document.getElementById('ntm-is-serie').checked;
   const newTopic = {
     id: maxId + 1,
     pillar,
     num: maxNum + 1,
     title,
+    type: isSerie ? 'serie' : undefined,
     goals: [goal],
     scripts: {
       ST: { goal: 'attract', hook, stakes:'', climax:'', lesson:'', cta:'Segue pra mais.' },
@@ -4709,7 +4724,7 @@ PROVA (quem): ___________________<br><br>
 <div class="new-topic-modal-ov" id="newTopicModalOv" onclick="closeNewTopicOut(event)">
   <div class="new-topic-modal">
     <div class="ntm-hdr">
-      <div class="ntm-hdr-title">＋ Novo Tópico</div>
+      <div class="ntm-hdr-title" id="ntm-hdr-label">＋ Novo Tópico</div>
       <button style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer" onclick="closeNewTopicModal()">✕</button>
     </div>
     <div class="ntm-body">
@@ -4748,6 +4763,10 @@ PROVA (quem): ___________________<br><br>
         <div class="ntm-lbl">📝 Notas de produção (opcional)</div>
         <textarea class="ntm-inp" id="ntm-notes" rows="2" placeholder="Local, roupa, referências de vídeo..." style="resize:vertical;font-size:12px;font-weight:400"></textarea>
       </div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:4px;">
+        <input type="checkbox" id="ntm-is-serie" style="accent-color:var(--nurture);width:14px;height:14px;">
+        <span style="font-size:12px;color:var(--muted2);font-weight:600;">🎬 Criar como Série <span style="font-weight:400;color:var(--muted)">(aparece na seção de séries)</span></span>
+      </label>
     </div>
     <div class="ntm-ftr">
       <button class="ntm-save-btn" onclick="saveNewTopic()">✓ Criar tópico</button>
