@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michael & Sabrina — $10K Income Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1DB994;
+  --green-dim: rgba(29,185,148,0.08);
+  --green-border: rgba(29,185,148,0.22);
+  --green-glow: rgba(29,185,148,0.15);
+  --bg: #131516;
+  --bg2: #1A1C1E;
+  --bg3: #222426;
+  --bg4: #2A2C2E;
+  --border: #2A2C2E;
+  --border2: #333538;
+  --text: #E8E8E8;
+  --text2: #B0B0B0;
+  --muted: #6B6F73;
+  --muted2: #888C90;
+  --danger: #E05252;
+  --danger-dim: rgba(224,82,82,0.08);
+  --warning: #E8A43A;
+  --warning-dim: rgba(232,164,58,0.08);
+  --blue: #5B8DEE;
+  --blue-dim: rgba(91,141,238,0.08);
+  --purple: #9B6DE0;
+  --purple-dim: rgba(155,109,224,0.08);
+  --orange: #E8843A;
+  --orange-dim: rgba(232,132,58,0.08);
+  --michael: #5B8DEE;
+  --michael-dim: rgba(91,141,238,0.08);
+  --michael-border: rgba(91,141,238,0.22);
+  --sabrina: #E05298;
+  --sabrina-dim: rgba(224,82,152,0.08);
+  --sabrina-border: rgba(224,82,152,0.22);
+  --together: #9B6DE0;
+  --together-dim: rgba(155,109,224,0.08);
+  --together-border: rgba(155,109,224,0.22);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.logo { font-size: 15px; font-weight: 900; letter-spacing: -0.02em; white-space: nowrap; }
+.logo span { color: var(--green); }
+.logo-sub { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-top: 1px; }
+.nav-tabs { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+.nav-tab {
+  background: none; border: none; color: var(--muted); font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  white-space: nowrap; transition: all 0.2s;
+}
+.nav-tab:hover { color: var(--text2); background: var(--bg3); }
+.nav-tab.active { color: var(--green); background: var(--green-dim); }
+
+/* ── PAGES ── */
+.page { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
+.page.active { display: block; }
+.section-title { font-size: 22px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.02em; }
+.section-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+.ov-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 20px; position: relative; overflow: hidden;
+}
+.ov-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.ov-card.ov-now::before { background: var(--danger); }
+.ov-card.ov-m3::before { background: var(--warning); }
+.ov-card.ov-m6::before { background: var(--blue); }
+.ov-card.ov-goal::before { background: var(--green); }
+.ov-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; }
+.ov-value { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.ov-card.ov-now .ov-value { color: var(--danger); }
+.ov-card.ov-m3 .ov-value { color: var(--warning); }
+.ov-card.ov-m6 .ov-value { color: var(--blue); }
+.ov-card.ov-goal .ov-value { color: var(--green); }
+.ov-detail { font-size: 11px; color: var(--muted2); }
+
+/* ── REVENUE STREAMS ── */
+.streams-section { margin-bottom: 32px; }
+.streams-title {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.stream-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 10px; overflow: hidden; transition: all 0.2s;
+}
+.stream-card:hover { border-color: var(--border2); }
+.stream-header {
+  display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer;
+}
+.stream-who {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.stream-who.who-michael { background: var(--michael); }
+.stream-who.who-sabrina { background: var(--sabrina); }
+.stream-who.who-both { background: var(--together); }
+.stream-name { font-size: 14px; font-weight: 800; flex: 1; }
+.stream-revenue {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--green);
+}
+.stream-phase {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.phase-now { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(224,82,82,0.2); }
+.phase-soon { background: var(--warning-dim); color: var(--warning); border: 1px solid rgba(232,164,58,0.2); }
+.phase-later { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,141,238,0.2); }
+.stream-body { padding: 0 20px 16px; display: none; }
+.stream-card.open .stream-body { display: block; }
+.stream-card.open { border-color: var(--green-border); }
+.stream-detail { font-size: 12px; color: var(--muted2); line-height: 1.7; margin-bottom: 12px; }
+.stream-detail strong { color: var(--text2); }
+.stream-actions { display: flex; flex-direction: column; gap: 6px; }
+.stream-action {
+  display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text2); line-height: 1.5;
+}
+.stream-action::before {
+  content: '→'; color: var(--green); font-weight: 800; flex-shrink: 0; margin-top: 0px;
+}
+.stream-milestone {
+  background: var(--bg3); border-radius: 8px; padding: 10px 14px; margin-top: 10px;
+}
+.sm-label { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.sm-targets { display: flex; gap: 16px; flex-wrap: wrap; }
+.sm-target { font-size: 12px; color: var(--text2); }
+.sm-target strong { color: var(--green); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, var(--danger), var(--warning), var(--blue), var(--green));
+  border-radius: 2px;
+}
+.tl-month {
+  position: relative; margin-bottom: 24px;
+}
+.tl-dot {
+  position: absolute; left: -24px; top: 4px; width: 12px; height: 12px;
+  border-radius: 50%; border: 2px solid var(--bg); z-index: 1;
+}
+.tl-month:nth-child(1) .tl-dot { background: var(--danger); }
+.tl-month:nth-child(2) .tl-dot { background: var(--danger); }
+.tl-month:nth-child(3) .tl-dot { background: var(--warning); }
+.tl-month:nth-child(4) .tl-dot { background: var(--warning); }
+.tl-month:nth-child(5) .tl-dot { background: var(--blue); }
+.tl-month:nth-child(6) .tl-dot { background: var(--blue); }
+.tl-month:nth-child(7) .tl-dot { background: var(--green); }
+.tl-month:nth-child(8) .tl-dot { background: var(--green); }
+.tl-month:nth-child(9) .tl-dot { background: var(--green); }
+.tl-header { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+.tl-target { font-size: 12px; color: var(--green); font-weight: 700; margin-bottom: 8px; }
+.tl-items { display: flex; flex-direction: column; gap: 4px; }
+.tl-item {
+  font-size: 12px; color: var(--muted2); line-height: 1.5; padding-left: 14px; position: relative;
+}
+.tl-item::before { content: '•'; position: absolute; left: 0; color: var(--muted); }
+.tl-editable {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 6px;
+  padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--text2);
+  font-family: 'Nunito', sans-serif; width: 100%; min-height: 36px; resize: vertical;
+}
+.tl-editable:focus { outline: none; border-color: var(--green-border); }
+
+/* ── WEEKLY PLAN ── */
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 20px; }
+.week-day {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.wd-header {
+  padding: 8px 10px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.wd-slot {
+  padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 11px;
+}
+.wd-slot:last-child { border-bottom: none; }
+.wd-time { font-size: 9px; font-weight: 800; color: var(--green); margin-bottom: 2px; }
+.wd-task { color: var(--text2); line-height: 1.4; }
+.wd-who { font-size: 9px; font-weight: 700; margin-top: 3px; }
+.wd-who.wm { color: var(--michael); }
+.wd-who.ws { color: var(--sabrina); }
+.wd-who.wb { color: var(--together); }
+
+/* ── CHECKLIST ── */
+.checklist { display: flex; flex-direction: column; gap: 6px; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.check-item:hover { border-color: var(--border2); }
+.check-item.done { opacity: 0.5; }
+.check-item.done .check-text { text-decoration: line-through; }
+.check-box {
+  width: 18px; height: 18px; border: 2px solid var(--muted); border-radius: 4px;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--green); margin-top: 1px; transition: all 0.2s;
+}
+.check-item.done .check-box { border-color: var(--green); background: var(--green-dim); }
+.check-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.check-text strong { color: var(--text); }
+.check-who {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.check-who.cw-m { background: var(--michael-dim); color: var(--michael); border: 1px solid var(--michael-border); }
+.check-who.cw-s { background: var(--sabrina-dim); color: var(--sabrina); border: 1px solid var(--sabrina-border); }
+.check-who.cw-b { background: var(--together-dim); color: var(--together); border: 1px solid var(--together-border); }
+
+/* ── NOTES ── */
+.notes-area {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; margin-top: 20px;
+}
+.notes-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; }
+.notes-input {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; font-size: 13px; color: var(--text); font-family: 'Nunito', sans-serif;
+  width: 100%; min-height: 80px; resize: vertical; line-height: 1.6;
+}
+.notes-input:focus { outline: none; border-color: var(--green-border); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { margin-bottom: 24px; }
+.progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.progress-label span { font-size: 11px; font-weight: 700; color: var(--muted); }
+.progress-label strong { color: var(--green); }
+.progress-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.pf-danger { background: linear-gradient(90deg, var(--danger), var(--warning)); }
+.pf-green { background: linear-gradient(90deg, var(--green), #2ED8A8); }
+
+/* ── TABS WITHIN PAGE ── */
+.sub-tabs { display: flex; gap: 2px; margin-bottom: 20px; background: var(--bg2); border-radius: 10px; padding: 3px; border: 1px solid var(--border); width: fit-content; }
+.sub-tab {
+  background: none; border: none; color: var(--muted); font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+}
+.sub-tab.active { color: var(--green); background: var(--green-dim); }
+
+/* ── TRUTH BOX ── */
+.truth-box {
+  background: linear-gradient(135deg, rgba(29,185,148,0.04), rgba(29,185,148,0.01));
+  border: 1px solid var(--green-border); border-radius: 12px;
+  padding: 20px 24px; margin-bottom: 28px;
+}
+.truth-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--green); margin-bottom: 8px; }
+.truth-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.truth-text strong { color: var(--text); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .overview-grid { grid-template-columns: repeat(2, 1fr); }
+  .week-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 600px) {
+  .overview-grid { grid-template-columns: 1fr 1fr; }
+  .week-grid { grid-template-columns: 1fr 1fr; }
+  .app-header { padding: 12px 16px; }
+  .page { padding: 16px; }
+  .nav-tabs { overflow-x: auto; }
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--bg2); border: 1px solid var(--green); border-radius: 30px;
+  padding: 10px 22px; font-size: 13px; font-weight: 700; color: var(--green);
+  z-index: 9999; transition: transform 0.3s ease; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── PRINT ── */
+@media print {
+  .app-header { position: static; }
+  .nav-tabs, .toast { display: none; }
+  .page { display: block !important; page-break-after: always; }
+  body { background: white; color: black; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div>
+    <div class="logo">M&S <span>Income Plan</span></div>
+    <div class="logo-sub">Path to $10K USD/month</div>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('overview',this)">📊 Overview</button>
+    <button class="nav-tab" onclick="showPage('streams',this)">💰 Revenue Streams</button>
+    <button class="nav-tab" onclick="showPage('timeline',this)">📅 Timeline</button>
+    <button class="nav-tab" onclick="showPage('weekly',this)">🗓 Weekly Plan</button>
+    <button class="nav-tab" onclick="showPage('actions',this)">✅ Action Items</button>
+    <button class="nav-tab" onclick="showPage('rules',this)">⚡ Rules</button>
+  </nav>
+</header>
+
+<!-- ════════════════ OVERVIEW ════════════════ -->
+<div class="page active" id="page-overview">
+  <div class="section-title">The $10K Plan</div>
+  <div class="section-sub">Michael & Sabrina · March 2026 → December 2026 · All revenue streams combined</div>
+
+  <div class="truth-box">
+    <div class="truth-title">Current Reality</div>
+    <div class="truth-text">
+      Household income: <strong>under R$2,000/month (~$340 USD)</strong>. Target: <strong>$10,000 USD/month (~R$58,000)</strong>. That's a 29× increase over 9 months. It won't happen overnight. The plan is built in 3 phases: <strong>Survive</strong> (months 1-2), <strong>Build</strong> (months 3-5), and <strong>Scale</strong> (months 6-9). Every action item is ranked by <strong>revenue per hour of effort</strong>.
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="ov-card ov-now">
+      <div class="ov-label">Now · March 2026</div>
+      <div class="ov-value">~$340</div>
+      <div class="ov-detail">R$2,000 · 4-8 English students</div>
+    </div>
+    <div class="ov-card ov-m3">
+      <div class="ov-label">Month 3 · June 2026</div>
+      <div class="ov-value">$2,500</div>
+      <div class="ov-detail">R$14,500 · Teaching + Freelance + Course</div>
+    </div>
+    <div class="ov-card ov-m6">
+      <div class="ov-label">Month 6 · Sept 2026</div>
+      <div class="ov-value">$5,000</div>
+      <div class="ov-detail">R$29,000 · App live + Groups + Dev income</div>
+    </div>
+    <div class="ov-card ov-goal">
+      <div class="ov-label">Month 9 · Dec 2026</div>
+      <div class="ov-value">$10,000</div>
+      <div class="ov-detail">R$58,000 · All streams compounding</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress to $10K/month</span> <strong id="prog-pct">3%</strong></div>
+    <div class="progress-bar"><div class="progress-fill pf-danger" id="prog-fill" style="width:3%"></div></div>
+  </div>
+
+  <!-- Revenue breakdown visual -->
+  <div class="streams-title">Revenue Stack at $10K/month (Target Breakdown)</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;">
+    <div class="ov-card" style="border-left:3px solid var(--michael)">
+      <div class="ov-label">Michael</div>
+      <div class="ov-value" style="font-size:24px;color:var(--michael)">$5,500</div>
+      <div class="ov-detail">Dev job/freelance: $3,500 · English for Devs: $700 · PT for Americans: $500 · Private English: $800</div>
+    </div>
+    <div class="ov-card" style="border-left:3px solid var(--sabrina)">
+      <div class="ov-label">Sabrina</div>
+      <div class="ov-value" style="font-size:24px;color:var(--sabrina)">$2,200</div>
+      <div class="ov-detail">Private English: $500 · Group tutoring: $700 · Substack paid: $200 · PT for Americans: $300 · Finance product: $500</div>
+    </div>
+    <div class="ov-card" style="border-left:3px solid var(--green);grid-column:span 2;">
+      <div class="ov-label">Fluency Connect (Shared)</div>
+      <div class="ov-value" style="font-size:24px;color:var(--green)">$2,300</div>
+      <div class="ov-detail">App subscribers: $1,000 · Hotmart course: $500 · Group tutoring: $800</div>
+    </div>
+  </div>
+
+  <div class="truth-box" style="border-color:var(--warning);background:linear-gradient(135deg,rgba(232,164,58,0.04),rgba(232,164,58,0.01));">
+    <div class="truth-title" style="color:var(--warning)">⚠ Critical Dependencies</div>
+    <div class="truth-text">
+      <strong>1.</strong> Michael landing dev freelance or a job is ~35% of the target. Without this, ceiling is ~$6,500/month.<br>
+      <strong>2.</strong> Content consistency (3 posts/day on FC) is required for app subscriber growth.<br>
+      <strong>3.</strong> Group tutoring retention fix must work — if students keep dropping, this stream stays at zero.<br>
+      <strong>4.</strong> Substack needs 6+ months of consistent posting before generating meaningful income.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ REVENUE STREAMS ════════════════ -->
+<div class="page" id="page-streams">
+  <div class="section-title">Revenue Streams</div>
+  <div class="section-sub">Click any stream to expand details, targets, and action steps. Ordered by revenue-per-hour-of-effort.</div>
+
+  <div class="streams-section">
+    <div class="streams-title">🔴 Phase 1 — Start This Week (Survive)</div>
+    <div id="streams-phase1"></div>
+  </div>
+
+  <div class="streams-section">
+    <div class="streams-title">🟡 Phase 2 — Launch by Month 3 (Build)</div>
+    <div id="streams-phase2"></div>
+  </div>
+
+  <div class="streams-section">
+    <div class="streams-title">🔵 Phase 3 — Scale by Month 6+ (Scale)</div>
+    <div id="streams-phase3"></div>
+  </div>
+</div>
+
+<!-- ════════════════ TIMELINE ════════════════ -->
+<div class="page" id="page-timeline">
+  <div class="section-title">9-Month Timeline</div>
+  <div class="section-sub">Monthly milestones with editable notes. Add your real numbers as you go.</div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<!-- ════════════════ WEEKLY PLAN ════════════════ -->
+<div class="page" id="page-weekly">
+  <div class="section-title">Ideal Week Template</div>
+  <div class="section-sub">How Michael and Sabrina should split their 40+ combined hours. Adapt as needed — this is a starting template.</div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="showWeek('both',this)">Both</button>
+    <button class="sub-tab" onclick="showWeek('michael',this)">Michael</button>
+    <button class="sub-tab" onclick="showWeek('sabrina',this)">Sabrina</button>
+  </div>
+
+  <div class="week-grid" id="week-grid"></div>
+
+  <div class="truth-box" style="margin-top:20px;">
+    <div class="truth-title">Time Budget (Weekly)</div>
+    <div class="truth-text">
+      <strong>Michael ~25 hrs:</strong> Dev job search/freelance (10h) · Teaching English + PT (6h) · FC content filming (4h) · App development (3h) · Admin (2h)<br><br>
+      <strong>Sabrina ~20 hrs:</strong> Content creation + posting 4 accounts (8h) · Teaching English (4h) · Substack writing (3h) · Group class (2h) · WhatsApp lead management (1.5h) · Admin (1.5h)<br><br>
+      <strong>⚠ Reality check:</strong> With 9-month-old twins, these hours will be irregular. The key is protecting the <strong>revenue hours</strong> (teaching, dev work) and being flexible with content hours.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ACTIONS ════════════════ -->
+<div class="page" id="page-actions">
+  <div class="section-title">Action Items</div>
+  <div class="section-sub">Checkable tasks. Progress saves automatically. Focus on Week 1 first.</div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="showActions('week1',this)">Week 1</button>
+    <button class="sub-tab" onclick="showActions('week2',this)">Week 2-4</button>
+    <button class="sub-tab" onclick="showActions('month2',this)">Month 2</button>
+    <button class="sub-tab" onclick="showActions('month3',this)">Month 3+</button>
+  </div>
+
+  <div id="actions-container"></div>
+
+  <div class="notes-area">
+    <div class="notes-label">📝 Your Notes</div>
+    <textarea class="notes-input" id="user-notes" placeholder="Add your notes, reflections, real revenue numbers here..." oninput="saveNotes()"></textarea>
+  </div>
+</div>
+
+<!-- ════════════════ RULES ════════════════ -->
+<div class="page" id="page-rules">
+  <div class="section-title">Operating Rules</div>
+  <div class="section-sub">Non-negotiable principles. Print this page and put it on your wall.</div>
+
+  <div class="truth-box">
+    <div class="truth-title">The Revenue-First Rule</div>
+    <div class="truth-text">
+      Every day, ask: <strong>"Did I do something today that will generate money this week?"</strong> If the answer is no, reprioritize. Content is important but content without a product behind it is a hobby. Teaching a class generates R$75-150/hour right now. Posting a Reel generates R$0 right now. Both matter — but when you're at R$2,000/month, revenue activities come first.
+    </div>
+  </div>
+
+  <div class="truth-box" style="border-color:var(--sabrina-border);background:linear-gradient(135deg,rgba(224,82,152,0.04),rgba(224,82,152,0.01));">
+    <div class="truth-title" style="color:var(--sabrina)">Sabrina's 4-Account System</div>
+    <div class="truth-text">
+      <strong>The only way this works:</strong><br><br>
+      <strong>1. Batch filming day (1×/week, 2-3 hours):</strong> Film all 4 Reels for the week in one session. Multiple outfits, same location. Each topic filmed from FC angle + personal angle.<br><br>
+      <strong>2. Repurpose, don't recreate:</strong> Every FC Pillar 2 video goes on Sabrina's account AND Fluency Connect. Every couple/family video goes on Sabrina + Michael's accounts. One video, multiple posts with different captions.<br><br>
+      <strong>3. Schedule everything:</strong> Use Meta Business Suite (free) for Instagram, and TikTok's built-in scheduler. Upload all videos on batch day. They post automatically all week.<br><br>
+      <strong>4. Carousels from scripts:</strong> The scripts already exist. Turn them into Canva carousels. 30 min per carousel max.<br><br>
+      <strong>5. Stories are scraps:</strong> Behind-the-scenes clips, polls, reposts of your own Reels. 5-10 min/day max.
+    </div>
+  </div>
+
+  <div class="truth-box" style="border-color:var(--michael-border);background:linear-gradient(135deg,rgba(91,141,238,0.04),rgba(91,141,238,0.01));">
+    <div class="truth-title" style="color:var(--michael)">Michael's Priority Stack</div>
+    <div class="truth-text">
+      <strong>In order of revenue impact:</strong><br><br>
+      <strong>1. Dev freelance/job applications (10h/week):</strong> This is the single biggest lever. One USD-paying remote dev job at $3,000-4,000/month covers 35-40% of the $10K target alone. Apply daily. Build portfolio projects. Contribute to open source.<br><br>
+      <strong>2. Teaching (6h/week):</strong> Private English students + Portuguese for Americans. Raise rates for new students. Target: 8-10 students total.<br><br>
+      <strong>3. Content filming (4h/week):</strong> Batch with Sabrina. His personal account is LOW priority — only post FC reposts and occasional lifestyle content.<br><br>
+      <strong>4. App development (3h/week):</strong> Only if no freelance work is available. The app launches May 10 — it needs to be ready, but a dev job > app revenue in the short term.
+    </div>
+  </div>
+
+  <div class="truth-box" style="border-color:var(--warning);background:linear-gradient(135deg,rgba(232,164,58,0.04),rgba(232,164,58,0.01));">
+    <div class="truth-title" style="color:var(--warning)">Group Class Retention Fix</div>
+    <div class="truth-text">
+      Your groups failed before because of open-ended commitment + price sensitivity + schedule conflicts. Here's the fix:<br><br>
+      <strong>1. 8-week cycles, not monthly.</strong> "Turma de 8 semanas" feels like a course with a finish line, not an endless subscription.<br><br>
+      <strong>2. Prepaid with discount.</strong> R$150/month if paid monthly. R$320 upfront for the full 8 weeks (saves R$80). Prepaid = committed.<br><br>
+      <strong>3. WhatsApp group accountability.</strong> Daily micro-challenge in the group chat. Students who engage in the group stay longer.<br><br>
+      <strong>4. Fixed schedule, no exceptions.</strong> "Tuesday 7PM" — if you miss it, there's no makeup class. This filters for serious students.<br><br>
+      <strong>5. Maximum 6 students per group.</strong> Small enough to feel personal. Big enough to be profitable.
+    </div>
+  </div>
+
+  <div class="truth-box">
+    <div class="truth-title">Substack Growth Playbook (Sabrina)</div>
+    <div class="truth-text">
+      <strong>Niche:</strong> "Brazilian woman navigating life, money, and motherhood between two countries" — written in English for Americans.<br><br>
+      <strong>Content mix:</strong> Finance journey (learning American personal finance with accounting background) + Bilingual family life + Cultural observations. This IS her Pillar 1 + Pillar 3 combined.<br><br>
+      <strong>Growth levers:</strong><br>
+      • Cross-post snippets to Sabrina's English IG/TikTok with "full post on Substack, link in bio"<br>
+      • Recommend other Substacks in her niche — they recommend back (Substack's recommendation engine)<br>
+      • Write 1 post/week. Quality > quantity at this stage.<br>
+      • Turn on paid tier ($5/month) at 200+ free subscribers<br><br>
+      <strong>Hidden value:</strong> Every Substack reader is a potential Portuguese student. Mention her language background naturally. "As a Portuguese speaker learning American financial terms..." — this plants seeds.
+    </div>
+  </div>
+
+  <div class="truth-box" style="border-color:var(--danger);background:linear-gradient(135deg,rgba(224,82,82,0.04),rgba(224,82,82,0.01));">
+    <div class="truth-title" style="color:var(--danger)">Kill List — Stop Doing These</div>
+    <div class="truth-text">
+      <strong>1. Michael's Pillar 3</strong> (chess, fitness, productivity). Zero revenue potential in the next 9 months. Cut it.<br><br>
+      <strong>2. Perfecting content systems before posting.</strong> You have 112 scripts, 84-video bank, calendars, format guides. Start posting TODAY with what exists.<br><br>
+      <strong>3. Equal time on all 4 accounts.</strong> FC gets 50% of content energy. Sabrina PT gets 30%. Michael + Sabrina EN split the remaining 20%.<br><br>
+      <strong>4. Undercharging students.</strong> New students start at R$350/month minimum (30 min/week). Existing students get a rate conversation at their next renewal.<br><br>
+      <strong>5. Waiting for the app to make money.</strong> The app is a long-term asset. Teaching and dev work pay the bills NOW.
+    </div>
+  </div>
+
+  <div class="truth-box">
+    <div class="truth-title">Checkpoint Dates</div>
+    <div class="truth-text">
+      <strong>Day 14 (April 13):</strong> How many posts published? How many WhatsApp leads? Any new students? Michael: how many job/freelance applications sent?<br><br>
+      <strong>Day 30 (April 30):</strong> Total revenue this month vs. last month. Which content performed best? Which revenue stream showed the most traction? Adjust plan based on REAL data.<br><br>
+      <strong>Day 60 (May 30):</strong> App launched. How many founding members? Michael: any dev income yet? Sabrina: Substack subscriber count?<br><br>
+      <strong>Day 90 (June 30):</strong> Major review. Are we on track for $2,500/month? If not, what needs to change?
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved ✓</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+
+const STREAMS = [
+  // Phase 1
+  { id:'private-english', phase:1, who:'both', name:'Private English Classes (Raise Rates)', revenue:'R$2,800–4,200/mo', revenueUSD:'$480–720',
+    detail:'You have 4-8 students now generating under R$2,000. <strong>Step 1:</strong> New students at R$350/month (30min/week) or R$650/month (60min/week). <strong>Step 2:</strong> Have a rate conversation with existing students at next renewal. <strong>Target:</strong> 8-10 students at R$350-650 average.',
+    actions:['This week: Set new rate card. R$350/mo (30min) and R$650/mo (60min) for all new students','This week: Message 5 people in your network offering a free 15-min assessment class','Week 2: Post FC convert content with WhatsApp CTA daily — the funnel is built, just activate it','Month 2: Rate conversation with any under-R$300 students — offer 8-week prepaid at new rate as transition'],
+    milestones:{m1:'6 students · R$2,100', m3:'10 students · R$3,500', m6:'12 students · R$4,800'}
+  },
+  { id:'dev-freelance', phase:1, who:'michael', name:'Michael: Dev Freelance + Job Search', revenue:'$500–4,000/mo', revenueUSD:'$500–4,000',
+    detail:'At intermediate level, target small freelance projects first while continuing job applications. <strong>Portfolio pieces:</strong> The Fluency Connect app itself is a portfolio project. <strong>Stack:</strong> React Native, TypeScript, Supabase — in-demand skills. <strong>Best case:</strong> Land a remote USD job at $3,500-5,000/month.',
+    actions:['Today: Create Upwork profile highlighting React Native + TypeScript + bilingual','Today: Apply to 3 remote dev positions on LinkedIn, Indeed, or AngelList','This week: Post Fluency Connect app screenshots as portfolio piece on GitHub','Weekly: Minimum 5 job applications + 2 freelance proposals per week','Month 2: If no freelance traction, try Fiverr gigs (React components, landing pages)'],
+    milestones:{m1:'First freelance gig ($200-500)', m3:'Steady freelance $1,000-1,500/mo OR job offer', m6:'$3,000-4,000/mo from dev work'}
+  },
+  { id:'pt-americans', phase:1, who:'both', name:'Portuguese for Americans (USD)', revenue:'$400–1,000/mo', revenueUSD:'$400–1,000',
+    detail:'You\'ve done this before. Michael is the perfect teacher for Americans — native English speaker who learned Portuguese in Brazil. <strong>Rate:</strong> $40-50/hour USD. <strong>3-4 students, 1 hour each/week = $480-800/month.</strong> This is R$2,800-4,600 for 4 hours of work per week.',
+    actions:['This week: List Michael on italki or Preply as Portuguese tutor (takes 30 min)','This week: Post on r/Portuguese and r/languagelearning offering trial classes','Sabrina\'s English Substack: mention Portuguese naturally in posts — plant seeds','Month 2: Create a "Portuguese for Beginners" landing page on Hotmart (R$40-100 mini-course)'],
+    milestones:{m1:'2 students · $320/mo', m3:'4 students · $640/mo', m6:'6 students · $1,000/mo'}
+  },
+  // Phase 2
+  { id:'group-tutoring', phase:2, who:'both', name:'Group Tutoring (8-Week Cycles)', revenue:'R$2,400–4,800/mo', revenueUSD:'$410–820',
+    detail:'The retention fix: <strong>8-week cycles, prepaid, WhatsApp accountability, fixed schedule, max 6 per group.</strong> Price: R$200/month or R$320 prepaid for 8 weeks. 2 groups × 6 students = R$2,400/month for 2 hours of teaching per week.',
+    actions:['Week 2: Announce first group on WhatsApp and Instagram — "Turma de 8 semanas, começa dia X"','Set fixed schedules: Beginner Tue 7PM, Intermediate Thu 7PM','Create WhatsApp group for each turma — post daily micro-challenge','Require R$320 prepaid or R$200/month auto-pay — no exceptions','After 8 weeks: open enrollment for next cycle, keep committed students'],
+    milestones:{m1:'Not yet', m3:'1 group · 5 students · R$1,000/mo', m6:'2 groups · 10 students · R$2,000/mo'}
+  },
+  { id:'hotmart-course', phase:2, who:'both', name:'Hotmart Course Sales', revenue:'R$1,600–4,000/mo', revenueUSD:'$275–685',
+    detail:'You already have the course (R$40 module, R$200 full). The missing piece is <strong>traffic</strong>. Your WhatsApp funnel (ebook → follow-up → pitch) is designed but not generating leads because content isn\'t being posted consistently. <strong>Fix:</strong> Post 3×/day with 15% convert content = ~4 convert posts/week = WhatsApp leads.',
+    actions:['Week 1: Start posting 3×/day on FC (you have 84 scripts ready)','Week 2: Check WhatsApp lead count — target 50 leads/month','Month 2: Optimize follow-up sequence based on which ebook converts better','Month 3: Add app waitlist as additional CTA in convert content'],
+    milestones:{m1:'10 ebook downloads · 2 course sales · R$80-400', m3:'50 leads/mo · 8-10 sales · R$1,600', m6:'100 leads/mo · 15-20 sales · R$3,000'}
+  },
+  { id:'english-devs', phase:2, who:'michael', name:'Michael: English for Developers', revenue:'R$1,600–3,600/mo', revenueUSD:'$275–615',
+    detail:'Brazilian devs desperately need English for job interviews, documentation, and international teams. Michael is a dev + native speaker = perfect positioning. <strong>Format:</strong> Group sessions, 4-6 devs, R$400/month each. <strong>1 group = R$1,600-2,400/month.</strong>',
+    actions:['Month 2: Create a simple landing page "English for Developers with a Native Speaker & Dev"','Post in Brazilian dev communities (TabNews, dev.to/pt, LinkedIn dev groups)','Offer free 30-min workshop "English for Technical Interviews" as lead magnet','Start with 1 group of 4 — Tuesday or Thursday evening'],
+    milestones:{m1:'Not yet', m3:'1 group · 4 students · R$1,600/mo', m6:'2 groups · 8 students · R$3,200/mo'}
+  },
+  // Phase 3
+  { id:'app', phase:3, who:'both', name:'Fluency Connect App', revenue:'R$2,000–8,000/mo', revenueUSD:'$340–1,370',
+    detail:'Launches May 10. Founding member price R$19.90/month (first 200). Regular R$29.90/month. Revenue depends entirely on audience size — which is why content consistency starting NOW matters.',
+    actions:['Pre-launch: Build waitlist through FC content (convert posts)','Launch week: Announce founding member price across all channels','Month 3: Target 50 founding members = R$995/month','Month 6: Target 150 subscribers (mix founding + regular) = R$3,500-4,000/month'],
+    milestones:{m1:'Waitlist building', m3:'50 founding members · R$995/mo', m6:'150 subscribers · R$3,500/mo'}
+  },
+  { id:'substack', phase:3, who:'sabrina', name:'Sabrina: Substack (Paid)', revenue:'$100–500/mo', revenueUSD:'$100–500',
+    detail:'English Substack for American audience. "Between Two Countries" — finance journey + bilingual family + cultural observations. Feeds into Portuguese class pipeline. <strong>Real talk:</strong> This is a 6-12 month build. Don\'t expect income before month 4-5.',
+    actions:['Week 1: Publish first post. Topic: "What my accounting degree didn\'t teach me about American money"','1 post per week minimum. Quality > quantity.','Month 2: Enable Substack recommendations — find 5 similar newsletters to cross-promote','Month 3: Turn on paid tier at 200+ free subscribers ($5/month)','Every post: Naturally mention Portuguese/bilingual life — this seeds PT class inquiries'],
+    milestones:{m1:'First 4 posts · 30-50 subscribers', m3:'200 free subscribers · Paid tier on', m6:'500 free · 30-50 paid · $150-250/mo'}
+  },
+  { id:'finance-product', phase:3, who:'sabrina', name:'Sabrina: Finance Learning Product', revenue:'R$500–2,000/mo', revenueUSD:'$85–340',
+    detail:'Not "expert financial advice" — it\'s "accountant learns personal finance and shares the journey." Start with free content, build audience, then sell a small digital product (workshop or mini-course). <strong>Target audience:</strong> American women interested in personal finance from an international perspective (via Substack).',
+    actions:['Months 1-3: Finance content is part of Substack — no separate product yet','Month 4: Based on which finance posts perform best, outline a small workshop','Month 5: Launch "$27 workshop: What I learned about American money as a Brazilian accountant"','Month 6+: Iterate based on sales — expand to course if workshop sells'],
+    milestones:{m1:'Content only', m3:'Content only — gathering data', m6:'First workshop · $200-500/mo'}
+  }
+];
+
+const TIMELINE = [
+  { month:'April 2026', label:'Month 1 — SURVIVE', color:'var(--danger)', target:'R$3,500 (~$600)',
+    items:['Start posting 3×/day on FC account','Raise rates for new English students to R$350/mo','Michael: Create Upwork profile + apply to 5 jobs/week','Michael: List on italki/Preply for Portuguese teaching','Sabrina: Publish first Substack post','Activate WhatsApp lead funnel — start collecting leads','Kill Michael Pillar 3 content — redirect time to revenue']},
+  { month:'May 2026', label:'Month 2 — SURVIVE', color:'var(--danger)', target:'R$5,000 (~$860)',
+    items:['APP LAUNCH May 10 — founding member push across all channels','Launch first 8-week group tutoring cycle','Michael: First freelance project or steady applications flowing','Sabrina: 4 Substack posts published, cross-promoting on English account','WhatsApp leads: target 50 this month','Hotmart sales starting to come from content funnel','Day 60 checkpoint: What is working? What isn\'t?']},
+  { month:'June 2026', label:'Month 3 — BUILD', color:'var(--warning)', target:'R$8,000 (~$1,370)',
+    items:['Michael: Launch "English for Devs" group','App: Target 50 founding members','Substack: Turn on paid tier if 200+ subscribers','Group tutoring: First cycle ends — re-enroll + open new spots','Review: Which content format drives most WhatsApp leads?','Adjust content ratio based on data (more of what converts)']},
+  { month:'July 2026', label:'Month 4 — BUILD', color:'var(--warning)', target:'R$12,000 (~$2,050)',
+    items:['Michael: Dev income should be $1,000+/month by now (freelance or job)','Second group tutoring cycle starts','App: Growing through content + word of mouth','Portuguese for Americans: 3-4 steady students','Sabrina: Finance content getting traction — note best-performing topics']},
+  { month:'Aug 2026', label:'Month 5 — BUILD', color:'var(--warning)', target:'R$17,000 (~$2,900)',
+    items:['All teaching streams at capacity or growing','App subscribers climbing toward 100','Sabrina: Outline finance workshop based on Substack data','Michael: If no dev job yet, intensify search — this is critical path','Evaluate: Are we on track for $5K by September?']},
+  { month:'Sept 2026', label:'Month 6 — SCALE', color:'var(--blue)', target:'R$23,000 (~$3,950)',
+    items:['Target: $5,000/month total','Michael dev income should be established','App: 150 subscribers target','Sabrina: Launch finance workshop ($27-47)','Group tutoring: 2 groups running','Consider raising private class rates again']},
+  { month:'Oct 2026', label:'Month 7 — SCALE', color:'var(--blue)', target:'R$30,000 (~$5,150)',
+    items:['Optimize all streams — focus on highest ROI activities','App: Anki import feature adds retention value','Substack: Growing toward 500 free subscribers','Michael: If at a job, explore raise/promotion path','Content should be well-oiled machine by now']},
+  { month:'Nov 2026', label:'Month 8 — SCALE', color:'var(--green)', target:'R$42,000 (~$7,200)',
+    items:['Push toward final target','App: 200+ subscribers','All teaching streams at max comfortable capacity','Finance product iterating based on first sales data','Black Friday promotion for annual app plan + course bundle']},
+  { month:'Dec 2026', label:'Month 9 — $10K TARGET', color:'var(--green)', target:'R$58,000 ($10,000)',
+    items:['🎯 TARGET: $10,000 USD/month','Dev income: $3,500-4,000','Teaching (all types): $2,500-3,000','App: $1,000-1,500','Course + Products: $1,000-1,500','Substack + Finance: $500-1,000','Review entire year — plan 2027']}
+];
+
+const ACTIONS = {
+  week1: [
+    { text:'<strong>Michael:</strong> Create Upwork profile with React Native + TypeScript + bilingual positioning', who:'m' },
+    { text:'<strong>Michael:</strong> Apply to 5 remote dev jobs today', who:'m' },
+    { text:'<strong>Michael:</strong> List as Portuguese tutor on italki or Preply', who:'m' },
+    { text:'<strong>Both:</strong> Set new rate card — R$350/mo (30min), R$650/mo (60min) for new students', who:'b' },
+    { text:'<strong>Both:</strong> Message 10 people in your network offering free 15-min English assessment', who:'b' },
+    { text:'<strong>Sabrina:</strong> Post first FC Reel from the 84 scripts already written', who:'s' },
+    { text:'<strong>Sabrina:</strong> Set up Meta Business Suite scheduler for Instagram', who:'s' },
+    { text:'<strong>Sabrina:</strong> Write + publish first Substack post', who:'s' },
+    { text:'<strong>Both:</strong> Film 4 FC videos in one batch session (use script bank)', who:'b' },
+    { text:'<strong>Michael:</strong> Remove Pillar 3 content from his posting schedule — reallocate that time', who:'m' },
+  ],
+  week2: [
+    { text:'<strong>Sabrina:</strong> Posting 3×/day on FC should be routine by now. Is it?', who:'s' },
+    { text:'<strong>Both:</strong> Check WhatsApp leads count — any ebook downloads?', who:'b' },
+    { text:'<strong>Michael:</strong> 10+ job applications sent. Any callbacks?', who:'m' },
+    { text:'<strong>Michael:</strong> First freelance proposal on Upwork sent?', who:'m' },
+    { text:'<strong>Sabrina:</strong> Second Substack post published', who:'s' },
+    { text:'<strong>Both:</strong> Announce first group tutoring cycle — "Turma de 8 semanas"', who:'b' },
+    { text:'<strong>Both:</strong> Film next batch of 4 FC videos', who:'b' },
+    { text:'<strong>Both:</strong> DAY 14 CHECKPOINT — bring real metrics to Claude for plan adjustment', who:'b' },
+    { text:'<strong>Both:</strong> Count: How many new student inquiries this month?', who:'b' },
+    { text:'<strong>Sabrina:</strong> Check FC Instagram insights — which posts got shares?', who:'s' },
+  ],
+  month2: [
+    { text:'<strong>Both:</strong> APP LAUNCH May 10 — founding member announcement on all channels', who:'b' },
+    { text:'<strong>Both:</strong> Launch first 8-week group class cycle (need 4+ enrolled)', who:'b' },
+    { text:'<strong>Michael:</strong> First freelance payment received?', who:'m' },
+    { text:'<strong>Michael:</strong> Research "English for Devs" — post in 3 dev communities to test interest', who:'m' },
+    { text:'<strong>Sabrina:</strong> 4 Substack posts live — check subscriber count', who:'s' },
+    { text:'<strong>Sabrina:</strong> Cross-promote Substack on English IG/TikTok account', who:'s' },
+    { text:'<strong>Both:</strong> DAY 30 CHECKPOINT — real revenue vs. plan. Adjust.', who:'b' },
+    { text:'<strong>Both:</strong> WhatsApp leads: hit 50? If not, increase convert content ratio', who:'b' },
+  ],
+  month3: [
+    { text:'<strong>Michael:</strong> Launch "English for Devs" group — first 4 students', who:'m' },
+    { text:'<strong>Sabrina:</strong> Turn on Substack paid tier if 200+ free subscribers', who:'s' },
+    { text:'<strong>Both:</strong> App: 50 founding members target — track daily', who:'b' },
+    { text:'<strong>Both:</strong> Second group tutoring cycle starts — re-enroll + recruit', who:'b' },
+    { text:'<strong>Both:</strong> DAY 60 + DAY 90 CHECKPOINTS — full plan review', who:'b' },
+    { text:'<strong>Sabrina:</strong> Finance content audit — which posts performed best?', who:'s' },
+    { text:'<strong>Michael:</strong> Dev income status check — if under $1K/mo, intensify job search', who:'m' },
+  ]
+};
+
+const WEEK_TEMPLATE = [
+  { day:'Mon', slots:[
+    { time:'8-9h', task:'Content batch prep', who:'sabrina' },
+    { time:'9-11h', task:'Dev work / job applications', who:'michael' },
+    { time:'11-12h', task:'Teach English (private)', who:'both' },
+    { time:'14-16h', task:'Dev work / freelance', who:'michael' },
+    { time:'14-15h', task:'Post content + engage', who:'sabrina' },
+    { time:'19-20h', task:'Teach English (private)', who:'both' },
+  ]},
+  { day:'Tue', slots:[
+    { time:'8-10h', task:'🎬 BATCH FILMING DAY', who:'both' },
+    { time:'10-12h', task:'Dev work / applications', who:'michael' },
+    { time:'10-11h', task:'Edit + schedule posts', who:'sabrina' },
+    { time:'14-16h', task:'Dev work / freelance', who:'michael' },
+    { time:'14-15h', task:'Substack writing', who:'sabrina' },
+    { time:'19-20h', task:'Group class (Beginner)', who:'both' },
+  ]},
+  { day:'Wed', slots:[
+    { time:'9-11h', task:'Dev work / job applications', who:'michael' },
+    { time:'9-10h', task:'Post + engage + WhatsApp leads', who:'sabrina' },
+    { time:'11-12h', task:'Teach English (private)', who:'both' },
+    { time:'14-16h', task:'Dev work / freelance', who:'michael' },
+    { time:'14-15h', task:'Carousel creation (Canva)', who:'sabrina' },
+    { time:'19-20h', task:'Teach PT to Americans', who:'michael' },
+  ]},
+  { day:'Thu', slots:[
+    { time:'9-11h', task:'Dev work / applications', who:'michael' },
+    { time:'9-10h', task:'Post + engage', who:'sabrina' },
+    { time:'11-12h', task:'Teach English (private)', who:'both' },
+    { time:'14-16h', task:'Dev work / freelance', who:'michael' },
+    { time:'14-15h', task:'Substack writing + promotion', who:'sabrina' },
+    { time:'19-20h', task:'Group class (Intermediate)', who:'both' },
+  ]},
+  { day:'Fri', slots:[
+    { time:'9-11h', task:'Dev work / job applications', who:'michael' },
+    { time:'9-10h', task:'Post + engage + WhatsApp leads', who:'sabrina' },
+    { time:'11-12h', task:'Teach English (private)', who:'both' },
+    { time:'14-16h', task:'Dev work / freelance', who:'michael' },
+    { time:'14-15h', task:'Schedule next week content', who:'sabrina' },
+    { time:'19-20h', task:'Teach PT to Americans', who:'michael' },
+  ]},
+  { day:'Sat', slots:[
+    { time:'9-10h', task:'Week review + metrics log', who:'both' },
+    { time:'10-11h', task:'Teach English for Devs group', who:'michael' },
+    { time:'10-11h', task:'Substack post publish', who:'sabrina' },
+  ]},
+  { day:'Sun', slots:[
+    { time:'—', task:'REST / Family day', who:'both' },
+    { time:'20-21h', task:'Plan next week (optional)', who:'both' },
+  ]},
+];
+
+// ══════════════════════════════════════════════
+// STATE + PERSISTENCE
+// ══════════════════════════════════════════════
+const STORAGE_KEY = 'ms-income-plan-v1';
+let state = loadState();
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return { checks: {}, notes: '', timelineNotes: {} };
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  showToast();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+// RENDER STREAMS
+// ══════════════════════════════════════════════
+function renderStreams() {
+  const containers = { 1: document.getElementById('streams-phase1'), 2: document.getElementById('streams-phase2'), 3: document.getElementById('streams-phase3') };
+  Object.values(containers).forEach(c => c.innerHTML = '');
+
+  STREAMS.forEach(s => {
+    const whoClass = s.who === 'michael' ? 'who-michael' : s.who === 'sabrina' ? 'who-sabrina' : 'who-both';
+    const phaseClass = s.phase === 1 ? 'phase-now' : s.phase === 2 ? 'phase-soon' : 'phase-later';
+    const phaseLabel = s.phase === 1 ? 'Start now' : s.phase === 2 ? 'Month 2-3' : 'Month 3+';
+
+    const actionsHtml = s.actions.map(a => `<div class="stream-action">${a}</div>`).join('');
+    const milestonesHtml = s.milestones ? `
+      <div class="stream-milestone">
+        <div class="sm-label">Revenue Milestones</div>
+        <div class="sm-targets">
+          <div class="sm-target">Month 1: <strong>${s.milestones.m1}</strong></div>
+          <div class="sm-target">Month 3: <strong>${s.milestones.m3}</strong></div>
+          <div class="sm-target">Month 6: <strong>${s.milestones.m6}</strong></div>
+        </div>
+      </div>` : '';
+
+    const card = document.createElement('div');
+    card.className = 'stream-card';
+    card.id = 'stream-' + s.id;
+    card.innerHTML = `
+      <div class="stream-header" onclick="toggleStream('${s.id}')">
+        <div class="stream-who ${whoClass}"></div>
+        <div class="stream-name">${s.name}</div>
+        <div class="stream-revenue">${s.revenueUSD}</div>
+        <div class="stream-phase ${phaseClass}">${phaseLabel}</div>
+      </div>
+      <div class="stream-body">
+        <div class="stream-detail">${s.detail}</div>
+        <div class="stream-actions">${actionsHtml}</div>
+        ${milestonesHtml}
+      </div>
+    `;
+    containers[s.phase].appendChild(card);
+  });
+}
+
+function toggleStream(id) {
+  document.getElementById('stream-' + id).classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════
+// RENDER TIMELINE
+// ══════════════════════════════════════════════
+function renderTimeline() {
+  const container = document.getElementById('timeline');
+  container.innerHTML = TIMELINE.map((m, i) => {
+    const items = m.items.map(item => `<div class="tl-item">${item}</div>`).join('');
+    const noteVal = state.timelineNotes[i] || '';
+    return `
+      <div class="tl-month">
+        <div class="tl-dot"></div>
+        <div class="tl-header">${m.month}</div>
+        <div class="tl-target">${m.label} — Target: ${m.target}</div>
+        <div class="tl-items">${items}</div>
+        <textarea class="tl-editable" placeholder="Your notes: actual revenue, what happened, adjustments..."
+          oninput="saveTimelineNote(${i}, this.value)">${noteVal}</textarea>
+      </div>
+    `;
+  }).join('');
+}
+
+function saveTimelineNote(idx, val) {
+  state.timelineNotes[idx] = val;
+  saveState();
+}
+
+// ══════════════════════════════════════════════
+// RENDER WEEKLY PLAN
+// ══════════════════════════════════════════════
+let weekFilter = 'both';
+
+function showWeek(filter, btn) {
+  weekFilter = filter;
+  document.querySelectorAll('#page-weekly .sub-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderWeek();
+}
+
+function renderWeek() {
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = WEEK_TEMPLATE.map(day => {
+    const slots = day.slots
+      .filter(s => weekFilter === 'both' || s.who === weekFilter || s.who === 'both')
+      .map(s => {
+        const whoLabel = s.who === 'michael' ? 'Michael' : s.who === 'sabrina' ? 'Sabrina' : 'Both';
+        const whoClass = s.who === 'michael' ? 'wm' : s.who === 'sabrina' ? 'ws' : 'wb';
+        return `<div class="wd-slot"><div class="wd-time">${s.time}</div><div class="wd-task">${s.task}</div><div class="wd-who ${whoClass}">${whoLabel}</div></div>`;
+      }).join('');
+    return `<div class="week-day"><div class="wd-header">${day.day}</div>${slots}</div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// RENDER ACTIONS
+// ══════════════════════════════════════════════
+let actionFilter = 'week1';
+
+function showActions(filter, btn) {
+  actionFilter = filter;
+  document.querySelectorAll('#page-actions .sub-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderActions();
+}
+
+function renderActions() {
+  const container = document.getElementById('actions-container');
+  const items = ACTIONS[actionFilter] || [];
+  container.innerHTML = '<div class="checklist">' + items.map((item, i) => {
+    const key = actionFilter + '-' + i;
+    const done = state.checks[key] ? 'done' : '';
+    const whoClass = item.who === 'm' ? 'cw-m' : item.who === 's' ? 'cw-s' : 'cw-b';
+    const whoLabel = item.who === 'm' ? 'Michael' : item.who === 's' ? 'Sabrina' : 'Both';
+    return `
+      <div class="check-item ${done}" onclick="toggleCheck('${key}', this)">
+        <div class="check-box">${state.checks[key] ? '✓' : ''}</div>
+        <div class="check-text">${item.text}</div>
+        <div class="check-who ${whoClass}">${whoLabel}</div>
+      </div>
+    `;
+  }).join('') + '</div>';
+}
+
+function toggleCheck(key, el) {
+  state.checks[key] = !state.checks[key];
+  saveState();
+  renderActions();
+  updateProgress();
+}
+
+function updateProgress() {
+  const totalWeek1 = ACTIONS.week1.length;
+  const doneWeek1 = ACTIONS.week1.filter((_, i) => state.checks['week1-' + i]).length;
+  const allTotal = Object.values(ACTIONS).flat().length;
+  const allDone = Object.keys(state.checks).filter(k => state.checks[k]).length;
+  const pct = Math.round((allDone / allTotal) * 100);
+  document.getElementById('prog-pct').textContent = Math.max(3, pct) + '%';
+  document.getElementById('prog-fill').style.width = Math.max(3, pct) + '%';
+  if (pct > 50) {
+    document.getElementById('prog-fill').className = 'progress-fill pf-green';
+  }
+}
+
+// ══════════════════════════════════════════════
+// NOTES
+// ══════════════════════════════════════════════
+function saveNotes() {
+  state.notes = document.getElementById('user-notes').value;
+  saveState();
+}
+
+function loadNotes() {
+  document.getElementById('user-notes').value = state.notes || '';
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+function init() {
+  renderStreams();
+  renderTimeline();
+  renderWeek();
+  renderActions();
+  loadNotes();
+  updateProgress();
+}
+
+init();
+</script>
+</body>
+</html>

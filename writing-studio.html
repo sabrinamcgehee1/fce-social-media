@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabrina — Writing Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f0f0f; --bg2:#181818; --bg3:#1e1e1e; --bg4:#252525; --bg5:#2c2c2c;
+  --border:#2a2a2a; --border2:#333;
+  --text:#eee; --muted:#666; --muted2:#999;
+  --green:#1DB994; --green-dim:rgba(29,185,148,.08); --green-border:rgba(29,185,148,.25);
+  --sab:#c084fc; --sab-dim:rgba(192,132,252,.08); --sab-border:rgba(192,132,252,.25);
+  --mc:#f59e0b; --mc-dim:rgba(245,158,11,.08); --mc-border:rgba(245,158,11,.25);
+  --attract:#e05272; --nurture:#9b7ed4; --position:#5b9ed4; --convert:#d4953e;
+  --attract-dim:rgba(224,82,114,.08); --nurture-dim:rgba(155,126,212,.08);
+  --position-dim:rgba(91,158,212,.08); --convert-dim:rgba(212,149,62,.08);
+  --life:#e05272; --english:#f59e0b; --growth:#1DB994;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+::selection{background:rgba(29,185,148,.3)}
+
+/* HEADER */
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100}
+.logo{font-family:'Playfair Display',serif;font-weight:800;font-size:18px;color:var(--green);padding:16px 0;letter-spacing:-.5px}
+.logo span{color:var(--muted2);font-weight:700;font-size:13px;font-family:'DM Sans',sans-serif;margin-left:8px}
+.main-tabs{display:flex;gap:2px;overflow-x:auto;margin-left:auto}
+.main-tab{padding:14px 18px;font-size:11px;font-weight:700;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;font-family:'DM Sans',sans-serif;letter-spacing:.3px;text-transform:uppercase}
+.main-tab:hover{color:var(--muted2)}
+.main-tab.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* PAGES */
+.page{display:none;padding:28px 24px;max-width:960px;margin:0 auto}
+.page.active{display:block}
+
+/* SECTION STYLES */
+.sec-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:24px}
+
+/* FRAMEWORK PAGE */
+.fw-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px}
+.fw-card-title{font-size:14px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fw-card-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#000;flex-shrink:0}
+.fw-card-desc{font-size:12px;color:var(--muted2);line-height:1.7}
+.fw-card-example{background:var(--bg3);border-radius:6px;padding:10px 14px;margin-top:10px;font-size:12px;color:var(--muted2);line-height:1.6;border-left:3px solid var(--green)}
+.fw-card-example strong{color:var(--text)}
+.fw-highlight{background:var(--green-dim);border:1px solid var(--green-border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.fw-highlight-title{font-size:13px;font-weight:800;color:var(--green);margin-bottom:6px}
+.fw-highlight-text{font-size:12px;color:var(--muted2);line-height:1.7}
+
+/* HOOK LIBRARY */
+.hook-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.hook-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;cursor:pointer;transition:all .15s}
+.hook-card:hover{border-color:var(--green);background:var(--bg3)}
+.hook-card.selected{border-color:var(--green);background:var(--green-dim)}
+.hook-type{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.hook-template{font-size:12px;color:var(--muted2);line-height:1.5}
+.hook-example{font-size:11px;color:var(--muted);margin-top:6px;font-style:italic}
+
+/* DRAFT PAGE */
+.draft-top{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.draft-selector{display:flex;flex-direction:column;gap:4px}
+.draft-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.draft-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;min-width:140px;outline:none}
+.draft-select:focus{border-color:var(--green)}
+.draft-select option{background:var(--bg2);color:var(--text)}
+
+/* STEP TRACKER */
+.step-tracker{display:flex;gap:4px;margin-bottom:24px;padding:12px 0;border-bottom:1px solid var(--border)}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;cursor:pointer;transition:all .2s;border:2px solid var(--border);color:var(--muted);background:transparent}
+.step-dot:hover{border-color:var(--muted2)}
+.step-dot.active{border-color:var(--green);background:var(--green);color:#000}
+.step-dot.done{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.step-connector{width:20px;height:2px;background:var(--border);align-self:center;flex-shrink:0}
+.step-connector.done{background:var(--green)}
+
+/* DRAFT FIELDS */
+.draft-section{margin-bottom:24px;display:none}
+.draft-section.active{display:block}
+.ds-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ds-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#000;background:var(--green);flex-shrink:0}
+.ds-title{font-size:15px;font-weight:800}
+.ds-subtitle{font-size:12px;color:var(--muted2);margin-bottom:12px;line-height:1.6}
+.ds-tip{background:var(--bg3);border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--muted2);line-height:1.6;border-left:3px solid var(--green)}
+.ds-tip strong{color:var(--text)}
+.draft-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--text);line-height:1.7;resize:vertical;outline:none;transition:border .15s;min-height:80px}
+.draft-textarea:focus{border-color:var(--green)}
+.draft-textarea::placeholder{color:var(--muted)}
+.draft-textarea.tall{min-height:140px}
+.draft-textarea.xtall{min-height:200px}
+.ds-nav{display:flex;gap:10px;margin-top:16px}
+.ds-btn{padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;border:none}
+.ds-btn-next{background:var(--green);color:#000}
+.ds-btn-next:hover{opacity:.9}
+.ds-btn-back{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
+.ds-btn-back:hover{border-color:var(--muted2)}
+
+/* PREVIEW PAGE */
+.preview-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;white-space:pre-wrap;font-size:14px;line-height:1.8;color:var(--muted2);min-height:300px}
+.preview-box .pv-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:2px;display:block}
+.preview-box .pv-content{color:var(--text);margin-bottom:16px;display:block}
+.preview-box .pv-empty{color:var(--muted);font-style:italic}
+.preview-actions{display:flex;gap:10px;margin-top:16px}
+.pv-btn{padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--muted2);transition:all .15s}
+.pv-btn:hover{border-color:var(--green);color:var(--green)}
+.pv-btn-primary{background:var(--green);color:#000;border:none}
+.pv-btn-primary:hover{opacity:.9;color:#000}
+
+/* SAVED DRAFTS */
+.saved-list{display:flex;flex-direction:column;gap:8px}
+.saved-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
+.saved-card:hover{border-color:var(--green)}
+.saved-left{display:flex;flex-direction:column;gap:2px}
+.saved-title{font-size:13px;font-weight:700}
+.saved-meta{font-size:11px;color:var(--muted);display:flex;gap:8px}
+.saved-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
+.tag-fc{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.tag-sab{background:var(--sab-dim);color:var(--sab);border:1px solid var(--sab-border)}
+.tag-mc{background:var(--mc-dim);color:var(--mc);border:1px solid var(--mc-border)}
+.saved-delete{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px 8px;transition:color .15s}
+.saved-delete:hover{color:var(--attract)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state-icon{font-size:32px;margin-bottom:12px}
+.empty-state-text{font-size:13px;line-height:1.6}
+
+/* SUBSTACK-SPECIFIC */
+.sub-structure{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.sub-step{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border-radius:6px;background:var(--bg3);font-size:12px;color:var(--muted2);line-height:1.5}
+.sub-step-num{width:20px;height:20px;border-radius:50%;background:var(--green);color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0;margin-top:1px}
+
+/* COPIED TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#000;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;opacity:0;transition:all .3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .header{padding:0 14px;gap:10px;flex-wrap:wrap}
+  .main-tabs{margin-left:0;width:100%;padding-bottom:4px}
+  .main-tab{padding:10px 12px;font-size:10px}
+  .page{padding:20px 14px}
+  .hook-grid{grid-template-columns:1fr}
+  .draft-top{flex-direction:column}
+  .draft-select{min-width:100%}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Writing Studio <span>by Sabrina</span></div>
+  <nav class="main-tabs">
+    <button class="main-tab active" onclick="showPage('framework',this)">Framework</button>
+    <button class="main-tab" onclick="showPage('hooks',this)">Hook Library</button>
+    <button class="main-tab" onclick="showPage('video',this)">Video Draft</button>
+    <button class="main-tab" onclick="showPage('substack',this)">Substack Draft</button>
+    <button class="main-tab" onclick="showPage('saved',this)">Saved</button>
+  </nav>
+</header>
+
+<!-- ═══════ FRAMEWORK ═══════ -->
+<div class="page active" id="page-framework">
+  <div class="sec-title">Your Master Story Framework</div>
+  <div class="sec-desc">Every piece of content you create — video, Substack, carousel, story — follows this core structure. Memorize this. It's your creative spine.</div>
+
+  <div class="fw-highlight">
+    <div class="fw-highlight-title">Before you write anything, answer these 3 questions:</div>
+    <div class="fw-highlight-text">
+      <strong>1. Which account?</strong> @fluencyconnect (authority + method) · @sabrina (personal brand + growth) · @michael+sabrina (couple + culture)<br>
+      <strong>2. What's the job?</strong> Attract (40%) · Nurture (25%) · Position (20%) · Convert (15%)<br>
+      <strong>3. What's the source?</strong> A life moment · A Kinnu card · A Substack phrase · A Deepstash idea · An essay video insight
+    </div>
+  </div>
+
+  <div class="fw-card">
+    <div class="fw-card-title"><div class="fw-card-num" style="background:var(--attract)">1</div> Moment</div>
+    <div class="fw-card-desc">A real, specific situation from your life. Not vague — cinematic. Where were you? What time was it? What were you doing? The more specific, the more universal it becomes.</div>
+    <div class="fw-card-example"><strong>Weak:</strong> "Being a mom is hard."<br><strong>Strong:</strong> "It was 2:17am. One baby was crying. The other had just fallen asleep. My English homework was open on the kitchen counter."</div>
+  </div>
+
+  <div class="fw-card">
+    <div class="fw-card-title"><div class="fw-card-num" style="background:var(--nurture)">2</div> Emotion</div>
+    <div class="fw-card-desc">What you actually felt — not what you think you should have felt. Name the ugly emotions: guilt, shame, jealousy, frustration, inadequacy. These are what connect. Your audience feels seen when you say the thing they've been thinking but couldn't articulate.</div>
+    <div class="fw-card-example"><strong>Example:</strong> "I felt like a fraud. A woman who teaches English but couldn't even finish a paragraph because her babies needed her."</div>
+  </div>
+
+  <div class="fw-card">
+    <div class="fw-card-title"><div class="fw-card-num" style="background:var(--position)">3</div> Shift</div>
+    <div class="fw-card-desc">This is your signature move — the moment something changed in your understanding. Not a generic epiphany. A real cognitive shift that came from experience, not theory. This is where you position your method, your brand, your worldview.</div>
+    <div class="fw-card-example"><strong>Example:</strong> "Then I realized — I wasn't failing at English. I was failing at forgiving myself for not being perfect at everything simultaneously."</div>
+  </div>
+
+  <div class="fw-card">
+    <div class="fw-card-title"><div class="fw-card-num" style="background:var(--convert)">4</div> Message</div>
+    <div class="fw-card-desc">Turn your shift into a lesson your audience can apply. One idea. One mindset change. One practical step. End with a power line — the sentence people screenshot and share. Then your CTA, matched to the content's job (attract = engagement, convert = WhatsApp/link).</div>
+    <div class="fw-card-example"><strong>Power lines:</strong><br>"You don't need more time — you need better focus."<br>"You don't lack English. You lack confidence using it."<br>"The best time to start was yesterday. The second best time is right now, with your babies watching."</div>
+  </div>
+
+  <div class="fw-highlight" style="background:var(--sab-dim);border-color:var(--sab-border)">
+    <div class="fw-highlight-title" style="color:var(--sab)">Your 3 Content Angles — rotate daily</div>
+    <div class="fw-highlight-text">
+      <strong style="color:var(--life)">LIFE</strong> — Motherhood, Michael, twins, relationship, real routine. Goal: make people feel seen.<br>
+      <strong style="color:var(--english)">ENGLISH</strong> — Mistakes, tips, student results, Fluency Connect method. Goal: build trust and authority.<br>
+      <strong style="color:var(--growth)">GROWTH</strong> — Discipline, reading, productivity, building in public. Goal: make people want your life.
+    </div>
+  </div>
+
+  <div class="fw-highlight" style="background:var(--mc-dim);border-color:var(--mc-border)">
+    <div class="fw-highlight-title" style="color:var(--mc)">The Content Engine: 1 Story → 5 Pieces</div>
+    <div class="fw-highlight-text">
+      <strong>Story:</strong> You tried to study English while the twins were crying<br><br>
+      → <strong>Reel #1:</strong> "Trying to study English as a mom of twins…" (attract)<br>
+      → <strong>Reel #2:</strong> "Why you can't focus when studying English" (nurture)<br>
+      → <strong>Substack:</strong> Full emotional story with deep lesson (authority)<br>
+      → <strong>Story post:</strong> "Today was hard…" (connection)<br>
+      → <strong>CTA post:</strong> Your method solves this (convert)
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ HOOK LIBRARY ═══════ -->
+<div class="page" id="page-hooks">
+  <div class="sec-title">Hook Library</div>
+  <div class="sec-desc">6 hook formulas you can rotate. Click any to copy the template, then adapt it to your story. Never open the same way twice.</div>
+
+  <div class="hook-grid">
+    <div class="hook-card" onclick="copyHook(this)">
+      <div class="hook-type" style="color:var(--attract)">Contrarian / Hot Take</div>
+      <div class="hook-template">"Everyone says [common belief]. But here's the truth…"</div>
+      <div class="hook-example">"Everyone says you need to study 2 hours a day to learn English. That's why most Brazilians never become fluent."</div>
+    </div>
+    <div class="hook-card" onclick="copyHook(this)">
+      <div class="hook-type" style="color:var(--nurture)">Confession / Vulnerability</div>
+      <div class="hook-template">"I need to tell you something I've never shared…"</div>
+      <div class="hook-example">"I'm an English teacher and I still make grammar mistakes. Here's why that matters."</div>
+    </div>
+    <div class="hook-card" onclick="copyHook(this)">
+      <div class="hook-type" style="color:var(--position)">Identity Call-Out</div>
+      <div class="hook-template">"If you're a [specific person], this is for you."</div>
+      <div class="hook-example">"If you're a Brazilian mom who wants to learn English but has zero time — stop scrolling."</div>
+    </div>
+    <div class="hook-card" onclick="copyHook(this)">
+      <div class="hook-type" style="color:var(--convert)">Cliffhanger / Story Open</div>
+      <div class="hook-template">"[Specific scene]. I had no idea what would happen next."</div>
+      <div class="hook-example">"It was 11pm. Both twins were finally asleep. I opened my laptop and started crying."</div>
+    </div>
+    <div class="hook-card" onclick="copyHook(this)">
+      <div class="hook-type" style="color:var(--life)">Data / Number</div>
+      <div class="hook-template">"[Surprising number] and here's why it matters."</div>
+      <div class="hook-example">"Brazilians study English for an average of 8 years. And most still can't hold a conversation."</div>
+    </div>
+    <div class="hook-card" onclick="copyHook(this)">
+      <div class="hook-type" style="color:var(--growth)">Nobody Talks About</div>
+      <div class="hook-template">"Nobody talks about [hidden truth about your niche]."</div>
+      <div class="hook-example">"Nobody talks about the guilt of choosing work over your babies — even for 30 minutes."</div>
+    </div>
+  </div>
+
+  <div class="fw-highlight">
+    <div class="fw-highlight-title">Story Starters (grab and go)</div>
+    <div class="fw-highlight-text" style="font-size:13px;line-height:2">
+      <strong style="color:var(--life)">LIFE:</strong> "No one talks about what it's really like having twins…" · "Today I almost gave up…" · "When Michael and I disagree about how to raise the girls…"<br>
+      <strong style="color:var(--english)">ENGLISH:</strong> "This is why Brazilians study for years and still can't speak…" · "I used to translate everything in my head until…" · "The mistake I hear from every single student…"<br>
+      <strong style="color:var(--growth)">GROWTH:</strong> "I thought I was disciplined… until I became a mom" · "The habit that changed how I learn forever" · "I run an English school with 7h/week for social media. Here's my system."
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ VIDEO DRAFT ═══════ -->
+<div class="page" id="page-video">
+  <div class="sec-title">Video Script Draft</div>
+  <div class="sec-desc">Follow each step. Don't skip ahead — the order is the method.</div>
+
+  <div class="draft-top">
+    <div class="draft-selector">
+      <div class="draft-label">Account</div>
+      <select class="draft-select" id="v-account">
+        <option value="fc">@fluencyconnect</option>
+        <option value="sab">@sabrina</option>
+        <option value="mc">@michael+sabrina</option>
+      </select>
+    </div>
+    <div class="draft-selector">
+      <div class="draft-label">Content Job</div>
+      <select class="draft-select" id="v-job">
+        <option value="attract">Attract (40%)</option>
+        <option value="nurture">Nurture (25%)</option>
+        <option value="position">Position (20%)</option>
+        <option value="convert">Convert (15%)</option>
+      </select>
+    </div>
+    <div class="draft-selector">
+      <div class="draft-label">Angle</div>
+      <select class="draft-select" id="v-angle">
+        <option value="life">Life</option>
+        <option value="english">English</option>
+        <option value="growth">Growth</option>
+      </select>
+    </div>
+    <div class="draft-selector">
+      <div class="draft-label">Source</div>
+      <select class="draft-select" id="v-source">
+        <option value="life">Life moment</option>
+        <option value="kinnu">Kinnu card</option>
+        <option value="substack">Substack phrase</option>
+        <option value="deepstash">Deepstash idea</option>
+        <option value="essay">Essay video</option>
+        <option value="comment">Audience comment</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="step-tracker" id="v-steps"></div>
+
+  <!-- Step 0: Source -->
+  <div class="draft-section" id="v-s0">
+    <div class="ds-header"><div class="ds-num">0</div><div class="ds-title">Source Capture</div></div>
+    <div class="ds-subtitle">What triggered this content? Write the phrase, idea, or moment that sparked it. This connects your learning pipeline to your content.</div>
+    <div class="ds-tip"><strong>Ask yourself:</strong> "What did I learn/see/feel that I can't stop thinking about?" — that tension is your content.</div>
+    <textarea class="draft-textarea" id="v-f-source" placeholder="The phrase, card, moment or idea that triggered this piece…"></textarea>
+    <div class="ds-nav"><button class="ds-btn ds-btn-next" onclick="vStep(1)">Next: Hook →</button></div>
+  </div>
+
+  <!-- Step 1: Hook -->
+  <div class="draft-section" id="v-s1">
+    <div class="ds-header"><div class="ds-num">1</div><div class="ds-title">Hook</div></div>
+    <div class="ds-subtitle">Pattern interrupt + identity. You have 3 seconds. Call your exact audience and make them stop scrolling.</div>
+    <div class="ds-tip"><strong>Formulas:</strong> Contrarian ("Everyone says X, but…") · Confession ("I need to tell you…") · Identity ("If you're a Brazilian mom…") · Cliffhanger ("It was 2am. Both twins were crying.") · Nobody talks about ("Nobody talks about…")</div>
+    <textarea class="draft-textarea" id="v-f-hook" placeholder="Write your hook — the first thing they hear/read…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="vStep(0)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="vStep(2)">Next: Micro-Story →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Micro-Story -->
+  <div class="draft-section" id="v-s2">
+    <div class="ds-header"><div class="ds-num">2</div><div class="ds-title">Micro-Story</div></div>
+    <div class="ds-subtitle">A specific, visual scene. Keep it simple and real. What happened? Where? When? Add sensory details — what did you see, hear, feel physically?</div>
+    <div class="ds-tip"><strong>Think cinematic:</strong> "It was 2:17am. One baby was crying. The other had just fallen asleep. My English homework was open on the kitchen counter, untouched."</div>
+    <textarea class="draft-textarea tall" id="v-f-story" placeholder="The scene — specific, visual, real…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="vStep(1)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="vStep(3)">Next: Struggle →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Struggle -->
+  <div class="draft-section" id="v-s3">
+    <div class="ds-header"><div class="ds-num">3</div><div class="ds-title">Struggle</div></div>
+    <div class="ds-subtitle">Show both the external struggle (what was happening) and the internal struggle (what you were thinking/feeling). The internal part is what builds loyal audience.</div>
+    <div class="ds-tip"><strong>Name the ugly emotion:</strong> guilt, shame, frustration, inadequacy, confusion, fear. "I felt like I was failing at everything — motherhood, work, even my English."</div>
+    <textarea class="draft-textarea tall" id="v-f-struggle" placeholder="External: what was happening…&#10;Internal: what you were thinking/feeling…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="vStep(2)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="vStep(4)">Next: Shift →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Shift -->
+  <div class="draft-section" id="v-s4">
+    <div class="ds-header"><div class="ds-num">4</div><div class="ds-title">Shift</div></div>
+    <div class="ds-subtitle">Your signature move. What did you change? What did you realize? This is where your brand shines — Fluency Connect method, mindset, lived experience.</div>
+    <div class="ds-tip"><strong>Position your method:</strong> This isn't generic advice. This comes from YOUR experience as a Brazilian bilingual mom running a school. What did YOUR life teach you that books can't?</div>
+    <textarea class="draft-textarea" id="v-f-shift" placeholder="The realization, the change, the 'aha' moment…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="vStep(3)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="vStep(5)">Next: Lesson →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Lesson + Power Line -->
+  <div class="draft-section" id="v-s5">
+    <div class="ds-header"><div class="ds-num">5</div><div class="ds-title">Lesson + Power Line</div></div>
+    <div class="ds-subtitle">Turn your story into value: 1 idea, 1 mindset shift, or 1 practical tip. Then write a power line — the sentence people screenshot and share.</div>
+    <div class="ds-tip"><strong>Power line formula:</strong> "You don't need [what they think] — you need [what actually works]." Make it quotable.</div>
+    <textarea class="draft-textarea" id="v-f-lesson" placeholder="The lesson — 1 idea, 1 shift, 1 tip…"></textarea>
+    <textarea class="draft-textarea" id="v-f-powerline" placeholder="Power line — the sentence people share…" style="margin-top:8px"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="vStep(4)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="vStep(6)">Next: CTA →</button>
+    </div>
+  </div>
+
+  <!-- Step 6: CTA -->
+  <div class="draft-section" id="v-s6">
+    <div class="ds-header"><div class="ds-num">6</div><div class="ds-title">CTA</div></div>
+    <div class="ds-subtitle">Match your CTA to the content job you selected.</div>
+    <div class="ds-tip">
+      <strong>Attract:</strong> "Comenta 👇" / "Você já passou por isso?"<br>
+      <strong>Nurture:</strong> "Salva esse vídeo" / "Manda pra alguém que precisa"<br>
+      <strong>Position:</strong> "Link na bio" / "Segue pra mais conteúdo assim"<br>
+      <strong>Convert:</strong> "Manda ESTRATÉGIA no WhatsApp" / "Link na bio — é de graça"
+    </div>
+    <textarea class="draft-textarea" id="v-f-cta" placeholder="Your call to action…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="vStep(5)">← Back</button>
+      <button class="ds-btn ds-btn-next ds-btn-save" onclick="saveVideoDraft()">Save & Preview →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SUBSTACK DRAFT ═══════ -->
+<div class="page" id="page-substack">
+  <div class="sec-title">Substack Newsletter Draft</div>
+  <div class="sec-desc">Your deep format. This is where you become unforgettable. Follow the 10 steps — each one builds on the last.</div>
+
+  <div class="draft-top">
+    <div class="draft-selector">
+      <div class="draft-label">Angle</div>
+      <select class="draft-select" id="s-angle">
+        <option value="life">Life</option>
+        <option value="english">English</option>
+        <option value="growth">Growth</option>
+      </select>
+    </div>
+    <div class="draft-selector">
+      <div class="draft-label">Source</div>
+      <select class="draft-select" id="s-source">
+        <option value="life">Life moment</option>
+        <option value="kinnu">Kinnu card</option>
+        <option value="substack">Substack phrase</option>
+        <option value="deepstash">Deepstash idea</option>
+        <option value="essay">Essay video</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="step-tracker" id="s-steps"></div>
+
+  <!-- S-Step 0: Source -->
+  <div class="draft-section" id="s-s0">
+    <div class="ds-header"><div class="ds-num">0</div><div class="ds-title">Source Capture</div></div>
+    <div class="ds-subtitle">What triggered this newsletter? The phrase, the card, the moment.</div>
+    <textarea class="draft-textarea" id="s-f-source" placeholder="The spark — what made you want to write this…"></textarea>
+    <div class="ds-nav"><button class="ds-btn ds-btn-next" onclick="sStep(1)">Next: Title →</button></div>
+  </div>
+
+  <!-- S-Step 1: Title -->
+  <div class="draft-section" id="s-s1">
+    <div class="ds-header"><div class="ds-num">1</div><div class="ds-title">Title</div></div>
+    <div class="ds-subtitle">Identity + curiosity. Make them click because they see themselves in the title.</div>
+    <div class="ds-tip"><strong>Examples:</strong> "What Having Twins Taught Me About Discipline" · "Why Most Brazilian Women Never Become Fluent" · "The Day I Realized I Was Wasting My Time"</div>
+    <textarea class="draft-textarea" id="s-f-title" placeholder="Your newsletter title…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(0)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(2)">Next: Cinematic Opening →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 2: Cinematic Opening -->
+  <div class="draft-section" id="s-s2">
+    <div class="ds-header"><div class="ds-num">2</div><div class="ds-title">Cinematic Opening</div></div>
+    <div class="ds-subtitle">Start like a movie. Drop them into a moment — no preamble, no context. Time, place, sensation.</div>
+    <div class="ds-tip"><strong>Example:</strong> "It was 2:17am. One baby was crying. The other had just fallen asleep. I was sitting on the bathroom floor, phone in hand, watching a video about productivity."</div>
+    <textarea class="draft-textarea tall" id="s-f-opening" placeholder="Open with a scene — specific time, place, detail…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(1)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(3)">Next: Expand the Story →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 3: Expand -->
+  <div class="draft-section" id="s-s3">
+    <div class="ds-header"><div class="ds-num">3</div><div class="ds-title">Expand the Story</div></div>
+    <div class="ds-subtitle">Slow down. Add details, thoughts, feelings. This is where your audience feels seen. Let the moment breathe.</div>
+    <textarea class="draft-textarea xtall" id="s-f-expand" placeholder="Go deeper — details, thoughts, inner dialogue, sensory moments…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(2)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(4)">Next: Internal Conflict →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 4: Internal Conflict -->
+  <div class="draft-section" id="s-s4">
+    <div class="ds-header"><div class="ds-num">4</div><div class="ds-title">Internal Conflict</div></div>
+    <div class="ds-subtitle">Your secret weapon. Doubt, guilt, fear, confusion. This is what builds a loyal audience — people who come back because you say what they can't.</div>
+    <textarea class="draft-textarea tall" id="s-f-conflict" placeholder="The inner war — doubt, guilt, fear, confusion…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(3)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(5)">Next: The Realization →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 5: Realization -->
+  <div class="draft-section" id="s-s5">
+    <div class="ds-header"><div class="ds-num">5</div><div class="ds-title">The Realization</div></div>
+    <div class="ds-subtitle">Zoom out. What did this moment teach you? Not a cliché — a real insight that only your specific life could produce.</div>
+    <textarea class="draft-textarea" id="s-f-realization" placeholder="The 'aha' — what this moment really taught you…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(4)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(6)">Next: Connect to Them →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 6: Connect -->
+  <div class="draft-section" id="s-s6">
+    <div class="ds-header"><div class="ds-num">6</div><div class="ds-title">Connect to Them</div></div>
+    <div class="ds-subtitle">Shift from "me" → "you." Bridge your personal story to their life. This is the pivot that turns a diary entry into content.</div>
+    <div class="ds-tip"><strong>Example:</strong> "And if you're learning English right now, this shows up differently — but the feeling is the same…"</div>
+    <textarea class="draft-textarea" id="s-f-connect" placeholder="Bridge to the reader — 'And if you're…'"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(5)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(7)">Next: Teach →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 7: Teach -->
+  <div class="draft-section" id="s-s7">
+    <div class="ds-header"><div class="ds-num">7</div><div class="ds-title">Teach</div></div>
+    <div class="ds-subtitle">Authority mode. Structure your idea clearly. Explain, break it down, give examples. This is where the Substack earns its keep vs a Reel.</div>
+    <textarea class="draft-textarea xtall" id="s-f-teach" placeholder="The lesson — structured, clear, with examples…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(6)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(8)">Next: Actionable Part →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 8: Actionable -->
+  <div class="draft-section" id="s-s8">
+    <div class="ds-header"><div class="ds-num">8</div><div class="ds-title">Actionable Part</div></div>
+    <div class="ds-subtitle">Give them something to do: 2–3 steps, or 1 framework, or 1 exercise. Make it specific enough to start today.</div>
+    <textarea class="draft-textarea tall" id="s-f-action" placeholder="2–3 steps, a framework, or an exercise…"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(7)">← Back</button>
+      <button class="ds-btn ds-btn-next" onclick="sStep(9)">Next: Strong Ending →</button>
+    </div>
+  </div>
+
+  <!-- S-Step 9: Ending + CTA -->
+  <div class="draft-section" id="s-s9">
+    <div class="ds-header"><div class="ds-num">9</div><div class="ds-title">Strong Ending + Soft CTA</div></div>
+    <div class="ds-subtitle">Loop back to the opening scene, or drop a powerful truth. Then a soft CTA: "If this resonated, subscribe" or "Reply and tell me your story."</div>
+    <textarea class="draft-textarea" id="s-f-ending" placeholder="Loop back to opening or powerful closing truth…"></textarea>
+    <textarea class="draft-textarea" id="s-f-cta" placeholder="Soft CTA…" style="margin-top:8px"></textarea>
+    <div class="ds-nav">
+      <button class="ds-btn ds-btn-back" onclick="sStep(8)">← Back</button>
+      <button class="ds-btn ds-btn-next ds-btn-save" onclick="saveSubstackDraft()">Save & Preview →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SAVED PAGE ═══════ -->
+<div class="page" id="page-saved">
+  <div class="sec-title">Saved Drafts</div>
+  <div class="sec-desc">All your drafts in one place. Click to preview and copy.</div>
+  <div class="saved-list" id="saved-list"></div>
+</div>
+
+<!-- PREVIEW OVERLAY -->
+<div id="preview-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;overflow-y:auto;padding:40px 20px">
+  <div style="max-width:700px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="sec-title" id="preview-title" style="margin:0">Preview</div>
+      <button onclick="closePreview()" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer">&times;</button>
+    </div>
+    <div class="preview-box" id="preview-content"></div>
+    <div class="preview-actions">
+      <button class="pv-btn pv-btn-primary" onclick="copyPreview()">Copy All</button>
+      <button class="pv-btn" onclick="closePreview()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ═══════ STATE ═══════
+let videoStep = 0;
+let substackStep = 0;
+let drafts = [];
+
+// Load saved drafts
+try { drafts = JSON.parse(localStorage.getItem('ws_drafts') || '[]'); } catch(e) { drafts = []; }
+
+// ═══════ NAVIGATION ═══════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'saved') renderSaved();
+  if (id === 'video') { videoStep = 0; renderVSteps(); showVSection(0); }
+  if (id === 'substack') { substackStep = 0; renderSSteps(); showSSection(0); }
+}
+
+// ═══════ VIDEO STEPS ═══════
+const V_LABELS = ['Source','Hook','Story','Struggle','Shift','Lesson','CTA'];
+function renderVSteps() {
+  const el = document.getElementById('v-steps');
+  let html = '';
+  V_LABELS.forEach((l, i) => {
+    if (i > 0) html += `<div class="step-connector${i <= videoStep ? ' done' : ''}"></div>`;
+    const cls = i === videoStep ? 'active' : i < videoStep ? 'done' : '';
+    html += `<div class="step-dot ${cls}" onclick="vStep(${i})" title="${l}">${i}</div>`;
+  });
+  el.innerHTML = html;
+}
+function showVSection(n) {
+  document.querySelectorAll('#page-video .draft-section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById('v-s' + n);
+  if (sec) sec.classList.add('active');
+}
+function vStep(n) {
+  videoStep = n;
+  renderVSteps();
+  showVSection(n);
+}
+
+// ═══════ SUBSTACK STEPS ═══════
+const S_LABELS = ['Source','Title','Opening','Expand','Conflict','Realize','Connect','Teach','Action','Ending'];
+function renderSSteps() {
+  const el = document.getElementById('s-steps');
+  let html = '';
+  S_LABELS.forEach((l, i) => {
+    if (i > 0) html += `<div class="step-connector${i <= substackStep ? ' done' : ''}"></div>`;
+    const cls = i === substackStep ? 'active' : i < substackStep ? 'done' : '';
+    html += `<div class="step-dot ${cls}" onclick="sStep(${i})" title="${l}">${i}</div>`;
+  });
+  el.innerHTML = html;
+}
+function showSSection(n) {
+  document.querySelectorAll('#page-substack .draft-section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById('s-s' + n);
+  if (sec) sec.classList.add('active');
+}
+function sStep(n) {
+  substackStep = n;
+  renderSSteps();
+  showSSection(n);
+}
+
+// ═══════ SAVE DRAFTS ═══════
+function saveVideoDraft() {
+  const draft = {
+    id: Date.now(),
+    type: 'video',
+    account: document.getElementById('v-account').value,
+    job: document.getElementById('v-job').value,
+    angle: document.getElementById('v-angle').value,
+    source_type: document.getElementById('v-source').value,
+    fields: {
+      source: document.getElementById('v-f-source').value,
+      hook: document.getElementById('v-f-hook').value,
+      story: document.getElementById('v-f-story').value,
+      struggle: document.getElementById('v-f-struggle').value,
+      shift: document.getElementById('v-f-shift').value,
+      lesson: document.getElementById('v-f-lesson').value,
+      powerline: document.getElementById('v-f-powerline').value,
+      cta: document.getElementById('v-f-cta').value,
+    },
+    created: new Date().toISOString()
+  };
+  drafts.unshift(draft);
+  localStorage.setItem('ws_drafts', JSON.stringify(drafts));
+  showPreview(draft);
+  toast('Draft saved!');
+}
+
+function saveSubstackDraft() {
+  const draft = {
+    id: Date.now(),
+    type: 'substack',
+    angle: document.getElementById('s-angle').value,
+    source_type: document.getElementById('s-source').value,
+    fields: {
+      source: document.getElementById('s-f-source').value,
+      title: document.getElementById('s-f-title').value,
+      opening: document.getElementById('s-f-opening').value,
+      expand: document.getElementById('s-f-expand').value,
+      conflict: document.getElementById('s-f-conflict').value,
+      realization: document.getElementById('s-f-realization').value,
+      connect: document.getElementById('s-f-connect').value,
+      teach: document.getElementById('s-f-teach').value,
+      action: document.getElementById('s-f-action').value,
+      ending: document.getElementById('s-f-ending').value,
+      cta: document.getElementById('s-f-cta').value,
+    },
+    created: new Date().toISOString()
+  };
+  drafts.unshift(draft);
+  localStorage.setItem('ws_drafts', JSON.stringify(drafts));
+  showPreview(draft);
+  toast('Draft saved!');
+}
+
+// ═══════ PREVIEW ═══════
+const ACCT_LABELS = { fc:'@fluencyconnect', sab:'@sabrina', mc:'@michael+sabrina' };
+const JOB_LABELS = { attract:'Attract', nurture:'Nurture', position:'Position', convert:'Convert' };
+const ANGLE_LABELS = { life:'Life', english:'English', growth:'Growth' };
+
+function showPreview(draft) {
+  document.getElementById('preview-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  const title = draft.type === 'video' ? 'Video Script Preview' : 'Substack Preview';
+  document.getElementById('preview-title').textContent = title;
+
+  let html = '';
+  if (draft.type === 'video') {
+    const meta = `${ACCT_LABELS[draft.account] || ''} · ${JOB_LABELS[draft.job] || ''} · ${ANGLE_LABELS[draft.angle] || ''}`;
+    html += `<span class="pv-label">META</span><span class="pv-content" style="font-size:12px;color:var(--green)">${meta}</span>`;
+    const vFields = [
+      ['SOURCE', draft.fields.source],
+      ['HOOK', draft.fields.hook],
+      ['MICRO-STORY', draft.fields.story],
+      ['STRUGGLE', draft.fields.struggle],
+      ['SHIFT', draft.fields.shift],
+      ['LESSON', draft.fields.lesson],
+      ['POWER LINE', draft.fields.powerline],
+      ['CTA', draft.fields.cta],
+    ];
+    vFields.forEach(([label, val]) => {
+      html += `<span class="pv-label">${label}</span>`;
+      html += val ? `<span class="pv-content">${esc(val)}</span>` : `<span class="pv-empty">(empty)</span>\n\n`;
+    });
+  } else {
+    const meta = `Substack · ${ANGLE_LABELS[draft.angle] || ''}`;
+    html += `<span class="pv-label">META</span><span class="pv-content" style="font-size:12px;color:var(--sab)">${meta}</span>`;
+    if (draft.fields.title) html += `<span class="pv-content" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:800;margin-bottom:20px">${esc(draft.fields.title)}</span>`;
+    const sFields = [
+      ['SOURCE', draft.fields.source],
+      ['OPENING', draft.fields.opening],
+      ['STORY', draft.fields.expand],
+      ['INTERNAL CONFLICT', draft.fields.conflict],
+      ['REALIZATION', draft.fields.realization],
+      ['CONNECT TO READER', draft.fields.connect],
+      ['TEACH', draft.fields.teach],
+      ['ACTIONABLE', draft.fields.action],
+      ['ENDING', draft.fields.ending],
+      ['CTA', draft.fields.cta],
+    ];
+    sFields.forEach(([label, val]) => {
+      html += `<span class="pv-label">${label}</span>`;
+      html += val ? `<span class="pv-content">${esc(val)}</span>` : `<span class="pv-empty">(empty)</span>\n\n`;
+    });
+  }
+  document.getElementById('preview-content').innerHTML = html;
+  window._previewDraft = draft;
+}
+
+function closePreview() {
+  document.getElementById('preview-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function copyPreview() {
+  const draft = window._previewDraft;
+  if (!draft) return;
+  let text = '';
+  if (draft.type === 'video') {
+    text = `[${ACCT_LABELS[draft.account]} · ${JOB_LABELS[draft.job]} · ${ANGLE_LABELS[draft.angle]}]\n\n`;
+    text += `SOURCE: ${draft.fields.source}\n\nHOOK: ${draft.fields.hook}\n\nSTORY: ${draft.fields.story}\n\nSTRUGGLE: ${draft.fields.struggle}\n\nSHIFT: ${draft.fields.shift}\n\nLESSON: ${draft.fields.lesson}\n\nPOWER LINE: ${draft.fields.powerline}\n\nCTA: ${draft.fields.cta}`;
+  } else {
+    text = `TITLE: ${draft.fields.title}\n\n${draft.fields.opening}\n\n${draft.fields.expand}\n\n${draft.fields.conflict}\n\n${draft.fields.realization}\n\n${draft.fields.connect}\n\n${draft.fields.teach}\n\n${draft.fields.action}\n\n${draft.fields.ending}\n\n${draft.fields.cta}`;
+  }
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard!'));
+}
+
+// ═══════ SAVED LIST ═══════
+function renderSaved() {
+  const el = document.getElementById('saved-list');
+  if (!drafts.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div class="empty-state-text">No saved drafts yet.<br>Create one from the Video or Substack tabs.</div></div>';
+    return;
+  }
+  el.innerHTML = drafts.map((d, i) => {
+    const title = d.type === 'video'
+      ? (d.fields.hook ? d.fields.hook.substring(0, 60) + (d.fields.hook.length > 60 ? '…' : '') : 'Video Draft')
+      : (d.fields.title || 'Substack Draft');
+    const tagCls = d.type === 'video' ? (d.account === 'fc' ? 'tag-fc' : d.account === 'sab' ? 'tag-sab' : 'tag-mc') : 'tag-sab';
+    const tagLabel = d.type === 'video' ? (ACCT_LABELS[d.account] || 'Video') : 'Substack';
+    const date = new Date(d.created).toLocaleDateString('pt-BR');
+    const job = d.job ? JOB_LABELS[d.job] : '';
+    return `<div class="saved-card" onclick="showPreview(drafts[${i}])">
+      <div class="saved-left">
+        <div class="saved-title">${esc(title)}</div>
+        <div class="saved-meta">
+          <span class="saved-tag ${tagCls}">${tagLabel}</span>
+          ${job ? `<span style="font-size:10px;color:var(--muted)">${job}</span>` : ''}
+          <span style="font-size:10px;color:var(--muted)">${date}</span>
+        </div>
+      </div>
+      <button class="saved-delete" onclick="event.stopPropagation();deleteDraft(${i})">&times;</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteDraft(i) {
+  drafts.splice(i, 1);
+  localStorage.setItem('ws_drafts', JSON.stringify(drafts));
+  renderSaved();
+}
+
+// ═══════ UTILS ═══════
+function esc(s) { return s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') : ''; }
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function copyHook(card) {
+  const template = card.querySelector('.hook-template').textContent;
+  navigator.clipboard.writeText(template).then(() => {
+    card.classList.add('selected');
+    toast('Hook template copied!');
+    setTimeout(() => card.classList.remove('selected'), 1500);
+  });
+}
+
+// Init
+renderVSteps();
+showVSection(0);
+renderSSteps();
+showSSection(0);
+</script>
+</body>
+</html>
