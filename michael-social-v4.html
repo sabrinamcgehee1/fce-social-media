@@ -79,6 +79,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .video-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;position:relative;}
 .video-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 4px 20px rgba(29,185,148,.1);}
 .video-card.done{opacity:.6;}
+.video-card.revised{background:rgba(116,192,252,.13);border-color:rgba(116,192,252,.4);}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;}
 .card-num{font-size:22px;font-weight:900;color:var(--bg4);line-height:1;flex-shrink:0;}
 .card-badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
@@ -1164,6 +1165,7 @@ PROVA (quem): ___________________<br><br>
     </div>
     <div class="modal-header-actions">
       <button id="mic-ai-btn" onclick="openMicModalAIPanel()" style="background:transparent;border:1px solid rgba(29,185,148,.4);color:var(--green);padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .15s;">✨ Gerar</button>
+      <button id="modal-revised-btn" onclick="toggleRevised()" style="background:transparent;border:1px solid rgba(116,192,252,.4);color:#74C0FC;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .15s;">Revised</button>
       <button class="edit-toggle" id="edit-toggle-btn" onclick="toggleEditMode()">✏️ Editar</button>
       <button class="del-topic-btn" onclick="deleteActiveTopic()">🗑</button>
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
@@ -1445,6 +1447,7 @@ const DEFAULT_TOPICS = [
 const micDeletedBuiltins = JSON.parse(localStorage.getItem('mic_deleted_builtins') || '[]');
 let TOPICS = JSON.parse(localStorage.getItem('mic_topics_v5') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TOPICS));
 let recorded = JSON.parse(localStorage.getItem('mic_rec_v4') || '{}');  // { topicId_version_fmt: bool }
+let revised  = JSON.parse(localStorage.getItem('mic_revised_v4') || '{}'); // { topicId_version_fmt: bool }
 let dates    = JSON.parse(localStorage.getItem('mic_dates_v4') || '{}'); // { topicId_version_fmt: {rec,post} }
 let notes    = JSON.parse(localStorage.getItem('mic_notes_v4') || '{}'); // { topicId: string }
 let calPosts = JSON.parse(localStorage.getItem('mic_cal_v4') || '{}');
@@ -1465,6 +1468,7 @@ function saveTopics() { localStorage.setItem('mic_topics_v5', JSON.stringify(TOP
 // Filter out permanently deleted built-in topics on load
 micDeletedBuiltins.forEach(id => { const i = TOPICS.findIndex(x => x.id === id); if (i > -1) TOPICS.splice(i, 1); });
 function saveRecorded() { localStorage.setItem('mic_rec_v4', JSON.stringify(recorded)); }
+function saveRevised()  { localStorage.setItem('mic_revised_v4', JSON.stringify(revised)); }
 function saveDates()    { localStorage.setItem('mic_dates_v4', JSON.stringify(dates)); }
 function saveNotesSt()  { localStorage.setItem('mic_notes_v4', JSON.stringify(notes)); }
 function saveCalPosts() { localStorage.setItem('mic_cal_v4', JSON.stringify(calPosts)); }
@@ -1478,6 +1482,21 @@ function getPostsForMonth(y,m) { return calPosts[calPostKey(y,m)] || []; }
 function getPostsForDay(y,m,d) { return getPostsForMonth(y,m).filter(p=>p.day===d); }
 
 function isRecorded(topicId, version, fmt) { return !!recorded[recKey(topicId,version,fmt)]; }
+function isRevised(topicId, version, fmt)  { return !!revised[recKey(topicId,version,fmt)]; }
+function toggleRevised() {
+  const k = recKey(activeModalTopic.id, activeModalVersion, activeModalFormat);
+  revised[k] = !revised[k];
+  saveRevised(); updateRevisedBtn(); renderGrid();
+}
+function updateRevisedBtn() {
+  const btn = document.getElementById('modal-revised-btn');
+  if (!btn) return;
+  const rev = isRevised(activeModalTopic.id, activeModalVersion, activeModalFormat);
+  btn.style.background = rev ? 'rgba(116,192,252,.2)' : 'transparent';
+  btn.style.borderColor = 'rgba(116,192,252,.4)';
+  btn.style.color = '#74C0FC';
+  btn.textContent = rev ? '✓ Revised' : 'Revised';
+}
 function toggleRecorded(topicId, version, fmt) {
   const k = recKey(topicId,version,fmt);
   recorded[k] = !recorded[k];
@@ -1601,7 +1620,7 @@ function renderGrid() {
     const dd = dates[dk]||{};
     const dateInfo = (dd.rec?`<span class="card-date-tag">🎬 ${dd.rec}</span>`:'')+
                      (dd.post?`<span class="card-date-tag">📅 ${dd.post}</span>`:'');
-    return `<div class="video-card ${done?'done':''}" onclick="openModal(${t.id},'${v}','${f}')">
+    return `<div class="video-card ${done?'done':''} ${isRevised(t.id,v,f)?'revised':''}" onclick="openModal(${t.id},'${v}','${f}')">
       ${done?'<div class="done-check">✓</div>':''}
       <div class="card-top">
         <div class="card-num" style="color:${pc}">${String(t.id).padStart(2,'0')}</div>
@@ -1692,6 +1711,7 @@ function openModal(topicId, version, fmt) {
   renderModalBody(t, version, fmt);
   loadDatesBar(t.id, version, fmt);
   loadNotesBar(t.id);
+  updateRevisedBtn();
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -1708,6 +1728,7 @@ function switchModalTab(version) {
   renderFormatTabs();
   renderModalBody(activeModalTopic, version, 'reel');
   loadDatesBar(activeModalTopic.id, version, 'reel');
+  updateRevisedBtn();
 }
 
 function switchFormatTab(fmt) {
@@ -1718,6 +1739,7 @@ function switchFormatTab(fmt) {
   renderFormatTabs();
   renderModalBody(activeModalTopic, activeModalVersion, fmt);
   loadDatesBar(activeModalTopic.id, activeModalVersion, fmt);
+  updateRevisedBtn();
 }
 
 function renderFormatTabs() {

@@ -80,6 +80,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .topic-card.p2{border-left-color:var(--p2);}
 .topic-card.p3{border-left-color:var(--p3);}
 .topic-card.recorded{opacity:.45;}
+.topic-card.revised{background:rgba(116,192,252,.13);border-color:rgba(116,192,252,.4);}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
 .card-num{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--border2);line-height:1;}
 .card-badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
@@ -1169,6 +1170,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
       <button id="modalAiBtn" onclick="openModalAIPanel()" style="padding:6px 14px;background:transparent;border:1px solid rgba(91,168,138,.4);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--p3);cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(91,168,138,.1)'" onmouseout="this.style.background='transparent'">✨ Gerar</button>
+      <button id="modalRevisedBtn" onclick="toggleRevised()" style="padding:6px 14px;background:transparent;border:1px solid rgba(116,192,252,.4);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:#74C0FC;cursor:pointer;transition:all .15s;">Revised</button>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
   </div>
@@ -1714,6 +1716,7 @@ const DEFAULT_TOPICS = [
 let state = {
   topics: JSON.parse(localStorage.getItem('sab_topics') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TOPICS)),
   recorded: JSON.parse(localStorage.getItem('sab_rec') || '{}'),
+  revised: JSON.parse(localStorage.getItem('sab_revised') || '{}'),
   filterPillar: 'all',
   filterGoal: 'all',
   filterPending: false,
@@ -1727,6 +1730,7 @@ let state = {
 function saveState() {
   localStorage.setItem('sab_topics', JSON.stringify(state.topics));
   localStorage.setItem('sab_rec', JSON.stringify(state.recorded));
+  localStorage.setItem('sab_revised', JSON.stringify(state.revised));
   localStorage.setItem('sab_dates', JSON.stringify(state.dates));
 }
 
@@ -1790,7 +1794,7 @@ function buildTopicCard(t) {
   const allFmtsDone = fmts.reel && fmts.carousel && fmts.story;
   const hasNotes = !!getTopicNotes(t.id);
   const isSerie = t.type === 'serie';
-  return `<div class="topic-card ${t.pillar}${isRec || allFmtsDone ? ' recorded' : ''}" data-id="${t.id}" onclick="openModal(${t.id})">
+  return `<div class="topic-card ${t.pillar}${isRec || allFmtsDone ? ' recorded' : ''}${Object.keys(state.revised).some(k=>k.startsWith(t.id+'_'))?' revised':''}" data-id="${t.id}" onclick="openModal(${t.id})">
     ${(isRec||allFmtsDone) ? '<div class="card-rec-dot">✓</div>' : ''}
     <div class="card-top">
       <div class="card-num">T${String(t.num).padStart(2,'0')}${hasNotes ? '<span class=\'card-notes-dot\'></span>' : ''}</div>
@@ -1884,6 +1888,7 @@ function openModal(id) {
   loadFormatDates();
   loadTopicNotes();
   updateFmtRecBtns();
+  updateRevisedBtn();
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1920,6 +1925,7 @@ function switchJob(job) {
   renderFormatTabs();
   renderModalBody(t);
   loadFormatDates();
+  updateRevisedBtn();
 }
 
 function switchFmt(fmt) {
@@ -1929,6 +1935,7 @@ function switchFmt(fmt) {
   renderFormatTabs();
   renderModalBody(t);
   loadFormatDates();
+  updateRevisedBtn();
 }
 
 // Map job -> script type key
@@ -2145,6 +2152,23 @@ function closeModal() {
 }
 
 function closeOutside(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+function revisedKey(id, job, fmt) { return `${id}_${job}_${fmt}`; }
+function isRevised(id, job, fmt) { return !!state.revised[revisedKey(id, job, fmt)]; }
+function toggleRevised() {
+  if (!state.currentId) return;
+  const k = revisedKey(state.currentId, state.currentJob, state.currentFmt);
+  state.revised[k] = !state.revised[k];
+  if (!state.revised[k]) delete state.revised[k];
+  saveState(); updateRevisedBtn(); renderGrid();
+}
+function updateRevisedBtn() {
+  const btn = document.getElementById('modalRevisedBtn');
+  if (!btn) return;
+  const rev = isRevised(state.currentId, state.currentJob, state.currentFmt);
+  btn.style.background = rev ? 'rgba(116,192,252,.2)' : 'transparent';
+  btn.textContent = rev ? '✓ Revised' : 'Revised';
+}
 
 function toggleRecorded() {
   if (!state.currentId) return;

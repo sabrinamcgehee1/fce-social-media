@@ -79,6 +79,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .video-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;position:relative}
 .video-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 4px 20px rgba(29,185,148,.1)}
 .video-card.done{opacity:.55}
+.video-card.revised{background:rgba(116,192,252,.13);border-color:rgba(116,192,252,.4)}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
 .card-num{font-size:20px;font-weight:900;color:var(--border);line-height:1;flex-shrink:0}
 .card-badges{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
@@ -1618,6 +1619,7 @@ PROVA (quem): ___________________<br><br>
     </div>
     <div class="modal-header-actions">
       <button class="modal-action-btn ai-btn" id="modal-ai-btn" onclick="openModalAIPanel()">✨ Gerar</button>
+      <button class="modal-action-btn" id="modal-revised-btn" onclick="toggleRevised()" style="border-color:rgba(116,192,252,.4);color:#74C0FC;">Revised</button>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
   </div>
@@ -1848,6 +1850,7 @@ let appState = {
   recorded: JSON.parse(localStorage.getItem('fc8_rec') || '{}'),
   scripts: JSON.parse(localStorage.getItem('fc8_scripts') || '{}'),
   prodCards: JSON.parse(localStorage.getItem('fc8_prod') || '{}'),
+  revised: JSON.parse(localStorage.getItem('fc8_revised') || '{}'),
   modalTopic:null, modalVersion:'attract', modalFormat:'video',
   aiPanelOpen:false
 };
@@ -1855,6 +1858,7 @@ let appState = {
 function saveRec(){ localStorage.setItem('fc8_rec', JSON.stringify(appState.recorded)); }
 function saveScripts(){ localStorage.setItem('fc8_scripts', JSON.stringify(appState.scripts)); }
 function saveProd(){ localStorage.setItem('fc8_prod', JSON.stringify(appState.prodCards)); }
+function saveRevised(){ localStorage.setItem('fc8_revised', JSON.stringify(appState.revised)); }
 
 function scriptKey(tid,ver,fmt,field){ return `${tid}_${ver}_${fmt}_${field}`; }
 function getScript(tid,ver,fmt,field){ return appState.scripts[scriptKey(tid,ver,fmt,field)] || ''; }
@@ -1922,7 +1926,8 @@ function renderGrid(){
   topics.forEach(t=>{
     versionsToShow.forEach(v=>{
       const done=isRecorded(t.id,v);
-      html+=`<div class="video-card${done?' done':''}\" onclick="openModal(${t.id},'${v}')">
+      const rev=isRevised(t.id,v);
+      html+=`<div class="video-card${done?' done':''}${rev?' revised':''}\" onclick="openModal(${t.id},'${v}')">
         ${done?'<div class="done-check">✓</div>':''}
         <div class="card-top">
           <div class="card-num" style="color:${pColors[t.pillar]}">${String(t.id).padStart(2,'0')}</div>
@@ -1969,6 +1974,7 @@ function openModal(tid,ver='attract'){
   renderFormatTabs();
   renderModalBody();
   updateRecordBtn();
+  updateRevisedBtn();
   document.getElementById('modal-ai-panel-container').innerHTML='';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
@@ -1988,7 +1994,7 @@ function switchModalVersion(v){
   appState.modalFormat='video';
   appState.aiPanelOpen=false;
   document.getElementById('modal-ai-panel-container').innerHTML='';
-  renderModalTabs(); renderFormatTabs(); renderModalBody(); updateRecordBtn();
+  renderModalTabs(); renderFormatTabs(); renderModalBody(); updateRecordBtn(); updateRevisedBtn();
   loadDateFields();
   loadMainDateFields();
   loadRecNotes();
@@ -2048,6 +2054,26 @@ function toggleRecorded(){
 }
 function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 function closeModalOutside(e){ if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+function isRevised(tid,ver){ return !!(appState.revised[tid] && appState.revised[tid][ver]); }
+function updateRevisedBtn(){
+  const {modalTopic:t,modalVersion:ver}=appState;
+  if(!t) return;
+  const btn=document.getElementById('modal-revised-btn');
+  if(!btn) return;
+  const rev=isRevised(t.id,ver);
+  btn.style.background=rev?'rgba(116,192,252,.2)':'';
+  btn.style.borderColor=rev?'#74C0FC':'rgba(116,192,252,.4)';
+  btn.style.color='#74C0FC';
+  btn.textContent=rev?'✓ Revised':'Revised';
+}
+function toggleRevised(){
+  const {modalTopic:t,modalVersion:ver}=appState;
+  if(!t) return;
+  if(!appState.revised[t.id]) appState.revised[t.id]={};
+  appState.revised[t.id][ver]=!appState.revised[t.id][ver];
+  saveRevised(); updateRevisedBtn(); renderGrid();
+}
 
 // ═══════════════════════════════════════════════════
 // MODAL AI PANEL
