@@ -252,10 +252,18 @@ async function handleGCalCallback() {
 
       console.log('[GCal] Exchanging code. redirect_uri =', cfg.redirectUri);
 
-      const res = await fetch('https://oauth2.googleapis.com/token', {
+      const res = await fetch(PROXY_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params
+        headers: {
+          'Content-Type': 'application/json',
+          'x-request-type': 'gcal-token'
+        },
+        body: JSON.stringify({
+          code,
+          client_id:     cfg.clientId,
+          redirect_uri:  cfg.redirectUri,
+          code_verifier: verifier
+        })
       });
 
       const data = await res.json();
