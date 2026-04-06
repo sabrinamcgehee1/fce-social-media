@@ -241,49 +241,43 @@ async function handleGCalCallback() {
   const verifier = sessionStorage.getItem('gcal_pkce_verifier');
   if (!verifier) return false;
 
-  try {
-      const params = new URLSearchParams({
+try {
+    console.log('[GCal] Exchanging code. redirect_uri =', cfg.redirectUri);
+
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-request-type': 'gcal-token'
+      },
+      body: JSON.stringify({
         code,
         client_id:     cfg.clientId,
         redirect_uri:  cfg.redirectUri,
         grant_type:    'authorization_code',
         code_verifier: verifier
-      });
+      })
+    });
 
-      console.log('[GCal] Exchanging code. redirect_uri =', cfg.redirectUri);
+    const data = await res.json();
+    console.log('[GCal] Token response:', data);
 
-      const res = await fetch(PROXY_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-request-type': 'gcal-token'
-        },
-        body: JSON.stringify({
-          code,
-          client_id:     cfg.clientId,
-          redirect_uri:  cfg.redirectUri,
-          code_verifier: verifier
-        })
-      });
-
-      const data = await res.json();
-      console.log('[GCal] Token response:', data);
-
-      if (data.access_token) {
-        gcalToken = data.access_token;
-        const settings = loadSettings();
-        settings.gcalToken = data.access_token;
-        settings.gcalConnected = true;
-        saveSettings(settings);
-        sessionStorage.removeItem('gcal_pkce_verifier');
-        window.history.replaceState({}, document.title, window.location.pathname);
-        return true;
-      } else {
-        console.error('[GCal] Token exchange failed:', data.error, data.error_description);
-      }
-    } catch(e) {
-      console.error('[API] GCal token exchange error:', e);
+    if (data.access_token) {
+      gcalToken = data.access_token;
+      const settings = loadSettings();
+      settings.gcalToken = data.access_token;
+      settings.gcalConnected = true;
+      saveSettings(settings);
+      sessionStorage.removeItem('gcal_pkce_verifier');
+      window.history.replaceState({}, document.title, window.location.pathname);
+      updateGCalBadge();
+      return true;
+    } else {
+      console.error('[GCal] Token exchange failed:', data.error, data.error_description);
     }
+  } catch(e) {
+    console.error('[API] GCal token exchange error:', e);
+  }
   return false;
 }
 
