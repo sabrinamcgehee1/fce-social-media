@@ -242,31 +242,40 @@ async function handleGCalCallback() {
   if (!verifier) return false;
 
   try {
-    const res = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        code, client_id: cfg.clientId,
-        redirect_uri: cfg.redirectUri,
-        grant_type: 'authorization_code',
+      const params = new URLSearchParams({
+        code,
+        client_id:     cfg.clientId,
+        redirect_uri:  cfg.redirectUri,
+        grant_type:    'authorization_code',
         code_verifier: verifier
-      })
-    });
-    const data = await res.json();
-    if (data.access_token) {
-      gcalToken = data.access_token;
-      const settings = loadSettings();
-      settings.gcalToken = data.access_token;
-      settings.gcalConnected = true;
-      saveSettings(settings);
-      sessionStorage.removeItem('gcal_pkce_verifier');
-      // Clean URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-      return true;
+      });
+
+      console.log('[GCal] Exchanging code. redirect_uri =', cfg.redirectUri);
+
+      const res = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+
+      const data = await res.json();
+      console.log('[GCal] Token response:', data);
+
+      if (data.access_token) {
+        gcalToken = data.access_token;
+        const settings = loadSettings();
+        settings.gcalToken = data.access_token;
+        settings.gcalConnected = true;
+        saveSettings(settings);
+        sessionStorage.removeItem('gcal_pkce_verifier');
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return true;
+      } else {
+        console.error('[GCal] Token exchange failed:', data.error, data.error_description);
+      }
+    } catch(e) {
+      console.error('[API] GCal token exchange error:', e);
     }
-  } catch(e) {
-    console.error('[API] GCal token exchange error:', e);
-  }
   return false;
 }
 
