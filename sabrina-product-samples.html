@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabrina EN — Product Samples Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#FAFAF8;--bg2:#F2F0ED;--bg3:#E8E5E0;
+  --surface:#fff;--border:#E2DFD9;--border2:#D4D0C8;
+  --text:#1A1A1A;--text2:#4A4540;--text3:#8A847A;--text4:#B8B2A8;
+  --accent:#2D2D2D;
+  --sage:#7A8F7A;--sage-light:#E8EDE8;--sage-bg:rgba(122,143,122,.08);
+  --warm:#C4956A;--warm-light:#F5EDE4;--warm-bg:rgba(196,149,106,.08);
+  --rose:#B87D82;--rose-light:#F2E4E6;--rose-bg:rgba(184,125,130,.08);
+  --shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.03);
+  --shadow2:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04);
+  --shadow3:0 4px 16px rgba(0,0,0,.08),0 16px 48px rgba(0,0,0,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+.container{max-width:960px;margin:0 auto;padding:40px 20px}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:48px}
+.header-sub{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.header h1{font-family:'Instrument Serif',serif;font-size:clamp(28px,5vw,44px);line-height:1.15;color:var(--accent);margin-bottom:8px}
+.header h1 em{font-style:italic;color:var(--sage)}
+.header p{font-size:14px;color:var(--text3);max-width:500px;margin:0 auto}
+
+/* NAV TABS */
+.product-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+.ptab{font-size:11px;font-weight:600;padding:8px 18px;border-radius:24px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text3);transition:all .25s}
+.ptab:hover{border-color:var(--border2);color:var(--text2)}
+.ptab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ptab .badge{display:inline-block;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:1px}
+.ptab.on .badge{background:rgba(255,255,255,.2);color:#fff}
+
+/* PRODUCT PAGES */
+.product{display:none;animation:fadeUp .5s ease}
+.product.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── PDF MOCK ─── */
+.pdf-spread{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:640px){.pdf-spread{grid-template-columns:1fr}}
+.pdf-page{
+  aspect-ratio:8.5/11;background:#fff;border-radius:4px;
+  box-shadow:var(--shadow2);padding:clamp(20px,4vw,40px);
+  position:relative;overflow:hidden;
+  border:1px solid rgba(0,0,0,.05);
+}
+.pdf-page::after{
+  content:'';position:absolute;top:0;right:0;width:20px;height:20px;
+  background:linear-gradient(135deg,var(--bg) 50%,rgba(0,0,0,.04) 50%);
+}
+
+/* PDF content styles */
+.pdf-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.pdf-logo{width:32px;height:32px;background:var(--sage);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;color:#fff;font-size:16px;font-style:italic}
+.pdf-brand{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--text3);text-transform:uppercase}
+
+.pdf-title{font-family:'Instrument Serif',serif;font-size:clamp(18px,3vw,26px);line-height:1.25;color:var(--accent);margin-bottom:6px}
+.pdf-subtitle{font-size:11px;color:var(--text3);margin-bottom:20px;line-height:1.6}
+
+.pdf-section{margin-bottom:16px}
+.pdf-section-title{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.pdf-text{font-size:10px;color:var(--text2);line-height:1.8}
+
+.pdf-prompt-box{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:10px}
+.pdf-prompt-label{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage);margin-bottom:4px}
+.pdf-prompt-line{border-bottom:1px solid var(--border2);height:18px;margin-bottom:4px}
+
+.pdf-checklist-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px}
+.pdf-check{width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0;margin-top:1px}
+.pdf-check-text{font-size:10px;color:var(--text2);line-height:1.5}
+
+.pdf-tracker{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px}
+.pdf-tracker-cell{aspect-ratio:1;border:1px solid var(--border);border-radius:3px;font-size:7px;display:flex;align-items:center;justify-content:center;color:var(--text4)}
+.pdf-tracker-cell.filled{background:var(--sage-light);border-color:var(--sage);color:var(--sage)}
+
+.pdf-quote{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;color:var(--sage);text-align:center;padding:16px;border-left:2px solid var(--sage);margin:16px 0}
+
+.pdf-footer{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:7px;color:var(--text4);letter-spacing:1px}
+
+/* ─── NOTION MOCK ─── */
+.notion-mock{background:#fff;border-radius:8px;box-shadow:var(--shadow2);overflow:hidden;border:1px solid rgba(0,0,0,.05);margin-bottom:24px}
+.notion-sidebar{background:#F7F6F3;padding:16px;border-bottom:1px solid #EDEDEA}
+.notion-sidebar-item{font-size:11px;padding:4px 8px;border-radius:4px;color:var(--text2);margin-bottom:2px;cursor:default}
+.notion-sidebar-item.active{background:rgba(122,143,122,.1);color:var(--sage);font-weight:600}
+.notion-sidebar-icon{margin-right:6px}
+
+.notion-body{padding:clamp(20px,4vw,40px)}
+.notion-cover{height:80px;background:linear-gradient(135deg,var(--sage-light) 0%,var(--warm-light) 100%);margin:-40px -40px 24px;position:relative}
+.notion-emoji{position:absolute;bottom:-20px;left:40px;font-size:40px}
+.notion-page-title{font-size:clamp(20px,3vw,28px);font-weight:700;margin-bottom:4px;margin-top:8px}
+.notion-page-desc{font-size:12px;color:var(--text3);margin-bottom:20px}
+
+.notion-table{width:100%;border-collapse:collapse;font-size:11px}
+.notion-table th{text-align:left;font-weight:600;padding:8px 10px;border-bottom:1px solid #EDEDEA;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.notion-table td{padding:8px 10px;border-bottom:1px solid #F5F5F3;color:var(--text2)}
+.notion-table tr:hover td{background:#FAFAF8}
+.notion-tag{display:inline-block;font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px}
+.notion-tag-income{background:#E8F5E9;color:#2E7D32}
+.notion-tag-expense{background:#FFF3E0;color:#E65100}
+.notion-tag-savings{background:var(--sage-light);color:var(--sage)}
+.notion-progress{height:6px;background:#F0F0EC;border-radius:3px;overflow:hidden}
+.notion-progress-fill{height:100%;border-radius:3px;background:var(--sage)}
+
+/* ─── LANDING PAGE MOCK ─── */
+.landing-mock{background:#fff;border-radius:12px;box-shadow:var(--shadow3);overflow:hidden;border:1px solid rgba(0,0,0,.05);margin-bottom:24px}
+.landing-hero{padding:clamp(24px,5vw,48px);text-align:center;background:linear-gradient(180deg,var(--bg) 0%,#fff 100%);position:relative}
+.landing-hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:3px;background:var(--sage);border-radius:2px}
+.landing-hero-title{font-family:'Instrument Serif',serif;font-size:clamp(22px,4vw,32px);line-height:1.25;color:var(--accent);margin-bottom:8px;margin-top:16px}
+.landing-hero-desc{font-size:13px;color:var(--text2);max-width:400px;margin:0 auto 20px;line-height:1.7}
+.landing-cta{display:inline-block;background:var(--sage);color:#fff;padding:12px 32px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.landing-cta:hover{background:#6A7F6A;transform:translateY(-1px)}
+.landing-subtext{font-size:10px;color:var(--text4);margin-top:8px}
+
+.landing-features{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border)}
+@media(max-width:640px){.landing-features{grid-template-columns:1fr}}
+.landing-feature{background:#fff;padding:20px;text-align:center}
+.landing-feature-icon{font-size:24px;margin-bottom:8px}
+.landing-feature-title{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.landing-feature-desc{font-size:10px;color:var(--text3);line-height:1.6}
+
+/* ─── META INFO ─── */
+.meta-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-top:16px}
+.meta-title{font-size:11px;font-weight:700;color:var(--sage);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.meta-text{font-size:12px;color:var(--text2);line-height:1.9}
+.meta-text strong{color:var(--text)}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:48px 0}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+<div class="header-sub">Product Samples</div>
+<h1>See Before You <em>Build</em></h1>
+<p>Preview samples of every free resource and digital product — so you know exactly what you're making before spending time in Canva.</p>
+</div>
+
+<!-- NAV -->
+<div class="product-tabs">
+<button class="ptab on" onclick="showProduct('journal',this)">The 1% Journal <span class="badge" style="background:var(--sage-bg);color:var(--sage)">FREE</span></button>
+<button class="ptab" onclick="showProduct('moneykit',this)">Money Kit <span class="badge" style="background:var(--sage-bg);color:var(--sage)">FREE</span></button>
+<button class="ptab" onclick="showProduct('readinglist',this)">Reading List <span class="badge" style="background:var(--sage-bg);color:var(--sage)">FREE</span></button>
+<button class="ptab" onclick="showProduct('planner',this)">Full Planner <span class="badge" style="background:var(--warm-bg);color:var(--warm)">$12</span></button>
+<button class="ptab" onclick="showProduct('moneyguide',this)">Money Guide <span class="badge" style="background:var(--warm-bg);color:var(--warm)">$19</span></button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PRODUCT 1: THE 1% JOURNAL (FREE PDF) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="product on" id="prod-journal">
+
+<div class="pdf-spread">
+<!-- COVER PAGE -->
+<div class="pdf-page" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(180deg,#FAFAF8 0%,#F2F0ED 100%)">
+  <div style="width:40px;height:3px;background:var(--sage);border-radius:2px;margin-bottom:24px"></div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:12px">Free Guide</div>
+  <div style="font-family:'Instrument Serif',serif;font-size:clamp(24px,4vw,34px);line-height:1.2;color:var(--accent);margin-bottom:8px">The 1%<br>Journal</div>
+  <div style="font-size:10px;color:var(--text3);max-width:200px;margin-bottom:24px;line-height:1.6">30 days of tiny improvements that compound into a completely different life.</div>
+  <div style="width:60px;height:1px;background:var(--border2);margin-bottom:16px"></div>
+  <div style="font-size:9px;color:var(--text4);letter-spacing:1px">By Sabrina McGehee</div>
+  <div class="pdf-footer">sabrinamcgehee.substack.com</div>
+</div>
+
+<!-- SAMPLE DAILY PAGE -->
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-logo">S</div>
+    <div class="pdf-brand">The 1% Journal</div>
+  </div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:4px">Day 07</div>
+  <div class="pdf-title">What's one thing I can do 1% better today?</div>
+  <div class="pdf-subtitle">Focus on the smallest possible improvement. Not a revolution — an evolution.</div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">Today's 1% improvement</div>
+    <div class="pdf-prompt-line"></div>
+    <div class="pdf-prompt-line"></div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">Why does this matter to me?</div>
+    <div class="pdf-prompt-line"></div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">How will I measure if I did it?</div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-section" style="margin-top:16px">
+    <div class="pdf-section-title">Evening check-in</div>
+    <div class="pdf-checklist-item"><div class="pdf-check"></div><div class="pdf-check-text">I followed through on my 1% improvement</div></div>
+    <div class="pdf-checklist-item"><div class="pdf-check"></div><div class="pdf-check-text">I noticed something I want to improve tomorrow</div></div>
+    <div class="pdf-checklist-item"><div class="pdf-check"></div><div class="pdf-check-text">I'm proud of myself for showing up today</div></div>
+  </div>
+
+  <div class="pdf-quote">"You don't rise to the level of your goals. You fall to the level of your systems."</div>
+  <div class="pdf-footer">Page 9 — sabrinamcgehee.substack.com</div>
+</div>
+</div>
+
+<!-- SAMPLE WEEKLY REVIEW PAGE -->
+<div class="pdf-spread">
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-logo">S</div>
+    <div class="pdf-brand">The 1% Journal</div>
+  </div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:4px">Week 01 Review</div>
+  <div class="pdf-title">7 Days of 1%</div>
+  <div class="pdf-subtitle">Look back at your week. Which improvements stuck? Which didn't?</div>
+
+  <div class="pdf-section-title" style="margin-bottom:6px">This week's wins</div>
+  <div class="pdf-tracker">
+    <div class="pdf-tracker-cell filled">M</div>
+    <div class="pdf-tracker-cell filled">T</div>
+    <div class="pdf-tracker-cell">W</div>
+    <div class="pdf-tracker-cell filled">T</div>
+    <div class="pdf-tracker-cell filled">F</div>
+    <div class="pdf-tracker-cell">S</div>
+    <div class="pdf-tracker-cell filled">S</div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">My biggest 1% win this week</div>
+    <div class="pdf-prompt-line"></div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">What I'll carry into next week</div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">What I'll let go of</div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">Next week's focus area</div>
+    <div style="display:flex;gap:6px;margin-top:6px">
+      <div style="font-size:9px;padding:3px 8px;border:1px solid var(--border);border-radius:12px;color:var(--text3)">Money</div>
+      <div style="font-size:9px;padding:3px 8px;border:1px solid var(--border);border-radius:12px;color:var(--text3)">Health</div>
+      <div style="font-size:9px;padding:3px 8px;border:1px solid var(--sage);border-radius:12px;color:var(--sage);background:var(--sage-bg)">Learning</div>
+      <div style="font-size:9px;padding:3px 8px;border:1px solid var(--border);border-radius:12px;color:var(--text3)">Family</div>
+      <div style="font-size:9px;padding:3px 8px;border:1px solid var(--border);border-radius:12px;color:var(--text3)">Work</div>
+    </div>
+  </div>
+  <div class="pdf-footer">Page 10 — sabrinamcgehee.substack.com</div>
+</div>
+
+<!-- MONTH TRACKER PAGE -->
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-logo">S</div>
+    <div class="pdf-brand">The 1% Journal</div>
+  </div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:4px">30-Day Tracker</div>
+  <div class="pdf-title">Your Compound Effect</div>
+  <div class="pdf-subtitle">Color in each day you completed your 1% improvement. Watch the grid fill up.</div>
+
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:16px">
+    <div class="pdf-tracker-cell filled" style="aspect-ratio:1;font-size:9px">1</div>
+    <div class="pdf-tracker-cell filled" style="aspect-ratio:1;font-size:9px">2</div>
+    <div class="pdf-tracker-cell filled" style="aspect-ratio:1;font-size:9px">3</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">4</div>
+    <div class="pdf-tracker-cell filled" style="aspect-ratio:1;font-size:9px">5</div>
+    <div class="pdf-tracker-cell filled" style="aspect-ratio:1;font-size:9px">6</div>
+    <div class="pdf-tracker-cell filled" style="aspect-ratio:1;font-size:9px">7</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">8</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">9</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">10</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">11</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">12</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">13</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">14</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">15</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">16</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">17</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">18</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">19</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">20</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">21</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">22</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">23</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">24</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">25</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">26</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">27</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">28</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">29</div>
+    <div class="pdf-tracker-cell" style="aspect-ratio:1;font-size:9px">30</div>
+  </div>
+
+  <div class="pdf-prompt-box">
+    <div class="pdf-prompt-label">After 30 days, I am different because...</div>
+    <div class="pdf-prompt-line"></div>
+    <div class="pdf-prompt-line"></div>
+    <div class="pdf-prompt-line"></div>
+  </div>
+
+  <div class="pdf-quote">"Being 1% better every day."<br>— Sabrina McGehee</div>
+  <div class="pdf-footer">Page 14 — sabrinamcgehee.substack.com</div>
+</div>
+</div>
+
+<div class="meta-card">
+<div class="meta-title">Build Notes</div>
+<div class="meta-text">
+<strong>Tool:</strong> Canva Premium (use your brand fonts + colors from Brand Kit)<br>
+<strong>Pages:</strong> 10–14 pages total (cover, intro, 7 daily templates, 4 weekly reviews, 1 monthly tracker, back cover)<br>
+<strong>Time to build:</strong> 2–3 hours in Canva<br>
+<strong>Delivery:</strong> PDF download via Substack welcome email or Stan Store<br>
+<strong>CTA in videos:</strong> "I made a free journal for this — link in bio"
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PRODUCT 2: BILINGUAL MONEY KIT (FREE NOTION) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="product" id="prod-moneykit">
+
+<div class="notion-mock">
+<div class="notion-sidebar">
+  <div class="notion-sidebar-item active"><span class="notion-sidebar-icon">💰</span>Dashboard</div>
+  <div class="notion-sidebar-item"><span class="notion-sidebar-icon">📊</span>Expense Tracker</div>
+  <div class="notion-sidebar-item"><span class="notion-sidebar-icon">🎯</span>Savings Goals</div>
+  <div class="notion-sidebar-item"><span class="notion-sidebar-icon">💱</span>Exchange Rate Log</div>
+  <div class="notion-sidebar-item"><span class="notion-sidebar-icon">📋</span>Monthly Budget</div>
+</div>
+<div class="notion-body">
+  <div class="notion-cover"></div>
+  <div class="notion-emoji">💰</div>
+  <div class="notion-page-title">Bilingual Money Starter Kit</div>
+  <div class="notion-page-desc">By Sabrina McGehee · Manage your finances across two countries, two currencies, one life.</div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px">Monthly Overview — April 2026</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+    <div style="background:var(--sage-bg);border-radius:8px;padding:12px;text-align:center">
+      <div style="font-size:9px;font-weight:600;color:var(--sage);text-transform:uppercase;letter-spacing:1px">Income (USD)</div>
+      <div style="font-size:20px;font-weight:700;color:var(--sage);margin-top:4px">$2,400</div>
+    </div>
+    <div style="background:var(--warm-bg);border-radius:8px;padding:12px;text-align:center">
+      <div style="font-size:9px;font-weight:600;color:var(--warm);text-transform:uppercase;letter-spacing:1px">Expenses (BRL)</div>
+      <div style="font-size:20px;font-weight:700;color:var(--warm);margin-top:4px">R$4,200</div>
+    </div>
+    <div style="background:var(--sage-bg);border-radius:8px;padding:12px;text-align:center">
+      <div style="font-size:9px;font-weight:600;color:var(--sage);text-transform:uppercase;letter-spacing:1px">Savings Rate</div>
+      <div style="font-size:20px;font-weight:700;color:var(--sage);margin-top:4px">18%</div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px">Savings Goals</div>
+  <div style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span style="color:var(--text2)">Emergency Fund (3 months)</span><span style="color:var(--sage);font-weight:600">62%</span></div>
+    <div class="notion-progress"><div class="notion-progress-fill" style="width:62%"></div></div>
+  </div>
+  <div style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span style="color:var(--text2)">Family Trip to Brazil</span><span style="color:var(--sage);font-weight:600">35%</span></div>
+    <div class="notion-progress"><div class="notion-progress-fill" style="width:35%"></div></div>
+  </div>
+
+  <div style="font-size:11px;font-weight:600;color:var(--text2);margin:20px 0 8px">Recent Transactions</div>
+  <table class="notion-table">
+    <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Category</th></tr></thead>
+    <tbody>
+      <tr><td>Apr 3</td><td>Groceries — Pão de Açúcar</td><td>R$340</td><td><span class="notion-tag notion-tag-expense">Expense</span></td></tr>
+      <tr><td>Apr 2</td><td>Wise Transfer → Brazil</td><td>$500 → R$2,815</td><td><span class="notion-tag notion-tag-expense">Transfer</span></td></tr>
+      <tr><td>Apr 1</td><td>Substack subscriber revenue</td><td>$47</td><td><span class="notion-tag notion-tag-income">Income</span></td></tr>
+      <tr><td>Apr 1</td><td>Auto-savings deposit</td><td>$200</td><td><span class="notion-tag notion-tag-savings">Savings</span></td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<div class="meta-card">
+<div class="meta-title">Build Notes</div>
+<div class="meta-text">
+<strong>Tool:</strong> Notion (free account is fine)<br>
+<strong>Pages:</strong> 5 linked databases (Dashboard, Expenses, Goals, Exchange Log, Budget)<br>
+<strong>Time to build:</strong> 3–4 hours<br>
+<strong>Free version:</strong> Basic dashboard + expense tracker + 1 savings goal<br>
+<strong>Paid upgrade ($19):</strong> Investment tracker, tax season checklist, exchange rate alerts system, multi-currency reports<br>
+<strong>Delivery:</strong> Notion template link (user duplicates to their workspace)
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PRODUCT 3: READING LIST (FREE LANDING PAGE) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="product" id="prod-readinglist">
+
+<div class="landing-mock">
+<div class="landing-hero">
+  <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-top:12px">Sabrina's Library</div>
+  <div class="landing-hero-title">The books that<br>changed my life</div>
+  <div class="landing-hero-desc">Curated by topic. Reviewed honestly. Updated monthly. Every book here earned its spot by changing how I think, earn, or live.</div>
+</div>
+<div class="landing-features">
+  <div class="landing-feature"><div class="landing-feature-icon">💰</div><div class="landing-feature-title">Money & Wealth</div><div class="landing-feature-desc">Psychology of Money · I Will Teach You to Be Rich · The Simple Path to Wealth · Your Money or Your Life</div></div>
+  <div class="landing-feature"><div class="landing-feature-icon">🧠</div><div class="landing-feature-title">Mindset & Growth</div><div class="landing-feature-desc">Atomic Habits · Meditations · The Daily Stoic · Dare to Lead · Start With Why</div></div>
+  <div class="landing-feature"><div class="landing-feature-icon">🌎</div><div class="landing-feature-title">Culture & Identity</div><div class="landing-feature-desc">Americanah · The Alchemist · Between the World and Me · The Immigrant Advantage</div></div>
+</div>
+</div>
+
+<div class="meta-card">
+<div class="meta-title">Build Notes</div>
+<div class="meta-text">
+<strong>Tool:</strong> Canva Website (you have Premium) or Carrd.co (free)<br>
+<strong>Structure:</strong> Single scrolling page with 5–6 categories, 3–5 books each, one-line review per book<br>
+<strong>Time to build:</strong> 1–2 hours<br>
+<strong>Monetization:</strong> Amazon Associates affiliate links on every book (earn 4–8% per purchase)<br>
+<strong>Lives permanently in your bio link</strong> — every time you mention a book in a video, traffic goes here
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PRODUCT 4: FULL PLANNER (PAID $12) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="product" id="prod-planner">
+
+<div class="landing-mock">
+<div class="landing-hero">
+  <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--warm);margin-top:12px">Digital Product — $12</div>
+  <div class="landing-hero-title">The 1% Planner</div>
+  <div class="landing-hero-desc">The complete 90-day system for compounding tiny improvements into real transformation. Notion template + printable PDF.</div>
+  <button class="landing-cta" style="background:var(--warm)">Get the Planner — $12</button>
+  <div class="landing-subtext">Instant download · Notion + PDF included</div>
+</div>
+<div class="landing-features">
+  <div class="landing-feature"><div class="landing-feature-icon">📋</div><div class="landing-feature-title">90-Day Goal System</div><div class="landing-feature-desc">Quarterly vision → monthly targets → weekly actions → daily 1% improvements. The full framework.</div></div>
+  <div class="landing-feature"><div class="landing-feature-icon">📊</div><div class="landing-feature-title">Compound Tracker</div><div class="landing-feature-desc">Visual tracker that shows your 1% improvements stacking. Watch the progress compound over 90 days.</div></div>
+  <div class="landing-feature"><div class="landing-feature-icon">✍️</div><div class="landing-feature-title">Weekly Reviews</div><div class="landing-feature-desc">Guided reflection prompts every week. What worked, what didn't, what's next. No guessing.</div></div>
+</div>
+</div>
+
+<div class="meta-card">
+<div class="meta-title">Build Notes</div>
+<div class="meta-text">
+<strong>This is the paid upgrade of the free 1% Journal.</strong> Everything in the free version plus: 90-day framework (vs 30-day), habit tracker, content planning section, compound visualization, monthly deep-dive reflections.<br>
+<strong>Tool:</strong> Notion (main) + Canva PDF (printable version)<br>
+<strong>When to launch:</strong> After 500+ Substack subscribers or 2,000+ followers<br>
+<strong>Price:</strong> $12–17 on Gumroad or Stan Store<br>
+<strong>Funnel:</strong> Free journal → "want the full 90-day system?" → paid planner
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PRODUCT 5: MONEY GUIDE (PAID $19) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="product" id="prod-moneyguide">
+
+<div class="pdf-spread">
+<div class="pdf-page" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(180deg,#FAFAF8 0%,var(--warm-light) 100%)">
+  <div style="width:40px;height:3px;background:var(--warm);border-radius:2px;margin-bottom:24px"></div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--warm);margin-bottom:12px">Digital Guide — $19</div>
+  <div style="font-family:'Instrument Serif',serif;font-size:clamp(20px,3.5vw,30px);line-height:1.2;color:var(--accent);margin-bottom:8px">The Cross-Cultural<br>Money Guide</div>
+  <div style="font-size:10px;color:var(--text3);max-width:200px;margin-bottom:16px;line-height:1.6">Everything an immigrant needs to manage money between two countries — from someone who does it every day.</div>
+  <div style="width:60px;height:1px;background:var(--border2);margin-bottom:16px"></div>
+  <div style="font-size:9px;color:var(--text4);letter-spacing:1px">By Sabrina McGehee</div>
+  <div style="font-size:8px;color:var(--text4);margin-top:4px;font-style:italic">Accounting background · Bilingual finances since 2019</div>
+  <div class="pdf-footer">sabrinamcgehee.substack.com</div>
+</div>
+
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-logo" style="background:var(--warm)">$</div>
+    <div class="pdf-brand">Cross-Cultural Money Guide</div>
+  </div>
+  <div class="pdf-title" style="font-size:18px">Table of Contents</div>
+  <div style="margin-top:12px">
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">1. The Two-Currency Mindset</span><span style="color:var(--text4)">4</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">2. Banking in Two Countries</span><span style="color:var(--text4)">8</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">3. Exchange Rate Timing Strategies</span><span style="color:var(--text4)">14</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">4. Sending Money Home (The Cheap Way)</span><span style="color:var(--text4)">20</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">5. Building Credit in a New Country</span><span style="color:var(--text4)">26</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">6. Tax Basics: What to Ask Your Accountant</span><span style="color:var(--text4)">30</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">7. Budgeting with Variable Exchange Rates</span><span style="color:var(--text4)">34</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><span style="color:var(--text2)">8. The 3 Mistakes Every Immigrant Makes</span><span style="color:var(--text4)">38</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:10px"><span style="color:var(--text2)">Bonus: My Actual Money Setup (Tools + Accounts)</span><span style="color:var(--text4)">42</span></div>
+  </div>
+  <div class="pdf-quote" style="margin-top:16px">"Financial literacy in two languages is a superpower. This guide gives you the framework."</div>
+  <div class="pdf-footer">Page 3 — sabrinamcgehee.substack.com</div>
+</div>
+</div>
+
+<div class="meta-card">
+<div class="meta-title">Build Notes</div>
+<div class="meta-text">
+<strong>This is your highest-value product.</strong> Zero competition — nobody makes a cross-cultural money guide for immigrants.<br>
+<strong>Format:</strong> 40–50 page PDF + companion Notion template (the Money Kit upgraded)<br>
+<strong>Tool:</strong> Canva Premium for the PDF design, Notion for the companion template<br>
+<strong>Time to build:</strong> 2–3 weekends (write content week 1, design week 2, test week 3)<br>
+<strong>Price:</strong> $19–27 on Gumroad or Stan Store<br>
+<strong>Funnel:</strong> Free Money Kit Notion template → "want the complete guide?" → paid product<br>
+<strong>Your credibility:</strong> Accounting background + actually living this every day = quiet authority
+</div>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+function showProduct(id,btn){
+  document.querySelectorAll('.product').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('prod-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+</script>
+</body>
+</html>

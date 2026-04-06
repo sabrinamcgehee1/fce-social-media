@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabrina EN — CapCut Editing Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF8;--bg2:#F2F0ED;--bg3:#E8E5E0;--surface:#fff;--border:#E2DFD9;--border2:#D4D0C8;--text:#1A1A1A;--text2:#4A4540;--text3:#8A847A;--text4:#B8B2A8;--accent:#2D2D2D;--sage:#7A8F7A;--sage-light:#E8EDE8;--sage-bg:rgba(122,143,122,.08);--warm:#C4956A;--warm-bg:rgba(196,149,106,.08);--rose:#B87D82;--rose-bg:rgba(184,125,130,.08);--blue:#6B8CAE;--blue-bg:rgba(107,140,174,.08);--purple:#8B7AAE;--purple-bg:rgba(139,122,174,.08);--shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.03);--shadow2:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:40px 20px 60px}
+
+.header{text-align:center;margin-bottom:48px}
+.header-sub{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.header h1{font-family:'Instrument Serif',serif;font-size:clamp(28px,5vw,42px);color:var(--accent);margin-bottom:8px}
+.header h1 em{font-style:italic;color:var(--sage)}
+.header p{font-size:14px;color:var(--text3);max-width:520px;margin:0 auto}
+
+.sec{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+.sec:last-child{border-bottom:none}
+.sec-num{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text4);margin-bottom:4px}
+.sec-title{font-family:'Instrument Serif',serif;font-size:clamp(22px,3.5vw,32px);color:var(--accent);margin-bottom:8px}
+.sec-desc{font-size:13px;color:var(--text2);max-width:640px;margin-bottom:24px;line-height:1.8}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:12px}
+.card-title{font-family:'Instrument Serif',serif;font-size:18px;color:var(--accent);margin-bottom:6px}
+.card-desc{font-size:13px;color:var(--text2);line-height:1.8}
+.card-how{font-size:12px;color:var(--text3);line-height:1.8;margin-top:12px;padding:12px 16px;background:var(--bg2);border-radius:8px}
+.card-how strong{color:var(--text2)}
+.card-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:inline-block;padding:3px 8px;border-radius:4px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+/* TIMELINE MOCK */
+.timeline-mock{background:var(--accent);border-radius:12px;padding:20px;margin-bottom:16px;overflow-x:auto}
+.timeline-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+.timeline-track{display:flex;gap:2px;margin-bottom:8px;min-width:600px}
+.tblock{border-radius:4px;padding:4px 8px;font-size:8px;font-weight:600;letter-spacing:.5px;white-space:nowrap;position:relative}
+.tblock-main{background:rgba(122,143,122,.5);color:#fff}
+.tblock-broll{background:rgba(196,149,106,.5);color:#fff}
+.tblock-text{background:rgba(139,122,174,.5);color:#fff}
+.tblock-sfx{background:rgba(184,125,130,.4);color:#fff}
+.tblock-music{background:rgba(107,140,174,.3);color:rgba(255,255,255,.7)}
+.tblock-end{background:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+.time-markers{display:flex;justify-content:space-between;min-width:600px;font-size:8px;color:rgba(255,255,255,.25);margin-top:4px}
+
+/* DECISION GRID */
+.decision{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.decision-q{padding:16px 20px;font-size:13px;font-weight:600;color:var(--accent);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.decision-q::before{content:'?';display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--sage-bg);color:var(--sage);font-size:11px;font-weight:700;flex-shrink:0}
+.decision-opts{padding:16px 20px}
+.decision-opt{display:flex;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .2s}
+.decision-opt:hover{border-color:var(--sage);background:var(--sage-bg)}
+.decision-opt-label{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:2px}
+.decision-opt-desc{font-size:11px;color:var(--text3);line-height:1.6}
+.decision-opt-icon{font-size:20px;flex-shrink:0}
+
+/* STEP NUMBERS */
+.steps{counter-reset:steps}
+.step{counter-increment:steps;position:relative;padding-left:48px;margin-bottom:20px}
+.step::before{content:counter(steps,decimal-leading-zero);position:absolute;left:0;top:2px;font-family:'Instrument Serif',serif;font-size:20px;font-weight:400;color:var(--sage)}
+.step-title{font-size:14px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.8}
+
+/* CREATOR COMPARISON */
+.creator-row{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid var(--border)}
+.creator-row:last-child{border-bottom:none}
+.creator-name{font-size:11px;font-weight:700;color:var(--accent)}
+.creator-handle{font-size:9px;color:var(--text4)}
+.creator-detail{font-size:11px;color:var(--text2);line-height:1.8}
+.creator-tag{display:inline-block;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:3px;margin-right:4px;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<div class="header-sub">CapCut Editing Blueprint</div>
+<h1>Find Your <em>Signature Edit</em></h1>
+<p>How your 5 inspiration creators edit, what they have in common, and the exact step-by-step guide to build your own CapCut template from scratch.</p>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 1: CREATOR EDITING BREAKDOWN -->
+<!-- ═══════════════════════════════════════ -->
+<div class="sec">
+<div class="sec-num">Part 1</div>
+<div class="sec-title">How Each Creator Edits</div>
+<div class="sec-desc">I studied each of your 5 inspirations. Here's what they actually do — broken into the specific editing elements you can replicate.</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="creator-row">
+<div><div class="creator-name">Tizi</div><div class="creator-handle">@bytiiiziana</div></div>
+<div class="creator-detail">
+<span class="creator-tag" style="background:var(--sage-bg);color:var(--sage)">Face to Camera</span>
+<span class="creator-tag" style="background:var(--warm-bg);color:var(--warm)">B-Roll Images</span>
+<span class="creator-tag" style="background:var(--purple-bg);color:var(--purple)">Text Pop-ups</span>
+<span class="creator-tag" style="background:var(--rose-bg);color:var(--rose)">Soft Music</span><br>
+<strong>Editing DNA:</strong> Clean talking head, slightly desaturated warm filter. Images of books/products/screenshots slide in from the side as she mentions them. Soft looping ambient track at low volume. Key phrases appear as text overlays in a clean serif font. Subtle "pop" or "whoosh" SFX when images appear. Her signature is the <strong>Anti-Brainrot series branded intro card</strong> (0.5s) before cutting to her face. End card with CTA. She rarely uses transitions — just hard cuts between points.
+</div>
+</div>
+
+<div class="creator-row">
+<div><div class="creator-name">Giulia</div><div class="creator-handle">@bygiuliasuvak</div></div>
+<div class="creator-detail">
+<span class="creator-tag" style="background:var(--sage-bg);color:var(--sage)">Face to Camera</span>
+<span class="creator-tag" style="background:var(--warm-bg);color:var(--warm)">Photo Slideshow</span>
+<span class="creator-tag" style="background:var(--purple-bg);color:var(--purple)">Signature Font</span>
+<span class="creator-tag" style="background:var(--rose-bg);color:var(--rose)">Ambient Sounds</span><br>
+<strong>Editing DNA:</strong> Very similar to Tizi but with a <strong>more aesthetic, curated photo selection</strong>. She uses Pinterest-quality images as B-roll. Her signature is the <strong>font choice</strong> — she uses a consistent serif font in a specific color for every key phrase. Background audio is soft ambient/lo-fi, not trending audio. She also adds very subtle <strong>zoom animations</strong> on her face (slight slow zoom in during key points) to add visual interest to talking-head segments. Small "click" or "page turn" sounds when images change.
+</div>
+</div>
+
+<div class="creator-row">
+<div><div class="creator-name">Isabel</div><div class="creator-handle">Isabel Radford</div></div>
+<div class="creator-detail">
+<span class="creator-tag" style="background:var(--sage-bg);color:var(--sage)">Face to Camera</span>
+<span class="creator-tag" style="background:var(--warm-bg);color:var(--warm)">Lifestyle B-Roll</span>
+<span class="creator-tag" style="background:var(--purple-bg);color:var(--purple)">Text Overlays</span>
+<span class="creator-tag" style="background:var(--rose-bg);color:var(--rose)">Acoustic Music</span><br>
+<strong>Editing DNA:</strong> The most "magazine-like" of the five. She films herself in <strong>aesthetically curated environments</strong> — golden light, tidy desk, plants visible. Her B-roll is often her own lifestyle footage (not stock). She uses <strong>her own photos</strong> as image overlays more than screenshots. Soft acoustic guitar or piano background track. Text is clean, minimal, positioned in the lower third. Her signature is the <strong>visual quality of the filming setup itself</strong> — good lighting is half her editing.
+</div>
+</div>
+
+<div class="creator-row">
+<div><div class="creator-name">Nana</div><div class="creator-handle">@nanadelbiz</div></div>
+<div class="creator-detail">
+<span class="creator-tag" style="background:var(--sage-bg);color:var(--sage)">Face to Camera</span>
+<span class="creator-tag" style="background:var(--warm-bg);color:var(--warm)">Screenshots</span>
+<span class="creator-tag" style="background:var(--purple-bg);color:var(--purple)">Bold Text</span>
+<span class="creator-tag" style="background:var(--blue-bg);color:var(--blue)">Fast Cuts</span><br>
+<strong>Editing DNA:</strong> More energetic than the others. <strong>Faster cuts</strong> between sentences — she trims every pause and "um." Her B-roll is mostly <strong>screenshots and text cards</strong> (stats, frameworks, quotes from articles) rather than aesthetic photos. Bold sans-serif text for key phrases, usually white on dark semi-transparent background. She often uses <strong>jump cuts</strong> (cutting within the same camera angle to remove pauses) more aggressively. Background music is slightly more upbeat but still subtle. Her signature is <strong>speed + density of information</strong>.
+</div>
+</div>
+
+<div class="creator-row">
+<div><div class="creator-name">NoteswNat</div><div class="creator-handle">NoteswNat</div></div>
+<div class="creator-detail">
+<span class="creator-tag" style="background:var(--sage-bg);color:var(--sage)">Face to Camera</span>
+<span class="creator-tag" style="background:var(--warm-bg);color:var(--warm)">Research Visuals</span>
+<span class="creator-tag" style="background:var(--purple-bg);color:var(--purple)">Data/Stats</span>
+<span class="creator-tag" style="background:var(--rose-bg);color:var(--rose)">Clean Audio</span><br>
+<strong>Editing DNA:</strong> The most research-heavy. Her B-roll is often <strong>data visualizations, study screenshots, article headlines</strong> — she backs claims with visual proof. Clean, minimal editing — fewer effects than the others. Focus is on <strong>the quality of the information</strong> rather than visual flair. Text overlays are functional (showing stats, study names) rather than aesthetic. Background music is very quiet or absent. Her signature is <strong>credibility through evidence</strong>.
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 2: THE COMMON PATTERN -->
+<!-- ═══════════════════════════════════════ -->
+<div class="sec">
+<div class="sec-num">Part 2</div>
+<div class="sec-title">The Universal Pattern</div>
+<div class="sec-desc">Despite their differences, all 5 creators use the same core structure. This is the editing formula that works:</div>
+
+<div class="card" style="background:var(--sage-bg);border-color:var(--sage)">
+<div style="font-size:13px;font-weight:600;color:var(--sage);margin-bottom:12px">The 6-Layer Video Structure</div>
+<div class="card-desc" style="line-height:2.4">
+<strong>Layer 1 — Your face (the anchor):</strong> You talking to camera. This is 70–80% of what's on screen. Clean background, good lighting, eye-level or slightly above.<br>
+<strong>Layer 2 — B-roll images (the proof):</strong> Photos, screenshots, book covers, or lifestyle images that appear while you talk. 3–6 per video. They appear on screen for 2–4 seconds each.<br>
+<strong>Layer 3 — Key phrase text (the quotable):</strong> When you say something important, it appears as text on screen in your signature font. 2–4 per video. These are what people screenshot.<br>
+<strong>Layer 4 — Subtitles (the accessibility):</strong> Auto-generated captions, styled in your brand font, running throughout.<br>
+<strong>Layer 5 — Background music (the mood):</strong> Soft, looping, consistent. Same vibe every video. 15–20% volume.<br>
+<strong>Layer 6 — Sound effects (the polish):</strong> Subtle "pop," "whoosh," or "click" when images or text appear. This is the detail that separates amateur from polished.
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 3: FIND YOUR SIGNATURE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="sec">
+<div class="sec-num">Part 3</div>
+<div class="sec-title">10 Decisions That Create Your Signature</div>
+<div class="sec-desc">Your signature editing style comes from making these 10 decisions ONCE and then never changing them. This is what makes people recognize your content in 2 seconds.</div>
+
+<div class="decision">
+<div class="decision-q">1. What's your filming setup?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">🪑</div><div><div class="decision-opt-label">Seated at desk (like Nana)</div><div class="decision-opt-desc">Clean desk, natural light from the side, bookshelf or plant behind you. Works for: productivity, finance, learning content.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🧍‍♀️</div><div><div class="decision-opt-label">Standing/handheld (like Tizi)</div><div class="decision-opt-desc">More casual, slightly closer to camera, can walk around. Works for: lifestyle, mindset, storytelling content.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">☕</div><div><div class="decision-opt-label">Cozy corner (like Isabel)</div><div class="decision-opt-desc">Bed, couch, or reading nook. Warm lighting, blankets visible. Works for: intimate, journal-style, personal content.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">2. Where do your B-roll images come from?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">📸</div><div><div class="decision-opt-label">Mostly your own photos (like Isabel)</div><div class="decision-opt-desc">Your twins, your workspace, your coffee, Brazil vs. US moments. Most personal. Requires building a photo library.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">📱</div><div><div class="decision-opt-label">Mostly screenshots + book covers (like Nana/NoteswNat)</div><div class="decision-opt-desc">Articles, stats, app screenshots, book covers. Most credible. Easier to source — just screenshot as you research.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🎨</div><div><div class="decision-opt-label">Mix of both + Pinterest-quality stock (like Giulia)</div><div class="decision-opt-desc">Some personal, some screenshots, some curated stock from Unsplash/Canva. Most aesthetic. Requires curation time.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">3. How do your B-roll images enter the screen?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">➡️</div><div><div class="decision-opt-label">Slide in from the right</div><div class="decision-opt-desc">Most common among your inspirations. Clean, professional. Image slides in, stays 2–3 seconds, slides out.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">⬆️</div><div><div class="decision-opt-label">Pop up from below</div><div class="decision-opt-desc">Slightly more playful. Image rises from bottom of frame, stays, then drops back down.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">✨</div><div><div class="decision-opt-label">Fade in (with slight scale)</div><div class="decision-opt-desc">Most subtle. Image gently appears (opacity 0→100%) while scaling slightly (95%→100%). Elegant, cinematic.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">4. How big are your B-roll images on screen?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">🖼️</div><div><div class="decision-opt-label">Small (25–30% of screen) — upper right corner</div><div class="decision-opt-desc">Your face stays dominant. Image is supporting evidence. Best for: talking-head-focused content.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">📐</div><div><div class="decision-opt-label">Medium (35–45% of screen) — right side</div><div class="decision-opt-desc">Balanced between face and image. Most common size your inspirations use. Best for: most content types.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🖥️</div><div><div class="decision-opt-label">Full takeover (80–100%) for 1–2 seconds</div><div class="decision-opt-desc">Your face disappears briefly while the image takes over. Returns to face. Dramatic. Best for: big reveals or key stats.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">5. What font for key phrases on screen?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">✍️</div><div><div class="decision-opt-label">Sedan SC (serif) — elegant, editorial</div><div class="decision-opt-desc">Closest to Instrument Serif in CapCut. Use for: quotable moments, lesson punchlines. Color: white or sage green.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">💪</div><div><div class="decision-opt-label">Montserrat Bold (sans-serif) — clean, punchy</div><div class="decision-opt-desc">More like Nana's style. Strong, modern, highly readable. Use for: stats, frameworks, action items. Color: white.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">6. Where do key phrases appear on screen?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">⬆️</div><div><div class="decision-opt-label">Top third (above your head)</div><div class="decision-opt-desc">Doesn't cover your face. Clean separation between you and the text. Most professional.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">↔️</div><div><div class="decision-opt-label">Center (over your chest area)</div><div class="decision-opt-desc">Maximum visual impact. Text is the star for that moment. Slightly covers you but demands attention.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">⬇️</div><div><div class="decision-opt-label">Lower third (subtitle area)</div><div class="decision-opt-desc">Integrated with your captions. Less dramatic but cleaner. Works if your subtitles are already in the lower third.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">7. What's your background music vibe?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">🎹</div><div><div class="decision-opt-label">Soft piano / acoustic guitar</div><div class="decision-opt-desc">Warm, personal, journal-like. Matches P1 (cultural/identity) content well. Isabel's vibe.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🎧</div><div><div class="decision-opt-label">Lo-fi / ambient beats</div><div class="decision-opt-desc">Modern, productive, focused. Matches P2 (learning/finance) content well. Tizi and Giulia's vibe.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🔇</div><div><div class="decision-opt-label">Very minimal / almost silent</div><div class="decision-opt-desc">Lets your voice be the star. More serious, research-focused. NoteswNat's vibe.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">8. What sound effect when images/text appear?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">🫧</div><div><div class="decision-opt-label">Soft "pop" / bubble</div><div class="decision-opt-desc">Playful, light. Search CapCut SFX: "pop" or "bubble." Good for warm, approachable content.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">💨</div><div><div class="decision-opt-label">Subtle "whoosh" / swoosh</div><div class="decision-opt-desc">Clean, professional. Search CapCut SFX: "whoosh" or "swoosh." Good for polished, editorial content.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">📄</div><div><div class="decision-opt-label">Paper / page turn</div><div class="decision-opt-desc">Unique, journal-like. Search CapCut SFX: "page turn" or "paper." Ties to your 1% Journal brand.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">9. How do you cut between sentences?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">✂️</div><div><div class="decision-opt-label">Jump cuts (remove all pauses)</div><div class="decision-opt-desc">Fast, punchy, high-energy. Nana's style. Good for information-dense content. Can feel rushed if overdone.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🫁</div><div><div class="decision-opt-label">Breathing room (keep small pauses)</div><div class="decision-opt-desc">More natural, calm, intentional. Tizi/Isabel's style. Good for mindset/personal content. Feels more intimate.</div></div></div>
+</div>
+</div>
+
+<div class="decision">
+<div class="decision-q">10. How does your video end?</div>
+<div class="decision-opts">
+<div class="decision-opt"><div class="decision-opt-icon">🪧</div><div><div class="decision-opt-label">Branded end card (1.5 seconds)</div><div class="decision-opt-desc">Static image with your name, CTA, and brand colors. Fade transition. Most professional.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🗣️</div><div><div class="decision-opt-label">Verbal CTA on camera</div><div class="decision-opt-desc">You say "follow for more" or "link in bio" directly to camera. More personal. No separate end card needed.</div></div></div>
+<div class="decision-opt"><div class="decision-opt-icon">🔁</div><div><div class="decision-opt-label">Loop back to hook</div><div class="decision-opt-desc">Last frame visually matches first frame, creating a seamless loop. Increases watch time. Advanced technique.</div></div></div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 4: CAPCUT TIMELINE STRUCTURE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="sec">
+<div class="sec-num">Part 4</div>
+<div class="sec-title">Your CapCut Timeline — Layer by Layer</div>
+<div class="sec-desc">Here's what your CapCut project timeline should look like. Each row is a layer. Build this once and save as your master template.</div>
+
+<div class="timeline-mock">
+<div class="timeline-label">Layer 6 — Sound Effects</div>
+<div class="timeline-track">
+<div class="tblock tblock-sfx" style="width:3%">🔊</div>
+<div style="width:18%"></div>
+<div class="tblock tblock-sfx" style="width:3%">🔊</div>
+<div style="width:12%"></div>
+<div class="tblock tblock-sfx" style="width:3%">🔊</div>
+<div style="width:20%"></div>
+<div class="tblock tblock-sfx" style="width:3%">🔊</div>
+<div style="width:10%"></div>
+<div class="tblock tblock-sfx" style="width:3%">🔊</div>
+</div>
+
+<div class="timeline-label">Layer 5 — Key Phrase Text</div>
+<div class="timeline-track">
+<div class="tblock tblock-text" style="width:12%">HOOK TEXT</div>
+<div style="width:25%"></div>
+<div class="tblock tblock-text" style="width:15%">KEY POINT</div>
+<div style="width:20%"></div>
+<div class="tblock tblock-text" style="width:12%">LESSON</div>
+</div>
+
+<div class="timeline-label">Layer 4 — B-Roll Images</div>
+<div class="timeline-track">
+<div style="width:15%"></div>
+<div class="tblock tblock-broll" style="width:10%">📸 IMG 1</div>
+<div style="width:10%"></div>
+<div class="tblock tblock-broll" style="width:10%">📚 IMG 2</div>
+<div style="width:8%"></div>
+<div class="tblock tblock-broll" style="width:10%">📱 IMG 3</div>
+<div style="width:12%"></div>
+<div class="tblock tblock-broll" style="width:10%">📸 IMG 4</div>
+</div>
+
+<div class="timeline-label">Layer 3 — Auto Captions</div>
+<div class="timeline-track">
+<div class="tblock tblock-end" style="width:95%">━━━━━ AUTO-GENERATED SUBTITLES (full duration) ━━━━━</div>
+</div>
+
+<div class="timeline-label">Layer 2 — Background Music</div>
+<div class="timeline-track">
+<div class="tblock tblock-music" style="width:98%">♪ ━━━━━━━━━━ Lo-fi / Acoustic @ 15-20% volume ━━━━━━━━━━ ♪</div>
+</div>
+
+<div class="timeline-label">Layer 1 — Main Video (your face)</div>
+<div class="timeline-track">
+<div class="tblock tblock-main" style="width:95%">━━━━━ YOUR TALKING HEAD CLIP (trimmed, jump cuts applied) ━━━━━</div>
+<div class="tblock tblock-end" style="width:5%">END</div>
+</div>
+
+<div class="time-markers">
+<span>0:00</span><span>0:10</span><span>0:20</span><span>0:30</span><span>0:40</span><span>0:50</span><span>1:00</span>
+</div>
+</div>
+
+<div class="card-how">
+<strong>How to read this:</strong> Layer 1 (bottom) is your main video — you talking to camera, with pauses trimmed out. Layer 2 is background music running the full duration at low volume. Layer 3 is auto-generated captions. Layer 4 is your B-roll images, placed at specific moments when you mention something visual. Layer 5 is your key phrase text — the quotable lines you want people to screenshot. Layer 6 is sound effects — a tiny "pop" or "whoosh" timed to when each image or text appears. <strong>The end card</strong> is the last 1.5 seconds with your branded static image.
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 5: BUILD GUIDE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="sec">
+<div class="sec-num">Part 5</div>
+<div class="sec-title">Build Your Template — Step by Step</div>
+<div class="sec-desc">Open CapCut right now and follow these steps. You'll have a reusable master template in about 30 minutes.</div>
+
+<div class="steps">
+<div class="step">
+<div class="step-title">Film a test clip (60 seconds of you talking about anything)</div>
+<div class="step-desc">Use natural light from a window to your side. Phone at eye level or slightly above. Clean background. Don't worry about what you say — this is just for building the template.</div>
+</div>
+<div class="step">
+<div class="step-title">Import into CapCut → Trim all pauses</div>
+<div class="step-desc">Go through the clip and split/delete every pause, "um," and dead space. This is your jump cut pass. Watch it back — it should feel faster than you naturally talk.</div>
+</div>
+<div class="step">
+<div class="step-title">Apply your color preset</div>
+<div class="step-desc">Select the clip → Adjust → Color Temp: +3, Saturation: -8, Highlights: +5, Shadows: +3, Fade: +10. Save as "Sabrina Clean" preset. This desaturated warm look is the foundation of your aesthetic.</div>
+</div>
+<div class="step">
+<div class="step-title">Add background music</div>
+<div class="step-desc">CapCut Audio → search "lo-fi" or "soft acoustic" → pick ONE track → trim to match your video length → set volume to 15–20%. This track becomes your permanent sound. Listen to 5–10 options and choose the one that feels most "you."</div>
+</div>
+<div class="step">
+<div class="step-title">Generate auto-captions</div>
+<div class="step-desc">Text → Auto captions → generate → change font to Montserrat (or closest clean sans-serif) → white text → black background at 30% opacity → centered in the lower third. Save this style.</div>
+</div>
+<div class="step">
+<div class="step-title">Add your first B-roll image</div>
+<div class="step-desc">Import a test image (any book cover or screenshot) → add as overlay → resize to ~35% of screen → position upper right → add "Slide In Right" animation (0.3s in, 0.3s out) → set duration to 3 seconds. Time it to when you mention the thing the image represents. <strong>Add a sound effect:</strong> SFX → search "pop" or "whoosh" → place at the exact moment the image appears → volume 40%.</div>
+</div>
+<div class="step">
+<div class="step-title">Add a key phrase text overlay</div>
+<div class="step-desc">Text → add text → type your quotable line → font: Sedan SC (or Playfair Display) → size: 22–26px → color: white → position: top third of screen → add "Fade In" animation (0.2s) → duration: match spoken phrase length. <strong>Optional:</strong> add a subtle sage green (#7A8F7A) underline or background highlight behind the text.</div>
+</div>
+<div class="step">
+<div class="step-title">Create your end card</div>
+<div class="step-desc">In Canva: 1080×1920, Linen (#F2F0ED) background, "follow for more" in Instrument Serif, your @handle in Sora underneath, thin sage green line. Export as PNG. Import into CapCut as the final 1.5 seconds with a 0.3s fade transition.</div>
+</div>
+<div class="step">
+<div class="step-title">Duplicate the image/text pattern</div>
+<div class="step-desc">Now add 2–3 more B-roll images and 1–2 more text overlays, following the same settings from Steps 6–7. Each image gets its own SFX pop. Space them evenly throughout the video — roughly one every 8–12 seconds.</div>
+</div>
+<div class="step">
+<div class="step-title">Save as "Sabrina Master" and NEVER delete it</div>
+<div class="step-desc">This project is your reusable template. For every new video: duplicate this project → swap the main clip → replace B-roll images → update text overlays → export. Your editing time drops from 45+ minutes to 15–20 minutes per video.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 6: MY RECOMMENDATION -->
+<!-- ═══════════════════════════════════════ -->
+<div class="sec" style="border-bottom:none">
+<div class="sec-num">My Recommendation</div>
+<div class="sec-title">Your Ideal Editing Style</div>
+<div class="sec-desc">Based on your pillars, audience, and the vibe you described — here's the combination I'd choose if I were you:</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="card-desc" style="line-height:2.4">
+<strong>Filming:</strong> Seated at a clean desk, natural side light, one plant visible. Simple but curated.<br>
+<strong>B-roll source:</strong> Mix — your own photos (twins, Brazil, workspace) + screenshots/book covers + a few curated stock images from Canva. Your personal photos are your moat.<br>
+<strong>Image animation:</strong> Slide in from right, 0.3s in/out. 35–40% of screen. Upper right corner.<br>
+<strong>Key phrase font:</strong> Sedan SC, white, top third. 2–3 per video.<br>
+<strong>Music:</strong> Lo-fi / soft acoustic at 15–18% volume. Same track or same vibe for at least 30 videos straight.<br>
+<strong>Sound effects:</strong> Soft "page turn" sound (ties to your 1% Journal brand). One pop per image/text appearance.<br>
+<strong>Cut style:</strong> Breathing room — trim the long pauses but keep the natural rhythm. You're not Nana (hyper-fast) — you're closer to Tizi/Isabel (calm, intentional).<br>
+<strong>Ending:</strong> Branded end card (1.5s) with sage green accent.<br>
+<strong>Unique element only you have:</strong> Occasionally show a quick clip of the twins or a Brazil moment as B-roll. No other productivity creator can do this. It makes people say "oh, she's the one with the twins and the two countries."
+</div>
+</div>
+
+<div class="card" style="background:var(--bg2);border-color:var(--border)">
+<div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px">First 5 Videos Checklist</div>
+<div class="card-desc" style="line-height:2.2">
+Video 1: Practice the full template. Film, edit, export. Don't post — just learn the workflow.<br>
+Video 2: Film a real topic. Apply the template. Post it. Don't judge performance.<br>
+Video 3: Same template, different topic. Notice what feels natural and what feels forced.<br>
+Video 4: Adjust ONE thing that felt off (image size? music volume? cut speed?).<br>
+Video 5: This should feel 80% comfortable. Lock in your settings and stop changing them.<br>
+<strong>After video 5:</strong> You have your signature. Don't change it for at least 30 videos. Consistency builds recognition.
+</div>
+</div>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

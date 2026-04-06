@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabrina EN — Brand Identity & Strategy Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#FAFAF8;--bg2:#F2F0ED;--bg3:#E8E5E0;
+  --surface:#fff;--surface2:#F7F5F2;
+  --border:#E2DFD9;--border2:#D4D0C8;
+  --text:#1A1A1A;--text2:#4A4540;--text3:#8A847A;--text4:#B8B2A8;
+  --accent:#2D2D2D;--accent2:#1A1A1A;
+  --sage:#7A8F7A;--sage-light:#E8EDE8;--sage-bg:rgba(122,143,122,.08);
+  --warm:#C4956A;--warm-light:#F5EDE4;--warm-bg:rgba(196,149,106,.08);
+  --rose:#B87D82;--rose-light:#F2E4E6;--rose-bg:rgba(184,125,130,.08);
+  --blue:#6B8CAE;--blue-light:#E4ECF2;--blue-bg:rgba(107,140,174,.08);
+  --purple:#8B7AAE;--purple-light:#EAE6F2;--purple-bg:rgba(139,122,174,.08);
+  --gold:#B8A060;--gold-light:#F5F0E0;
+  --red-soft:#C47A6A;
+  --shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.03);
+  --shadow2:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,250,248,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0 20px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:52px;gap:24px}
+.nav-brand{font-family:'Instrument Serif',serif;font-size:20px;font-style:italic;color:var(--accent);white-space:nowrap}
+.tabs{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-size:11px;font-weight:500;letter-spacing:.3px;padding:6px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;color:var(--text3);transition:all .2s;border:none;background:none}
+.tab:hover{color:var(--text2);background:var(--bg2)}
+.tab.on{color:var(--text);background:var(--bg2);font-weight:600}
+
+/* LAYOUT */
+.container{max-width:900px;margin:0 auto;padding:68px 20px 40px}
+.page{display:none;animation:fadeUp .4s ease}
+.page.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION HEADERS */
+.sec-num{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text4);margin-bottom:6px}
+.sec-title{font-family:'Instrument Serif',serif;font-size:clamp(28px,5vw,42px);line-height:1.15;margin-bottom:8px;color:var(--accent)}
+.sec-title em{font-style:italic;color:var(--sage)}
+.sec-desc{font-size:14px;color:var(--text2);max-width:620px;margin-bottom:32px;line-height:1.8}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:12px;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card-sm{padding:16px 20px}
+.card-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:inline-block;padding:3px 8px;border-radius:4px}
+.card-title{font-family:'Instrument Serif',serif;font-size:20px;margin-bottom:6px;color:var(--accent)}
+.card-desc{font-size:13px;color:var(--text2);line-height:1.8}
+.card-how{font-size:12px;color:var(--text3);line-height:1.8;margin-top:12px;padding:12px 16px;background:var(--bg2);border-radius:8px}
+.card-how strong{color:var(--text2)}
+
+/* COLOR SWATCHES */
+.palette{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.swatch{width:80px;height:80px;border-radius:10px;cursor:pointer;position:relative;border:1px solid var(--border);transition:transform .2s}
+.swatch:hover{transform:scale(1.05)}
+.swatch-info{font-size:9px;font-weight:600;color:var(--text3);text-align:center;margin-top:4px}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* TYPE SAMPLES */
+.type-hero{font-family:'Instrument Serif',serif;font-size:36px;line-height:1.2;margin-bottom:8px}
+.type-body{font-family:'Sora',sans-serif;font-size:14px;color:var(--text2);line-height:1.8}
+.type-detail{font-size:11px;color:var(--text4);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* HOOKS TABLE */
+.hook-row{display:grid;grid-template-columns:36px 70px 1fr 80px;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.hook-row:hover{background:var(--bg2)}
+.hook-num{font-weight:700;color:var(--text4);font-size:11px}
+.hook-cat{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:3px}
+.hook-text{color:var(--text);line-height:1.5}
+.hook-src{font-size:10px;color:var(--text4)}
+.hook-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.hook-filter{font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text3);transition:all .2s}
+.hook-filter.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.hook-search{width:100%;padding:10px 16px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Sora',sans-serif;background:var(--surface);margin-bottom:12px;outline:none}
+.hook-search:focus{border-color:var(--sage)}
+.hook-count{font-size:11px;color:var(--text4);margin-bottom:8px}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--accent);color:#fff;padding:8px 20px;border-radius:8px;font-size:12px;font-weight:600;opacity:0;transition:all .3s;z-index:200}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* PILLAR TAGS */
+.ptag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-right:4px}
+.ptag-p1{background:var(--rose-bg);color:var(--rose)}
+.ptag-p2{background:var(--sage-bg);color:var(--sage)}
+
+/* NUMBERED LIST STYLE */
+.nlist{counter-reset:nlist}
+.nitem{counter-increment:nlist;position:relative;padding-left:40px;margin-bottom:16px}
+.nitem::before{content:counter(nlist,decimal-leading-zero);position:absolute;left:0;top:2px;font-family:'Instrument Serif',serif;font-size:18px;color:var(--text4)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+<div class="nav-inner">
+<div class="nav-brand">Sabrina McGehee</div>
+<div class="tabs" id="tabs">
+<button class="tab on" onclick="go('identity',this)">Visual Identity</button>
+<button class="tab" onclick="go('series',this)">Series Ideas</button>
+<button class="tab" onclick="go('freevalue',this)">Free Value</button>
+<button class="tab" onclick="go('products',this)">Digital Products</button>
+<button class="tab" onclick="go('research',this)">Research</button>
+<button class="tab" onclick="go('hooks',this)">100 Hooks</button>
+<button class="tab" onclick="go('capcut',this)">CapCut</button>
+<button class="tab" onclick="go('rules',this)">Rules</button>
+</div>
+</div>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 1: VISUAL IDENTITY -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page on" id="pg-identity">
+<div class="sec-num">01 — Visual Identity</div>
+<div class="sec-title">The <em>New</em> Sabrina EN</div>
+<div class="sec-desc">Clean. Intentional. Polished but human. Inspired by Tizi, Giulia, Isabel, Nana, and NoteswNat — but built around the one story none of them can tell: yours.</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="card-title">Brand Positioning in One Line</div>
+<div class="card-desc">A Brazilian woman building her best life between two countries — documenting money, growth, and motherhood with radical honesty. Not an expert. A woman figuring it out in public.</div>
+</div>
+
+<div class="card-title" style="margin:32px 0 12px">Color Palette</div>
+<div class="sec-desc" style="margin-bottom:16px">Clean, neutral, elevated. Not corporate — organic. Earth tones with sage as your signature color (what terracotta was to the old identity).</div>
+
+<div class="palette">
+<div onclick="copyHex('#FAFAF8')"><div class="swatch" style="background:#FAFAF8"></div><div class="swatch-info">Off White<br>#FAFAF8</div></div>
+<div onclick="copyHex('#F2F0ED')"><div class="swatch" style="background:#F2F0ED"></div><div class="swatch-info">Linen<br>#F2F0ED</div></div>
+<div onclick="copyHex('#E2DFD9')"><div class="swatch" style="background:#E2DFD9"></div><div class="swatch-info">Oat<br>#E2DFD9</div></div>
+<div onclick="copyHex('#7A8F7A')"><div class="swatch" style="background:#7A8F7A"></div><div class="swatch-info">Sage ★<br>#7A8F7A</div></div>
+<div onclick="copyHex('#2D2D2D')"><div class="swatch" style="background:#2D2D2D"></div><div class="swatch-info">Charcoal<br>#2D2D2D</div></div>
+<div onclick="copyHex('#1A1A1A')"><div class="swatch" style="background:#1A1A1A"></div><div class="swatch-info">Near Black<br>#1A1A1A</div></div>
+<div onclick="copyHex('#C4956A')"><div class="swatch" style="background:#C4956A"></div><div class="swatch-info">Warm Tan<br>#C4956A</div></div>
+<div onclick="copyHex('#B87D82')"><div class="swatch" style="background:#B87D82"></div><div class="swatch-info">Dusty Rose<br>#B87D82</div></div>
+</div>
+<div class="card-how">
+<strong>Canva Brand Kit:</strong> Add all 8 hex codes. Primary trio = Sage + Charcoal + Off White. Use Sage for accent elements (underlines, highlights, tags). Linen/Oat for backgrounds. Charcoal/Near Black for text. Warm Tan and Dusty Rose for occasional P1/P2 pillar accents.<br>
+<strong>Key rule:</strong> Your feed should feel like a curated Pinterest board — lots of white space, clean typography, and intentional pops of sage green.
+</div>
+
+<div class="card-title" style="margin:32px 0 12px">Typography</div>
+<div class="grid2">
+<div class="card">
+<div class="card-label" style="background:var(--sage-bg);color:var(--sage)">Headlines</div>
+<div class="type-hero">Life doesn't wait for permission.</div>
+<div class="type-detail"><strong>Font:</strong> Instrument Serif (Canva: "Instrument Serif") — Italic for emphasis, Regular for titles. Elegant but not stuffy. Used by Giulia-style creators.<br><strong>Alt in Canva:</strong> "Cormorant Garamond" if Instrument Serif unavailable.</div>
+</div>
+<div class="card">
+<div class="card-label" style="background:var(--bg2);color:var(--text3)">Body + Captions</div>
+<div class="type-body">The moment I stopped apologizing for my accent was the moment I started actually living in English instead of performing it.</div>
+<div class="type-detail"><strong>Font:</strong> Sora (Canva: "Sora") — Clean, geometric, modern. Weights: Light (300) for subtle text, Regular (400) for body, SemiBold (600) for bold captions, Bold (700) for emphasis.<br><strong>Alt in Canva:</strong> "Plus Jakarta Sans" if Sora unavailable.</div>
+</div>
+</div>
+
+<div class="card-title" style="margin:32px 0 12px">The Editing DNA (What Your 5 Inspirations All Do)</div>
+<div class="sec-desc" style="margin-bottom:16px">This is the formula. Every single one of your inspiration creators follows this pattern:</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="card-desc" style="line-height:2.2">
+<strong>1. Face-to-camera talking</strong> — you're the anchor. Clean background, natural light, slightly above eye level.<br>
+<strong>2. B-roll images appearing on screen</strong> — as you mention a book, a concept, a place → a relevant image/screenshot slides in (usually from the right or bottom). This is the Giulia/Isabel/Tizi signature move.<br>
+<strong>3. Soft looping background track</strong> — lo-fi, acoustic, or ambient. Never trending audio. Same vibe every video. This creates subconscious recognition.<br>
+<strong>4. Signature font for key phrases</strong> — when you say something quotable, it appears as text on screen in your brand font (Instrument Serif italic, Sage green or white).<br>
+<strong>5. Subtle sound effects</strong> — a soft "pop" or "whoosh" when images appear. Not cartoon-loud — elegant.<br>
+<strong>6. Clean ending</strong> — either a call-to-action card or a gentle fade with your name.
+</div>
+</div>
+
+<div class="card-title" style="margin:32px 0 12px">Image Style for B-Roll</div>
+<div class="card">
+<div class="card-desc">The images that appear while you talk are critical. Here's what to use:</div>
+<div class="card-how">
+<strong>Book covers</strong> — when mentioning any book (screenshot from Amazon/Goodreads, crop clean)<br>
+<strong>Screenshots</strong> — from apps, articles, your own Substack, spreadsheets you use, your phone home screen<br>
+<strong>Aesthetic stock photos</strong> — coffee, journal, laptop, city street, airport. Use Unsplash or Canva stock. Always warm-toned, light, clean.<br>
+<strong>Your own photos</strong> — twins, Brazil/US moments, your workspace, your journal. These are your moat.<br>
+<strong>Text cards</strong> — key stats, quotes, or frameworks on a Linen (#F2F0ED) background with Instrument Serif text<br>
+<strong>Never use:</strong> Busy/cluttered images, cold-toned stock, corporate photos, images with lots of text already on them
+</div>
+</div>
+
+<div class="card-title" style="margin:32px 0 12px">Sabrina vs. Fluency Connect — The Hard Line</div>
+<div class="grid2">
+<div class="card card-sm">
+<div class="card-label" style="background:var(--sage-bg);color:var(--sage)">Sabrina EN</div>
+<div style="font-size:12px;color:var(--text2);line-height:2">
+Sage + neutrals · Instrument Serif + Sora<br>
+Light/clean aesthetic · Productivity girl<br>
+English only · American audience<br>
+Personal brand · Learning in public<br>
+Substack-first · Instagram supports
+</div>
+</div>
+<div class="card card-sm">
+<div class="card-label" style="background:var(--blue-bg);color:var(--blue)">Fluency Connect</div>
+<div style="font-size:12px;color:var(--text2);line-height:2">
+Navy + Blue + Red · Nexa font<br>
+Dark/corporate aesthetic · School brand<br>
+Portuguese captions · Brazilian audience<br>
+Business brand · Teaching authority<br>
+Instagram-first · App supports
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 2: SERIES IDEAS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-series">
+<div class="sec-num">02 — Signature Series</div>
+<div class="sec-title">Your <em>"Anti-Brainrot"</em></div>
+<div class="sec-desc">A signature series is the single most powerful growth lever on Instagram/TikTok. It gives people a reason to follow (they want the next episode) and creates binge-worthy content. Here are 5 options designed for your unique angle.</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="card-label" style="background:var(--sage-bg);color:var(--sage)">★ Top Pick</div>
+<div class="card-title">The 1% Series</div>
+<div class="card-desc">Tagline: <em>"Being 1% better every day — and showing you the receipts."</em> Each episode = one small improvement you made that week. Could be financial (saved $20 by switching X), personal (started waking at 6am), learning (new French phrase that changed how you think), parenting (bilingual trick that worked). Format: you talking to camera, showing the actual thing you changed, with the result.</div>
+<div class="card-how"><strong>Why this wins:</strong> It's your existing catchphrase turned into a content engine. It's infinitely repeatable. Each episode is standalone but part of something larger. And no one else has your specific 1% improvements (bilingual family + immigrant + finance background).<br><strong>Hook formula:</strong> "1% better, day [X]: I [did this thing] and here's what happened."</div>
+</div>
+
+<div class="card">
+<div class="card-title">Between Two Countries</div>
+<div class="card-desc">Cultural observations only someone living between Brazil and the US can make. Not "differences between Brazil and America" (overdone). Instead: the specific, micro moments. "In Brazil we say 'saudade' and there's no English word for it — but I found 3 things that come close." Format: cinematic B-roll of both countries, your voiceover, text on screen.</div>
+<div class="card-how"><strong>Why it works:</strong> Unique angle, highly shareable, emotional. Americans love learning about other cultures when it's delivered through personal story, not lecture.</div>
+</div>
+
+<div class="card">
+<div class="card-title">Money Diaries: Immigrant Edition</div>
+<div class="card-desc">Real numbers. Real decisions. How you manage money across two currencies, two tax systems, two family expectations. Each episode = one specific financial move or decision you made, with context. "This month I sent R$2,000 to Brazil for [reason]. Here's how I decided the timing based on the exchange rate."</div>
+<div class="card-how"><strong>Why it works:</strong> Personal finance + immigration is an untapped niche. Most finance creators are American-born Americans. You bring a perspective nobody else has. Plus your accounting background gives quiet authority.</div>
+</div>
+
+<div class="card">
+<div class="card-title">Building in Public</div>
+<div class="card-desc">Document building Fluency Connect, growing your Substack, learning French — all at once. The chaos of being a mom of twins running multiple projects. Raw, real, Nana Del Rey style. "Week 12: Our app has 47 users. Here's what went wrong and what I'd change."</div>
+<div class="card-how"><strong>Why it works:</strong> Nana's entire brand is built on this. You have even more material — you're building a tech company, growing a newsletter, learning a third language, AND raising twins. The content writes itself.</div>
+</div>
+
+<div class="card">
+<div class="card-title">The Anti-Comfort Zone</div>
+<div class="card-desc">Each episode = you doing something uncomfortable on camera and sharing what you learned. Cold-calling a potential client. Recording a video in French (badly). Asking Michael a hard question about money. The vulnerability IS the content. Think Tizi's Anti-Brainrot but applied to personal growth through discomfort.</div>
+<div class="card-how"><strong>Why it works:</strong> Raw, real, addictive to watch. Creates emotional investment — people root for you.</div>
+</div>
+
+<div class="card" style="background:var(--sage-bg);border-color:var(--sage)">
+<div style="font-size:13px;color:var(--sage);font-weight:600;margin-bottom:8px">My recommendation</div>
+<div class="card-desc">Start with <strong>The 1% Series</strong> as your main series. It's the easiest to produce (you're already living it), the most flexible (any topic works), and it directly ties to your catchphrase. Use "Between Two Countries" as an occasional secondary format when you have a cultural observation worth sharing. Save the others for when you've established your rhythm — month 2 or 3.</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 3: FREE VALUE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-freevalue">
+<div class="sec-num">03 — Free Value Strategy</div>
+<div class="sec-title">What to Give <em>Away</em></div>
+<div class="sec-desc">Your inspiration creators all have free resources in their bio. Tizi has a journal guide. Nana has sprint waitlists. NoteswNat has link trees with resources. Here's what makes sense for you — and what to build first.</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="card-label" style="background:var(--sage-bg);color:var(--sage)">Build First</div>
+<div class="card-title">The 1% Journal — Free PDF Guide</div>
+<div class="card-desc">A beautifully designed 10-page PDF: "The 1% Journal: 30 Days of Tiny Improvements." Includes: daily 1% reflection prompt, weekly review template, monthly progress tracker. Simple. Actionable. Branded with your Sabrina EN aesthetic (sage, Instrument Serif, Sora). Built entirely in Canva.</div>
+<div class="card-how">
+<strong>Why first:</strong> It ties directly to your series name, it's fast to make (1 afternoon in Canva), and it works as an email/subscriber magnet on Substack AND as a bio link freebie.<br>
+<strong>Delivery:</strong> Substack welcome email (auto-sends on subscribe) OR Stan Store / Gumroad free download.<br>
+<strong>CTA in videos:</strong> "I made a free journal for this — link in bio."
+</div>
+</div>
+
+<div class="card">
+<div class="card-label" style="background:var(--warm-bg);color:var(--warm)">Build Second</div>
+<div class="card-title">The Bilingual Money Starter Kit — Notion Template</div>
+<div class="card-desc">A Notion template for managing personal finances across two countries/currencies. Includes: expense tracker with BRL/USD toggle, savings goals dashboard, exchange rate log, monthly budget template. Free version is basic; upgraded version (paid product later) adds investment tracker and tax season checklist.</div>
+<div class="card-how">
+<strong>Why second:</strong> This is your unique IP — no one else makes bilingual finance tools. It positions you as the go-to person for cross-cultural money management. Plus Notion templates are the #1 shared digital freebie in this creator space.<br>
+<strong>Delivery:</strong> Notion template link (duplicate to your workspace). Gate behind email or Substack subscribe.
+</div>
+</div>
+
+<div class="card">
+<div class="card-label" style="background:var(--rose-bg);color:var(--rose)">Build Third</div>
+<div class="card-title">My Reading List — Curated Resource Page</div>
+<div class="card-desc">A simple, beautiful landing page (Canva website or Carrd.co) with your curated book recommendations organized by topic: Money, Mindset, Parenting, Language Learning, Business. Each book has a one-line review from you. Include affiliate links (Amazon Associates) for passive income.</div>
+<div class="card-how">
+<strong>Why third:</strong> Low effort, high credibility. Isabel and NoteswNat both do this. It lives permanently in your bio. Every time you mention a book in a video, people go to this page. Over time, affiliate revenue adds up.<br>
+<strong>Delivery:</strong> Canva website (you have Premium) or free Carrd.co site. Link in bio permanently.
+</div>
+</div>
+
+<div class="card" style="background:var(--bg2)">
+<div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px">Bio Link Structure (like Tizi's pillar.io)</div>
+<div class="card-desc">
+Use <strong>Stan Store</strong> (free tier) or <strong>Beacons</strong> as your link-in-bio. Structure it like this:<br><br>
+1. 🌿 Free: The 1% Journal (PDF download → captures email)<br>
+2. 📚 My Reading List (Canva website with affiliate links)<br>
+3. ✍️ Substack (direct link to your publication)<br>
+4. 💰 Bilingual Money Kit (Notion template → captures email)<br>
+5. 🎯 [Future paid product slot]
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 4: DIGITAL PRODUCTS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-products">
+<div class="sec-num">04 — Digital Products</div>
+<div class="sec-title">What to <em>Sell</em></div>
+<div class="sec-desc">Start free → prove value → sell the upgraded version. Every product below has a free version (Tab 3) that feeds into a paid version here. This is how Nana and Tizi monetize.</div>
+
+<div class="nlist">
+<div class="nitem">
+<div class="card">
+<div class="card-title">The 1% Planner — Full Digital Planner</div>
+<div class="card-desc"><strong>Price: $12–17</strong> · Notion or PDF. The paid upgrade of the free journal. Includes: 90-day goal-setting system, weekly review framework, habit tracker, content planning section, monthly reflection templates, and the "1% compound tracker" that visualizes your progress. Designed in your brand aesthetic.</div>
+<div class="card-how"><strong>Platform:</strong> Gumroad or Stan Store. <strong>When to launch:</strong> After 500+ Substack subscribers or 2,000+ IG followers — whichever comes first.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">The Cross-Cultural Money Guide</div>
+<div class="card-desc"><strong>Price: $19–27</strong> · PDF + Notion bundle. Everything an immigrant or dual-citizen needs to manage money between two countries. Covers: exchange rate timing strategies, banking in two countries, tax basics (what to ask an accountant), building credit in a new country, sending money home affordably, budgeting with variable exchange rates. Your accounting background makes this credible.</div>
+<div class="card-how"><strong>Why it works:</strong> Zero competition. No one makes this product. Immigrants are an underserved market with real money problems and willingness to pay for solutions.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">The Bilingual Family Starter Kit</div>
+<div class="card-desc"><strong>Price: $14–19</strong> · PDF guide + resource list. For parents raising bilingual children. Includes: age-by-age language milestones, the OPOL method explained, media recommendations by age (books, shows, music in both languages), your personal system for the twins, common mistakes to avoid, and a printable daily language tracker.</div>
+<div class="card-how"><strong>Market:</strong> Massive. There are 67 million bilingual households in the US alone. Most resources are academic and boring. Yours is personal, practical, and beautiful.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">The Content Creator Starter Pack</div>
+<div class="card-desc"><strong>Price: $9–14</strong> · Notion template. Your actual content creation system packaged for others: content calendar template, hook formulas, batch filming schedule, editing workflow, posting checklist. This is meta — you're teaching what you're doing. Very Nana Del Rey.</div>
+<div class="card-how"><strong>When to sell:</strong> After you've proven your system works (month 3–4). Your own growth is the social proof.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">Paid Substack Tier</div>
+<div class="card-desc"><strong>Price: $5/month or $50/year</strong> · Gated content within your existing Substack. Includes: detailed money breakdowns (your actual numbers), behind-the-scenes of building Fluency Connect, extended essays with action steps, monthly "ask me anything" thread, and early access to all digital products.</div>
+<div class="card-how"><strong>When to launch:</strong> After 200+ free subscribers. Use the paywall-in-the-middle technique: free hook + story → paywall → tactical/detailed section.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 5: RESEARCH SOURCES -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-research">
+<div class="sec-num">05 — Research Sources</div>
+<div class="sec-title">Where to Find <em>Ideas</em></div>
+<div class="sec-desc">Your inspiration creators don't make things up — they curate, synthesize, and personalize. Here's where they find material, and where you should look based on your pillars.</div>
+
+<div class="card" style="border-left:3px solid var(--sage)">
+<div class="card-label" style="background:var(--sage-bg);color:var(--sage)">What Your Inspirations Use</div>
+<div class="card-title">Their Research Stack</div>
+<div class="card-desc" style="line-height:2.4">
+<strong>Nana Del Rey:</strong> Morning pages (journaling her own thoughts), Substack essays from other creators (she cites "Sticky Spaghetti" by Alexa), business/productivity books, her own quarterly sprint reflections.<br>
+<strong>NoteswNat:</strong> Research papers (Google Scholar), psychology books, neuroscience articles, Reddit threads for real-world examples.<br>
+<strong>Tizi:</strong> Self-help/mindset books, wellness podcasts, Pinterest for aesthetic inspiration, personal experience + journaling.<br>
+<strong>Giulia:</strong> Books (especially popular non-fiction), personal experiences, cultural observations, trending topics she can add a unique angle to.<br>
+<strong>Isabel Radford:</strong> Whatever she's currently studying (she "learns in public"), online courses, curated reading lists, personal life moments.
+</div>
+</div>
+
+<div class="card-title" style="margin:24px 0 12px">Your Research Sources — By Pillar</div>
+
+<div class="card">
+<div class="card-label ptag ptag-p1">P1 — Life Between Two Countries</div>
+<div class="card-title">Cultural + Identity Sources</div>
+<div class="card-desc" style="line-height:2.2">
+<strong>Substacks:</strong> The Cultural Study, Letters from an American (Heather Cox Richardson), Culture Study by Anne Helen Petersen<br>
+<strong>Books:</strong> "Americanah" (Adichie), "The Immigrant Advantage" (Claudia Kolker), "Between the World and Me" (Coates)<br>
+<strong>Podcasts:</strong> Code Switch (NPR), Rough Translation (NPR), The Immigrant Story<br>
+<strong>Your moat:</strong> Your own daily life. Keep a "cultural moments" note on your phone — every time you notice a Brazil-vs-US difference, write it down. This is unlimited content.
+</div>
+</div>
+
+<div class="card">
+<div class="card-label ptag ptag-p2">P2 — Learning in Public</div>
+<div class="card-title">Finance, Growth, Learning Sources</div>
+<div class="card-desc" style="line-height:2.2">
+<strong>Substacks:</strong> The Pragmatic Engineer, Ness Labs (Anne-Laure Le Cunff), Of Dollars and Data, Sticky Spaghetti<br>
+<strong>Books:</strong> Your existing syllabus is excellent (Psychology of Money, I Will Teach You to Be Rich, Atomic Habits, etc.)<br>
+<strong>Data sources:</strong> FRED (Federal Reserve Economic Data), Bureau of Labor Statistics, Banco Central do Brasil (for exchange rate data)<br>
+<strong>YouTube:</strong> Ali Abdaal (productivity), The Plain Bagel (finance), Thomas Frank (systems)<br>
+<strong>Reddit:</strong> r/personalfinance, r/FIRE, r/languagelearning, r/bilingual — for real stories and questions your audience has<br>
+<strong>Podcasts:</strong> The Tim Ferriss Show, The Diary of a CEO, How I Built This
+</div>
+</div>
+
+<div class="card">
+<div class="card-label" style="background:var(--purple-bg);color:var(--purple)">Content Ideas</div>
+<div class="card-title">Idea Mining Spots</div>
+<div class="card-desc" style="line-height:2.2">
+<strong>Quora:</strong> Search "immigrant money" "bilingual children" "living abroad" — the questions people ask = your content topics<br>
+<strong>Amazon reviews:</strong> Read 1-star reviews of books you like. The complaints = content gaps you can fill<br>
+<strong>Google Trends:</strong> Check what's trending in personal finance, immigration, bilingual parenting<br>
+<strong>AnswerThePublic.com:</strong> Type any keyword and get hundreds of real questions people search<br>
+<strong>Your DMs/comments:</strong> Once you start posting, the questions people ask you = your best content ideas<br>
+<strong>The "borrowed credibility" method:</strong> Find a stat or study, share it, then add your personal take. NoteswNat does this perfectly.
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 6: 100 HOOKS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-hooks">
+<div class="sec-num">06 — Hook Bank</div>
+<div class="sec-title">100 <em>Hooks</em></div>
+<div class="sec-desc">Adapted from patterns used by your 5 inspiration creators, customized for your pillars and story. Filter by category, search by keyword, or browse all.</div>
+
+<input class="hook-search" id="hookSearch" placeholder="Search hooks..." oninput="filterHooks()">
+<div class="hook-filters" id="hookFilters"></div>
+<div class="hook-count" id="hookCount"></div>
+<div id="hookList" style="border:1px solid var(--border);border-radius:10px;overflow:hidden;max-height:600px;overflow-y:auto"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 7: CAPCUT WORKFLOW -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-capcut">
+<div class="sec-num">07 — CapCut Workflow</div>
+<div class="sec-title">Your Editing <em>System</em></div>
+<div class="sec-desc">Starting from zero. Here's how to build the Tizi/Giulia/Isabel editing style in CapCut — step by step. Do this once, then every future video follows the same template.</div>
+
+<div class="nlist">
+<div class="nitem">
+<div class="card">
+<div class="card-title">Set Up Your Color Preset</div>
+<div class="card-desc">Open CapCut → New Project → Import any clip → Adjust → Exposure: +5, Color Temp: +3 (slightly warm), Saturation: -8 (desaturated, clean look), Highlights: +5, Shadows: +3, Fade: +10 (slight matte finish). Save as <strong>"Sabrina Clean"</strong> preset. This gives you the soft, elevated look your inspiration creators have.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">Choose Your Background Track</div>
+<div class="card-desc">CapCut Audio Library → search "lo-fi study" or "soft ambient" or "acoustic morning." Pick ONE track you love. This becomes YOUR sound. Tizi uses the same vibe in every video. Set volume to 15–20% — it should be felt, not heard. The track plays from start to finish, under your voice.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">Build the B-Roll Image System</div>
+<div class="card-desc">Before filming, prepare 3–5 images per video (screenshots, book covers, aesthetic photos). Import them into CapCut as overlays. For each image: (1) Set size to about 35–40% of screen, (2) Position in upper right or lower left, (3) Add a "Slide In" animation (0.3s from right), (4) Add a subtle drop shadow, (5) Duration: 2–4 seconds per image. Add a soft "pop" sound effect from CapCut's SFX library when each image appears.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">Set Up Caption Styles</div>
+<div class="card-desc"><strong>Regular subtitles:</strong> Auto-captions → font closest to Sora or clean sans-serif → white text, black background at 30% opacity, centered bottom third. <strong>Key phrase emphasis:</strong> When you say something quotable, add a separate text element: Instrument Serif style (or elegant serif available in CapCut), larger size (22–26px), centered, white text with subtle sage green underline or background. Duration matches the spoken phrase.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">Create Your End Card</div>
+<div class="card-desc">In Canva, design a 1080×1920 end card: Linen (#F2F0ED) background, centered "follow for more" in Instrument Serif, your @handle in Sora, and a small sage green line underneath. Export as PNG. In CapCut, add as the final 1.5 seconds with a 0.3s fade transition. Reuse on every video.</div>
+</div>
+</div>
+<div class="nitem">
+<div class="card">
+<div class="card-title">Save as Master Template</div>
+<div class="card-desc">Once steps 1–5 are set up in a project: save this project as "Sabrina Master." For each new video, duplicate this project → swap the main clip → update B-roll images → update key phrases → export. Your editing time per video drops from 45+ minutes to 15–20 minutes.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 8: BRAND RULES -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-rules">
+<div class="sec-num">08 — Brand Rules</div>
+<div class="sec-title">Do This, <em>Never That</em></div>
+<div class="sec-desc">Print this out. Tape it to your wall. These rules keep you consistent when you're tired, rushed, or tempted to break brand.</div>
+
+<div class="grid2">
+<div class="card" style="border-left:3px solid var(--sage)">
+<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:12px">Always Do</div>
+<div class="card-desc" style="line-height:2.2">
+Use Instrument Serif for titles/headlines<br>
+Use Sora for body text and captions<br>
+Apply "Sabrina Clean" color preset to every video<br>
+Include 3–5 B-roll images per video<br>
+Use the same background track every time<br>
+Keep your feed light/clean (white space dominant)<br>
+Use sage green (#7A8F7A) as your signature accent<br>
+End every video with the same end card<br>
+Add a freebie CTA in your caption ("link in bio")<br>
+Post in English only on Sabrina EN
+</div>
+</div>
+<div class="card" style="border-left:3px solid var(--red-soft)">
+<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red-soft);margin-bottom:12px">Never Do</div>
+<div class="card-desc" style="line-height:2.2">
+Use Fluency Connect colors (navy, blue, red)<br>
+Use Nexa or any font besides Instrument Serif + Sora<br>
+Use cold/blue-toned filters<br>
+Use CapCut's default neon/colorful caption styles<br>
+Post without B-roll images (talking head alone = boring)<br>
+Use trending audio (your background track is your brand)<br>
+Mix Portuguese content into Sabrina EN<br>
+Use random Canva templates that don't match<br>
+Skip the end card to "save time"<br>
+Post without a custom cover/thumbnail
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:16px;background:var(--sage-bg);border-color:var(--sage)">
+<div style="font-size:13px;font-weight:600;color:var(--sage);margin-bottom:8px">The 3-Second Recognition Test</div>
+<div class="card-desc">Before posting, ask: "If someone saw this with no username — would they know it's me?" Check: Is the filter clean/warm? Is there B-roll? Is the font Instrument Serif? Is there sage green somewhere? Is there soft background music? If any of these are missing, fix before posting. Consistency builds brand. Brand builds trust. Trust builds income.</div>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// NAV
+function go(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function copyHex(hex){navigator.clipboard.writeText(hex).then(()=>showToast('Copied '+hex))}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+// HOOKS DATA
+const HOOKS=[
+// PRODUCTIVITY (1-20)
+{n:1,cat:'Productivity',text:"I tracked every hour for 30 days — here's what I learned about where my time actually goes.",src:'Nana'},
+{n:2,cat:'Productivity',text:"Stop making to-do lists. Do this instead.",src:'Nana'},
+{n:3,cat:'Productivity',text:"The morning routine that actually works when you have twin babies.",src:'Original'},
+{n:4,cat:'Productivity',text:"I deleted social media for a week and my productivity didn't change. Here's why.",src:'Tizi'},
+{n:5,cat:'Productivity',text:"The 2-minute rule changed how I run my entire day.",src:'NoteswNat'},
+{n:6,cat:'Productivity',text:"You don't need more discipline. You need better systems.",src:'Nana'},
+{n:7,cat:'Productivity',text:"I batch-film 2 weeks of content in 3 hours. Here's the exact system.",src:'Original'},
+{n:8,cat:'Productivity',text:"The #1 productivity killer nobody talks about.",src:'Tizi'},
+{n:9,cat:'Productivity',text:"How I manage two businesses, two babies, and still read 2 books a month.",src:'Original'},
+{n:10,cat:'Productivity',text:"The difference between being busy and being productive — I learned this the hard way.",src:'Nana'},
+{n:11,cat:'Productivity',text:"3 apps that replaced my entire productivity system.",src:'NoteswNat'},
+{n:12,cat:'Productivity',text:"I used to plan my week on Sunday. Now I do it on Friday. Here's why.",src:'Giulia'},
+{n:13,cat:'Productivity',text:"The calendar trick that gave me back 10 hours a week.",src:'Nana'},
+{n:14,cat:'Productivity',text:"Why 'eating the frog' never worked for me — and what I do instead.",src:'Isabel'},
+{n:15,cat:'Productivity',text:"Ambition without a system is just stress with a dream attached.",src:'Nana'},
+{n:16,cat:'Productivity',text:"I time-blocked my entire week. Here's day 1.",src:'Original'},
+{n:17,cat:'Productivity',text:"The myth of 'finding time.' You don't find it. You build it.",src:'Tizi'},
+{n:18,cat:'Productivity',text:"How to plan your week in 15 minutes flat.",src:'Nana'},
+{n:19,cat:'Productivity',text:"The Sunday reset that keeps me sane as a twin mom and business owner.",src:'Original'},
+{n:20,cat:'Productivity',text:"What happens when you stop multitasking for one week.",src:'NoteswNat'},
+// MONEY (21-40)
+{n:21,cat:'Money',text:"I have an accounting degree and I still made this mistake with money.",src:'Original'},
+{n:22,cat:'Money',text:"The first thing I do every time I get paid. It takes 5 minutes.",src:'Nana'},
+{n:23,cat:'Money',text:"How I manage money in two currencies without losing my mind.",src:'Original'},
+{n:24,cat:'Money',text:"3 money rules I follow that my Brazilian family thinks are crazy.",src:'Original'},
+{n:25,cat:'Money',text:"The book that completely changed how I think about money.",src:'Giulia'},
+{n:26,cat:'Money',text:"I tracked every expense for a month. The results were embarrassing.",src:'NoteswNat'},
+{n:27,cat:'Money',text:"Nobody talks about how expensive it is to be an immigrant.",src:'Original'},
+{n:28,cat:'Money',text:"The savings method that actually works when your income isn't stable.",src:'Original'},
+{n:29,cat:'Money',text:"My honest money breakdown this month — real numbers, no filter.",src:'Nana'},
+{n:30,cat:'Money',text:"The financial advice that works in Brazil does NOT work in America.",src:'Original'},
+{n:31,cat:'Money',text:"How I'm building wealth starting from basically zero in a new country.",src:'Original'},
+{n:32,cat:'Money',text:"5 free tools I use to manage money across two countries.",src:'Original'},
+{n:33,cat:'Money',text:"The exchange rate cost me $400 this month. Here's what I'd do differently.",src:'Original'},
+{n:34,cat:'Money',text:"Unpopular opinion: budgeting is not about restriction.",src:'Giulia'},
+{n:35,cat:'Money',text:"The money conversation every couple needs to have (we finally did).",src:'Original'},
+{n:36,cat:'Money',text:"My savings rate this quarter: the honest truth.",src:'Nana'},
+{n:37,cat:'Money',text:"How to send money internationally without getting robbed by fees.",src:'Original'},
+{n:38,cat:'Money',text:"The sinking fund method saved my marriage (seriously).",src:'Original'},
+{n:39,cat:'Money',text:"I grew up thinking rich people were bad. Here's how I unlearned that.",src:'Original'},
+{n:40,cat:'Money',text:"3 financial mistakes immigrants make in their first year — I made all of them.",src:'Original'},
+// MINDSET (41-60)
+{n:41,cat:'Mindset',text:"You're not lazy. You're overwhelmed. There's a difference.",src:'Tizi'},
+{n:42,cat:'Mindset',text:"The 1% rule: being slightly better every day compounds faster than you think.",src:'Original'},
+{n:43,cat:'Mindset',text:"I stopped saying 'I'm fine' and started saying what I actually felt.",src:'Tizi'},
+{n:44,cat:'Mindset',text:"The comparison trap is worse when you live between two cultures.",src:'Original'},
+{n:45,cat:'Mindset',text:"3 mindset shifts that changed my 2026.",src:'Nana'},
+{n:46,cat:'Mindset',text:"I failed publicly this week. Here's what I'm taking from it.",src:'Nana'},
+{n:47,cat:'Mindset',text:"The permission you're waiting for? This is it.",src:'Tizi'},
+{n:48,cat:'Mindset',text:"Perfectionism is not a flex. It's fear wearing a nice outfit.",src:'Tizi'},
+{n:49,cat:'Mindset',text:"What nobody tells you about starting over in a new country at 30.",src:'Original'},
+{n:50,cat:'Mindset',text:"I stopped trying to be balanced and started being intentional.",src:'Isabel'},
+{n:51,cat:'Mindset',text:"The 'highlight reel' problem: why I show the messy parts too.",src:'Original'},
+{n:52,cat:'Mindset',text:"Your comfort zone is not protecting you. It's trapping you.",src:'Tizi'},
+{n:53,cat:'Mindset',text:"I read one page of this book and cried. Here's why.",src:'Giulia'},
+{n:54,cat:'Mindset',text:"The morning I almost quit everything — and what happened instead.",src:'Original'},
+{n:55,cat:'Mindset',text:"You don't need confidence to start. You need to start to get confident.",src:'Nana'},
+{n:56,cat:'Mindset',text:"The identity crisis nobody warns you about when you become a mom.",src:'Original'},
+{n:57,cat:'Mindset',text:"3 things I'm unlearning this year.",src:'Giulia'},
+{n:58,cat:'Mindset',text:"What my therapist said that I think about every single day.",src:'Tizi'},
+{n:59,cat:'Mindset',text:"The difference between self-care and self-avoidance.",src:'Tizi'},
+{n:60,cat:'Mindset',text:"Growth isn't linear. Here's my actual progress chart.",src:'NoteswNat'},
+// CULTURE (61-80)
+{n:61,cat:'Culture',text:"Things that are normal in Brazil that Americans find absolutely wild.",src:'Original'},
+{n:62,cat:'Culture',text:"My American husband tried to explain Thanksgiving to my Brazilian family.",src:'Original'},
+{n:63,cat:'Culture',text:"The word 'saudade' has no English translation — but I found 3 things that come close.",src:'Original'},
+{n:64,cat:'Culture',text:"I think in Portuguese but dream in English. What does that mean?",src:'Original'},
+{n:65,cat:'Culture',text:"Raising bilingual twins: what we do every single day (it's simpler than you think).",src:'Original'},
+{n:66,cat:'Culture',text:"The culture shock I wasn't prepared for: going BACK to Brazil.",src:'Original'},
+{n:67,cat:'Culture',text:"My accent used to embarrass me. Now it's my superpower.",src:'Original'},
+{n:68,cat:'Culture',text:"5 Brazilian habits I refuse to give up living in the US.",src:'Original'},
+{n:69,cat:'Culture',text:"What dating an American taught me about my own culture.",src:'Original'},
+{n:70,cat:'Culture',text:"The bilingual mistake I make every day (and why it's actually beautiful).",src:'Original'},
+{n:71,cat:'Culture',text:"My babies' first words were in two languages. Here's what happened.",src:'Original'},
+{n:72,cat:'Culture',text:"Things Americans do that Brazilians will never understand.",src:'Original'},
+{n:73,cat:'Culture',text:"The loneliest part of being an immigrant that nobody talks about.",src:'Original'},
+{n:74,cat:'Culture',text:"How we celebrate Christmas in a bilingual household (it's chaos).",src:'Original'},
+{n:75,cat:'Culture',text:"I'm learning French as my third language. Day 1 vs Day 90.",src:'Original'},
+{n:76,cat:'Culture',text:"The question every immigrant gets asked that we secretly hate.",src:'Original'},
+{n:77,cat:'Culture',text:"My American mother-in-law tried Brazilian food for the first time.",src:'Original'},
+{n:78,cat:'Culture',text:"I translated a Brazilian saying to English and it made zero sense.",src:'Original'},
+{n:79,cat:'Culture',text:"Living between two countries means you're never fully home anywhere.",src:'Original'},
+{n:80,cat:'Culture',text:"What my twins are teaching me about identity and belonging.",src:'Original'},
+// BUILDING (81-100)
+{n:81,cat:'Building',text:"Month 1 of building in public: here's every number.",src:'Nana'},
+{n:82,cat:'Building',text:"I started a Substack with 0 subscribers. Here's week 4.",src:'Original'},
+{n:83,cat:'Building',text:"The content strategy I'm using to grow from 0 to 10K.",src:'Nana'},
+{n:84,cat:'Building',text:"I made my first $100 online. It took longer than you think.",src:'Nana'},
+{n:85,cat:'Building',text:"What I wish I knew before starting to create content.",src:'Giulia'},
+{n:86,cat:'Building',text:"My exact posting schedule and why I chose these times.",src:'Original'},
+{n:87,cat:'Building',text:"The tool stack I use to create content as a one-person team.",src:'NoteswNat'},
+{n:88,cat:'Building',text:"I'm building an app, a newsletter, and a business — here's how I stay sane.",src:'Original'},
+{n:89,cat:'Building',text:"The algorithm doesn't hate you. Your content just isn't specific enough.",src:'Nana'},
+{n:90,cat:'Building',text:"3 mistakes I made in my first month of content creation.",src:'Giulia'},
+{n:91,cat:'Building',text:"How I come up with content ideas (I never run out).",src:'NoteswNat'},
+{n:92,cat:'Building',text:"The real cost of starting a business as an immigrant mom.",src:'Original'},
+{n:93,cat:'Building',text:"I studied 5 creators with 100K+ followers. Here's the pattern.",src:'Nana'},
+{n:94,cat:'Building',text:"My content got 12 views. Here's what I did next.",src:'Original'},
+{n:95,cat:'Building',text:"The free tools that replaced $200/month in subscriptions.",src:'NoteswNat'},
+{n:96,cat:'Building',text:"How I batch-create a week of content in one afternoon.",src:'Original'},
+{n:97,cat:'Building',text:"The difference between a follower and a fan — and how to create fans.",src:'Nana'},
+{n:98,cat:'Building',text:"I asked 100 people what they want to learn. The top answer surprised me.",src:'Original'},
+{n:99,cat:'Building',text:"Quarter 2 review: what worked, what flopped, what's next.",src:'Nana'},
+{n:100,cat:'Building',text:"If you're starting from zero, do these 5 things first.",src:'Nana'},
+];
+
+const CATS=['All','Productivity','Money','Mindset','Culture','Building'];
+const CAT_COLORS={Productivity:'var(--sage)',Money:'var(--warm)',Mindset:'var(--purple)',Culture:'var(--rose)',Building:'var(--blue)'};
+const CAT_BGS={Productivity:'var(--sage-bg)',Money:'var(--warm-bg)',Mindset:'var(--purple-bg)',Culture:'var(--rose-bg)',Building:'var(--blue-bg)'};
+let hookFilter='All';
+
+function renderHookFilters(){
+  document.getElementById('hookFilters').innerHTML=CATS.map(c=>`<button class="hook-filter${hookFilter===c?' on':''}" onclick="setHookFilter('${c}')">${c}</button>`).join('');
+}
+function setHookFilter(c){hookFilter=c;renderHookFilters();filterHooks()}
+function filterHooks(){
+  const q=document.getElementById('hookSearch').value.toLowerCase();
+  const filtered=HOOKS.filter(h=>{
+    if(hookFilter!=='All'&&h.cat!==hookFilter)return false;
+    if(q&&!h.text.toLowerCase().includes(q))return false;
+    return true;
+  });
+  document.getElementById('hookCount').textContent=filtered.length+' hooks';
+  document.getElementById('hookList').innerHTML=filtered.map(h=>
+    `<div class="hook-row"><div class="hook-num">${String(h.n).padStart(2,'0')}</div><div><span class="hook-cat" style="background:${CAT_BGS[h.cat]};color:${CAT_COLORS[h.cat]}">${h.cat}</span></div><div class="hook-text">${h.text}</div><div class="hook-src">${h.src}</div></div>`
+  ).join('');
+}
+
+// Init
+renderHookFilters();
+filterHooks();
+</script>
+</body>
+</html>
