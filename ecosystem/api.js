@@ -186,18 +186,17 @@ Return ONLY a JSON array:
 // Setup instructions are in SETUP.md
 
 const GCAL_SCOPES = 'https://www.googleapis.com/auth/calendar.events';
-
 let gcalToken = null;
+let _gcalPopup = null;
 
 function getGCalConfig() {
   const settings = loadSettings();
   return {
-    clientId:    settings.gcalClientId    || '',
+    clientId:    settings.gcalClientId || '',
     redirectUri: window.location.origin + window.location.pathname
   };
 }
 
-// Generate PKCE code verifier and challenge
 async function generatePKCE() {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
@@ -212,42 +211,67 @@ async function generatePKCE() {
 async function startGCalAuth() {
   const cfg = getGCalConfig();
   if (!cfg.clientId) {
-    alert('Google Calendar Client ID not configured. Check Settings → Calendar Setup.');
+    alert('Google Calendar Client ID not configured. Check Sabrina → Master tab.');
     return;
   }
+
   const { verifier, challenge } = await generatePKCE();
   sessionStorage.setItem('gcal_pkce_verifier', verifier);
+
   const params = new URLSearchParams({
-    response_type: 'code',
-    client_id:     cfg.clientId,
-    redirect_uri:  cfg.redirectUri,
-    scope:         GCAL_SCOPES,
-    code_challenge: challenge,
+    response_type:         'code',
+    client_id:             cfg.clientId,
+    redirect_uri:          cfg.redirectUri,
+    scope:                 GCAL_SCOPES,
+    code_challenge:        challenge,
     code_challenge_method: 'S256',
-    access_type:   'offline',
-    prompt:        'consent',
-    state:         'gcal_oauth'
+    access_type:           'offline',
+    prompt:                'consent',
+    state:                 'gcal_oauth'
   });
-  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+
+  // Open in popup so main page stays alive — code won't expire
+  const width = 500, height = 600;
+  const left  = window.screenX + (window.outerWidth  - width)  / 2;
+  const top   = window.screenY + (window.outerHeight - height) / 2;
+  _gcalPopup  = window.open(authUrl, 'gcal_auth', `width=${width},height=${height},left=${left},top=${top}`);
+
+  // Listen for the popup to redirect back with the code
+  const timer = setInterval(async () => {
+    try {
+      if (!_gcalPopup || _gcalPopup.closed) {
+        clearInterval(timer);
+        return;
+      }
+      const popupUrl = _gcalPopup.location.href;
+      if (popupUrl.includes('state=gcal_oauth') && popupUrl.includes('code=')) {
+        clearInterval(timer);
+        const popupParams = new URLSearchParams(new URL(popupUrl).search);
+        const code = popupParams.get('code');
+        _gcalPopup.close();
+        _gcalPopup = null;
+        if (code) await exchangeGCalCode(code);
+      }
+    } catch(e) {
+      // Cross-origin errors are expected while on Google's domain — ignore them
+    }
+  }, 300);
 }
 
-async function handleGCalCallback() {
-  const params = new URLSearchParams(window.location.search);
-  const code  = params.get('code');
-  const state = params.get('state');
-  if (!code || state !== 'gcal_oauth') return false;
-
+async function exchangeGCalCode(code) {
   const cfg      = getGCalConfig();
   const verifier = sessionStorage.getItem('gcal_pkce_verifier');
-  if (!verifier) return false;
+  if (!verifier) { console.error('[GCal] No PKCE verifier found'); return; }
 
-try {
+  try {
     console.log('[GCal] Exchanging code. redirect_uri =', cfg.redirectUri);
 
     const res = await fetch(PROXY_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type':   'application/json',
         'x-request-type': 'gcal-token'
       },
       body: JSON.stringify({
@@ -265,20 +289,38 @@ try {
     if (data.access_token) {
       gcalToken = data.access_token;
       const settings = loadSettings();
-      settings.gcalToken = data.access_token;
-      settings.gcalConnected = true;
+      settings.gcalToken      = data.access_token;
+      settings.gcalConnected  = true;
       saveSettings(settings);
       sessionStorage.removeItem('gcal_pkce_verifier');
-      window.history.replaceState({}, document.title, window.location.pathname);
       updateGCalBadge();
-      return true;
+      toast('📅 Google Calendar connected!');
+      // Refresh master tab if open
+      const masterEl = document.getElementById('sab-master');
+      if (masterEl) { delete masterEl.dataset.rendered; renderTabContent('sab','master',masterEl); }
     } else {
       console.error('[GCal] Token exchange failed:', data.error, data.error_description);
+      toast('Google Calendar connection failed. Check console.');
     }
   } catch(e) {
     console.error('[API] GCal token exchange error:', e);
   }
-  return false;
+}
+
+async function handleGCalCallback() {
+  // With the popup approach the main page never gets the code in its URL,
+  // so this function now only handles the edge case of a direct redirect
+  // (e.g. if a popup blocker forced a full redirect instead).
+  const params = new URLSearchParams(window.location.search);
+  const code   = params.get('code');
+  const state  = params.get('state');
+  if (!code || state !== 'gcal_oauth') return false;
+
+  // Clean the URL immediately so the code isn't reused on refresh
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  await exchangeGCalCode(code);
+  return true;
 }
 
 function getGCalToken() {
@@ -288,12 +330,8 @@ function getGCalToken() {
 }
 
 async function createCalendarEvent(eventData) {
-  // eventData: { title, description, recDate, postDate, account }
   const token = getGCalToken();
-  if (!token) {
-    // Fall back to pre-filled Google Calendar URL
-    return openCalendarFallback(eventData);
-  }
+  if (!token) return openCalendarFallback(eventData);
 
   const accountLabel = ACCOUNTS[eventData.account]?.label || eventData.account;
   const results = [];
@@ -302,7 +340,7 @@ async function createCalendarEvent(eventData) {
     if (!date) continue;
     const d = new Date(date + 'T10:00:00');
     const event = {
-      summary: `${type} | ${accountLabel} | ${eventData.title}`,
+      summary:     `${type} | ${accountLabel} | ${eventData.title}`,
       description: eventData.description || '',
       start: { dateTime: d.toISOString(), timeZone: 'America/Sao_Paulo' },
       end:   { dateTime: new Date(d.getTime() + 60*60*1000).toISOString(), timeZone: 'America/Sao_Paulo' },
@@ -315,16 +353,12 @@ async function createCalendarEvent(eventData) {
     try {
       const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=all', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(event)
       });
       if (res.ok) {
         results.push(await res.json());
       } else if (res.status === 401) {
-        // Token expired
         const settings = loadSettings();
         settings.gcalToken = null;
         settings.gcalConnected = false;
@@ -340,10 +374,8 @@ async function createCalendarEvent(eventData) {
 }
 
 function openCalendarFallback(eventData) {
-  // Opens pre-filled Google Calendar "new event" in a new tab
   const title = encodeURIComponent(`${ACCOUNTS[eventData.account]?.emoji || ''} ${eventData.title}`);
-  const base = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
-  const url  = `${base}&text=${title}&add=${COMPANY_EMAIL}`;
+  const url   = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&add=${COMPANY_EMAIL}`;
   window.open(url, '_blank');
   return null;
 }
