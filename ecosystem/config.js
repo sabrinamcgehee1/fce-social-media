@@ -67,10 +67,6 @@ const CONVERT_SCRIPT_FIELDS = {
   ]
 };
 
-// ── SAB/MIC SCRIPT FIELDS — full FC-style per-version scripts ──────────────
-// Sab and Michael use the same rich version-specific scripts as FC
-const PILLAR_SCRIPT_FIELDS = FC_SCRIPT_FIELDS;
-
 // Full script fields (FC has richer version-specific scripts):
 const FC_SCRIPT_FIELDS = {
   attract: {
@@ -175,6 +171,9 @@ const FC_SCRIPT_FIELDS = {
     ]
   }
 };
+
+// Sab and Michael use the same rich version-specific scripts as FC
+const PILLAR_SCRIPT_FIELDS = FC_SCRIPT_FIELDS;
 
 // ── PILLARS ────────────────────────────────────────────────────────────────────
 const PILLARS = {
