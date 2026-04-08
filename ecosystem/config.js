@@ -67,14 +67,9 @@ const CONVERT_SCRIPT_FIELDS = {
   ]
 };
 
-// ── 3-PART SCRIPT (used for regular pillar videos on FC, Sab, Mic) ──────────
-const PILLAR_SCRIPT_FIELDS = {
-  video: [
-    { key:'hook',   label:'Hook',   cls:'l-hook',  rows:2, ph:'Frase que prende em 3 segundos...' },
-    { key:'value',  label:'Value',  cls:'l-lesson',rows:4, ph:'O conteúdo de valor principal...' },
-    { key:'cta',    label:'CTA',    cls:'l-cta',   rows:1, ph:'Ação que você quer que o espectador tome...' }
-  ]
-};
+// ── SAB/MIC SCRIPT FIELDS — full FC-style per-version scripts ──────────────
+// Sab and Michael use the same rich version-specific scripts as FC
+const PILLAR_SCRIPT_FIELDS = FC_SCRIPT_FIELDS;
 
 // Full script fields (FC has richer version-specific scripts):
 const FC_SCRIPT_FIELDS = {
@@ -184,10 +179,10 @@ const FC_SCRIPT_FIELDS = {
 // ── PILLARS ────────────────────────────────────────────────────────────────────
 const PILLARS = {
   fc: [
-    { id:'p1', name:'False Beginner Breakthrough', color:'#1DB994', desc:'Para quem estudou inglês por anos mas ainda não consegue falar. O problema não é linguístico — é metodológico e psicológico.' },
-    { id:'p2', name:'Real-Life Fluency',           color:'#e05252', desc:'O inglês que ninguém aprende no livro didático. Frases reais de nativos, small talk, reações naturais, inglês do trabalho e de viagem.' },
-    { id:'p3', name:'Pronúncia + Confiança',       color:'#e0a030', desc:'O pilar que aborda a parte mais emocional do aprendizado: o medo de soar errado, o sotaque, a vergonha de falar.' },
-    { id:'p4', name:'Culture Immersion',           color:'#5b8dee', desc:'O pilar que nenhum concorrente tem: o casal bilíngue intercultural como fonte de conteúdo.' }
+    { id:'p1', name:'False Beginner Breakthrough', color:'#1DB994', tags:['Storytelling','Double Down','Educational','Séries'], insight:'"Estudei inglês por anos e ainda não falo" — conteúdo que absolve e mostra caminho gera alto compartilhamento.', desc:'Para quem estudou inglês por anos mas ainda não consegue falar. O problema não é linguístico — é metodológico e psicológico. A história da Sabrina (travou com um americano após anos de estudo) e a do Michael (aprendeu português na terceira tentativa, falando desde o dia 1) são os âncoras narrativos desse pilar.' },
+    { id:'p2', name:'Real-Life Fluency',           color:'#e05252', tags:['Educational','Comparison','Séries','Carrossel'], insight:'"Para de falar X — diz Y" gera saves imediatos. O Michael como nativo é a autoridade máxima aqui.', desc:'O inglês que ninguém aprende no livro didático. Frases reais de nativos, small talk, reações naturais, inglês do trabalho e de viagem. Conteúdo de alto valor percebido e alta taxa de salvamento.' },
+    { id:'p3', name:'Pronúncia + Confiança',       color:'#e0a030', tags:['Storytelling','Educational','Authority','Séries'], insight:'"Falar rápido não é fluência — é ansiedade." Contraintuitivo. Gera debate e engajamento.', desc:'O pilar mais emocional: o medo de soar errado, o sotaque, a vergonha de falar. Foco em ritmo e entonação (stress-timed vs syllable-timed) — o que realmente muda como a pessoa soa.' },
+    { id:'p4', name:'Culture Immersion',           color:'#5b8dee', tags:['Storytelling','Comparison','Educational','Séries'], insight:'Nenhum outro canal de inglês tem um americano nativo como parceiro. O Michael valida tudo — esse é o ativo mais difícil de replicar.', desc:'O pilar que nenhum concorrente tem: o casal bilíngue intercultural. Michael explica a cultura americana de dentro. Sabrina explica o choque de fora. Ambos criam perspectiva única.' }
   ],
   sab: [
     { id:'p1', name:'Nossa história & Vida entre dois mundos', color:'#1DB994', desc:'A história do casal, vida intercultural, gêmeas bilíngues, voltar pro Brasil. O pilar que ninguém pode copiar.' },

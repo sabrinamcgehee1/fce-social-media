@@ -357,7 +357,16 @@ async function createCalendarEvent(eventData) {
         body: JSON.stringify(event)
       });
       if (res.ok) {
-        results.push(await res.json());
+        const created = await res.json();
+        results.push(created);
+        // Store the gcal event ID so we can delete it later
+        const allCal = JSON.parse(localStorage.getItem('hub_cal_v1')||'{}');
+        const dateKey = date.slice(0,10);
+        if (!allCal[dateKey]) allCal[dateKey] = [];
+        // Find the matching hub event by title and update it with the gcal ID
+        const match = allCal[dateKey].find(e => e.title === eventData.title && !e.gcalId);
+        if (match) match.gcalId = created.id;
+        localStorage.setItem('hub_cal_v1', JSON.stringify(allCal));
       } else if (res.status === 401) {
         const settings = loadSettings();
         settings.gcalToken = null;
@@ -386,6 +395,32 @@ function sendDevEmail(message) {
   const subject = encodeURIComponent('[Content Hub] Sabrina — Change Request');
   const body    = encodeURIComponent(`Hi Michael,\n\nSabrina has a request:\n\n${message}\n\n— Sent from the Content Hub`);
   window.location.href = `mailto:${DEV_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+// ── SILENT EMAIL via Cloudflare Worker + Resend ──────────────────────────────
+// The Worker forwards to Resend so no email app opens.
+// SETUP: In your Cloudflare Worker, add this route:
+//   POST with header x-request-type: send-email
+//   Body: { to, from, subject, text }
+//   In the Worker, call Resend API with your RESEND_API_KEY env variable.
+async function sendDevEmailSilent(message) {
+  try {
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-request-type': 'send-email' },
+      body: JSON.stringify({
+        to:      DEV_EMAIL,
+        from:    'hub@fluencyconnect.com',  // must be a verified Resend sender
+        subject: '[Content Hub] Sabrina — Change Request',
+        text:    `Hi Michael,\n\nSabrina has a request:\n\n${message}\n\n— Sent from the Content Hub`
+      })
+    });
+    const data = await res.json();
+    return data.ok || data.id; // Resend returns { id: '...' } on success
+  } catch(e) {
+    console.error('[API] Silent email error:', e);
+    return false;
+  }
 }
 
 // ── INIT ────────────────────────────────────────────────────────────────────

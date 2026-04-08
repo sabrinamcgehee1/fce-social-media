@@ -232,6 +232,9 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .metric-label{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .metric-value{font-size:24px;font-weight:900;color:var(--green)}
 .metric-desc{font-size:11px;color:var(--muted);margin-top:4px}
+.metric-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.metric-kpi-value{font-size:28px;font-weight:900;color:var(--green);line-height:1}
+.metric-kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:4px}
 .metrics-log{margin-top:20px}
 .log-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;align-items:center}
 .log-date{color:var(--muted);font-size:10px;min-width:80px}
@@ -391,6 +394,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .import-item-title{font-size:11px;font-weight:700}
 .import-item-sub{font-size:10px;color:var(--muted);margin-top:1px}
 
+/* ── SERIES MODAL ── */
+#smod-ep-tabs .modal-tab.active { border-bottom-color: var(--green); color: var(--text); }
+#smod-fmt-tabs { border-top: 1px solid var(--border); }
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -419,7 +426,9 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <div class="logo">Content <span>Hub</span></div>
     <div class="header-actions">
       <span class="gcal-status disconnected" id="gcal-status-badge" onclick="handleGCalConnect()">📅 Calendar</span>
-      <button class="hdr-btn" onclick="openImportModal()">📥 Import Ideas</button>
+      <button class="hdr-btn" onclick="exportCSV()">📤 Export CSV</button>
+      <button class="hdr-btn" onclick="document.getElementById('csv-import-inp').click()">📥 Import CSV</button>
+      <input type="file" id="csv-import-inp" accept=".csv" style="display:none" onchange="importCSV(this)">
     </div>
   </div>
   <div class="account-nav">
@@ -438,8 +447,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   <div class="account-panel" id="panel-fc">
     <div class="inner-tabs" id="itabs-fc"></div>
     <div class="tab-page active" id="fc-content"><!-- rendered by JS --></div>
-    <div class="tab-page" id="fc-repurpose"><!-- rendered by JS --></div>
-    <div class="tab-page" id="fc-scripts"><!-- rendered by JS --></div>
     <div class="tab-page" id="fc-generator"><!-- rendered by JS --></div>
     <div class="tab-page" id="fc-formats"><!-- rendered by JS --></div>
     <div class="tab-page" id="fc-pillars"><!-- rendered by JS --></div>
@@ -451,8 +458,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   <div class="account-panel" id="panel-sab">
     <div class="inner-tabs" id="itabs-sab"></div>
     <div class="tab-page active" id="sab-content"><!-- rendered by JS --></div>
-    <div class="tab-page" id="sab-repurpose"><!-- rendered by JS --></div>
-    <div class="tab-page" id="sab-scripts"><!-- rendered by JS --></div>
     <div class="tab-page" id="sab-generator"><!-- rendered by JS --></div>
     <div class="tab-page" id="sab-formats"><!-- rendered by JS --></div>
     <div class="tab-page" id="sab-pillars"><!-- rendered by JS --></div>
@@ -464,8 +469,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   <div class="account-panel" id="panel-mic">
     <div class="inner-tabs" id="itabs-mic"></div>
     <div class="tab-page active" id="mic-content"><!-- rendered by JS --></div>
-    <div class="tab-page" id="mic-repurpose"><!-- rendered by JS --></div>
-    <div class="tab-page" id="mic-scripts"><!-- rendered by JS --></div>
     <div class="tab-page" id="mic-generator"><!-- rendered by JS --></div>
     <div class="tab-page" id="mic-formats"><!-- rendered by JS --></div>
     <div class="tab-page" id="mic-pillars"><!-- rendered by JS --></div>
@@ -491,6 +494,31 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   </div>
 </div>
 
+<!-- ═══════════════ SERIES MODAL ═══════════════ -->
+<div class="modal-overlay" id="series-modal" onclick="closeSeriesModalOutside(event)">
+  <div class="modal-box" style="max-width:900px">
+    <div class="modal-header">
+      <div class="modal-title" id="smod-title">—</div>
+      <div class="modal-sub" id="smod-sub">—</div>
+      <button class="modal-close" onclick="closeSeriesModal()">✕</button>
+    </div>
+    <div class="modal-tabs" id="smod-ep-tabs" style="flex-wrap:nowrap;overflow-x:auto"></div>
+    <div class="modal-tabs" id="smod-fmt-tabs" style="background:var(--bg3)"></div>
+    <div class="modal-body" id="smod-body"></div>
+    <div class="date-row">
+      <div class="date-field"><div class="date-label">🎬 Recording Date</div><input type="date" class="date-inp" id="smod-date-rec" onchange="saveSeriesDate('rec',this.value)"></div>
+      <div class="date-field"><div class="date-label">📢 Post Date</div><input type="date" class="date-inp" id="smod-date-post" onchange="saveSeriesDate('post',this.value)"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="action-btn" onclick="addSeriesEpisode()" style="border-color:var(--green);color:var(--green)">＋ Add Episode</button>
+      <button class="action-btn" onclick="deleteSeriesEpisode()" style="border-color:var(--red);color:var(--red)">🗑 Delete Episode</button>
+      <button class="action-btn btn-generate" onclick="aiGenerateSeriesEp()">✨ Generate Episode</button>
+      <button class="action-btn btn-calendar" onclick="addSeriesEpToCalendar()">📅 Calendar</button>
+      <button class="action-btn btn-delete" onclick="deleteCard()">🗑 Delete Series</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ CARD MODAL ═══════════════ -->
 <div class="modal-overlay" id="card-modal" onclick="closeCardOutside(event)">
   <div class="modal-box">
@@ -501,8 +529,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     </div>
     <div class="modal-tabs" id="cmod-tabs">
       <button class="modal-tab active" onclick="switchCardTab('scripts',this)">✏️ Scripts</button>
-      <button class="modal-tab" onclick="switchCardTab('repurpose',this)">♻️ Repurpose</button>
-      <button class="modal-tab" onclick="switchCardTab('generator',this)">✨ Generator</button>
       <button class="modal-tab" onclick="switchCardTab('guide',this)">📖 Format Guide</button>
     </div>
     <div class="modal-body" id="cmod-body"></div>
@@ -510,12 +536,26 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
       <div class="date-field"><div class="date-label">🎬 Recording Date</div><input type="date" class="date-inp" id="cmod-date-rec" onchange="saveCardDate('rec',this.value)"></div>
       <div class="date-field"><div class="date-label">📢 Post Date</div><input type="date" class="date-inp" id="cmod-date-post" onchange="saveCardDate('post',this.value)"></div>
     </div>
+    <div style="padding:10px 22px;border-top:1px solid var(--border);background:var(--bg3)">
+      <button style="background:none;border:none;color:var(--muted);font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;letter-spacing:.5px;text-transform:uppercase" onclick="toggleCardMetrics(this)">📊 Log Metrics ▼</button>
+      <div id="cmod-metrics-area" style="display:none;margin-top:10px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          <div><div class="date-label">👁 Views</div><input type="number" class="date-inp" id="cmod-views" placeholder="0" min="0"></div>
+          <div><div class="date-label">🔖 Saves</div><input type="number" class="date-inp" id="cmod-saves" placeholder="0" min="0"></div>
+          <div><div class="date-label">↗ Shares</div><input type="number" class="date-inp" id="cmod-shares" placeholder="0" min="0"></div>
+          <div><div class="date-label">💬 Coments.</div><input type="number" class="date-inp" id="cmod-comments" placeholder="0" min="0"></div>
+        </div>
+        <button class="btn-primary" style="margin-top:10px;font-size:11px;padding:6px 14px" onclick="saveCardMetrics()">💾 Save Metrics</button>
+      </div>
+    </div>
     <div class="modal-actions">
       <button class="action-btn btn-generate" id="cmod-btn-generate" onclick="setCardStatus('generate')">✨ Generate</button>
       <button class="action-btn btn-reviewed" id="cmod-btn-reviewed" onclick="setCardStatus('reviewed')">👁 Reviewed</button>
       <button class="action-btn btn-finished" id="cmod-btn-finished" onclick="setCardStatus('finished')">✅ Finished</button>
       <button class="action-btn btn-calendar" onclick="addCardToCalendar()">📅 Add to Calendar</button>
+      <button class="action-btn" id="cmod-collab-btn" onclick="toggleCollabMenu(event)" style="border-color:var(--blue);color:var(--blue)">🤝 Collab</button>
       <button class="action-btn btn-delete" onclick="deleteCard()">🗑 Delete</button>
+      <div id="collab-dropdown" style="display:none;position:absolute;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px;z-index:600;box-shadow:var(--shadow)"></div>
     </div>
   </div>
 </div>
@@ -566,6 +606,36 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     </div>
     <div class="modal-body" id="cal-modal-body"></div>
     <div class="modal-actions"><button class="btn-primary" onclick="saveCalPost()">Save</button><button class="btn-secondary" onclick="closeCalModal()">Cancel</button><button class="action-btn btn-delete" id="cal-delete-btn" style="display:none" onclick="deleteCalPost()">🗑 Delete</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════ METRIC LOG MODAL ═══════════════ -->
+<div class="modal-overlay" id="metric-modal" onclick="closeMetricModalOutside(event)">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title" id="metric-modal-title">Logar post</div>
+      <button class="modal-close" onclick="closeMetricModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="script-section"><div class="script-label">Título do post</div><input type="text" class="pm-input" id="metric-inp-post" placeholder="Ex: O dia que a Sabrina travou..."></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="script-section"><div class="script-label">Versão</div><select class="pm-select" id="metric-inp-version"></select></div>
+        <div class="script-section"><div class="script-label">Pilar</div><select class="pm-select" id="metric-inp-pillar"></select></div>
+      </div>
+      <div class="script-section"><div class="script-label">Data do post</div><input type="date" class="date-inp" id="metric-inp-date" style="width:100%"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+        <div class="script-section"><div class="script-label">👁 Views</div><input type="number" class="pm-input" id="metric-inp-views" placeholder="0" min="0"></div>
+        <div class="script-section"><div class="script-label">🔖 Saves</div><input type="number" class="pm-input" id="metric-inp-saves" placeholder="0" min="0"></div>
+        <div class="script-section"><div class="script-label">↗ Shares</div><input type="number" class="pm-input" id="metric-inp-shares" placeholder="0" min="0"></div>
+        <div class="script-section"><div class="script-label">💬 Coments.</div><input type="number" class="pm-input" id="metric-inp-comments" placeholder="0" min="0"></div>
+      </div>
+      <div class="script-section"><div class="script-label">📝 Observação</div><input type="text" class="pm-input" id="metric-inp-notes" placeholder="Notas, hashtags, link..."></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="saveMetricEntry()">💾 Salvar</button>
+      <button class="btn-secondary" onclick="closeMetricModal()">Cancelar</button>
+      <button class="action-btn btn-delete" id="metric-del-btn" style="display:none" onclick="deleteMetricEntry(metricsEditAcc, metricsEditId)">🗑 Apagar</button>
+    </div>
   </div>
 </div>
 
@@ -652,17 +722,17 @@ function switchAccount(acc, btn) {
 function buildInnerTabs(acc) {
   const configs = {
     fc:  [
-      ['content','📱 Content'],['repurpose','♻️ Repurpose'],['scripts','📋 Scripts'],
+      ['content','📱 Content'],
       ['generator','✨ Generator'],['formats','📖 Formats'],
       ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],['whatsapp','💬 WhatsApp']
     ],
     sab: [
-      ['content','📱 Content'],['repurpose','♻️ Repurpose'],['scripts','📋 Scripts'],
+      ['content','📱 Content'],
       ['generator','✨ Generator'],['formats','📖 Formats'],
       ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],['master','🏠 Master']
     ],
     mic: [
-      ['content','📱 Content'],['repurpose','♻️ Repurpose'],['scripts','📋 Scripts'],
+      ['content','📱 Content'],
       ['generator','✨ Generator'],['formats','📖 Formats'],
       ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],['inspiration','🔥 Inspiration']
     ],
@@ -879,6 +949,11 @@ function toggleSeries(acc) {
 function openCardModal(acc, topicId) {
   const t = getTopics(acc).find(x=>x.id===topicId);
   if (!t) return;
+  const topicData = getTopics(acc).find(x=>x.id===topicId);
+  if (topicData?.type === 'serie') {
+    openSeriesModal(acc, topicId);
+    return;
+  }
   cardModal = { account:acc, topicId, version:'attract', format:'video', tab:'scripts' };
   document.getElementById('cmod-title').textContent = t.title;
   document.getElementById('cmod-sub').textContent   = t.sub||'';
@@ -889,6 +964,168 @@ function openCardModal(acc, topicId) {
   renderCardModalBody();
   document.getElementById('card-modal').classList.add('open');
 }
+
+// ─── SERIES MODAL ────────────────────────────────────────────────────────────
+let seriesModal = { account:null, topicId:null, ep:1, format:'video' };
+
+function openSeriesModal(acc, topicId) {
+  seriesModal = { account:acc, topicId, ep:1, format:'video' };
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  document.getElementById('smod-title').textContent = t.title;
+  document.getElementById('smod-sub').textContent = t.sub||'';
+  renderSeriesEpTabs();
+  renderSeriesFmtTabs();
+  renderSeriesBody();
+  const dates = getDates(acc, topicId);
+  document.getElementById('smod-date-rec').value = dates.rec||'';
+  document.getElementById('smod-date-post').value = dates.post||'';
+  document.getElementById('series-modal').classList.add('open');
+}
+
+function closeSeriesModal() { document.getElementById('series-modal').classList.remove('open'); }
+function closeSeriesModalOutside(e) { if(e.target===document.getElementById('series-modal')) closeSeriesModal(); }
+
+function getSeriesEpisodes(acc, topicId) {
+  const s = getState(acc);
+  if (!s.episodes) s.episodes = {};
+  if (!s.episodes[topicId]) s.episodes[topicId] = [{ ep:1, title:'Episode 1' }];
+  return s.episodes[topicId];
+}
+
+function renderSeriesEpTabs() {
+  const { account:acc, topicId, ep } = seriesModal;
+  const eps = getSeriesEpisodes(acc, topicId);
+  const tabs = document.getElementById('smod-ep-tabs');
+  tabs.innerHTML = eps.map(e=>`<button class="modal-tab ${e.ep===ep?'active':''}" onclick="switchSeriesEp(${e.ep},this)">Ep ${e.ep}</button>`).join('');
+}
+
+function renderSeriesFmtTabs() {
+  const { format } = seriesModal;
+  const tabs = document.getElementById('smod-fmt-tabs');
+  tabs.innerHTML = FORMATS.map(f=>`<button class="modal-tab ${f===format?'active':''}" onclick="switchSeriesFmt('${f}',this)">${FORMAT_LABELS[f]}</button>`).join('');
+}
+
+function renderSeriesBody() {
+  const { account:acc, topicId, ep, format } = seriesModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const eps = getSeriesEpisodes(acc, topicId);
+  const epData = eps.find(e=>e.ep===ep)||eps[0];
+  const epKey = `ep${ep}`;
+  const fieldDefs = FC_SCRIPT_FIELDS.convert.video; // series always use convert/video structure
+  const body = document.getElementById('smod-body');
+  body.innerHTML = `
+    <div style="padding:0 22px 10px;display:flex;align-items:center;gap:10px">
+      <div class="script-label" style="margin:0;white-space:nowrap">Episode ${ep} title:</div>
+      <input type="text" class="pm-input" value="${esc(epData.title||'Episode '+ep)}" oninput="saveEpTitle(${ep},this.value)" style="flex:1;margin:0">
+    </div>
+    <div style="padding:0 22px">
+      ${fieldDefs.map(fd=>`
+        <div class="script-section">
+          <div class="script-label">${fd.label}</div>
+          <textarea class="script-textarea ${fd.cls}" rows="${fd.rows}" placeholder="${fd.ph}"
+            oninput="autoResize(this);saveSeriesScript('${epKey}','${format}','${fd.key}',this.value)"
+          >${esc(getSeriesScript(acc,topicId,epKey,format,fd.key))}</textarea>
+        </div>`).join('')}
+      <div class="ai-box">
+        <div class="ai-box-title">✨ AI Generator — Episode ${ep}</div>
+        <button class="ai-btn" id="smod-ai-btn" onclick="aiGenerateSeriesEp()">Generate Episode ${ep} Scripts</button>
+        <div class="ai-output" id="smod-ai-out"></div>
+      </div>
+    </div>`;
+  body.querySelectorAll('textarea').forEach(autoResize);
+}
+
+function getSeriesScript(acc, topicId, epKey, format, field) {
+  const s = getState(acc);
+  return (s.scripts||{})[`${topicId}_${epKey}_${format}_${field}`]||'';
+}
+
+function saveSeriesScript(epKey, format, field, val) {
+  const { account:acc, topicId } = seriesModal;
+  const s = getState(acc);
+  if (!s.scripts) s.scripts={};
+  s.scripts[`${topicId}_${epKey}_${format}_${field}`] = val;
+  persist(acc);
+}
+
+function saveEpTitle(ep, val) {
+  const { account:acc, topicId } = seriesModal;
+  const eps = getSeriesEpisodes(acc, topicId);
+  const e = eps.find(x=>x.ep===ep);
+  if (e) { e.title=val; const s=getState(acc); if(!s.episodes) s.episodes={}; s.episodes[topicId]=eps; persist(acc); }
+}
+
+function switchSeriesEp(ep, btn) {
+  seriesModal.ep = ep;
+  document.querySelectorAll('#smod-ep-tabs .modal-tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderSeriesBody();
+}
+
+function switchSeriesFmt(f, btn) {
+  seriesModal.format = f;
+  document.querySelectorAll('#smod-fmt-tabs .modal-tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderSeriesBody();
+}
+
+function addSeriesEpisode() {
+  const { account:acc, topicId } = seriesModal;
+  const eps = getSeriesEpisodes(acc, topicId);
+  const nextEp = eps.length ? Math.max(...eps.map(e=>e.ep)) + 1 : 1;
+  eps.push({ ep:nextEp, title:`Episode ${nextEp}` });
+  const s = getState(acc); if(!s.episodes) s.episodes={}; s.episodes[topicId]=eps; persist(acc);
+  seriesModal.ep = nextEp;
+  renderSeriesEpTabs(); renderSeriesBody();
+  toast(`Episode ${nextEp} added`);
+}
+
+function deleteSeriesEpisode() {
+  const { account:acc, topicId, ep } = seriesModal;
+  const eps = getSeriesEpisodes(acc, topicId);
+  if (eps.length <= 1) { toast('Cannot delete the only episode'); return; }
+  if (!confirm(`Delete Episode ${ep}?`)) return;
+  const newEps = eps.filter(e=>e.ep!==ep);
+  const s = getState(acc); s.episodes[topicId]=newEps; persist(acc);
+  seriesModal.ep = newEps[0].ep;
+  renderSeriesEpTabs(); renderSeriesBody();
+  toast('Episode deleted');
+}
+
+function saveSeriesDate(type, val) {
+  const { account:acc, topicId } = seriesModal;
+  setDate(acc, topicId, type, val);
+}
+
+function addSeriesEpToCalendar() {
+  const { account:acc, topicId } = seriesModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const dates = getDates(acc, topicId);
+  createCalendarEvent({ title:t.title, description:`Episode ${seriesModal.ep}`, recDate:dates.rec, postDate:dates.post, account:acc });
+}
+
+async function aiGenerateSeriesEp() {
+  const { account:acc, topicId, ep, format } = seriesModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const btn = document.getElementById('smod-ai-btn');
+  const out = document.getElementById('smod-ai-out');
+  if (!btn || !out) return;
+  btn.disabled=true; btn.textContent='⏳ Generating...';
+  out.classList.add('visible'); out.textContent='';
+  try {
+    const epKey = `ep${ep}`;
+    const existing = {};
+    FC_SCRIPT_FIELDS.convert.video.forEach(fd=>{ existing[fd.key]=getSeriesScript(acc,topicId,epKey,format,fd.key); });
+    const raw = await generateScripts(acc, {...t, title:`${t.title} — Ep. ${ep}`}, 'convert', 'video', existing, (chunk,full)=>{ out.textContent=full; });
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    Object.entries(parsed).forEach(([key,val])=>saveSeriesScript(epKey,'video',key,val));
+    renderSeriesBody();
+    toast('✨ Episode generated!');
+  } catch(e) { out.textContent='Error: '+e.message; }
+  btn.disabled=false; btn.textContent=`Generate Episode ${ep} Scripts`;
+}
+
 function closeCardModal() { document.getElementById('card-modal').classList.remove('open'); }
 function closeCardOutside(e) { if(e.target===document.getElementById('card-modal')) closeCardModal(); }
 
@@ -947,25 +1184,44 @@ function renderCardModalBody() {
           </div>`).join('')}
       </div>
       <div class="ai-box" id="ai-gen-box">
-        <div class="ai-box-title">✨ AI Script Generator</div>
-        <button class="ai-btn" id="ai-gen-btn" onclick="aiGenerateScripts()">Generate ${VERSION_LABELS[version]} ${acc==='fc'?FORMAT_LABELS[format]:'scripts'}</button>
+        <div class="ai-box-title">✨ AI Script Generator — select fields to fill</div>
+        <div id="ai-field-checks" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <button class="ai-btn" id="ai-gen-btn" onclick="aiGenerateScripts()">✨ Generate Selected Fields</button>
         <div class="ai-output" id="ai-out-scripts"></div>
       </div>`;
-  } else if (tab==='repurpose') {
-    body.innerHTML = `<div class="doc-box-body"><h4>1 Topic → 12 Pieces</h4>${REPURPOSE_STRATEGY.split('\n').map(l=>l?`<p>${esc(l)}</p>`:'<br>').join('')}</div>`;
   } else if (tab==='generator') {
     body.innerHTML = `<div class="ai-box"><div class="ai-box-title">✨ Multi-Format Generator</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Generate all 4 versions at once for this topic.</p>
       <button class="ai-btn" onclick="aiGenerateAll()">Generate All Versions</button>
       <div class="ai-output visible" id="ai-out-all" style="margin-top:12px;font-size:11px;color:var(--muted)">Select Generate above to auto-fill all script versions.</div>
     </div>`;
-  } else if (tab==='guide') {
+  }
+  // Populate AI field checklist after body renders
+  if (tab === 'scripts') setTimeout(buildAIFieldChecks, 0);
+  if (tab==='guide') {
     body.innerHTML = Object.values(FORMAT_GUIDES).map(fg=>`
       <div class="wa-section">
         <div class="wa-section-title">${fg.label}</div>
         ${fg.sections.map(s=>`<div class="wa-step"><strong>${s.title}</strong><br>${s.body}</div>`).join('')}
       </div>`).join('');
   }
+}
+
+function buildAIFieldChecks() {
+  const { account:acc, topicId, version, format } = cardModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const isSerie = t?.type==='serie';
+  const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.video)
+                               : (PILLAR_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.attract?.video||[]);
+  const box = document.getElementById('ai-field-checks');
+  if (!box) return;
+  box.innerHTML = fieldDefs.map(fd=>{
+    const hasContent = !!getScript(acc,topicId,version,format,fd.key);
+    return `<label style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:${hasContent?'var(--muted)':'var(--text)'};cursor:pointer;padding:3px 8px;background:var(--bg4);border:1px solid ${hasContent?'var(--border)':'rgba(29,185,148,.3)'};border-radius:4px">
+      <input type="checkbox" id="aichk_${fd.key}" ${hasContent?'':'checked'} style="cursor:pointer">
+      ${fd.label}${hasContent?' ✓':''}
+    </label>`;
+  }).join('');
 }
 
 function switchVersion(v, btn) {
@@ -997,6 +1253,36 @@ function rebuildScriptFields() {
         oninput="autoResize(this);setScriptField('${acc}',${topicId},'${version}','${format}','${fd.key}',this.value)"
       >${esc(getScript(acc,topicId,version,format,fd.key))}</textarea>
     </div>`).join('');
+}
+
+function toggleCardMetrics(btn) {
+  const area = document.getElementById('cmod-metrics-area');
+  const open = area.style.display==='block';
+  area.style.display = open?'none':'block';
+  btn.textContent = open?'📊 Log Metrics ▼':'📊 Log Metrics ▲';
+}
+
+function saveCardMetrics() {
+  const { account:acc, topicId } = cardModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const entry = {
+    id: 'm'+Date.now(),
+    post: t?.title||'',
+    version: cardModal.version,
+    pillar: t?.pillar||'',
+    date: new Date().toISOString().slice(0,10),
+    views: document.getElementById('cmod-views').value,
+    saves: document.getElementById('cmod-saves').value,
+    shares: document.getElementById('cmod-shares').value,
+    comments: document.getElementById('cmod-comments').value,
+    notes: ''
+  };
+  const s = getState(acc);
+  if (!s.metrics) s.metrics=[];
+  s.metrics.push(entry);
+  persist(acc);
+  ['cmod-views','cmod-saves','cmod-shares','cmod-comments'].forEach(id=>{ document.getElementById(id).value=''; });
+  toast('✅ Metrics logged!');
 }
 
 function updateStatusButtons(acc, topicId) {
@@ -1039,6 +1325,35 @@ function addCardToCalendar() {
   }).catch(()=>toast('📅 Opening Google Calendar...'));
 }
 
+function toggleCollabMenu(e) {
+  const dd = document.getElementById('collab-dropdown');
+  if (dd.style.display === 'block') { dd.style.display='none'; return; }
+  const btn = document.getElementById('cmod-collab-btn');
+  const rect = btn.getBoundingClientRect();
+  dd.style.top = (rect.bottom + window.scrollY + 4)+'px';
+  dd.style.left = rect.left+'px';
+  dd.style.position = 'fixed';
+  const { account:acc, topicId } = cardModal;
+  const others = Object.keys(ACCOUNTS).filter(a=>a!==acc && a!=='cal');
+  dd.innerHTML = others.map(a=>`<button onclick="collabWith('${a}')" style="display:block;width:100%;text-align:left;padding:8px 14px;background:none;border:none;color:var(--text);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:4px;transition:background .2s" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='none'">${ACCOUNTS[a].emoji} ${ACCOUNTS[a].label}</button>`).join('');
+  dd.style.display = 'block';
+  setTimeout(()=>document.addEventListener('click', ()=>{ dd.style.display='none'; }, {once:true}), 50);
+}
+
+function collabWith(targetAcc) {
+  const { account:srcAcc, topicId } = cardModal;
+  const t = getTopics(srcAcc).find(x=>x.id===topicId);
+  if (!t) return;
+  const tgt = getState(targetAcc);
+  const dup = tgt.topics.find(x=>x.title===t.title);
+  if (dup) { toast(`Already on ${ACCOUNTS[targetAcc].label}`); return; }
+  const collabTopic = { ...t, id: nextId(tgt.topics), collabWith: srcAcc };
+  tgt.topics.push(collabTopic);
+  persist(targetAcc);
+  toast(`🤝 Added to ${ACCOUNTS[targetAcc].label}!`);
+  document.getElementById('collab-dropdown').style.display='none';
+}
+
 function deleteCard() {
   const { account:acc, topicId } = cardModal;
   if (!confirm('Delete this topic?')) return;
@@ -1061,19 +1376,27 @@ async function aiGenerateScripts() {
   try {
     const existing = {};
     const isSerie = t?.type==='serie';
-    const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.video)
-                                 : (isSerie ? CONVERT_SCRIPT_FIELDS.video : PILLAR_SCRIPT_FIELDS.video);
-    fieldDefs.forEach(fd=>{ existing[fd.key]=getScript(acc,topicId,version,format,fd.key); });
+    const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||FC_SCRIPT_FIELDS.attract.video)
+                                 : (FC_SCRIPT_FIELDS[version]?.[format]||FC_SCRIPT_FIELDS.attract.video);
+    // Collect which fields to generate (only checked ones)
+    const toGenerate = new Set();
+    fieldDefs.forEach(fd=>{
+      const chk = document.getElementById(`aichk_${fd.key}`);
+      if (!chk || chk.checked) toGenerate.add(fd.key); // if no checkbox, generate all
+      existing[fd.key] = getScript(acc,topicId,version,format,fd.key);
+    });
     const raw = await generateScripts(acc, t, version, format, existing, (chunk, full)=>{ out.textContent=full; });
     const clean = raw.replace(/```json|```/g,'').trim();
     const parsed = JSON.parse(clean);
-    Object.entries(parsed).forEach(([key,val])=>{ setScriptField(acc,topicId,version,format,key,val); });
+    Object.entries(parsed).forEach(([key,val])=>{
+      if (toGenerate.has(key)) setScriptField(acc,topicId,version,format,key,val);
+    });
     renderCardModalBody();
     toast('✨ Scripts generated!');
   } catch(e) {
     out.textContent = 'Error: '+e.message; toast('Error generating scripts');
   }
-  btn.disabled = false; btn.textContent = `Generate ${VERSION_LABELS[version]} ${FORMAT_LABELS[format]||'scripts'}`;
+  btn.disabled = false; btn.textContent = `✨ Generate Selected Fields`;
 }
 
 async function aiGenerateAll() {
@@ -1279,67 +1602,165 @@ function spRender(acc) {
 // GENERATOR TAB
 // ═══════════════════════════════════════════════════════════════════════════
 function renderGenerator(acc, el) {
-  const topics = getTopics(acc);
-  el.innerHTML = `<div class="section-title">✨ AI Script Generator</div>
-    <div class="section-desc">Select a topic and which pieces to generate. AI fills the fields automatically.</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px">
-      <div>
-        <div class="pm-row"><div class="pm-label">Topic</div>
-          <select class="pm-select" id="gen-topic-${acc}">
+  const topics = getTopics(acc).filter(t=>t.type!=='serie');
+  el.innerHTML = `
+    <div class="section-title">✨ AI Script Generator</div>
+    <div class="section-desc">Escreva o script de origem, selecione quais peças gerar, e o Claude preenche automaticamente. Existindo conteúdo, será usado como contexto — não será substituído sem marcar o campo.</div>
+    <div style="display:grid;grid-template-columns:360px 1fr;gap:20px;margin-top:20px">
+      <!-- LEFT PANEL -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px">
+        <div style="font-size:11px;font-weight:900;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px">⚙️ Configurar Geração</div>
+        <div class="pm-row"><div class="pm-label">Tópico</div>
+          <select class="pm-select" id="gen-topic-${acc}" onchange="onGenTopicChange('${acc}')">
+            <option value="">— Seleciona tópico —</option>
             ${topics.map(t=>`<option value="${t.id}">${t.id}. ${esc(t.title)}</option>`).join('')}
           </select>
         </div>
-        <div class="pm-row"><div class="pm-label">Version</div>
-          <select class="pm-select" id="gen-version-${acc}">
+        <div class="pm-row"><div class="pm-label">Versão de origem</div>
+          <select class="pm-select" id="gen-src-ver-${acc}">
             ${VERSIONS.map(v=>`<option value="${v}">${VERSION_LABELS[v]}</option>`).join('')}
           </select>
         </div>
-        <div class="pm-row"><div class="pm-label">Format</div>
-          <select class="pm-select" id="gen-format-${acc}">
+        <div class="pm-row"><div class="pm-label">Formato de origem</div>
+          <select class="pm-select" id="gen-src-fmt-${acc}">
             ${FORMATS.map(f=>`<option value="${f}">${FORMAT_LABELS[f]}</option>`).join('')}
           </select>
         </div>
-        <button class="ai-btn" id="gen-btn-${acc}" onclick="runGenerator('${acc}')">✨ Generate Scripts</button>
+        <div class="pm-row">
+          <div class="pm-label">Gerar estas peças</div>
+          <button class="filter-btn" onclick="genToggleAll('${acc}')" style="margin-bottom:8px">☑ Selecionar / Desmarcar todos</button>
+          <div id="gen-checks-${acc}" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);padding:8px;background:var(--bg3);border-radius:6px;margin-bottom:12px" id="gen-status-${acc}">Seleciona um tópico para começar.</div>
+        <button class="ai-btn" id="gen-run-${acc}" onclick="runGenerator('${acc}')" disabled>✨ Gerar Scripts Selecionados</button>
       </div>
-      <div>
-        <div class="pm-label">Output</div>
-        <div class="ai-output visible" id="gen-out-${acc}" style="min-height:200px;margin-top:0">Scripts will appear here.</div>
+      <!-- RIGHT PANEL — results -->
+      <div id="gen-results-${acc}" style="display:flex;flex-direction:column;gap:12px">
+        <div style="text-align:center;padding:60px 20px;color:var(--muted);font-size:12px">Os scripts gerados aparecem aqui.<br>Selecione um tópico e as peças que quer gerar.</div>
       </div>
     </div>`;
+  buildGenCheckboxes(acc);
 }
+
+function buildGenCheckboxes(acc) {
+  const box = document.getElementById(`gen-checks-${acc}`);
+  if (!box) return;
+  let html='';
+  VERSIONS.forEach(v=>{
+    html+=`<div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-top:8px;margin-bottom:4px">${VERSION_LABELS[v]}</div>`;
+    FORMATS.forEach(f=>{
+      html+=`<label style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;cursor:pointer;padding:4px 0">
+        <input type="checkbox" id="gcb_${acc}_${v}_${f}" checked style="cursor:pointer"> ${FORMAT_LABELS[f]}
+      </label>`;
+    });
+  });
+  box.innerHTML=html;
+}
+
+function genToggleAll(acc) {
+  const boxes=document.querySelectorAll(`[id^="gcb_${acc}_"]`);
+  const anyUnchecked=[...boxes].some(b=>!b.checked);
+  boxes.forEach(b=>b.checked=anyUnchecked);
+}
+
+function onGenTopicChange(acc) {
+  const val=document.getElementById(`gen-topic-${acc}`)?.value;
+  document.getElementById(`gen-run-${acc}`).disabled=!val;
+  document.getElementById(`gen-status-${acc}`).textContent=val?'Clique em "Gerar Scripts Selecionados" para começar.':'Seleciona um tópico para começar.';
+}
+
 async function runGenerator(acc) {
   const topicId = parseInt(document.getElementById(`gen-topic-${acc}`).value);
-  const version = document.getElementById(`gen-version-${acc}`).value;
-  const format  = document.getElementById(`gen-format-${acc}`).value;
+  const srcVer  = document.getElementById(`gen-src-ver-${acc}`).value;
+  const srcFmt  = document.getElementById(`gen-src-fmt-${acc}`).value;
   const t = getTopics(acc).find(x=>x.id===topicId);
-  const btn = document.getElementById(`gen-btn-${acc}`);
-  const out = document.getElementById(`gen-out-${acc}`);
-  btn.disabled=true; btn.textContent='⏳ Generating...';
-  out.textContent='';
-  try {
-    const raw = await generateScripts(acc, t, version, format, {}, (chunk,full)=>{out.textContent=full;});
-    const clean=raw.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-    Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,topicId,version,format,key,val));
-    out.textContent='✅ Scripts saved! Open the card to review.';
-    toast('✨ Scripts generated and saved!');
-  } catch(e) { out.textContent='Error: '+e.message; toast('Generation error'); }
-  btn.disabled=false; btn.textContent='✨ Generate Scripts';
+  if (!t) return;
+  const toGenerate=[];
+  VERSIONS.forEach(v=>FORMATS.forEach(f=>{
+    if (v===srcVer&&f===srcFmt) return;
+    const cb=document.getElementById(`gcb_${acc}_${v}_${f}`);
+    if(cb&&cb.checked) toGenerate.push({v,f});
+  }));
+  if(!toGenerate.length){ document.getElementById(`gen-status-${acc}`).textContent='⚠️ Selecione pelo menos uma peça.'; return; }
+  const runBtn=document.getElementById(`gen-run-${acc}`);
+  runBtn.disabled=true;
+  const results=document.getElementById(`gen-results-${acc}`);
+  results.innerHTML='';
+  let done=0;
+  for(const {v,f} of toGenerate){
+    document.getElementById(`gen-status-${acc}`).textContent=`⏳ Gerando ${done+1}/${toGenerate.length}: ${VERSION_LABELS[v]} ${FORMAT_LABELS[f]}...`;
+    try{
+      const existing={};
+      const fieldDefs=FC_SCRIPT_FIELDS[v]?.[f]||FC_SCRIPT_FIELDS.attract.video;
+      fieldDefs.forEach(fd=>{ existing[fd.key]=getScript(acc,topicId,v,f,fd.key); });
+      const raw=await generateScripts(acc,t,v,f,existing,null);
+      const clean=raw.replace(/```json|```/g,'').trim();
+      const parsed=JSON.parse(clean);
+      // Apply to storage
+      Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,topicId,v,f,key,val));
+      // Render result card with Apply button
+      const card=document.createElement('div');
+      card.style.cssText='background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden';
+      card.innerHTML=`
+        <div style="padding:10px 16px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;font-weight:800">${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}</span>
+          <button class="action-btn" style="padding:4px 10px;font-size:10px" onclick="openCardModal('${acc}',${topicId})">Ver no card →</button>
+        </div>
+        <div style="padding:14px 16px">
+          ${Object.entries(parsed).map(([k,val])=>`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">${k}</div><div style="font-size:12px;color:var(--muted2);line-height:1.6;white-space:pre-wrap">${esc(val)}</div></div>`).join('')}
+        </div>`;
+      results.appendChild(card);
+      done++;
+    } catch(err){
+      document.getElementById(`gen-status-${acc}`).textContent=`❌ Erro ao gerar ${VERSION_LABELS[v]} ${FORMAT_LABELS[f]}: ${err.message}`;
+      runBtn.disabled=false;
+      return;
+    }
+  }
+  document.getElementById(`gen-status-${acc}`).textContent=`✅ ${done} peça(s) geradas e salvas!`;
+  runBtn.disabled=false;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FORMATS TAB
 // ═══════════════════════════════════════════════════════════════════════════
 function renderFormats(acc, el) {
-  el.innerHTML = `<div class="section-title">📖 Format Guide</div>
-    <div class="section-desc">Structure reference for each content format.</div>
-    ${Object.entries(FORMAT_GUIDES).map(([fmt,fg])=>`
-      <div class="wa-section">
-        <div class="wa-section-title">${fg.label}</div>
-        <div class="wa-flow">
-          ${fg.sections.map(s=>`<div class="wa-step"><strong>${s.title}</strong><br>${s.body}</div>`).join('')}
+  const GUIDE_CARDS = [
+    {key:'ST',color:'var(--green)',name:'Storytelling',goal:'Atrair / Nutrir',
+     steps:[{l:'Hook',d:'Frase que prende em 3 segundos. Para o scroll.'},{l:'Stakes',d:'O que estava em jogo? Por que importava?'},{l:'Clímax',d:'O momento de virada da história'},{l:'Lição',d:'O que você aprendeu'},{l:'CTA',d:'Segue / salva / comenta'}]},
+    {key:'CO',color:'#e0a030',name:'Comparison / Double Down',goal:'Atrair',
+     steps:[{l:'Hook',d:'Contradiz uma crença popular diretamente'},{l:'Crença',d:'O que todo mundo acredita'},{l:'Contradição',d:'O que é diferente ou oposto'},{l:'Explicação',d:'Por que você está certo'},{l:'CTA',d:'Salva / comenta'}]},
+    {key:'AT',color:'var(--blue)',name:'Authority / Position',goal:'Posicionar',
+     steps:[{l:'Hook',d:'Credencial ou observação única'},{l:'Experiência',d:'O que você viveu'},{l:'Observação',d:'O que você viu nos seguidores'},{l:'Insight',d:'A conclusão não-óbvia'},{l:'CTA',d:'Link na bio / segue'}]},
+    {key:'ED',color:'var(--purple)',name:'Educational / Nurture',goal:'Nutrir',
+     steps:[{l:'Hook',d:'Um erro ou problema muito comum'},{l:'Problema',d:'Por que esse erro acontece'},{l:'Solução',d:'O jeito certo de fazer'},{l:'Prática',d:'Exercício imediato'},{l:'CTA',d:'Salva'}]},
+    {key:'SE',color:'var(--orange)',name:'Série / Convert',goal:'Converter',
+     steps:[{l:'Hook + Ep.',d:'Nome da série + número do episódio'},{l:'Contexto',d:'O que esse episódio cobre'},{l:'Lição',d:'O conteúdo'},{l:'Prévia',d:'O que vem no próximo episódio'},{l:'CTA',d:'Palavra de ativação WhatsApp'}]},
+    {key:'CA',color:'#e09840',name:'Carrossel',goal:'Salvar / Nutrir',
+     steps:[{l:'Slide 1',d:'Hook — para o scroll'},{l:'Slides 2–3',d:'Contexto — por que importa'},{l:'Slides 4–5',d:'Valor — um ponto por slide'},{l:'Slides 6–7',d:'Resolução — payoff ou insight'},{l:'Slide final',d:'CTA — uma ação + trigger'}]},
+    {key:'SO',color:'var(--blue)',name:'Stories',goal:'Engajar / Converter',
+     steps:[{l:'Story 1',d:'Gancho — para o tap'},{l:'Stories 2–3',d:'Contexto — 1 frase por story'},{l:'Stories 4–5',d:'Conteúdo — dica simples e visual'},{l:'Story 6',d:'CTA — responde / link / WhatsApp'}]},
+  ];
+  el.innerHTML = `<div class="section-title">📖 Guia de Formatos</div>
+    <div class="section-desc">Estrutura de cada formato — o job de cada parte.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:20px">
+    ${GUIDE_CARDS.map(g=>`
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+        <div style="height:4px;background:${g.color}"></div>
+        <div style="padding:16px 18px">
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+            <span style="font-size:11px;font-weight:900;color:${g.color};letter-spacing:.5px">${g.key}</span>
+            <span style="font-size:13px;font-weight:900">${g.name}</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:14px">Objetivo: ${g.goal}</div>
+          ${g.steps.map((s,i)=>`
+            <div style="display:flex;gap:10px;margin-bottom:8px;align-items:flex-start">
+              <div style="width:20px;height:20px;border-radius:50%;background:${g.color};color:#000;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i+1}</div>
+              <div><strong style="font-size:11px">${s.l}:</strong> <span style="font-size:11px;color:var(--muted2)">${s.d}</span></div>
+            </div>`).join('')}
         </div>
-      </div>`).join('')}`;
+      </div>`).join('')}
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1347,56 +1768,253 @@ function renderFormats(acc, el) {
 // ═══════════════════════════════════════════════════════════════════════════
 function renderPillars(acc, el) {
   const pillars = getPillars(acc);
-  el.innerHTML = `<div class="section-title">⭐ Pillar Strategy</div>
-    <div class="section-desc">Deep dive into each content pillar.</div>
-    ${pillars.map((p,i)=>`
-      <div class="pillar-block" style="border-left:4px solid ${p.color}">
-        <div class="pillar-block-title" style="color:${p.color}">${i+1}. ${p.name}</div>
-        <div class="pillar-block-desc">${p.desc}</div>
-      </div>`).join('')}`;
+  const topics  = getTopics(acc);
+  const colorNames = ['var(--fc-color)','var(--red)','var(--yellow)','var(--blue)'];
+  const versionDistrib = [
+    {pct:'40%',label:'ATRAIR',color:'var(--green)',desc:'Storytelling<br>sem pitch'},
+    {pct:'25%',label:'NUTRIR',color:'var(--purple)',desc:'Educational<br>constrói confiança'},
+    {pct:'20%',label:'POSICIONAR',color:'var(--blue)',desc:'Authority<br>mostra o método'},
+    {pct:'15%',label:'CONVERTER',color:'var(--orange)',desc:'CTA direto<br>produto / ação'},
+  ];
+  el.innerHTML = `
+    <div class="section-title">⭐ Pilares de Conteúdo</div>
+    <div class="section-desc">Os pilares que organizam todo o conteúdo — propósito, audiência e gatilhos de cada um.</div>
+    ${pillars.map((p,i)=>{
+      const count = topics.filter(t=>t.pillar===p.id).length;
+      const done  = topics.filter(t=>t.pillar===p.id&&getStatus(acc,t.id)==='finished').length;
+      return `
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:16px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${p.color}"></div>
+        <div style="display:flex;align-items:flex-start;gap:20px">
+          <div style="font-size:60px;font-weight:900;color:var(--border);line-height:1;flex-shrink:0">${i+1}</div>
+          <div style="flex:1">
+            <div style="font-size:17px;font-weight:900;color:${p.color};margin-bottom:4px">${p.name}</div>
+            <div style="font-size:12px;color:var(--muted2);line-height:1.75;margin-bottom:12px">${p.desc}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+              ${(p.tags||['Storytelling','Educational','Séries']).map(tag=>`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;background:rgba(255,255,255,.06);border:1px solid var(--border)">${tag}</span>`).join('')}
+            </div>
+            ${p.insight?`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted2);line-height:1.7"><strong style="color:var(--text)">Gatilho:</strong> ${p.insight}</div>`:''}
+            <div style="display:flex;gap:16px;margin-top:12px">
+              <span style="font-size:11px;color:var(--muted)">${count} tópicos</span>
+              <span style="font-size:11px;color:var(--green)">${done} finalizados</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:8px">
+      <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px">Distribuição de Content Jobs</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${versionDistrib.map(v=>`
+          <div style="text-align:center;padding:14px 8px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">
+            <div style="font-size:22px;font-weight:900;color:${v.color}">${v.pct}</div>
+            <div style="font-size:10px;font-weight:800;color:${v.color};margin-top:2px">${v.label}</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5">${v.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // METRICS TAB
 // ═══════════════════════════════════════════════════════════════════════════
+// ─── METRICS LOG MODAL (shared) ───────────────────────────────────────────────
+let metricsEditId = null;
+let metricsEditAcc = null;
+
 function renderMetrics(acc, el) {
-  const topics = getTopics(acc);
-  const done   = topics.filter(t=>getStatus(acc,t.id)==='finished').length;
-  const gen    = topics.filter(t=>getStatus(acc,t.id)==='generate').length;
   const s = getState(acc);
-  const log = s.metrics||[];
-  el.innerHTML = `<div class="section-title">📊 Metrics</div>
-    <div class="section-desc">Track your content performance.</div>
-    <div class="metrics-grid">
-      <div class="metric-card"><div class="metric-label">Total Topics</div><div class="metric-value">${topics.length}</div><div class="metric-desc">Ideas in your pipeline</div></div>
-      <div class="metric-card"><div class="metric-label">Finished</div><div class="metric-value" style="color:var(--green)">${done}</div><div class="metric-desc">${topics.length?Math.round(done/topics.length*100):0}% completion</div></div>
-      <div class="metric-card"><div class="metric-label">AI Generated</div><div class="metric-value" style="color:var(--purple)">${gen}</div><div class="metric-desc">Scripts ready to review</div></div>
+  const log = s.metrics || [];
+  const totalViews   = log.reduce((sum,e)=>sum+(parseInt(e.views)||0),0);
+  const totalSaves   = log.reduce((sum,e)=>sum+(parseInt(e.saves)||0),0);
+  const totalShares  = log.reduce((sum,e)=>sum+(parseInt(e.shares)||0),0);
+  const totalComments= log.reduce((sum,e)=>sum+(parseInt(e.comments)||0),0);
+  const avgEng = totalViews ? ((totalSaves+totalShares)/totalViews*100).toFixed(1)+'%' : '—';
+  const pillars = getPillars(acc);
+  el.innerHTML = `
+    <div class="section-title">📊 Métricas de Performance</div>
+    <div class="section-desc">Logue os dados reais de cada post. Checkpoints aparecem aos 5 e 10 posts.</div>
+    <!-- KPI Bar -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">
+      <div class="metric-kpi"><div class="metric-kpi-value">${log.length}</div><div class="metric-kpi-label">Posts logados</div></div>
+      <div class="metric-kpi"><div class="metric-kpi-value">${totalViews?totalViews.toLocaleString('pt-BR'):'—'}</div><div class="metric-kpi-label">Total views</div></div>
+      <div class="metric-kpi"><div class="metric-kpi-value">${totalSaves?totalSaves.toLocaleString('pt-BR'):'—'}</div><div class="metric-kpi-label">Total saves</div></div>
+      <div class="metric-kpi"><div class="metric-kpi-value">${totalShares?totalShares.toLocaleString('pt-BR'):'—'}</div><div class="metric-kpi-label">Total shares</div></div>
+      <div class="metric-kpi"><div class="metric-kpi-value">${avgEng}</div><div class="metric-kpi-label">Eng. médio</div><div style="font-size:9px;color:var(--muted)">(saves+shares)/views</div></div>
     </div>
-    <div class="metrics-log">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="section-title" style="font-size:14px">Performance Log</div>
-        <button class="btn-primary" onclick="openMetricEntry('${acc}')">＋ Log Entry</button>
+    <!-- Checkpoints -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px" id="metrics-checkpoints-${acc}"></div>
+    <!-- Filters + Log button -->
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div class="filters" style="margin:0">
+        <button class="filter-btn active" onclick="metricsFilter('${acc}','all',this)">Todos</button>
+        ${VERSIONS.map(v=>`<button class="filter-btn" onclick="metricsFilter('${acc}','${v}',this)">${VERSION_LABELS[v]}</button>`).join('')}
+        <div class="filter-sep"></div>
+        ${pillars.map(p=>`<button class="filter-btn" onclick="metricsFilter('${acc}','${p.id}',this)">${p.id.toUpperCase()}</button>`).join('')}
       </div>
-      ${log.length ? log.slice().reverse().slice(0,10).map(e=>`
-        <div class="log-row">
-          <div class="log-date">${e.date}</div>
-          <div style="flex:1"><strong>${esc(e.post)}</strong> — ${esc(e.notes||'')}</div>
-          <div style="color:var(--green);font-size:11px;font-weight:700">${e.reach||''}</div>
-        </div>`).join('') : '<div style="color:var(--muted);font-size:12px;padding:20px 0">No entries yet. Log your first post performance above.</div>'}
+      <button class="btn-primary" onclick="openMetricEntry('${acc}',null)">＋ Logar post</button>
+    </div>
+    <!-- Table -->
+    <div style="overflow-x:auto;margin-bottom:24px">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr style="border-bottom:1px solid var(--border)">
+          <th style="text-align:left;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Post</th>
+          <th style="text-align:left;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Versão</th>
+          <th style="text-align:left;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Pilar</th>
+          <th style="text-align:left;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Data</th>
+          <th style="text-align:right;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Views</th>
+          <th style="text-align:right;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Saves</th>
+          <th style="text-align:right;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Shares</th>
+          <th style="text-align:right;padding:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Eng%</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="metrics-tbody-${acc}">
+          ${log.length===0?`<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--muted)">Nenhum post logado ainda.</td></tr>`
+            :log.slice().reverse().map(e=>{
+              const v=parseInt(e.views)||0, sa=parseInt(e.saves)||0, sh=parseInt(e.shares)||0;
+              const eng=v?((sa+sh)/v*100).toFixed(1)+'%':'—';
+              const dateStr=e.date?new Date(e.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):'—';
+              return `<tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:8px;font-size:11px;font-weight:700;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(e.post)}">${esc(e.post)}</td>
+                <td style="padding:8px"><span style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.06);color:var(--muted2)">${VERSION_LABELS[e.version]||e.version||'—'}</span></td>
+                <td style="padding:8px;font-size:11px;color:var(--muted2)">${e.pillar||'—'}</td>
+                <td style="padding:8px;font-size:11px;color:var(--muted)">${dateStr}</td>
+                <td style="padding:8px;text-align:right;font-size:11px">${v||'—'}</td>
+                <td style="padding:8px;text-align:right;font-size:11px;color:var(--green)">${sa||'—'}</td>
+                <td style="padding:8px;text-align:right;font-size:11px;color:var(--blue)">${sh||'—'}</td>
+                <td style="padding:8px;text-align:right;font-size:12px;font-weight:700;color:${v&&((sa+sh)/v)>0.05?'var(--green)':'var(--muted2)'}">${eng}</td>
+                <td style="padding:8px;white-space:nowrap">
+                  <button class="action-btn" style="padding:4px 8px;font-size:10px" onclick="openMetricEntry('${acc}','${e.id}')">✏️</button>
+                  <button class="action-btn btn-delete" style="padding:4px 8px;font-size:10px;margin-left:4px" onclick="deleteMetricEntry('${acc}','${e.id}')">🗑</button>
+                </td>
+              </tr>`;
+            }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <!-- Breakdowns -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px">Por versão</div>
+        <div id="metrics-version-bd-${acc}"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px">Por pilar</div>
+        <div id="metrics-pillar-bd-${acc}"></div>
+      </div>
     </div>`;
+
+  // Checkpoints
+  const ck14 = document.getElementById(`metrics-checkpoints-${acc}`);
+  if (ck14) {
+    const n = log.length;
+    ck14.innerHTML = [
+      {id:'ck14',threshold:5,label:'📍 Checkpoint 5 posts',q:'Qual versão tem mais saves? Qual pilar tem mais shares?'},
+      {id:'ck30',threshold:10,label:'🏁 Checkpoint 10 posts',q:'Qual formato dobrar? Qual pilar pausar?'}
+    ].map(ck=>{
+      const met = n>=ck.threshold;
+      return `<div style="background:var(--bg2);border:1px solid ${met?'var(--green)':'var(--border)'};border-radius:10px;padding:16px">
+        <div style="font-size:12px;font-weight:800;margin-bottom:6px">${ck.label} <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:${met?'var(--green-dim)':'rgba(255,255,255,.04)'};color:${met?'var(--green)':'var(--muted)'}">${met?'✓ Pronto':`${n}/${ck.threshold} posts`}</span></div>
+        <div style="font-size:11px;color:var(--muted2)">${met?`<strong>Analise:</strong> ${ck.q}`:ck.q}</div>
+      </div>`;
+    }).join('');
+  }
+  
+  // Breakdowns
+  const vBd = document.getElementById(`metrics-version-bd-${acc}`);
+  const pBd = document.getElementById(`metrics-pillar-bd-${acc}`);
+  if (vBd) {
+    const vGroups = {};
+    log.forEach(e=>{ const k=e.version||'?'; if(!vGroups[k]) vGroups[k]={count:0,saves:0,shares:0,views:0}; vGroups[k].count++; vGroups[k].saves+=parseInt(e.saves)||0; vGroups[k].shares+=parseInt(e.shares)||0; vGroups[k].views+=parseInt(e.views)||0; });
+    vBd.innerHTML = Object.entries(vGroups).length?Object.entries(vGroups).map(([v,d])=>{
+      const e=d.views?((d.saves+d.shares)/d.views*100).toFixed(1)+'%':'—';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--border)"><span style="font-size:11px;font-weight:700">${VERSION_LABELS[v]||v}</span><span style="font-size:11px;color:var(--muted)">${d.count} posts · eng ${e}</span></div>`;
+    }).join(''):`<div style="color:var(--muted);font-size:11px;padding:10px 0">Sem dados.</div>`;
+  }
+  if (pBd) {
+    const pGroups = {};
+    log.forEach(e=>{ const k=e.pillar||'?'; if(!pGroups[k]) pGroups[k]={count:0,saves:0,shares:0,views:0}; pGroups[k].count++; pGroups[k].saves+=parseInt(e.saves)||0; pGroups[k].shares+=parseInt(e.shares)||0; pGroups[k].views+=parseInt(e.views)||0; });
+    const pillarColors = pillars.reduce((o,p)=>{o[p.id]=p.color;return o},{});
+    pBd.innerHTML = Object.entries(pGroups).length?Object.entries(pGroups).map(([p,d])=>{
+      const e=d.views?((d.saves+d.shares)/d.views*100).toFixed(1)+'%':'—';
+      const c=pillarColors[p]||'var(--muted)';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--border)"><span style="font-size:11px;font-weight:700;color:${c}">${p.toUpperCase()}</span><span style="font-size:11px;color:var(--muted)">${d.count} posts · eng ${e}</span></div>`;
+    }).join(''):`<div style="color:var(--muted);font-size:11px;padding:10px 0">Sem dados.</div>`;
+  }
 }
-function openMetricEntry(acc) {
-  const date  = prompt('Date (YYYY-MM-DD):', new Date().toISOString().slice(0,10));
-  if (!date) return;
-  const post  = prompt('Post title / description:');
-  if (!post) return;
-  const reach = prompt('Reach / views:');
-  const notes = prompt('Notes:');
+
+let metricsFilter_active = {};
+function metricsFilter(acc, val, btn) {
+  metricsFilter_active[acc] = val;
+  const el = document.getElementById(`${acc}-metrics`);
+  if (el && btn) { el.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+  delete el.dataset.rendered;
+  renderMetrics(acc, el);
+}
+
+// Metric Log Modal — shared HTML-based modal
+function openMetricEntry(acc, id) {
+  metricsEditId = id;
+  metricsEditAcc = acc;
+  const s = getState(acc);
+  const log = s.metrics || [];
+  const entry = id ? log.find(e=>e.id===id) : null;
+  const pillars = getPillars(acc);
+  const modal = document.getElementById('metric-modal');
+  document.getElementById('metric-modal-title').textContent = entry ? 'Editar métricas' : 'Logar post';
+  document.getElementById('metric-inp-post').value = entry?.post||'';
+  document.getElementById('metric-inp-version').innerHTML = VERSIONS.map(v=>`<option value="${v}" ${entry?.version===v?'selected':''}>${VERSION_LABELS[v]}</option>`).join('');
+  document.getElementById('metric-inp-pillar').innerHTML = pillars.map(p=>`<option value="${p.id}" ${entry?.pillar===p.id?'selected':''}>${p.id.toUpperCase()} — ${p.name}</option>`).join('');
+  document.getElementById('metric-inp-date').value = entry?.date||new Date().toISOString().slice(0,10);
+  document.getElementById('metric-inp-views').value = entry?.views||'';
+  document.getElementById('metric-inp-saves').value = entry?.saves||'';
+  document.getElementById('metric-inp-shares').value = entry?.shares||'';
+  document.getElementById('metric-inp-comments').value = entry?.comments||'';
+  document.getElementById('metric-inp-notes').value = entry?.notes||'';
+  document.getElementById('metric-del-btn').style.display = entry?'':'none';
+  modal.classList.add('open');
+}
+
+function saveMetricEntry() {
+  const acc = metricsEditAcc;
+  const post = document.getElementById('metric-inp-post').value.trim();
+  if (!post) { toast('Please enter a post title'); return; }
+  const entry = {
+    id: metricsEditId || 'm'+Date.now(),
+    post, version:document.getElementById('metric-inp-version').value,
+    pillar:document.getElementById('metric-inp-pillar').value,
+    date:document.getElementById('metric-inp-date').value,
+    views:document.getElementById('metric-inp-views').value,
+    saves:document.getElementById('metric-inp-saves').value,
+    shares:document.getElementById('metric-inp-shares').value,
+    comments:document.getElementById('metric-inp-comments').value,
+    notes:document.getElementById('metric-inp-notes').value
+  };
   const s = getState(acc);
   if (!s.metrics) s.metrics=[];
-  s.metrics.push({ date, post, reach, notes }); persist(acc);
-  refreshTab(acc,'metrics'); toast('✅ Logged!');
+  const idx = s.metrics.findIndex(e=>e.id===metricsEditId);
+  if (idx>=0) s.metrics[idx]=entry; else s.metrics.push(entry);
+  persist(acc);
+  closeMetricModal();
+  refreshTab(acc,'metrics');
+  toast('✅ Logged!');
 }
+
+function deleteMetricEntry(acc, id) {
+  if (!confirm('Delete this entry?')) return;
+  const s = getState(acc);
+  s.metrics = (s.metrics||[]).filter(e=>e.id!==id);
+  persist(acc);
+  refreshTab(acc,'metrics');
+  toast('Deleted');
+}
+
+function closeMetricModal() {
+  document.getElementById('metric-modal').classList.remove('open');
+  metricsEditId=null; metricsEditAcc=null;
+}
+
+function closeMetricModalOutside(e) { if(e.target===document.getElementById('metric-modal')) closeMetricModal(); }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // WHATSAPP TAB (FC only)
@@ -1507,12 +2125,21 @@ function toggleDevEmail(btn) {
   btn.querySelector('span').textContent = body.classList.contains('open') ? '▲' : '▼';
 }
 
-function sendDevNote() {
+async function sendDevNote() {
   const msg = document.getElementById('dev-email-text').value.trim();
   if (!msg) { toast('Please type a message'); return; }
-  sendDevEmail(msg);
-  document.getElementById('dev-email-text').value = '';
-  toast('📧 Opening your email app...');
+  const btn = document.querySelector('[onclick="sendDevNote()"]');
+  if (btn) { btn.disabled=true; btn.textContent='📤 Sending...'; }
+  const ok = await sendDevEmailSilent(msg);
+  if (btn) { btn.disabled=false; btn.textContent='📤 Send Message'; }
+  if (ok) {
+    document.getElementById('dev-email-text').value = '';
+    toast('📧 Message sent to Michael!');
+  } else {
+    // Fallback to mailto
+    sendDevEmail(msg);
+    toast('📧 Opening your email app (fallback)...');
+  }
 }
 
 async function testAPIConn() {
@@ -2049,13 +2676,41 @@ function saveCalPost() {
   localStorage.setItem('hub_cal_v1', JSON.stringify(allCal));
   closeCalModal(); renderCalendar(); toast('✅ Event saved!');
 }
-function deleteCalPost() {
-  const allCal=JSON.parse(localStorage.getItem('hub_cal_v1')||'{}');
-  if(allCal[calModal.date]) {
-    allCal[calModal.date]=allCal[calModal.date].filter(p=>p.id!==calModal.postId);
-    localStorage.setItem('hub_cal_v1',JSON.stringify(allCal));
+async function deleteCalPost() {
+  const allCal = JSON.parse(localStorage.getItem('hub_cal_v1')||'{}');
+  const post = (allCal[calModal.date]||[]).find(p=>p.id===calModal.postId);
+
+  // If this event was pushed to Google Calendar, delete it there too
+  if (post?.gcalId) {
+    const token = getGCalToken();
+    if (token) {
+      try {
+        const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${post.gcalId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.status === 401) {
+          // Token expired — clear it
+          const settings = loadSettings();
+          settings.gcalToken = null; settings.gcalConnected = false;
+          saveSettings(settings); gcalToken = null;
+          toast('⚠️ Google Calendar session expired. Reconnect in Master tab.');
+        } else if (res.ok || res.status === 204 || res.status === 410) {
+          // 204 = deleted, 410 = already gone — both are fine
+          console.log('[GCal] Event deleted from Google Calendar');
+        }
+      } catch(e) {
+        console.error('[GCal] Delete error:', e);
+      }
+    }
   }
-  closeCalModal(); renderCalendar(); toast('Deleted');
+
+  // Always remove from local storage regardless of GCal result
+  if (allCal[calModal.date]) {
+    allCal[calModal.date] = allCal[calModal.date].filter(p=>p.id!==calModal.postId);
+    localStorage.setItem('hub_cal_v1', JSON.stringify(allCal));
+  }
+  closeCalModal(); renderCalendar(); toast('🗑 Deleted');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2084,6 +2739,62 @@ function updateGCalBadge() {
 // ═══════════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
+// ─── CSV EXPORT / IMPORT ─────────────────────────────────────────────────────
+function exportCSV() {
+  const rows = [['Account','TopicID','Pillar','Type','Title','Subtitle','Version','Format','Field','Content']];
+  Object.keys(ACCOUNTS).filter(a=>a!=='cal').forEach(acc=>{
+    const s = getState(acc);
+    (s.topics||[]).forEach(t=>{
+      VERSIONS.forEach(v=>{
+        FORMATS.forEach(f=>{
+          const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[v]?.[f]||[]) : (FC_SCRIPT_FIELDS[v]?.[f]||[]);
+          fieldDefs.forEach(fd=>{
+            const val = getScript(acc,t.id,v,f,fd.key);
+            if (val) rows.push([acc,t.id,t.pillar,t.type,t.title,t.sub||'',v,f,fd.key,val.replace(/\n/g,' | ')]);
+          });
+        });
+      });
+    });
+  });
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = `content-hub-export-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('📤 Exported!');
+}
+
+function importCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split('\n').filter(Boolean);
+    const headers = lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+    let added=0;
+    lines.slice(1).forEach(line=>{
+      const cols = line.match(/("(?:[^"]|"")*"|[^,]*)/g).map(c=>c.replace(/^"|"$/g,'').replace(/""/g,'"'));
+      const row = {};
+      headers.forEach((h,i)=>row[h]=cols[i]||'');
+      const acc=row['Account'], tid=parseInt(row['TopicID']), ver=row['Version'], fmt=row['Format'], field=row['Field'], val=row['Content'];
+      if (!acc||!tid||!ver||!fmt||!field||!val) return;
+      if (!ACCOUNTS[acc]) return;
+      const s=getState(acc);
+      if (!s.scripts) s.scripts={};
+      s.scripts[`${tid}_${ver}_${fmt}_${field}`]=val.replace(/ \| /g,'\n');
+      // Add topic if missing
+      if (!s.topics.find(t=>t.id===tid)) {
+        s.topics.push({id:tid,pillar:row['Pillar']||'p1',type:row['Type']||'regular',title:row['Title']||'Imported',sub:row['Subtitle']||''});
+      }
+      persist(acc); added++;
+    });
+    input.value='';
+    toast(`📥 Imported ${added} script field(s)!`);
+    Object.keys(ACCOUNTS).filter(a=>a!=='cal').forEach(acc=>refreshTab(acc,'content'));
+  };
+  reader.readAsText(file);
+}
+
 document.addEventListener('DOMContentLoaded', ()=>{
   updateGCalBadge();
   switchAccount('fc');
