@@ -1028,7 +1028,7 @@ function renderSeriesBody() {
         </div>`).join('')}
       <div class="ai-box">
         <div class="ai-box-title">✨ AI Generator — Episode ${ep}</div>
-        <button class="ai-btn" id="smod-ai-btn" onclick="aiGenerateSeriesEp()">Generate Episode ${ep} Scripts</button>
+        <button class="ai-btn" id="smod-ai-btn" onclick="aiGenerateSeriesEp()">✨ Generate More Episodes from Ep. 1</button>
         <div class="ai-output" id="smod-ai-out"></div>
       </div>
     </div>`;
@@ -1105,25 +1105,95 @@ function addSeriesEpToCalendar() {
 }
 
 async function aiGenerateSeriesEp() {
-  const { account:acc, topicId, ep, format } = seriesModal;
+  const { account:acc, topicId, format } = seriesModal;
   const t = getTopics(acc).find(x=>x.id===topicId);
-  const btn = document.getElementById('smod-ai-btn');
   const out = document.getElementById('smod-ai-out');
-  if (!btn || !out) return;
-  btn.disabled=true; btn.textContent='⏳ Generating...';
+  if (!out) return;
+
+  // Always use Episode 1 as the source
+  const sourceFields = FC_SCRIPT_FIELDS.convert.video;
+  const sourceContent = {};
+  sourceFields.forEach(fd => {
+    sourceContent[fd.key] = getSeriesScript(acc, topicId, 'ep1', format, fd.key);
+  });
+
+  // Check if ep1 has any content at all
+  const hasSource = Object.values(sourceContent).some(v => !!v);
+  if (!hasSource) {
+    out.classList.add('visible');
+    out.textContent = '⚠️ Write Episode 1 first — it will be used as the source for all other episodes.';
+    return;
+  }
+
+  // Ask how many episodes to generate
+  const eps = getSeriesEpisodes(acc, topicId);
+  const existingCount = eps.length;
+  const countStr = prompt(`How many new episodes do you want to generate?\n(You already have ${existingCount} episode${existingCount!==1?'s':''})`, '3');
+  if (!countStr) return;
+  const count = parseInt(countStr);
+  if (!count || count < 1 || count > 20) {
+    alert('Please enter a number between 1 and 20.');
+    return;
+  }
+
+  // Figure out which episode numbers to create
+  const lastEp = eps.length ? Math.max(...eps.map(e=>e.ep)) : 1;
+  const toGenerate = [];
+  for (let i = 1; i <= count; i++) {
+    toGenerate.push(lastEp + i);
+  }
+
+  const btn = document.getElementById('smod-ai-btn');
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Generating...'; }
   out.classList.add('visible'); out.textContent='';
+
   try {
-    const epKey = `ep${ep}`;
-    const existing = {};
-    FC_SCRIPT_FIELDS.convert.video.forEach(fd=>{ existing[fd.key]=getSeriesScript(acc,topicId,epKey,format,fd.key); });
-    const raw = await generateScripts(acc, {...t, title:`${t.title} — Ep. ${ep}`}, 'convert', 'video', existing, (chunk,full)=>{ out.textContent=full; });
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-    Object.entries(parsed).forEach(([key,val])=>saveSeriesScript(epKey,'video',key,val));
-    renderSeriesBody();
-    toast('✨ Episode generated!');
-  } catch(e) { out.textContent='Error: '+e.message; }
-  btn.disabled=false; btn.textContent=`Generate Episode ${ep} Scripts`;
+    let log = `Generating ${count} episode${count!==1?'s':''} from Episode 1 as source...\n\n`;
+    out.textContent = log;
+
+    for (const epNum of toGenerate) {
+      out.textContent = log + `⏳ Generating Episode ${epNum}...`;
+
+      // Add the episode tab if it doesn't exist yet
+      const currentEps = getSeriesEpisodes(acc, topicId);
+      if (!currentEps.find(e=>e.ep===epNum)) {
+        currentEps.push({ ep:epNum, title:`Episode ${epNum}` });
+        const s = getState(acc);
+        if (!s.episodes) s.episodes={};
+        s.episodes[topicId] = currentEps;
+        persist(acc);
+      }
+
+      const epKey = `ep${epNum}`;
+      const raw = await generateScripts(
+        acc,
+        { ...t, title:`${t.title} — Ep. ${epNum}` },
+        'convert',
+        'video',
+        // Pass ep1 as context so AI builds on it naturally
+        { ...sourceContent, _epNum: epNum, _epContext: `This is Episode ${epNum} of the series. Episode 1 covered: ${Object.values(sourceContent).filter(Boolean).join(' | ')}` },
+        null
+      );
+
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      Object.entries(parsed).forEach(([key,val]) => saveSeriesScript(epKey, format, key, val));
+
+      log += `✅ Episode ${epNum} generated\n`;
+      out.textContent = log;
+    }
+
+    out.textContent = log + `\nDone! Use the episode tabs above to review each one.`;
+    // Refresh the episode tabs to show newly added episodes
+    renderSeriesEpTabs();
+    toast(`✨ ${count} episode${count!==1?'s':''} generated!`);
+
+  } catch(e) {
+    out.textContent = 'Error: ' + e.message;
+    toast('Error generating episodes');
+  }
+
+  if (btn) { btn.disabled=false; btn.textContent='✨ Generate Episodes from Ep. 1'; }
 }
 
 function closeCardModal() { document.getElementById('card-modal').classList.remove('open'); }
@@ -1164,8 +1234,7 @@ function renderCardModalBody() {
       return;
     }
 
-    const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.video)
-                                 : (isSerie ? CONVERT_SCRIPT_FIELDS.video : PILLAR_SCRIPT_FIELDS.video);
+    const fieldDefs = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
 
     body.innerHTML = `
       <div class="version-tabs" id="version-tabs">
@@ -1209,17 +1278,27 @@ function renderCardModalBody() {
 
 function buildAIFieldChecks() {
   const { account:acc, topicId, version, format } = cardModal;
-  const t = getTopics(acc).find(x=>x.id===topicId);
-  const isSerie = t?.type==='serie';
-  const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.video)
-                               : (PILLAR_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.attract?.video||[]);
   const box = document.getElementById('ai-field-checks');
   if (!box) return;
-  box.innerHTML = fieldDefs.map(fd=>{
-    const hasContent = !!getScript(acc,topicId,version,format,fd.key);
-    return `<label style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:${hasContent?'var(--muted)':'var(--text)'};cursor:pointer;padding:3px 8px;background:var(--bg4);border:1px solid ${hasContent?'var(--border)':'rgba(29,185,148,.3)'};border-radius:4px">
-      <input type="checkbox" id="aichk_${fd.key}" ${hasContent?'':'checked'} style="cursor:pointer">
-      ${fd.label}${hasContent?' ✓':''}
+  // Show target versions (all except the currently open one) + their formats
+  const targets = [];
+  VERSIONS.forEach(v => {
+    if (v === version) return; // skip current — it's the source
+    FORMATS.forEach(f => {
+      const fieldDefs = FC_SCRIPT_FIELDS[v]?.[f] || [];
+      if (!fieldDefs.length) return;
+      const hasContent = fieldDefs.some(fd => !!getScript(acc,topicId,v,f,fd.key));
+      targets.push({ v, f, hasContent });
+    });
+  });
+  box.innerHTML = targets.map(({v, f, hasContent}) => {
+    const id = `aichk_${v}_${f}`;
+    return `<label style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+      color:${hasContent?'var(--muted)':'var(--text)'};cursor:pointer;padding:3px 8px;
+      background:var(--bg4);border:1px solid ${hasContent?'var(--border)':'rgba(29,185,148,.3)'};
+      border-radius:4px">
+      <input type="checkbox" id="${id}" ${hasContent?'':'checked'} style="cursor:pointer">
+      ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}${hasContent?' ✓':''}
     </label>`;
   }).join('');
 }
@@ -1373,30 +1452,51 @@ async function aiGenerateScripts() {
   const out = document.getElementById('ai-out-scripts');
   btn.disabled = true; btn.textContent = '⏳ Generating...';
   out.classList.add('visible'); out.textContent = '';
+
+  // Collect the source script (current version/format) as context
+  const sourceFields = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+  const sourceContent = {};
+  sourceFields.forEach(fd => { sourceContent[fd.key] = getScript(acc,topicId,version,format,fd.key); });
+
+  // Collect checked targets (other versions/formats)
+  const toGenerate = [];
+  VERSIONS.forEach(v => {
+    if (v === version) return;
+    FORMATS.forEach(f => {
+      const chk = document.getElementById(`aichk_${v}_${f}`);
+      if (chk && chk.checked) toGenerate.push({ v, f });
+    });
+  });
+
+  if (!toGenerate.length) {
+    out.textContent = 'Select at least one target version to generate.';
+    btn.disabled = false; btn.textContent = '✨ Generate Selected';
+    return;
+  }
+
   try {
-    const existing = {};
-    const isSerie = t?.type==='serie';
-    const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||FC_SCRIPT_FIELDS.attract.video)
-                                 : (FC_SCRIPT_FIELDS[version]?.[format]||FC_SCRIPT_FIELDS.attract.video);
-    // Collect which fields to generate (only checked ones)
-    const toGenerate = new Set();
-    fieldDefs.forEach(fd=>{
-      const chk = document.getElementById(`aichk_${fd.key}`);
-      if (!chk || chk.checked) toGenerate.add(fd.key); // if no checkbox, generate all
-      existing[fd.key] = getScript(acc,topicId,version,format,fd.key);
-    });
-    const raw = await generateScripts(acc, t, version, format, existing, (chunk, full)=>{ out.textContent=full; });
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-    Object.entries(parsed).forEach(([key,val])=>{
-      if (toGenerate.has(key)) setScriptField(acc,topicId,version,format,key,val);
-    });
-    renderCardModalBody();
+    let done = 0;
+    let log = '';
+    for (const { v, f } of toGenerate) {
+      out.textContent = `⏳ Generating ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]} (${done+1}/${toGenerate.length})...`;
+      const existing = {};
+      const targetFields = FC_SCRIPT_FIELDS[v]?.[f] || FC_SCRIPT_FIELDS.attract.video;
+      targetFields.forEach(fd => { existing[fd.key] = getScript(acc,topicId,v,f,fd.key); });
+      const raw = await generateScripts(acc, t, v, f, { ...sourceContent, ...existing }, null);
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      Object.entries(parsed).forEach(([key,val]) => setScriptField(acc,topicId,v,f,key,val));
+      done++;
+      log += `✅ ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}\n`;
+      out.textContent = log;
+    }
+    out.textContent = log + `\nDone! Switch versions to review.`;
     toast('✨ Scripts generated!');
   } catch(e) {
-    out.textContent = 'Error: '+e.message; toast('Error generating scripts');
+    out.textContent = 'Error: ' + e.message;
+    toast('Error generating scripts');
   }
-  btn.disabled = false; btn.textContent = `✨ Generate Selected Fields`;
+  btn.disabled = false; btn.textContent = '✨ Generate Selected';
 }
 
 async function aiGenerateAll() {
