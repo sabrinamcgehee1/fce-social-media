@@ -1321,10 +1321,7 @@ function switchFormat(f, btn) {
 
 function rebuildScriptFields() {
   const { account:acc, topicId, version, format } = cardModal;
-  const t = getTopics(acc).find(x=>x.id===topicId);
-  const isSerie = t?.type==='serie';
-  const fieldDefs = acc==='fc' ? (FC_SCRIPT_FIELDS[version]?.[format]||PILLAR_SCRIPT_FIELDS.video)
-                               : (isSerie ? CONVERT_SCRIPT_FIELDS.video : PILLAR_SCRIPT_FIELDS.video);
+  const fieldDefs = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
   return fieldDefs.map(fd=>`
     <div class="script-section">
       <div class="script-label">${fd.label}</div>
