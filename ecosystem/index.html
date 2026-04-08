@@ -398,6 +398,51 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 #smod-ep-tabs .modal-tab.active { border-bottom-color: var(--green); color: var(--text); }
 #smod-fmt-tabs { border-top: 1px solid var(--border); }
 
+/* ── SUBSTACK STUDIO ── */
+.sub-studio-tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.sub-studio-btn{padding:6px 16px;border-radius:8px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--muted2);transition:all .2s}
+.sub-studio-btn:hover{border-color:var(--muted2);color:var(--text)}
+.sub-studio-btn.active{background:var(--sub-color);color:#fff;border-color:var(--sub-color)}
+.sub-step-track{display:flex;gap:4px;margin-bottom:20px;padding:12px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.sub-sdot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;cursor:pointer;transition:all .2s;border:2px solid var(--border);color:var(--muted);background:transparent;flex-shrink:0}
+.sub-sdot:hover{border-color:var(--muted2)}.sub-sdot.on{border-color:var(--sub-color);background:var(--sub-color);color:#000}.sub-sdot.done{border-color:var(--sub-color);color:var(--sub-color);background:var(--orange-dim)}
+.sub-sconn{width:14px;height:2px;background:var(--border);align-self:center;flex-shrink:0}.sub-sconn.done{background:var(--sub-color)}
+.sub-ds-tip{background:var(--bg3);border-left:3px solid var(--sub-color);border-radius:0 8px 8px 0;padding:10px 14px;font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:12px}
+.sub-ds-tip strong{color:var(--text)}
+.sub-split{display:grid;grid-template-columns:1fr 300px;gap:16px}
+@media(max-width:900px){.sub-split{grid-template-columns:1fr}}
+.sub-split-side{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;max-height:calc(100vh - 200px);overflow-y:auto;position:sticky;top:80px}
+.sub-draft-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s}
+.sub-draft-card:hover{border-color:var(--sub-color)}
+.sub-draft-title{font-size:12px;font-weight:700;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub-draft-meta{font-size:10px;color:var(--muted)}
+.sub-essay-area{width:100%;min-height:400px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:20px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);line-height:1.8;resize:vertical;outline:none;transition:border-color .2s}
+.sub-essay-area:focus{border-color:var(--sub-color)}
+.sub-hook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:16px}
+.sub-hook-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative}
+.sub-hook-type{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.sub-hook-template{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.5;cursor:pointer}
+.sub-hook-template:hover{color:var(--sub-color)}
+.sub-hook-example{font-size:11px;color:var(--muted);font-style:italic}
+.sub-inspo-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.sub-inspo-name{font-size:16px;font-weight:800;margin-bottom:2px}
+.sub-inspo-handle{font-size:11px;color:var(--sub-color);margin-bottom:8px}
+.sub-inspo-desc{font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:10px}
+.sub-inspo-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:700px){.sub-inspo-grid3{grid-template-columns:1fr}}
+.sub-inspo-cell{background:var(--bg3);border-radius:8px;padding:10px 12px}
+.sub-inspo-cell-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.sub-inspo-cell-text{font-size:11px;color:var(--muted2);line-height:1.5}
+.sub-note-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;position:relative}
+.sub-note-text{font-size:13px;line-height:1.6;margin-bottom:6px;white-space:pre-wrap}
+.sub-note-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1}
+.sub-note-del:hover{color:var(--red)}
+.sub-fwc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:10px}
+.sub-fwc-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#000;flex-shrink:0}
+.sub-pblock{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:16px;position:relative;overflow:hidden}
+.sub-pblock::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sub-pblock.p1::before{background:var(--fc-color)}.sub-pblock.p2::before{background:var(--yellow)}
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -780,6 +825,7 @@ function renderTabContent(acc, tabId, el) {
     master:      () => renderMaster(el),
     inspiration: () => acc==='sub' ? renderSubInspo(el) : renderMicInspo(el),
     studio:      () => renderStudio(el),
+    notes:       () => renderNotes(el),
     subjects:    () => renderSubjects(el),
     notes:       () => renderNotes(el),
   };
@@ -2890,6 +2936,362 @@ function importCSV(input) {
     Object.keys(ACCOUNTS).filter(a=>a!=='cal').forEach(acc=>refreshTab(acc,'content'));
   };
   reader.readAsText(file);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SUBSTACK TAB RENDERERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── Shared state for studio ──────────────────────────────────────────────────
+let _subStudioPanel = 'essay'; // hooks | draft | essay | aiEssay
+let _subDraftStep = 0;
+let _subDraft = JSON.parse(localStorage.getItem('hub_sub_draft')||'{}');
+let _subNotes = JSON.parse(localStorage.getItem('hub_sub_notes')||'[]');
+
+function saveSubDraft() { localStorage.setItem('hub_sub_draft', JSON.stringify(_subDraft)); }
+function saveSubNotes() { localStorage.setItem('hub_sub_notes', JSON.stringify(_subNotes)); }
+
+const SUB_INSPIRATIONS = [
+  {name:'Nana DelRey',handle:'@nanadelrey · 145K',desc:'Ambitious, productive, builds in public.',learn:'Hook structure: bold claim → personal proof → framework.',edge:'She focuses on productivity/business. You bring cross-cultural + motherhood — a lane she can\'t touch.',act:'Film 1 "building in public" video per week showing your real process — writing, learning French, building Fluency Connect.'},
+  {name:'NoteswNat',handle:'@noteswnat · Substack',desc:'Research-backed brain science. Mixes lists with deep dives.',learn:'High posting frequency + format variety (lists, deep dives, quick tips).',edge:'She uses research papers for authority. You use accounting background + cross-cultural lived experience.',act:'Post 1 research-backed Substack Note per day. Use data from your books to support personal insights.'},
+  {name:'Isabel Radford',handle:'Lifestyle + learning creator',desc:'Aesthetic, intentional. Studies something and turns it into curated content.',learn:'Visual consistency — feed looks like a magazine but sounds like a friend.',edge:'She\'s aspirational lifestyle. You\'re aspirational + raw reality (twins, immigration, learning in public).',act:'Plan your visual identity: consistent color tones, fonts in graphics, cohesive feed aesthetic.'},
+  {name:'Olivia Wickstrom',handle:'Substack growth strategist',desc:'The newsletter growth playbook you\'re following.',learn:'10-step framework, paywall placement, Notes-first discovery.',edge:'She teaches growth. You demonstrate it by doing it publicly.',act:'Document yourself implementing her strategy — "learning in public about learning in public."'},
+  {name:'Sari Azout',handle:'Check Your Pulse',desc:'Cinematic, precise writing. One clear point per essay.',learn:'Sentence structure: 2-3 sentence paragraphs. Openings that drop you into a scene.',edge:'She writes about tech + culture. You write about identity + language + motherhood.',act:'Read 1 Sari essay per week. Outline the structure BEFORE reading your own draft.'},
+  {name:'Anne-Laure Le Cunff',handle:'Ness Labs · Substack',desc:'Learning in public pioneer. Neuroscience + productivity.',learn:'Read → test → write about the experience. Accessible research voice.',edge:'She\'s a neuroscience angle. You\'re an accounting + immigrant + polyglot angle.',act:'Same method: read a finance book, test for a week, write what happened.'},
+  {name:'Morgan Housel',handle:'Author + Substack',desc:'Psychology of Money author. Finance feels like philosophy.',learn:'Opening lines: unexpected story → financial concept → personal application.',edge:'He\'s an American male finance writer. You\'re a Brazilian immigrant woman with an accounting degree.',act:'Apply his story-first structure to your cross-cultural finance essays.'},
+  {name:'The Cultural Study',handle:'Substack newsletter',desc:'Cultural analysis essays. Makes you see the world differently.',learn:'Structure: cultural observation → historical context → personal connection → insight.',edge:'They analyze culture as observers. You live between cultures daily.',act:'Follow this exact structure for your P1 essays. Start with observation, add context, personalize.'},
+];
+
+const SUB_HOOKS = [
+  {type:'Contrarian',color:'var(--green)',template:'"Everyone says [common belief]. But here\'s the truth…"',example:'Everyone says you need 2 hours/day to learn English.'},
+  {type:'Confession',color:'var(--purple)',template:'"I need to tell you something I\'ve never shared…"',example:'I\'m an English teacher and I still make grammar mistakes.'},
+  {type:'Identity Call-Out',color:'var(--blue)',template:'"If you\'re a [specific person], this is for you."',example:'If you\'re a Brazilian mom who wants to learn English…'},
+  {type:'Cliffhanger',color:'var(--orange)',template:'"[Specific scene]. I had no idea what would happen next."',example:'It was 11pm. Both twins were asleep. I opened my laptop and started crying.'},
+  {type:'Data / Number',color:'var(--red)',template:'"[Surprising number] and here\'s why it matters."',example:'Brazilians study English for 8 years. Most still can\'t speak.'},
+  {type:'Nobody Talks About',color:'var(--yellow)',template:'"Nobody talks about [hidden truth]."',example:'Nobody talks about the guilt of choosing work over your babies.'},
+];
+
+const SUB_SS_STEPS = [
+  {t:'Source Capture',sub:'What triggered this essay?',tip:'<strong>The rule:</strong> Start with a real moment — specific time, place, sensation. Not a theme. A scene.',ph:'The moment, observation, or book insight that sparked this…',field:'source'},
+  {t:'Title',sub:'Draft your working title.',tip:'<strong>Best titles:</strong> Promise a transformation or create a question the reader needs answered. Can edit later.',ph:'Working title…',field:'title'},
+  {t:'Cinematic Opening',sub:'Drop the reader into a scene.',tip:'<strong>Test:</strong> Can the reader picture where you are? What you heard, saw, felt? No preamble.',ph:'It was [time]. I was [place]. [Specific sensory detail]…',field:'opening'},
+  {t:'Expand the Story',sub:'Give context. What happened before and after.',tip:'<strong>Rule:</strong> Show, don\'t summarize. "I cried" is summary. "I sat in the parking lot for 20 minutes" is story.',ph:'The full context of what happened…',field:'story'},
+  {t:'Internal Conflict',sub:'What were you fighting with inside?',tip:'<strong>Name ugly emotions:</strong> guilt, shame, jealousy, fear. This is where readers see themselves.',ph:'What I was actually feeling (not what I wanted to feel)…',field:'conflict'},
+  {t:'The Realization',sub:'The moment something shifted.',tip:'<strong>Not generic:</strong> "I realized I needed to be kinder." Generic. "I realized I was angry at myself, not him." Specific.',ph:'The exact moment or thought that changed something…',field:'realization'},
+  {t:'Connect to Them',sub:'Shift from "me" to "you."',tip:'<strong>Pivot:</strong> "And if you\'re reading this, maybe you know this feeling…" Bridge your story to their life.',ph:'Bridge to reader…',field:'connect'},
+  {t:'Teach',sub:'Authority mode. Structure and examples.',tip:'<strong>State the principle.</strong> Give 2-3 concrete examples. This is where your P2 expertise lives.',ph:'The lesson or framework…',field:'teach'},
+  {t:'Actionable Part',sub:'Steps they can start today.',tip:'<strong>Test:</strong> Could someone DO something different today from this section alone?',ph:'Steps or framework they can use…',field:'action'},
+  {t:'Strong Ending + CTA',sub:'Loop back to opening or drop a truth.',tip:'<strong>Options:</strong> 1) Loop to opening scene. 2) One-line truth. 3) Reflective question. Then soft CTA.',ph:'Closing + CTA…',field:'ending'},
+];
+
+// ── SUBSTACK CONTENT TAB ─────────────────────────────────────────────────────
+// (already handled by renderContent — no changes needed)
+
+// ── SUBSTACK STUDIO TAB ──────────────────────────────────────────────────────
+function renderStudio(el) {
+  el.innerHTML = `
+    <div class="section-title" style="color:var(--sub-color)">✍️ Writing Studio</div>
+    <div class="section-desc">Write → Save to Drafts → Review → Publish to Topics.</div>
+    <div class="sub-studio-tabs" id="sub-studio-tabs">
+      <button class="sub-studio-btn ${_subStudioPanel==='hooks'?'active':''}" onclick="subStudioGo('hooks',this)">Hook Library</button>
+      <button class="sub-studio-btn ${_subStudioPanel==='draft'?'active':''}" onclick="subStudioGo('draft',this)">📋 Substack Draft</button>
+      <button class="sub-studio-btn ${_subStudioPanel==='essay'?'active':''}" onclick="subStudioGo('essay',this)">📝 Essay Pad</button>
+      <button class="sub-studio-btn ${_subStudioPanel==='aiEssay'?'active':''}" onclick="subStudioGo('aiEssay',this)">✨ AI Essay</button>
+    </div>
+    <div id="sub-studio-content"></div>`;
+  renderSubStudioPanel();
+}
+
+function subStudioGo(panel, btn) {
+  _subStudioPanel = panel;
+  document.querySelectorAll('.sub-studio-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderSubStudioPanel();
+}
+
+function renderSubStudioPanel() {
+  const el = document.getElementById('sub-studio-content');
+  if (!el) return;
+  if (_subStudioPanel === 'hooks') renderSubHooks(el);
+  else if (_subStudioPanel === 'draft') renderSubDraftFramework(el);
+  else if (_subStudioPanel === 'essay') renderSubEssayPad(el);
+  else if (_subStudioPanel === 'aiEssay') renderSubAIEssay(el);
+}
+
+function renderSubHooks(el) {
+  el.innerHTML = `
+    <div class="sub-hook-grid">
+      ${SUB_HOOKS.map(h=>`
+        <div class="sub-hook-card">
+          <div class="sub-hook-type" style="color:${h.color}">${h.type}</div>
+          <div class="sub-hook-template" onclick="navigator.clipboard.writeText(${JSON.stringify(h.template)});toast('Hook copied!')">${esc(h.template)}</div>
+          <div class="sub-hook-example">${esc(h.example)}</div>
+          <textarea class="script-textarea" rows="3" placeholder="Write your script based on this hook…"
+            style="margin-top:10px;font-size:12px"
+            oninput="autoResize(this)"
+            onchange="subSaveHookScript('${h.type}',this.value)"></textarea>
+        </div>`).join('')}
+    </div>`;
+  el.querySelectorAll('textarea').forEach(autoResize);
+}
+
+function subSaveHookScript(type, val) {
+  const s = getState('sub');
+  if (!s.hookScripts) s.hookScripts = {};
+  s.hookScripts[type] = val;
+  persist('sub');
+}
+
+function renderSubDraftFramework(el) {
+  let tracker = '<div class="sub-step-track">';
+  SUB_SS_STEPS.forEach((step, i) => {
+    if (i > 0) tracker += `<div class="sub-sconn${i <= _subDraftStep?' done':''}"></div>`;
+    tracker += `<div class="sub-sdot ${i===_subDraftStep?'on':i<_subDraftStep?'done':''}" onclick="subSaveStepField();_subDraftStep=${i};renderSubStudioPanel()" title="${step.t}">${i}</div>`;
+  });
+  tracker += '</div>';
+  const step = SUB_SS_STEPS[_subDraftStep];
+  const s = getState('sub');
+  const drafts = s.drafts || [];
+  el.innerHTML = `
+    <div class="sub-split">
+      <div>
+        ${tracker}
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--sub-color);color:#000;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${_subDraftStep}</div>
+          <div style="font-size:15px;font-weight:700">${step.t}</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:8px">${step.sub}</div>
+        <div class="sub-ds-tip">${step.tip}</div>
+        <textarea class="script-textarea" id="sub-ss-field" rows="5" placeholder="${step.ph}"
+          oninput="autoResize(this)"
+          style="font-size:13px;line-height:1.6"
+        >${esc(_subDraft[step.field]||'')}</textarea>
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+          ${_subDraftStep>0?`<button class="btn-secondary" onclick="subSaveStepField();_subDraftStep--;renderSubStudioPanel()">← Back</button>`:''}
+          ${_subDraftStep<9?`<button class="btn-primary" onclick="subSaveStepField();_subDraftStep++;renderSubStudioPanel()">Next →</button>`:''}
+          ${_subDraftStep===9?`<button class="btn-primary" style="background:var(--sub-color)" onclick="subSaveStepField();subSaveDraftComplete()">✓ Done — Save to Drafts</button>`:''}
+        </div>
+      </div>
+      <div class="sub-split-side">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--sub-color);margin-bottom:10px">📝 Saved Drafts</div>
+        ${drafts.length ? drafts.slice(0,10).map(d=>`
+          <div class="sub-draft-card" onclick="subViewDraft('${d.id}')">
+            <div class="sub-draft-title">${esc(d.fields?.title||d.fields?.source||'Untitled')}</div>
+            <div class="sub-draft-meta">${new Date(d.created).toLocaleDateString()}</div>
+          </div>`).join('')
+          : `<div style="color:var(--muted);font-size:11px">No drafts yet. Complete the framework to save one.</div>`}
+      </div>
+    </div>`;
+  const ta = document.getElementById('sub-ss-field');
+  if (ta) autoResize(ta);
+}
+
+function subSaveStepField() {
+  const field = SUB_SS_STEPS[_subDraftStep].field;
+  const el = document.getElementById('sub-ss-field');
+  if (el) { _subDraft[field] = el.value; saveSubDraft(); }
+}
+
+function subSaveDraftComplete() {
+  const s = getState('sub');
+  if (!s.drafts) s.drafts = [];
+  s.drafts.unshift({ id: 'd'+Date.now(), type:'substack', fields:{..._subDraft}, created: new Date().toISOString() });
+  persist('sub');
+  _subDraft = {}; saveSubDraft(); _subDraftStep = 0;
+  toast('✅ Draft saved!');
+  renderSubStudioPanel();
+}
+
+function subViewDraft(id) {
+  const s = getState('sub');
+  const draft = (s.drafts||[]).find(d=>d.id===id);
+  if (!draft) return;
+  const fields = draft.fields || {};
+  const content = SUB_SS_STEPS.map(step => fields[step.field] ? `**${step.t}**\n${fields[step.field]}` : '').filter(Boolean).join('\n\n');
+  const modal = document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto';
+  modal.innerHTML=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:700px;margin:auto;overflow:hidden">
+    <div style="padding:16px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:14px;font-weight:800">${esc(fields.title||'Draft')}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="subDraftToTopic('${id}')">✓ Publish to Topics</button>
+        <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="subDeleteDraft('${id}');this.closest('.modal-like').remove()">🗑 Delete</button>
+        <button class="modal-close" onclick="this.closest('[style*=fixed]').remove()">✕</button>
+      </div>
+    </div>
+    <div style="padding:22px;font-size:13px;line-height:1.8;color:var(--muted2);white-space:pre-wrap;max-height:70vh;overflow-y:auto">${esc(content)}</div>
+  </div>`;
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
+function subDeleteDraft(id) {
+  const s = getState('sub');
+  s.drafts = (s.drafts||[]).filter(d=>d.id!==id);
+  persist('sub');
+  toast('Deleted');
+  refreshTab('sub','studio');
+}
+
+function subDraftToTopic(id) {
+  const s = getState('sub');
+  const draft = (s.drafts||[]).find(d=>d.id===id);
+  if (!draft) return;
+  const title = draft.fields?.title || draft.fields?.source || 'Untitled';
+  const newTopic = { id: nextId(s.topics), pillar:'p1', type:'essay', title, sub: draft.fields?.opening?.slice(0,80)||'' };
+  s.topics.push(newTopic);
+  persist('sub');
+  document.querySelectorAll('[style*=fixed]').forEach(m=>m.remove());
+  toast('✅ Published to Topics!');
+  refreshTab('sub','content');
+}
+
+function renderSubEssayPad(el) {
+  const saved = localStorage.getItem('hub_sub_essay')||'';
+  el.innerHTML = `
+    <div style="background:var(--orange-dim);border:1px solid rgba(230,126,34,.2);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:12px;color:var(--muted2);line-height:1.7">
+      <strong style="color:var(--sub-color)">Free Essay Writing</strong><br>
+      Write freely here. Your essay auto-saves every few seconds. When done, copy it into the Substack Draft framework to structure it.
+    </div>
+    <textarea class="sub-essay-area" id="sub-essay-pad" placeholder="Start writing your essay here… let it flow. Don't edit yet."
+      oninput="clearTimeout(window._subEssaySave);window._subEssaySave=setTimeout(()=>{localStorage.setItem('hub_sub_essay',this.value);document.getElementById('sub-essay-status').textContent='Saved at '+new Date().toLocaleTimeString()},1000)">${esc(saved)}</textarea>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="sub-essay-status">${saved?'Loaded from auto-save':'Start writing…'}</div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('sub-essay-pad').value);toast('Copied!')">Copy All</button>
+      <button class="btn-secondary" onclick="if(confirm('Clear the essay pad?')){localStorage.removeItem('hub_sub_essay');renderSubStudioPanel()}">Clear</button>
+    </div>`;
+}
+
+async function renderSubAIEssay(el) {
+  el.innerHTML = `
+    <div style="max-width:600px">
+      <div style="font-size:13px;font-weight:800;margin-bottom:4px">✨ AI Essay Generator</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Paste a hook, topic title, or brief description. Claude will generate a full essay draft following your 10-step framework.</div>
+      <div class="script-section"><div class="script-label">Hook or Topic</div>
+        <textarea class="script-textarea" id="sub-ai-essay-input" rows="4" placeholder="e.g. 'What Having Twins Taught Me About Discipline' or 'I moved to America alone at 22 and fell in love with someone who couldn't say obrigada'"></textarea>
+      </div>
+      <button class="ai-btn" id="sub-ai-essay-btn" onclick="runSubAIEssay()">✨ Generate Essay</button>
+      <div class="ai-output" id="sub-ai-essay-out" style="margin-top:14px"></div>
+      <div id="sub-ai-essay-actions" style="display:none;margin-top:8px;gap:8px;display:none">
+        <button class="btn-primary" style="background:var(--sub-color)" onclick="subSaveAIEssayToDraft()">💾 Save to Drafts</button>
+        <button class="btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('sub-ai-essay-out').textContent);toast('Copied!')">Copy</button>
+      </div>
+    </div>`;
+}
+
+async function runSubAIEssay() {
+  const input = document.getElementById('sub-ai-essay-input')?.value.trim();
+  if (!input) { toast('Enter a topic or hook first'); return; }
+  const btn = document.getElementById('sub-ai-essay-btn');
+  const out = document.getElementById('sub-ai-essay-out');
+  btn.disabled=true; btn.textContent='⏳ Generating…';
+  out.classList.add('visible'); out.textContent='';
+  try {
+    const result = await callAI(
+      `You are an essay coach for Sabrina McGehee, a Brazilian-American woman living between São Paulo and the US. She writes warm, honest, bilingual essays on Substack about life between two countries and learning in public. Write in her voice: personal, specific, emotionally honest, occasionally mixing Portuguese words naturally.`,
+      `Generate a full essay draft using this 10-step framework for this topic/hook:
+
+"${input}"
+
+Steps: 1) Cinematic opening — specific scene with time/place/sensation. 2) Story expansion — what happened, show don't summarize. 3) Internal conflict — name the ugly emotion specifically. 4) The realization — the exact moment something shifted. 5) Connect to reader — "maybe you know this feeling…" 6) Teach — the principle with 2-3 concrete examples. 7) Actionable steps — what they can do today. 8) Strong ending — loop back or one-line truth. 9) Substack CTA — soft, not salesy.
+
+Write the full essay draft, approximately 600-800 words. Use short paragraphs. Make it feel like a letter to a friend.`
+    );
+    out.textContent = result;
+    const actions = document.getElementById('sub-ai-essay-actions');
+    if (actions) actions.style.display = 'flex';
+    toast('✨ Essay generated!');
+  } catch(e) { out.textContent = 'Error: '+e.message; }
+  btn.disabled=false; btn.textContent='✨ Generate Essay';
+}
+
+function subSaveAIEssayToDraft() {
+  const text = document.getElementById('sub-ai-essay-out')?.textContent;
+  if (!text) return;
+  const s = getState('sub');
+  if (!s.drafts) s.drafts=[];
+  s.drafts.unshift({ id:'d'+Date.now(), type:'ai-essay', fields:{ source:'AI Generated', title:'AI Essay Draft', opening:text.slice(0,200), teach:text }, created:new Date().toISOString() });
+  persist('sub');
+  toast('✅ Saved to Drafts!');
+}
+
+// ── SUBSTACK INSPIRATION TAB ─────────────────────────────────────────────────
+function renderSubInspo(el) {
+  el.innerHTML = `
+    <div class="section-title" style="color:var(--sub-color)">💡 Creator Inspiration</div>
+    <div class="section-desc">Study their structure, not their content. Reverse-engineer what works. Then make it yours.</div>
+    ${SUB_INSPIRATIONS.map(i=>`
+      <div class="sub-inspo-card">
+        <div class="sub-inspo-name">${esc(i.name)}</div>
+        <div class="sub-inspo-handle">${esc(i.handle)}</div>
+        <div class="sub-inspo-desc">${esc(i.desc)}</div>
+        <div class="sub-inspo-grid3">
+          <div class="sub-inspo-cell">
+            <div class="sub-inspo-cell-label" style="color:var(--green)">Learn</div>
+            <div class="sub-inspo-cell-text">${esc(i.learn)}</div>
+          </div>
+          <div class="sub-inspo-cell">
+            <div class="sub-inspo-cell-label" style="color:var(--sub-color)">Your Edge</div>
+            <div class="sub-inspo-cell-text">${esc(i.edge)}</div>
+          </div>
+          <div class="sub-inspo-cell">
+            <div class="sub-inspo-cell-label" style="color:var(--orange)">Action</div>
+            <div class="sub-inspo-cell-text">${esc(i.act)}</div>
+          </div>
+        </div>
+      </div>`).join('')}`;
+}
+
+// ── SUBSTACK NOTES TAB ───────────────────────────────────────────────────────
+function renderNotes(el) {
+  _subNotes = JSON.parse(localStorage.getItem('hub_sub_notes')||'[]');
+  el.innerHTML = `
+    <div class="section-title" style="color:var(--sub-color)">📓 Quick Notes</div>
+    <div class="section-desc">Capture ideas — flag them to write or record later.</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <input class="pm-input" id="sub-note-input" placeholder="Quick idea, phrase, or thought…"
+        style="flex:1;min-width:200px"
+        onkeydown="if(event.key==='Enter')addSubNote()">
+      <select class="pm-select" id="sub-note-type" style="width:auto;min-width:120px">
+        <option value="idea">💡 Idea</option>
+        <option value="write">✍️ Write later</option>
+        <option value="record">🎙️ Record later</option>
+      </select>
+      <button class="btn-primary" onclick="addSubNote()">Add</button>
+    </div>
+    <div id="sub-note-grid">
+      ${_subNotes.length ? _subNotes.map((n,i)=>{
+        const tagStyle = n.type==='idea'?'background:rgba(155,89,182,.12);color:var(--purple)':n.type==='record'?'background:rgba(230,126,34,.12);color:var(--orange)':'background:rgba(29,185,148,.12);color:var(--green)';
+        const tagLabel = n.type==='idea'?'💡 Idea':n.type==='record'?'🎙️ Record':'✍️ Write';
+        return `<div class="sub-note-item">
+          <button class="sub-note-del" onclick="deleteSubNote(${i})">×</button>
+          <div class="sub-note-text">${esc(n.text)}</div>
+          <div style="display:flex;gap:8px;align-items:center;font-size:10px;color:var(--muted)">
+            <span style="padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;${tagStyle}">${tagLabel}</span>
+            <span>${new Date(n.created).toLocaleDateString()}</span>
+          </div>
+        </div>`;
+      }).join('') : `<div style="text-align:center;padding:40px;color:var(--muted)">No notes yet. Capture your first idea above.</div>`}
+    </div>`;
+}
+
+function addSubNote() {
+  const input = document.getElementById('sub-note-input');
+  const text = input?.value.trim();
+  if (!text) return;
+  _subNotes.unshift({ text, type: document.getElementById('sub-note-type').value, created: new Date().toISOString() });
+  saveSubNotes();
+  input.value='';
+  const el = document.getElementById('sub-notes');
+  if (el) { delete el.dataset.rendered; renderNotes(el); }
+  toast('Note saved!');
+}
+
+function deleteSubNote(i) {
+  _subNotes.splice(i, 1);
+  saveSubNotes();
+  const el = document.getElementById('sub-notes');
+  if (el) { delete el.dataset.rendered; renderNotes(el); }
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
