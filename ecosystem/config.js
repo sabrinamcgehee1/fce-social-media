@@ -175,25 +175,94 @@ const FC_SCRIPT_FIELDS = {
 // Sab and Michael use the same rich version-specific scripts as FC
 const PILLAR_SCRIPT_FIELDS = FC_SCRIPT_FIELDS;
 
+// ── SAB/MIC CAROUSEL FIELDS (from Sabrina example file) ──────────────────────
+const SAB_MIC_CAROUSEL_FIELDS = [
+  { key:'hook',   label:'Slide 1 — Hook (capa)',      cls:'l-cover',  rows:2, ph:'Frase impactante que faz parar o scroll...' },
+  { key:'slide2', label:'Slide 2',                    cls:'l-slide',  rows:2, ph:'Ponto 1 — o mais importante...' },
+  { key:'slide3', label:'Slide 3',                    cls:'l-slide',  rows:2, ph:'Ponto 2...' },
+  { key:'slide4', label:'Slide 4',                    cls:'l-slide',  rows:2, ph:'Ponto 3...' },
+  { key:'slide5', label:'Slide 5',                    cls:'l-slide',  rows:2, ph:'Ponto 4 / exemplo / prova...' },
+  { key:'slide6', label:'Slide 6',                    cls:'l-slide',  rows:2, ph:'Ponto 5 / comparação / dados...' },
+  { key:'slide7', label:'Slide 7',                    cls:'l-slide',  rows:2, ph:'Resumo ou insight final...' },
+  { key:'cta',    label:'Slide 8 — CTA',              cls:'l-cta',    rows:2, ph:'CTA com palavra do WhatsApp ou link na bio...' }
+];
+
+// ── SAB/MIC STORY FIELDS (from Sabrina example file) ─────────────────────────
+const SAB_MIC_STORY_FIELDS = [
+  { key:'hook',   label:'Frame 1 — Gancho / abertura',              cls:'l-hook',     rows:2, ph:'Frase ou imagem que faz a pessoa clicar pro próximo frame...' },
+  { key:'frame2', label:'Frame 2 — Contexto',                       cls:'l-slide',    rows:2, ph:'Contexto rápido — o que é isso, por que importa...' },
+  { key:'frame3', label:'Frame 3 — Conteúdo principal',             cls:'l-lesson',   rows:2, ph:'O conteúdo real — dica, bastidor, momento, opinião...' },
+  { key:'frame4', label:'Frame 4 — Prova / detalhe',                cls:'l-insight',  rows:2, ph:'Prova, foto, print, detalhe que apoia o frame 3...' },
+  { key:'frame5', label:'Frame 5 — Reflexão ou pergunta',           cls:'l-steps',    rows:2, ph:'Pergunta pra engajar ou reflexão pessoal...' },
+  { key:'cta',    label:'Frame 6 — CTA (sticker / link / resposta)',cls:'l-cta',      rows:2, ph:'Sticker de resposta / caixa de pergunta / link WhatsApp / CTA suave...' }
+];
+
 // ── PILLARS ────────────────────────────────────────────────────────────────────
 const PILLARS = {
   fc: [
-    { id:'p1', name:'False Beginner Breakthrough', color:'#1DB994', tags:['Storytelling','Double Down','Educational','Séries'], insight:'"Estudei inglês por anos e ainda não falo" — conteúdo que absolve e mostra caminho gera alto compartilhamento.', desc:'Para quem estudou inglês por anos mas ainda não consegue falar. O problema não é linguístico — é metodológico e psicológico. A história da Sabrina (travou com um americano após anos de estudo) e a do Michael (aprendeu português na terceira tentativa, falando desde o dia 1) são os âncoras narrativos desse pilar.' },
-    { id:'p2', name:'Real-Life Fluency',           color:'#e05252', tags:['Educational','Comparison','Séries','Carrossel'], insight:'"Para de falar X — diz Y" gera saves imediatos. O Michael como nativo é a autoridade máxima aqui.', desc:'O inglês que ninguém aprende no livro didático. Frases reais de nativos, small talk, reações naturais, inglês do trabalho e de viagem. Conteúdo de alto valor percebido e alta taxa de salvamento.' },
-    { id:'p3', name:'Pronúncia + Confiança',       color:'#e0a030', tags:['Storytelling','Educational','Authority','Séries'], insight:'"Falar rápido não é fluência — é ansiedade." Contraintuitivo. Gera debate e engajamento.', desc:'O pilar mais emocional: o medo de soar errado, o sotaque, a vergonha de falar. Foco em ritmo e entonação (stress-timed vs syllable-timed) — o que realmente muda como a pessoa soa.' },
-    { id:'p4', name:'Culture Immersion',           color:'#5b8dee', tags:['Storytelling','Comparison','Educational','Séries'], insight:'Nenhum outro canal de inglês tem um americano nativo como parceiro. O Michael valida tudo — esse é o ativo mais difícil de replicar.', desc:'O pilar que nenhum concorrente tem: o casal bilíngue intercultural. Michael explica a cultura americana de dentro. Sabrina explica o choque de fora. Ambos criam perspectiva única.' }
+    { id:'p1', name:'False Beginner Breakthrough', color:'#1DB994',
+      subtag:'Fluência · Método · Bloqueio · Mindset',
+      tags:['Storytelling','Double Down','Educational','Séries'],
+      insight:'Gatilho principal: "Estudei inglês por anos e ainda não falo" — qualquer conteúdo que confirme que esse não é problema de inteligência ou talento gera alto compartilhamento. O público quer ser absolvido e mostrar um caminho.',
+      desc:'Para quem estudou inglês por anos mas ainda não consegue falar. Esse é o maior grupo de brasileiros — eles têm vocabulário, têm gramática, mas travam na hora da conversa real. O problema não é linguístico, é metodológico e psicológico.',
+      desc2:'A história da Sabrina (travou com um americano depois de anos de estudo) e a história do Michael (aprendeu português na terceira tentativa, falando desde o dia 1) são os âncoras narrativos desse pilar. É o pilar de maior identificação do público.' },
+    { id:'p2', name:'Real-Life Fluency', color:'#e05252',
+      subtag:'Inglês real · Situações práticas · Conversação · Vocabulário ativo',
+      tags:['Educational','Comparison','Séries','Carrossel'],
+      insight:'Gatilho principal: "Para de falar X — diz Y" gera saves e compartilhamentos imediatos. Comparações diretas (Hollywood English vs Real English) criam surpresa e curiosidade. O Michael como nativo é a autoridade máxima aqui.',
+      desc:'O inglês que ninguém aprende no livro didático. Frases reais de nativos, small talk, reações naturais, inglês do trabalho, inglês de viagem. A Sabrina viveu nos EUA e tem histórias reais — restaurante, trabalho, entrevista. O Michael é a fonte nativa para validar o que é real vs o que é formal demais.',
+      desc2:'Conteúdo de alto valor percebido e alta taxa de salvamento. O público salva porque quer usar. Formatos ideais: comparação (textbook vs real), listas de frases, correções de erros comuns.' },
+    { id:'p3', name:'Pronúncia + Confiança', color:'#e0a030',
+      subtag:'Pronúncia · Ritmo · Confiança · Desbloqueio',
+      tags:['Storytelling','Educational','Authority','Séries'],
+      insight:'Gatilho principal: Mostrar que o problema não é o sotaque — é o ritmo. Isso é contraintuitivo e gera debate e engajamento. "Falar rápido não é fluência — é ansiedade" é o tipo de frase que para o scroll.',
+      desc:'O pilar que aborda a parte mais emocional do aprendizado: o medo de soar errado, o sotaque, a vergonha de falar. A Sabrina tem a história da apresentação tremendo. O Michael tem a história de perceber que soava gringo demais no ritmo, não nos sons.',
+      desc2:'Conteúdo que valida a insegurança do público e oferece uma saída prática. O foco é em ritmo e entonação (stress-timed vs syllable-timed), não em sons isolados — porque é o que realmente muda como a pessoa soa.' },
+    { id:'p4', name:'Culture Immersion', color:'#5b8dee',
+      subtag:'Cultura americana · Choque cultural · Imersão em casa · Casal intercultural',
+      tags:['Storytelling','Comparison','Educational','Séries','Carrossel'],
+      insight:'Diferencial único: Nenhum outro professor de inglês brasileiro tem um americano nativo como parceiro. O Michael como co-apresentador valida tudo o que a Sabrina ensina. Esse é o ativo mais difícil de replicar pelos concorrentes.',
+      desc:'O pilar que nenhum concorrente tem: o casal bilíngue intercultural como fonte de conteúdo. Michael explica a cultura americana de dentro. Sabrina explica o choque cultural de quem chegou de fora. Os dois juntos criam perspectiva que não existe em nenhum outro canal de inglês.',
+      desc2:'Conteúdo de imersão em casa (sem sair do Brasil), diferenças culturais Brasil × EUA, por que americanos parecem rudes, como criar ambiente de inglês no dia a dia. Alto potencial viral porque resolve uma crença limitante: "preciso ir pros EUA para ser fluente".' }
   ],
   sab: [
-    { id:'p1', name:'Nossa história & Vida entre dois mundos', color:'#1DB994', desc:'A história do casal, vida intercultural, gêmeas bilíngues, voltar pro Brasil. O pilar que ninguém pode copiar.' },
-    { id:'p2', name:'Inglês na vida real',                     color:'#e05252', desc:'Diferenças culturais, dicas práticas de inglês, casamento intercultural como aula de idioma.' },
-    { id:'p3', name:'Empreendedorismo & Mãe',                  color:'#e0a030', desc:'Rotina de mãe empreendedora, Fluency Connect por dentro, jornada real sem filtro.' },
-    { id:'p4', name:'Aprendizado & Crescimento',               color:'#5b8dee', desc:'Aprender idiomas como adulto, método Fluency Connect, disciplina vs motivação.' }
+    { id:'p1', name:'A nossa vida — eu, Michael e as gêmeas', color:'#d4537e',
+      subtag:'Lifestyle · Casal · Maternidade twin · Brasil × EUA',
+      tags:['Attract','Nurture','Storytelling','Double Down'],
+      desc:'Esse é o pilar que nenhuma outra professora de inglês tem. Vida real com marido americano, gêmeas bilíngues, a dinâmica de um casal intercultural. Conteúdo com Michael, rotina das filhas, choque cultural, planos de voltar pros EUA.',
+      desc2:'Inspiração: Alex & Jon, Brad & Mill, Alexa Westover, Emmietanner25. O que prende nesses criadores é a autenticidade do casal e da família real.' },
+    { id:'p2', name:'Inglês real + Fluency Connect', color:'#e09840',
+      subtag:'Educacional · Autoridade · Escola · Resultados',
+      tags:['Position','Convert','Educational','Authority','Series'],
+      desc:'Aqui entra o conteúdo de inglês — mini-aulas, mitos, erros comuns, dicas da vida real. E também os bastidores da escola, reviews de alunos, metodologia. Esse pilar tem overlap direto com o @FluencyConnect.',
+      desc2:'A diferença do seu inglês vs o da escola: na escola é mais estruturado, mais técnico. No seu perfil é mais pessoal — "eu aprendi assim", "isso aconteceu comigo".',
+      collab:'Collab tip: quando você postar conteúdo de inglês no seu perfil, marca @FluencyConnect. Audiência do seu perfil vira aluno da escola.' },
+    { id:'p3', name:'Mulher que constrói — produtividade, leitura, crescimento', color:'#5ba88a',
+      subtag:'Lifestyle intelectual · Rotina · Livros · Finanças pessoais',
+      tags:['Attract','Nurture','Storytelling','Educational'],
+      desc:'Esse pilar é o que te diferencia de ser "só mais uma professora de inglês com família bonita." Você estuda francês, tem formação em contabilidade, gosta de ler, quer entender finanças.',
+      desc2:'Conteúdo de rotina, o que você está lendo, o que está aprendendo, como você organiza a vida entre escola + bebês + estudos. Não precisa ser especialista — precisa ser honesta sobre o processo.',
+      note:'⚠️ O Pilar 3 só funciona se for real. Se você não está de fato lendo, estudando francês, acompanhando finanças — não force. O que prende na Isabel Radford e na Nana Del Rey é que elas realmente fazem aquilo.' }
   ],
   mic: [
-    { id:'p1', name:'Americano no Brasil',          color:'#1DB994', desc:'Choques culturais, descobertas, jornada de um americano vivendo no Brasil.' },
-    { id:'p2', name:'Idiomas & Aprendizado',        color:'#e05252', desc:'Método de aprendizado, como aprendi português, dicas diretas pra brasileiros aprenderem inglês.' },
-    { id:'p3', name:'Tech, Lógica & Disciplina',    color:'#e0a030', desc:'Desenvolvimento, pensamento de engenheiro, disciplina, sistemas.' },
-    { id:'p4', name:'Fluency Connect por dentro',   color:'#5b8dee', desc:'Bastidores do negócio, produto, evolução da escola.' }
+    { id:'p1', name:'🌎 Americano no Brasil', color:'#1DB994',
+      subtag:'Lifestyle · Cultura · Família · Paternidade twin · Brasil × EUA',
+      tags:['Storytelling','Double Down','Série','Atrair','Nutrir'],
+      insight:'Diferencial: Conteúdo que gera reação emocional forte — surpresa, identificação, orgulho. Reações, comparações, momentos com as gêmeas. Conecta diretamente com a audiência da Sabrina.',
+      desc:'O pilar mais único do Michael. Nenhum outro criador tem essa perspectiva: americano nativo, casado com brasileira, pai de gêmeas, vivendo no Brasil. Isso cobre vida cultural, choque de costumes, família bilíngue, paternidade, casamento intercultural e comparações reais entre os dois países.',
+      desc2:'Cobre tópicos de: choques culturais, vida no Brasil, coisas que ama no Brasil, gêmeas bilíngues, casamento intercultural, descoberta das gêmeas, paternidade jovem, rotina familiar bilíngue. É o pilar de maior identificação e viralidade — conteúdo que ninguém mais pode replicar.' },
+    { id:'p2', name:'🎙️ Idiomas & Aprendizado', color:'#e05252',
+      subtag:'Inglês · Português · Bilinguismo · Método · Fluência',
+      tags:['Educational','Authority','Double Down','Posicionar','Nutrir'],
+      insight:'Diferença Michael vs Sabrina: Ela ensina como aluna que virou professora. Ele ensina como nativo. São ângulos complementares, não competidores. Usa para enviar audiência ao @FluencyConnect.',
+      desc:'Conteúdo de idiomas com o ângulo exclusivo de nativo americano que aprendeu português. Michael ensina inglês de um lugar que nenhuma professora brasileira pode ocupar: ele é o nativo. Ao mesmo tempo documenta sua própria jornada com o português, criando espelhamento com a audiência.',
+      desc2:'Tópicos incluem: como aprendeu português, hacks de inglês, maior erro dos brasileiros no speaking, como pensar em inglês, pronúncia e ritmo, rotina de idiomas, o método que funciona, inglês para situações reais.' },
+    { id:'p3', name:'⚡ Tech · Lógica · Disciplina', color:'#e0a030',
+      subtag:'Programação · Xadrez · Fitness · Produtividade · Mentalidade',
+      tags:['Storytelling','Educational','Authority','Atrair','Converter'],
+      insight:'Estratégia: Atrai audiência de devs, entusiastas de produtividade e fitness. Xadrez e fitness funcionam como "proof of character" — alguém que pratica o que prega sobre disciplina.',
+      desc:'O pilar que diferencia Michael de ser "só um gringo no Brasil". Mostra profundidade intelectual e disciplina pessoal: estudante de dev nos EUA, jogador de xadrez, atleta mantendo rotina como pai.',
+      desc2:'Tópicos incluem: jornada em programação, inglês para devs, xadrez como ferramenta mental, voltar a treinar com rotina cheia, disciplina com gêmeas, produtividade e hábitos, linguagens de programação.' }
   ],
   sub: [
     { id:'p1', name:'Life Between Two Countries',  color:'#1DB994', desc:'The pillar no other creator can copy. A Brazilian woman married to an American, raising bilingual twins, navigating life between São Paulo and the US.' },

@@ -529,6 +529,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <div class="tab-page" id="sub-inspiration"><!-- rendered by JS --></div>
     <div class="tab-page" id="sub-subjects"><!-- rendered by JS --></div>
     <div class="tab-page" id="sub-notes"><!-- rendered by JS --></div>
+    <div class="tab-page" id="sub-quotes"><!-- rendered by JS --></div>
   </div>
 
   <!-- ── CALENDAR ── -->
@@ -783,7 +784,7 @@ function buildInnerTabs(acc) {
     ],
     sub: [
       ['content','📝 Content'],['studio','✍️ Studio'],['inspiration','💡 Inspiration'],
-      ['subjects','📚 Subjects'],['notes','📓 Notes']
+      ['subjects','📚 Subjects'],['notes','📓 Notes'],['quotes','💬 Quotes']
     ]
   };
   const itabs = document.getElementById(`itabs-${acc}`);
@@ -825,9 +826,9 @@ function renderTabContent(acc, tabId, el) {
     master:      () => renderMaster(el),
     inspiration: () => acc==='sub' ? renderSubInspo(el) : renderMicInspo(el),
     studio:      () => renderStudio(el),
-    notes:       () => renderNotes(el),
     subjects:    () => renderSubjects(el),
     notes:       () => renderNotes(el),
+    quotes:      () => renderQuotes(el),
   };
   const fn = renderers[tabId];
   if (fn) { fn(); el.dataset.rendered = tabId; }
@@ -1280,13 +1281,20 @@ function renderCardModalBody() {
       return;
     }
 
-    const fieldDefs = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+    let fieldDefs;
+    if (format === 'carousel' && acc !== 'fc') {
+      fieldDefs = SAB_MIC_CAROUSEL_FIELDS;
+    } else if (format === 'story' && acc !== 'fc') {
+      fieldDefs = SAB_MIC_STORY_FIELDS;
+    } else {
+      fieldDefs = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+    }
 
     body.innerHTML = `
       <div class="version-tabs" id="version-tabs">
         ${VERSIONS.map(v=>`<button class="version-tab v-${v} ${v===version?'active':''}" onclick="switchVersion('${v}',this)">${VERSION_LABELS[v]}</button>`).join('')}
       </div>
-      ${!isEssay && acc==='fc' ? `<div class="format-tabs" id="format-tabs">
+      ${!isEssay ? `<div class="format-tabs" id="format-tabs">
         ${FORMATS.map(f=>`<button class="format-tab ${f===format?'active':''}" onclick="switchFormat('${f}',this)">${FORMAT_LABELS[f]}</button>`).join('')}
       </div>` : ''}
       <div id="script-fields">
@@ -1367,7 +1375,14 @@ function switchFormat(f, btn) {
 
 function rebuildScriptFields() {
   const { account:acc, topicId, version, format } = cardModal;
-  const fieldDefs = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+  let fieldDefs;
+  if (format === 'carousel' && acc !== 'fc') {
+    fieldDefs = SAB_MIC_CAROUSEL_FIELDS;
+  } else if (format === 'story' && acc !== 'fc') {
+    fieldDefs = SAB_MIC_STORY_FIELDS;
+  } else {
+    fieldDefs = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+  }
   return fieldDefs.map(fd=>`
     <div class="script-section">
       <div class="script-label">${fd.label}</div>
@@ -1487,6 +1502,12 @@ function deleteCard() {
   toast('Deleted');
 }
 
+function getFieldDefs(acc, version, format) {
+  if (format === 'carousel' && acc !== 'fc') return SAB_MIC_CAROUSEL_FIELDS;
+  if (format === 'story'    && acc !== 'fc') return SAB_MIC_STORY_FIELDS;
+  return FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+}
+
 // ── AI GENERATION ────────────────────────────────────────────────────────
 async function aiGenerateScripts() {
   const { account:acc, topicId, version, format } = cardModal;
@@ -1497,7 +1518,7 @@ async function aiGenerateScripts() {
   out.classList.add('visible'); out.textContent = '';
 
   // Collect the source script (current version/format) as context
-  const sourceFields = FC_SCRIPT_FIELDS[version]?.[format] || FC_SCRIPT_FIELDS.attract.video;
+  const sourceFields = getFieldDefs(acc, version, format);
   const sourceContent = {};
   sourceFields.forEach(fd => { sourceContent[fd.key] = getScript(acc,topicId,version,format,fd.key); });
 
@@ -1523,7 +1544,7 @@ async function aiGenerateScripts() {
     for (const { v, f } of toGenerate) {
       out.textContent = `⏳ Generating ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]} (${done+1}/${toGenerate.length})...`;
       const existing = {};
-      const targetFields = FC_SCRIPT_FIELDS[v]?.[f] || FC_SCRIPT_FIELDS.attract.video;
+      const targetFields = getFieldDefs(acc, v, f);
       targetFields.forEach(fd => { existing[fd.key] = getScript(acc,topicId,v,f,fd.key); });
       const raw = await generateScripts(acc, t, v, f, { ...sourceContent, ...existing }, null);
       const clean = raw.replace(/```json|```/g,'').trim();
@@ -1912,50 +1933,72 @@ function renderFormats(acc, el) {
 function renderPillars(acc, el) {
   const pillars = getPillars(acc);
   const topics  = getTopics(acc);
-  const colorNames = ['var(--fc-color)','var(--red)','var(--yellow)','var(--blue)'];
   const versionDistrib = [
     {pct:'40%',label:'ATRAIR',color:'var(--green)',desc:'Storytelling<br>sem pitch'},
     {pct:'25%',label:'NUTRIR',color:'var(--purple)',desc:'Educational<br>constrói confiança'},
     {pct:'20%',label:'POSICIONAR',color:'var(--blue)',desc:'Authority<br>mostra o método'},
     {pct:'15%',label:'CONVERTER',color:'var(--orange)',desc:'CTA direto<br>produto / ação'},
   ];
+
+  const pillarBlocks = pillars.map((p,i) => {
+    const count = topics.filter(t=>t.pillar===p.id).length;
+    const done  = topics.filter(t=>t.pillar===p.id&&getStatus(acc,t.id)==='finished').length;
+    const bgMap  = ['rgba(29,185,148,.06)','rgba(224,82,82,.06)','rgba(224,160,48,.06)','rgba(91,141,238,.06)','rgba(91,168,138,.06)'];
+    const brdMap = ['rgba(29,185,148,.2)', 'rgba(224,82,82,.2)', 'rgba(224,160,48,.2)', 'rgba(91,141,238,.2)', 'rgba(91,168,138,.2)'];
+    const bg  = bgMap[i]  || 'rgba(255,255,255,.03)';
+    const brd = brdMap[i] || 'var(--border)';
+    return `
+    <div style="background:${bg};border:1px solid ${brd};border-radius:14px;padding:22px 26px;margin-bottom:16px;position:relative;overflow:hidden">
+      <div style="font-size:36px;font-weight:900;color:${p.color};line-height:1;margin-bottom:4px">${i+1}</div>
+      <div style="font-size:20px;font-weight:900;margin-bottom:3px">${p.name}</div>
+      ${p.subtag ? `<div style="font-size:11px;color:var(--muted2);margin-bottom:14px;letter-spacing:.03em">${p.subtag}</div>` : ''}
+      <div style="height:1px;background:var(--border);margin-bottom:14px"></div>
+      <div style="font-size:13px;color:var(--muted2);line-height:1.75;margin-bottom:10px">${p.desc}</div>
+      ${p.desc2 ? `<div style="font-size:13px;color:var(--muted2);line-height:1.75;margin-bottom:10px">${p.desc2}</div>` : ''}
+      ${p.collab ? `<div style="background:rgba(29,185,148,.08);border:1px solid rgba(29,185,148,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:10px"><strong style="color:var(--green)">🤝 Collab tip:</strong> ${p.collab}</div>` : ''}
+      ${p.note ? `<div style="background:rgba(230,126,34,.08);border:1px solid rgba(230,126,34,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:10px">⚠️ ${p.note}</div>` : ''}
+      ${p.tags?.length ? `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+        ${p.tags.map(tag=>`<span style="padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${bg};border:1px solid ${brd};color:${p.color}">${tag}</span>`).join('')}
+      </div>` : ''}
+      ${p.insight ? `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:12px;font-size:12px;color:var(--muted2);line-height:1.7"><strong style="color:var(--text)">${p.insight}</strong></div>` : ''}
+      <div style="display:flex;gap:16px;margin-top:12px">
+        <span style="font-size:11px;color:var(--muted)">${count} tópicos</span>
+        <span style="font-size:11px;color:var(--green)">${done} finalizados</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Distribution grid — only for FC
+  const distGrid = acc === 'fc' ? `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-top:8px">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px">Distribuição de conteúdo por pilar</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${pillars.map(p=>{
+          const count = topics.filter(t=>t.pillar===p.id).length;
+          return `<div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px">
+            <div style="font-size:22px;font-weight:900;color:${p.color}">${p.id.toUpperCase()}</div>
+            <div style="font-size:11px;color:var(--muted2);margin-top:2px;line-height:1.5">${count} tópicos</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div style="background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.2);border-radius:10px;padding:18px 22px;margin-top:12px">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:12px">Distribuição de Content Jobs (40/25/20/15)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${versionDistrib.map(v=>`
+          <div style="text-align:center;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)">
+            <div style="font-size:20px;font-weight:900;color:${v.color}">${v.pct}</div>
+            <div style="font-size:10px;font-weight:800;color:${v.color};margin-top:2px">${v.label}</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">${v.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
   el.innerHTML = `
     <div class="section-title">⭐ Pilares de Conteúdo</div>
     <div class="section-desc">Os pilares que organizam todo o conteúdo — propósito, audiência e gatilhos de cada um.</div>
-    ${pillars.map((p,i)=>{
-      const count = topics.filter(t=>t.pillar===p.id).length;
-      const done  = topics.filter(t=>t.pillar===p.id&&getStatus(acc,t.id)==='finished').length;
-      return `
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:16px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${p.color}"></div>
-        <div style="display:flex;align-items:flex-start;gap:20px">
-          <div style="font-size:60px;font-weight:900;color:var(--border);line-height:1;flex-shrink:0">${i+1}</div>
-          <div style="flex:1">
-            <div style="font-size:17px;font-weight:900;color:${p.color};margin-bottom:4px">${p.name}</div>
-            <div style="font-size:12px;color:var(--muted2);line-height:1.75;margin-bottom:12px">${p.desc}</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-              ${(p.tags||['Storytelling','Educational','Séries']).map(tag=>`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;background:rgba(255,255,255,.06);border:1px solid var(--border)">${tag}</span>`).join('')}
-            </div>
-            ${p.insight?`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted2);line-height:1.7"><strong style="color:var(--text)">Gatilho:</strong> ${p.insight}</div>`:''}
-            <div style="display:flex;gap:16px;margin-top:12px">
-              <span style="font-size:11px;color:var(--muted)">${count} tópicos</span>
-              <span style="font-size:11px;color:var(--green)">${done} finalizados</span>
-            </div>
-          </div>
-        </div>
-      </div>`;
-    }).join('')}
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:8px">
-      <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px">Distribuição de Content Jobs</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-        ${versionDistrib.map(v=>`
-          <div style="text-align:center;padding:14px 8px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">
-            <div style="font-size:22px;font-weight:900;color:${v.color}">${v.pct}</div>
-            <div style="font-size:10px;font-weight:800;color:${v.color};margin-top:2px">${v.label}</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5">${v.desc}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
+    ${pillarBlocks}
+    ${distGrid}`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3292,6 +3335,101 @@ function deleteSubNote(i) {
   saveSubNotes();
   const el = document.getElementById('sub-notes');
   if (el) { delete el.dataset.rendered; renderNotes(el); }
+}
+
+// ─── SUBSTACK QUOTES TAB ────────────────────────────────────────────────────
+const DEFAULT_SUB_QUOTES = [
+  {text:'The cost of a thing is the amount of life you exchange for it.',author:'Thoreau',theme:'money'},
+  {text:'Do not save what is left after spending; spend what is left after saving.',author:'Buffett',theme:'money'},
+  {text:'An investment in knowledge pays the best interest.',author:'Franklin',theme:'money'},
+  {text:'Courage is not the absence of fear, but the assessment that something else is more important.',author:'FDR',theme:'courage'},
+  {text:'Life shrinks or expands in proportion to one\'s courage.',author:'Anaïs Nin',theme:'courage'},
+  {text:'The impediment to action advances action. What stands in the way becomes the way.',author:'Marcus Aurelius',theme:'courage'},
+  {text:'I am not what happened to me. I am what I choose to become.',author:'Carl Jung',theme:'identity'},
+  {text:'Two countries. Two languages. One me — still figuring it out.',author:'Sabrina McGehee',theme:'identity'},
+  {text:'To have another language is to possess a second soul.',author:'Charlemagne',theme:'language'},
+  {text:'The limits of my language mean the limits of my world.',author:'Wittgenstein',theme:'language'},
+  {text:'If you talk to a man in his language, that goes to his heart.',author:'Mandela',theme:'language'},
+  {text:'There is no way to be a perfect mother, and a million ways to be a good one.',author:'Jill Churchill',theme:'motherhood'},
+  {text:'The days are long but the years are short.',author:'Gretchen Rubin',theme:'motherhood'},
+  {text:'Behind every young child who believes in herself is a parent who believed first.',author:'Matthew Jacobson',theme:'motherhood'},
+  {text:'Small daily improvements over time lead to stunning results.',author:'Robin Sharma',theme:'growth'},
+  {text:'What we fear doing most is usually what we most need to do.',author:'Tim Ferriss',theme:'growth'},
+  {text:'Being 1% better every day is not a destination. It\'s a direction.',author:'Sabrina McGehee',theme:'growth'},
+  {text:'The only person you are destined to become is the person you decide to be.',author:'Emerson',theme:'growth'},
+];
+
+let _subQuotes = JSON.parse(localStorage.getItem('hub_sub_quotes') || 'null') || JSON.parse(JSON.stringify(DEFAULT_SUB_QUOTES));
+let _subQuoteFilter = 'all';
+
+function saveSubQuotes() { localStorage.setItem('hub_sub_quotes', JSON.stringify(_subQuotes)); }
+
+function renderQuotes(el) {
+  const THEMES = ['all','money','courage','identity','language','motherhood','growth','custom','used'];
+  const filtered = _subQuoteFilter === 'used'   ? _subQuotes.filter(q=>q.used) :
+                   _subQuoteFilter === 'all'    ? _subQuotes.filter(q=>!q.used) :
+                   _subQuoteFilter === 'custom' ? _subQuotes.filter(q=>q.custom&&!q.used) :
+                   _subQuotes.filter(q=>q.theme===_subQuoteFilter&&!q.used);
+
+  el.innerHTML = `
+    <div class="section-title" style="color:var(--sub-color)">💬 Quote Library</div>
+    <div class="section-desc">Curated quotes for essays, captions, and Substack Notes. Click any quote to copy it.</div>
+    <!-- Filter tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+      ${THEMES.map(f=>`<button class="filter-btn ${_subQuoteFilter===f?'active':''}"
+        onclick="_subQuoteFilter='${f}';renderQuotes(document.getElementById('sub-quotes'))"
+        style="${_subQuoteFilter===f?'background:var(--sub-color);border-color:var(--sub-color);color:#fff':''}"
+      >${f==='custom'?'My Quotes':f==='used'?'✓ Used':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('')}
+    </div>
+    <!-- Source tip -->
+    <div style="background:rgba(29,185,148,.06);border:1px solid rgba(29,185,148,.15);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Where to find more quotes</div>
+      <div style="font-size:12px;color:var(--muted2);line-height:1.7"><strong>Goodreads:</strong> goodreads.com/quotes · <strong>BrainyQuote:</strong> brainyquote.com · <strong>Authors to search:</strong> Brené Brown, Morgan Housel, Paulo Coelho, Maya Angelou, James Baldwin</div>
+    </div>
+    <!-- Add form -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <input class="pm-input" id="sub-q-text" placeholder="Add a quote…" style="flex:2;min-width:200px">
+      <input class="pm-input" id="sub-q-auth" placeholder="Author" style="flex:1;min-width:100px">
+      <select class="pm-select" id="sub-q-theme" style="width:auto;min-width:100px">
+        ${['money','courage','identity','language','motherhood','growth'].map(t=>`<option value="${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</option>`).join('')}
+      </select>
+      <button class="btn-primary" onclick="addSubQuote()">Add</button>
+    </div>
+    <!-- Quote cards -->
+    ${filtered.length ? filtered.map(q => {
+      const realIdx = _subQuotes.indexOf(q);
+      return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;cursor:pointer"
+        onclick="navigator.clipboard.writeText('"'+${JSON.stringify(q.text)}+'" — '+${JSON.stringify(q.author)});toast('Copied!')">
+        <div style="font-size:16px;font-style:italic;line-height:1.5;margin-bottom:4px;color:var(--text)">"${esc(q.text)}"</div>
+        <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">— ${esc(q.author)}
+          <span style="font-size:9px;padding:2px 7px;border-radius:5px;background:var(--bg3);color:var(--muted2);margin-left:6px">${q.theme}</span>
+          ${q.used?'<span style="font-size:9px;padding:2px 7px;border-radius:5px;background:var(--green-dim);color:var(--green);margin-left:4px">✓ Used</span>':''}
+        </div>
+        <div style="display:flex;gap:6px" onclick="event.stopPropagation()">
+          ${q.used
+            ? `<button class="btn-secondary" style="font-size:10px;padding:4px 10px" onclick="_subQuotes[${realIdx}].used=false;saveSubQuotes();renderQuotes(document.getElementById('sub-quotes'))">↩ Unmark</button>`
+            : `<button class="btn-secondary" style="font-size:10px;padding:4px 10px;border-color:rgba(29,185,148,.3);color:var(--green)" onclick="_subQuotes[${realIdx}].used=true;saveSubQuotes();renderQuotes(document.getElementById('sub-quotes'))">✓ Mark Used</button>`}
+          <button class="btn-secondary" style="font-size:10px;padding:4px 10px;border-color:rgba(224,82,82,.3);color:var(--red)" onclick="if(confirm('Delete?')){_subQuotes.splice(${realIdx},1);saveSubQuotes();renderQuotes(document.getElementById('sub-quotes'))}">Delete</button>
+        </div>
+      </div>`;
+    }).join('')
+    : `<div style="text-align:center;padding:40px;color:var(--muted)">${_subQuoteFilter==='used'?'No used quotes yet.':'No quotes in this category.'}</div>`}`;
+}
+
+function addSubQuote() {
+  const text = document.getElementById('sub-q-text')?.value.trim();
+  if (!text) { toast('Enter a quote'); return; }
+  _subQuotes.push({
+    text,
+    author: document.getElementById('sub-q-auth').value.trim() || 'Unknown',
+    theme:  document.getElementById('sub-q-theme').value,
+    custom: true
+  });
+  saveSubQuotes();
+  document.getElementById('sub-q-text').value = '';
+  document.getElementById('sub-q-auth').value = '';
+  renderQuotes(document.getElementById('sub-quotes'));
+  toast('Quote added!');
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
