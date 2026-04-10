@@ -107,6 +107,8 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 .video-card.status-generate{background:rgba(155,89,182,.12);border-color:rgba(155,89,182,.4)}
 .video-card.status-reviewed{background:rgba(52,152,219,.12);border-color:rgba(52,152,219,.4)}
 .video-card.status-finished{background:rgba(29,185,148,.1);border-color:rgba(29,185,148,.4);opacity:.7}
+.video-card.collab-card{background:rgba(230,126,34,.08);border-color:rgba(230,126,34,.35);}
+.video-card.collab-card:hover{border-color:rgba(230,126,34,.6);}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
 .card-num{font-size:20px;font-weight:900;color:var(--border);line-height:1;flex-shrink:0}
 .card-badges{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
@@ -599,9 +601,11 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
       <button class="action-btn btn-reviewed" id="cmod-btn-reviewed" onclick="setCardStatus('reviewed')">👁 Reviewed</button>
       <button class="action-btn btn-finished" id="cmod-btn-finished" onclick="setCardStatus('finished')">✅ Finished</button>
       <button class="action-btn btn-calendar" onclick="addCardToCalendar()">📅 Add to Calendar</button>
-      <button class="action-btn" id="cmod-collab-btn" onclick="toggleCollabMenu(event)" style="border-color:var(--blue);color:var(--blue)">🤝 Collab</button>
+      <div style="position:relative">
+        <button class="action-btn" id="cmod-collab-btn" onclick="toggleCollabMenu()" style="border-color:var(--blue);color:var(--blue)">🤝 Collab ▾</button>
+        <div id="collab-dropdown" style="display:none;position:absolute;bottom:calc(100% + 6px);left:0;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:6px;z-index:600;box-shadow:var(--shadow);min-width:160px;white-space:nowrap"></div>
+      </div>
       <button class="action-btn btn-delete" onclick="deleteCard()">🗑 Delete</button>
-      <div id="collab-dropdown" style="display:none;position:absolute;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px;z-index:600;box-shadow:var(--shadow)"></div>
     </div>
   </div>
 </div>
@@ -946,8 +950,9 @@ function buildCard(acc, t) {
   const dates  = getDates(acc, t.id);
   const pillar = getPillars(acc).find(p=>p.id===t.pillar);
   const statusCls = status ? `status-${status}` : '';
+  const collabCls = t.collabWith ? 'collab-card' : '';
   const statusBadge = status ? `<span class="badge badge-status-${status[0]}">${status==='generate'?'✨ Generated':status==='reviewed'?'👁 Reviewed':'✅ Done'}</span>` : '';
-  return `<div class="video-card ${statusCls}" onclick="openCardModal('${acc}',${t.id})">
+  return `<div class="video-card ${statusCls} ${collabCls}" onclick="openCardModal('${acc}',${t.id})">
     <div class="card-top">
       <div class="card-num">${t.id}</div>
       <div class="card-badges">
@@ -1003,7 +1008,11 @@ function openCardModal(acc, topicId) {
   }
   cardModal = { account:acc, topicId, version:'attract', format:'video', tab:'scripts' };
   document.getElementById('cmod-title').textContent = t.title;
-  document.getElementById('cmod-sub').textContent   = t.sub||'';
+  const collabLabel = t.collabWith
+    ? `${ACCOUNTS[t.collabWith]?.emoji || ''} Collab with ${ACCOUNTS[t.collabWith]?.label || t.collabWith}`
+    : (t.sub || '');
+  document.getElementById('cmod-sub').textContent = collabLabel;
+  document.getElementById('cmod-sub').style.color = t.collabWith ? 'var(--orange)' : '';
   const dates = getDates(acc, topicId);
   document.getElementById('cmod-date-rec').value  = dates.rec||'';
   document.getElementById('cmod-date-post').value = dates.post||'';
@@ -1462,31 +1471,43 @@ function addCardToCalendar() {
   }).catch(()=>toast('📅 Opening Google Calendar...'));
 }
 
-function toggleCollabMenu(e) {
+function toggleCollabMenu() {
   const dd = document.getElementById('collab-dropdown');
+  if (!dd) return;
   if (dd.style.display === 'block') { dd.style.display='none'; return; }
-  const btn = document.getElementById('cmod-collab-btn');
-  const rect = btn.getBoundingClientRect();
-  dd.style.top = (rect.bottom + window.scrollY + 4)+'px';
-  dd.style.left = rect.left+'px';
-  dd.style.position = 'fixed';
-  const { account:acc, topicId } = cardModal;
+  const { account:acc } = cardModal;
   const others = Object.keys(ACCOUNTS).filter(a=>a!==acc && a!=='cal');
-  dd.innerHTML = others.map(a=>`<button onclick="collabWith('${a}')" style="display:block;width:100%;text-align:left;padding:8px 14px;background:none;border:none;color:var(--text);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:4px;transition:background .2s" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='none'">${ACCOUNTS[a].emoji} ${ACCOUNTS[a].label}</button>`).join('');
+  dd.innerHTML = others.map(a=>`<button onclick="collabWith('${a}');document.getElementById('collab-dropdown').style.display='none'"
+    style="display:block;width:100%;text-align:left;padding:8px 14px;background:none;border:none;color:var(--text);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:4px;transition:background .2s"
+    onmouseover="this.style.background='var(--bg4)'"
+    onmouseout="this.style.background='none'"
+  >${ACCOUNTS[a].emoji} ${ACCOUNTS[a].label}</button>`).join('');
   dd.style.display = 'block';
-  setTimeout(()=>document.addEventListener('click', ()=>{ dd.style.display='none'; }, {once:true}), 50);
+  setTimeout(()=>document.addEventListener('click', (e)=>{
+    if (!dd.contains(e.target)) dd.style.display='none';
+  }, {once:true}), 50);
 }
 
 function collabWith(targetAcc) {
   const { account:srcAcc, topicId } = cardModal;
-  const t = getTopics(srcAcc).find(x=>x.id===topicId);
+  const srcTopics = getTopics(srcAcc);
+  const t = srcTopics.find(x=>x.id===topicId);
   if (!t) return;
   const tgt = getState(targetAcc);
   const dup = tgt.topics.find(x=>x.title===t.title);
   if (dup) { toast(`Already on ${ACCOUNTS[targetAcc].label}`); return; }
+  // Mark the original topic on the source account as collabbing with target
+  t.collabWith = targetAcc;
+  persist(srcAcc);
+  // Add a copy to the target account marked as collabbing with source
   const collabTopic = { ...t, id: nextId(tgt.topics), collabWith: srcAcc };
   tgt.topics.push(collabTopic);
   persist(targetAcc);
+  // Force full re-render of both accounts
+  delete states[srcAcc];
+  delete states[targetAcc];
+  refreshGrid(srcAcc);
+  refreshGrid(targetAcc);
   toast(`🤝 Added to ${ACCOUNTS[targetAcc].label}!`);
   document.getElementById('collab-dropdown').style.display='none';
 }
