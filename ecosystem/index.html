@@ -482,7 +482,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <button class="account-tab fc" id="atab-fc"  onclick="switchAccount('fc',this)">🌱 Fluency Connect</button>
     <button class="account-tab sab" id="atab-sab" onclick="switchAccount('sab',this)">💜 Sabrina</button>
     <button class="account-tab mic" id="atab-mic" onclick="switchAccount('mic',this)">🎬 Michael</button>
-    <button class="account-tab sub" id="atab-sub" onclick="switchAccount('sub',this)">✍️ Substack</button>
+    <button class="account-tab sub" id="atab-sub" onclick="switchAccount('sub',this)">✍️ Sabrina English</button>
     <button class="account-tab cal-tab" id="atab-cal" onclick="switchAccount('cal',this)">📅 Calendar</button>
   </div>
 </div>
@@ -532,6 +532,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <div class="tab-page" id="sub-subjects"><!-- rendered by JS --></div>
     <div class="tab-page" id="sub-notes"><!-- rendered by JS --></div>
     <div class="tab-page" id="sub-quotes"><!-- rendered by JS --></div>
+    <div class="tab-page" id="sub-ideas"><!-- rendered by JS --></div>
   </div>
 
   <!-- ── CALENDAR ── -->
@@ -689,6 +690,26 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   </div>
 </div>
 
+<!-- ═══════════════ ESSAY MODAL ═══════════════ -->
+<div class="modal-overlay" id="essay-modal" onclick="closeEssayModalOutside(event)">
+  <div class="modal-box" style="max-width:780px">
+    <div class="modal-header">
+      <div class="modal-title" id="essay-modal-title">—</div>
+      <div class="modal-sub" id="essay-modal-sub">—</div>
+      <button class="modal-close" onclick="closeEssayModal()">✕</button>
+    </div>
+    <div class="modal-tabs" id="essay-modal-ver-tabs"></div>
+    <div class="modal-body" id="essay-modal-body"></div>
+    <div class="modal-actions">
+      <button class="action-btn btn-generate" id="essay-btn-generate" onclick="setEssayStatus('generate')">✨ Generate</button>
+      <button class="action-btn btn-reviewed" id="essay-btn-reviewed" onclick="setEssayStatus('reviewed')">👁 Reviewed</button>
+      <button class="action-btn btn-finished" id="essay-btn-finished" onclick="setEssayStatus('finished')">✅ Finished</button>
+      <button class="action-btn" id="essay-publish-btn" onclick="publishEssayToVideoScripts()" style="border-color:var(--sub-color);color:var(--sub-color)">📹 Publish → Video Scripts</button>
+      <button class="action-btn btn-delete" onclick="deleteEssayTopic()">🗑 Delete</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ TOAST ═══════════════ -->
 <div class="toast" id="toast"></div>
 
@@ -787,8 +808,9 @@ function buildInnerTabs(acc) {
       ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],['inspiration','🔥 Inspiration']
     ],
     sub: [
-      ['content','📝 Content'],['studio','✍️ Studio'],['inspiration','💡 Inspiration'],
-      ['subjects','📚 Subjects'],['notes','📓 Notes'],['quotes','💬 Quotes']
+      ['content','📝 Content'],['studio','✍️ Studio'],['ideas','💡 Ideas'],
+      ['inspiration','🔥 Inspiration'],['subjects','📚 Subjects'],
+      ['notes','📓 Notes'],['quotes','💬 Quotes']
     ]
   };
   const itabs = document.getElementById(`itabs-${acc}`);
@@ -833,6 +855,7 @@ function renderTabContent(acc, tabId, el) {
     subjects:    () => renderSubjects(el),
     notes:       () => renderNotes(el),
     quotes:      () => renderQuotes(el),
+    ideas:       () => renderSubIdeas(el),
   };
   const fn = renderers[tabId];
   if (fn) { fn(); el.dataset.rendered = tabId; }
@@ -847,6 +870,7 @@ function refreshTab(acc, tabId) {
 // CONTENT TAB
 // ═══════════════════════════════════════════════════════════════════════════
 function renderContent(acc, el) {
+  if (acc === 'sub') { renderSubContent(el); return; }
   const pillars = getPillars(acc);
   const topics  = getTopics(acc);
   const regular = topics.filter(t=>t.type!=='serie' && t.type!=='essay');
@@ -1646,6 +1670,160 @@ function saveNewTopic() {
   const newT = { id: nextId(s.topics), pillar, type, title, sub };
   s.topics.push(newT); persist(acc);
   closeAddModal(); refreshGrid(acc); toast('✅ Idea added!');
+}
+
+// ─── ESSAY MODAL (Sabrina English) ───────────────────────────────────────────
+let essayModal = { account:'sub', topicId:null, version:'attract' };
+
+function openEssayModal(acc, topicId) {
+  essayModal = { account:acc, topicId, version:'attract' };
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  document.getElementById('essay-modal-title').textContent = t.title;
+  document.getElementById('essay-modal-sub').textContent   = t.sub||'';
+  renderEssayModalBody();
+  document.getElementById('essay-modal').classList.add('open');
+}
+
+function closeEssayModal() { document.getElementById('essay-modal').classList.remove('open'); }
+function closeEssayModalOutside(e) { if(e.target===document.getElementById('essay-modal')) closeEssayModal(); }
+
+const ESSAY_VERSION_FIELDS = {
+  attract:  [
+    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'The opening line that makes them stop scrolling...'},
+    {key:'story',  label:'Story',       cls:'l-stakes', rows:4, ph:'The personal moment — specific, cinematic, real...'},
+    {key:'lesson', label:'Lesson',      cls:'l-lesson', rows:3, ph:'What this taught you...'},
+    {key:'reader', label:'Bridge',      cls:'l-steps',  rows:2, ph:'Connect to reader — "maybe you know this feeling..."'},
+    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:1, ph:'Soft call to action...'}
+  ],
+  nurture:  [
+    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'A problem or question your reader has...'},
+    {key:'teach',  label:'Teach',       cls:'l-lesson', rows:5, ph:'The framework, steps, or insight — go deep...'},
+    {key:'example',label:'Example',     cls:'l-steps',  rows:3, ph:'Concrete example or proof...'},
+    {key:'action', label:'Action',      cls:'l-insight',rows:2, ph:'What they can do today...'},
+    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:1, ph:'Save / share / reply...'}
+  ],
+  position: [
+    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'Your unique credential or perspective...'},
+    {key:'exp',    label:'Experience',  cls:'l-exp',    rows:3, ph:'What you lived that gives you this authority...'},
+    {key:'obs',    label:'Observation', cls:'l-insight',rows:3, ph:'What you\'ve noticed that others miss...'},
+    {key:'insight',label:'Insight',     cls:'l-lesson', rows:2, ph:'The non-obvious conclusion...'},
+    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:1, ph:'Link / follow / subscribe...'}
+  ],
+  convert:  [
+    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'The transformation or result...'},
+    {key:'problem',label:'Problem',     cls:'l-stakes', rows:3, ph:'The pain point you solve...'},
+    {key:'solution',label:'Solution',   cls:'l-lesson', rows:3, ph:'What you offer and why it works...'},
+    {key:'proof',  label:'Proof',       cls:'l-insight',rows:2, ph:'Evidence, results, testimonials...'},
+    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:2, ph:'Direct CTA — subscribe, buy, join...'}
+  ]
+};
+
+function renderEssayModalBody() {
+  const { account:acc, topicId, version } = essayModal;
+  const fields = ESSAY_VERSION_FIELDS[version];
+  const tabs = document.getElementById('essay-modal-ver-tabs');
+  tabs.innerHTML = VERSIONS.map(v=>
+    `<button class="modal-tab ${v===version?'active':''}" onclick="switchEssayVersion('${v}',this)">${VERSION_LABELS[v]}</button>`
+  ).join('');
+  const body = document.getElementById('essay-modal-body');
+  body.innerHTML = fields.map(fd=>`
+    <div class="script-section">
+      <div class="script-label">${fd.label}</div>
+      <textarea class="script-textarea ${fd.cls}" rows="${fd.rows}" placeholder="${fd.ph}"
+        oninput="autoResize(this);setScriptField('${acc}',${topicId},'${version}','essay','${fd.key}',this.value)"
+      >${esc(getScript(acc,topicId,version,'essay',fd.key))}</textarea>
+    </div>`).join('') + `
+    <div class="ai-box" style="margin-top:14px">
+      <div class="ai-box-title">✨ AI Essay Generator</div>
+      <button class="ai-btn" id="essay-ai-btn" onclick="aiGenerateEssayVersion()">Generate ${VERSION_LABELS[version]} Essay</button>
+      <div class="ai-output" id="essay-ai-out"></div>
+    </div>`;
+  body.querySelectorAll('textarea').forEach(autoResize);
+  // Status buttons
+  const status = getStatus(acc, topicId);
+  ['generate','reviewed','finished'].forEach(s=>{
+    const btn = document.getElementById(`essay-btn-${s}`);
+    if (btn) btn.classList.toggle('active', status===s);
+  });
+}
+
+function switchEssayVersion(v, btn) {
+  essayModal.version = v;
+  document.querySelectorAll('#essay-modal-ver-tabs .modal-tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderEssayModalBody();
+}
+
+async function aiGenerateEssayVersion() {
+  const { account:acc, topicId, version } = essayModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const btn = document.getElementById('essay-ai-btn');
+  const out = document.getElementById('essay-ai-out');
+  btn.disabled=true; btn.textContent='⏳ Generating...';
+  out.classList.add('visible'); out.textContent='';
+  try {
+    const fields = ESSAY_VERSION_FIELDS[version];
+    const existing = {};
+    fields.forEach(fd=>{ existing[fd.key]=getScript(acc,topicId,version,'essay',fd.key); });
+    const raw = await callAI(
+      `You are an essay writing coach for Sabrina McGehee, a Brazilian-American woman writing on Substack about life between two countries and learning in public. Write in her voice: personal, warm, bilingual (mix Portuguese naturally), honest.`,
+      `Generate a ${VERSION_LABELS[version]} essay outline for:\nTitle: "${t.title}"\nAngle: ${t.sub||''}\nExisting notes: ${JSON.stringify(existing)}\n\nReturn ONLY valid JSON with these exact keys:\n{${fields.map(f=>`"${f.key}":"${f.label} content"`).join(',')}}`
+    );
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,topicId,version,'essay',key,val));
+    renderEssayModalBody();
+    toast('✨ Essay generated!');
+  } catch(e) { out.textContent='Error: '+e.message; }
+  btn.disabled=false; btn.textContent=`Generate ${VERSION_LABELS[essayModal.version]} Essay`;
+}
+
+function deleteEssayTopic() {
+  const { account:acc, topicId } = essayModal;
+  if (!confirm('Delete this essay topic?')) return;
+  const s = getState(acc);
+  s.topics = s.topics.filter(t=>t.id!==topicId);
+  persist(acc);
+  closeEssayModal();
+  renderSubEssayGrid();
+  toast('Deleted');
+}
+
+async function publishEssayToVideoScripts() {
+  const { account:acc, topicId } = essayModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const btn = document.getElementById('essay-publish-btn');
+  btn.disabled=true; btn.textContent='⏳ Generating video scripts...';
+  try {
+    // Collect all essay content across versions
+    const essayContent = VERSIONS.map(v=>{
+      const fields = ESSAY_VERSION_FIELDS[v];
+      return fields.map(f=>getScript(acc,topicId,v,'essay',f.key)).filter(Boolean).join(' ');
+    }).filter(Boolean).join('\n');
+    // Add as video topic if not already there
+    const s = getState(acc);
+    let videoTopic = s.topics.find(x=>x.title===t.title&&x.type==='regular');
+    if (!videoTopic) {
+      videoTopic = { id:nextId(s.topics), pillar:t.pillar, type:'regular', title:t.title, sub:t.sub||'' };
+      s.topics.push(videoTopic);
+      persist(acc);
+    }
+    // Generate all 4 video versions
+    for (const v of VERSIONS) {
+      const raw = await generateScripts(acc, videoTopic, v, 'video',
+        { _essayContext: essayContent.slice(0,500) }, null);
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,videoTopic.id,v,'video',key,val));
+    }
+    setStatus(acc, videoTopic.id, 'generate');
+    persist(acc);
+    closeEssayModal();
+    _subContentTab = 'video';
+    renderSubContent(document.getElementById('sub-content'));
+    toast('✅ Video scripts generated! Check the Video tab.');
+  } catch(e) { toast('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='📹 Publish → Video Scripts';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2546,68 +2724,215 @@ async function doneEssay() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SUBSTACK INSPIRATION
-// ═══════════════════════════════════════════════════════════════════════════
-function renderSubInspo(el) {
-  el.innerHTML = `<div class="section-title">💡 Inspiration</div>
-    <div class="section-desc">Quotes and ideas to fuel your writing.</div>
-    <div class="quote-grid">
-      ${SUBSTACK_QUOTES.map(q=>`
-        <div class="quote-card">
-          <div class="quote-text">${esc(q.text)}</div>
-          <div class="quote-author">— ${esc(q.author)}</div>
-        </div>`).join('')}
-    </div>`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // SUBSTACK SUBJECTS
 // ═══════════════════════════════════════════════════════════════════════════
 function renderSubjects(el) {
   const s = getState('sub');
-  if (!s.completed) s.completed = {};
-  if (!s.customResources) s.customResources = {};
-  const TYPE_ICONS = { book:'📖', course:'🎓', podcast:'🎙️', substack:'📝' };
-
-  function getSubjectItems(subj) {
-    let all = [];
-    subj.phases.forEach((p, pi) => {
-      p.items.forEach(item => all.push({...item, phaseIdx:pi}));
-      const custom = s.customResources[subj.id+'_'+pi] || [];
-      custom.forEach(item => all.push({...item, phaseIdx:pi, custom:true}));
-    });
-    return all;
-  }
-  function getSubjectStats(subj) {
-    const items = getSubjectItems(subj);
-    const done = items.filter(i => {
-      const k = subj.id+'-'+i.title.replace(/\s+/g,'-').substring(0,30);
-      return s.completed[k];
-    }).length;
-    return { total:items.length, done, pct:items.length ? Math.round(done/items.length*100) : 0 };
-  }
-
-  function buildGrid() {
-    return SUBJECTS.map(subj => {
-      const st = getSubjectStats(subj);
-      return `<div class="video-card" style="cursor:pointer;border-left:3px solid ${subj.color}" onclick="openSyllabusSubject('${subj.id}')">
-        <div style="font-size:24px;margin-bottom:6px">${subj.icon}</div>
-        <div class="card-title">${esc(subj.title)}</div>
-        <div class="card-dates" style="margin-top:8px">
-          <span>📚 ${st.total}</span><span>✅ ${st.done}</span><span>${st.pct}%</span>
-        </div>
-        <div class="pillar-progress" style="margin-top:8px">
-          <div class="pillar-progress-bar" style="width:${st.pct}%;background:${subj.color}"></div>
-        </div>
-      </div>`;
-    }).join('');
-  }
+  if (!s.customSubjects) s.customSubjects = [];
+  const allSubjects = [...SUBJECTS, ...s.customSubjects];
 
   el.innerHTML = `
-    <div class="section-title">📚 Learning Syllabus</div>
-    <div class="section-desc">11 subjects feeding your Substack essays and video scripts. Click any subject to see resources and check off what you've completed.</div>
-    <div class="video-grid" id="subject-grid">${buildGrid()}</div>
-    <div id="subject-detail" style="display:none"></div>`;
+    <div class="section-title" style="color:var(--sub-color)">📚 Learning Syllabus</div>
+    <div class="section-desc">11 subjects feeding your essays and scripts. Click any subject to see resources.</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+      <button class="btn-primary" style="background:var(--sub-color)" onclick="openAddSubjectModal()">＋ Add Subject</button>
+    </div>
+    <div class="video-grid" id="subjects-grid">
+      ${allSubjects.map(s=>{
+        const items = getSubjectItems(s);
+        const done = items.filter(i=>{const k=s.id+'-'+i.title.replace(/\s+/g,'-').substring(0,30);const st=getState('sub');return st.completed&&st.completed[k]}).length;
+        const pct = items.length?Math.round(done/items.length*100):0;
+        const isCustom = !!s._custom;
+        return `<div class="video-card" style="cursor:pointer;border-left:3px solid ${s.color}" onclick="openSubjectDetail('${s.id}')">
+          <div style="font-size:22px;margin-bottom:4px">${s.icon}</div>
+          <div class="card-title">${s.title}</div>
+          <div style="display:flex;gap:10px;font-size:10px;color:var(--muted);margin-top:6px">
+            <span>📚 ${items.length}</span><span>✅ ${done}</span><span>${pct}%</span>
+          </div>
+          <div style="height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${s.color};border-radius:2px"></div>
+          </div>
+          ${isCustom?`<button style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="event.stopPropagation();deleteCustomSubject('${s.id}')">×</button>`:''}
+        </div>`;
+      }).join('')}
+    </div>
+    <!-- Add Subject Modal (inline) -->
+    <div id="add-subject-inline" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:16px">
+      <div style="font-size:13px;font-weight:800;margin-bottom:12px">Add New Subject</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="script-section"><div class="script-label">Subject Name</div><input type="text" class="pm-input" id="new-subj-title" placeholder="e.g. Photography"></div>
+        <div class="script-section"><div class="script-label">Icon (emoji)</div><input type="text" class="pm-input" id="new-subj-icon" placeholder="📷" maxlength="2"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-primary" onclick="saveNewSubject()">Add Subject</button>
+        <button class="btn-secondary" onclick="document.getElementById('add-subject-inline').style.display='none'">Cancel</button>
+      </div>
+    </div>`;
+}
+
+function openAddSubjectModal() {
+  document.getElementById('add-subject-inline').style.display='block';
+  document.getElementById('new-subj-title').value='';
+  document.getElementById('new-subj-icon').value='';
+}
+
+function saveNewSubject() {
+  const title = document.getElementById('new-subj-title').value.trim();
+  const icon  = document.getElementById('new-subj-icon').value.trim()||'📖';
+  if (!title) { toast('Subject name required'); return; }
+  const s = getState('sub');
+  if (!s.customSubjects) s.customSubjects=[];
+  const colors = ['#1DB994','#e05252','#e0a030','#5b8dee','#9b59b6'];
+  const newSubj = {
+    id:'cs_'+Date.now(), icon, title,
+    color:colors[s.customSubjects.length%colors.length],
+    phases:[{title:'Resources',items:[]}], _custom:true
+  };
+  s.customSubjects.push(newSubj);
+  persist('sub');
+  const el = document.getElementById('sub-subjects');
+  if (el) { delete el.dataset.rendered; renderSubjects(el); }
+  toast('Subject added!');
+}
+
+function deleteCustomSubject(id) {
+  if (!confirm('Delete this subject?')) return;
+  const s = getState('sub');
+  s.customSubjects = (s.customSubjects||[]).filter(x=>x.id!==id);
+  persist('sub');
+  const el = document.getElementById('sub-subjects');
+  if (el) { delete el.dataset.rendered; renderSubjects(el); }
+  toast('Subject deleted');
+}
+
+function openSubjectDetail(id) {
+  const s = getState('sub');
+  const allSubjects = [...SUBJECTS, ...(s.customSubjects||[])];
+  const subj = allSubjects.find(x=>x.id===id);
+  if (!subj) return;
+  // Store current subject for add resource modal
+  window._currentSubjectId = id;
+  const TYPE_ICONS = {book:'📖',course:'🎓',podcast:'🎙️',substack:'📝'};
+  const st = getState('sub');
+  let html = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn-secondary" onclick="refreshTab('sub','subjects')">← Back</button>
+    <div style="font-size:18px;font-weight:800">${subj.icon} ${subj.title}</div>
+    <button class="btn-primary" style="margin-left:auto;background:var(--sub-color);font-size:11px;padding:6px 14px" onclick="openAddResourceModal('${id}')">＋ Add Resource</button>
+  </div>`;
+
+  subj.phases.forEach((phase, pi) => {
+    html += `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;padding:16px 18px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <div style="width:24px;height:24px;border-radius:50%;background:${subj.color};color:#000;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">${pi+1}</div>
+        ${esc(phase.title)}
+      </div>`;
+    const allItems = [...phase.items];
+    const customKey = subj.id+'_'+pi;
+    const custom = (st.customResources||{})[customKey]||[];
+    allItems.push(...custom);
+    allItems.forEach((item, ii) => {
+      const key = subj.id+'-'+item.title.replace(/\s+/g,'-').substring(0,30);
+      const isDone = st.completed&&st.completed[key];
+      const isCustom = ii >= phase.items.length;
+      html += `<div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;align-items:flex-start">
+        <div style="width:18px;height:18px;border:2px solid ${isDone?subj.color:'var(--border2)'};border-radius:4px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;background:${isDone?subj.color:'transparent'}"
+          onclick="toggleSubjectItem('${subj.id}','${key}')">${isDone?'<span style="color:#000;font-size:11px;font-weight:800">✓</span>':''}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${TYPE_ICONS[item.type]||''} ${esc(item.title)}</div>
+          <div style="font-size:11px;color:var(--muted2)">${esc(item.author)}</div>
+          ${item.why?`<div style="font-size:11px;color:var(--muted);margin-top:4px;border-left:2px solid var(--border);padding-left:8px;font-style:italic">${esc(item.why)}</div>`:''}
+        </div>
+        ${isCustom?`<button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="deleteSubjectResource('${subj.id}',${pi},${ii-phase.items.length})">×</button>`:''}
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  // Add resource inline form
+  html += `<div id="add-resource-inline" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:8px">
+    <div style="font-size:13px;font-weight:800;margin-bottom:12px">Add Resource</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="script-section"><div class="script-label">Phase</div>
+        <select class="pm-select" id="ar-phase-sel">
+          ${subj.phases.map((p,i)=>`<option value="${i}">${p.title}</option>`).join('')}
+        </select>
+      </div>
+      <div class="script-section"><div class="script-label">Type</div>
+        <select class="pm-select" id="ar-type-sel">
+          <option value="book">📖 Book</option><option value="course">🎓 Course</option>
+          <option value="podcast">🎙️ Podcast</option><option value="substack">📝 Substack</option>
+        </select>
+      </div>
+    </div>
+    <div class="script-section"><div class="script-label">Title</div><input type="text" class="pm-input" id="ar-title-inp" placeholder="Resource title..."></div>
+    <div class="script-section"><div class="script-label">Author</div><input type="text" class="pm-input" id="ar-author-inp" placeholder="Author name..."></div>
+    <div class="script-section"><div class="script-label">Why (optional)</div><input type="text" class="pm-input" id="ar-why-inp" placeholder="Why this resource matters..."></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn-primary" onclick="saveSubjectResource('${id}')">Add Resource</button>
+      <button class="btn-secondary" onclick="document.getElementById('add-resource-inline').style.display='none'">Cancel</button>
+    </div>
+  </div>`;
+
+  // Render into the subjects tab
+  const subjectsEl = document.getElementById('sub-subjects');
+  if (subjectsEl) { subjectsEl.innerHTML = html; }
+}
+
+function openAddResourceModal(subjId) {
+  document.getElementById('add-resource-inline').style.display='block';
+  document.getElementById('ar-title-inp').value='';
+  document.getElementById('ar-author-inp').value='';
+  document.getElementById('ar-why-inp').value='';
+}
+
+function saveSubjectResource(subjId) {
+  const title = document.getElementById('ar-title-inp').value.trim();
+  if (!title) { toast('Title required'); return; }
+  const pi = parseInt(document.getElementById('ar-phase-sel').value);
+  const key = subjId+'_'+pi;
+  const s = getState('sub');
+  if (!s.customResources) s.customResources={};
+  if (!s.customResources[key]) s.customResources[key]=[];
+  s.customResources[key].push({
+    type: document.getElementById('ar-type-sel').value,
+    title,
+    author: document.getElementById('ar-author-inp').value.trim(),
+    why: document.getElementById('ar-why-inp').value.trim()
+  });
+  persist('sub');
+  openSubjectDetail(subjId);
+  toast('Resource added!');
+}
+
+function deleteSubjectResource(subjId, pi, customIdx) {
+  if (!confirm('Delete this resource?')) return;
+  const s = getState('sub');
+  const key = subjId+'_'+pi;
+  if (s.customResources&&s.customResources[key]) {
+    s.customResources[key].splice(customIdx,1);
+    persist('sub');
+  }
+  openSubjectDetail(subjId);
+  toast('Deleted');
+}
+
+function toggleSubjectItem(subjId, key) {
+  const s = getState('sub');
+  if (!s.completed) s.completed={};
+  s.completed[key] = !s.completed[key];
+  persist('sub');
+  openSubjectDetail(subjId);
+}
+
+function getSubjectItems(subj) {
+  const s = getState('sub');
+  let all = [];
+  subj.phases.forEach((p,pi)=>{
+    p.items.forEach(item=>all.push({...item,phaseIdx:pi}));
+    const custom=(s.customResources||{})[subj.id+'_'+pi]||[];
+    custom.forEach(item=>all.push({...item,phaseIdx:pi,custom:true}));
+  });
+  return all;
 }
 
 function openSyllabusSubject(id) {
@@ -3036,16 +3361,36 @@ const SUB_HOOKS = [
 ];
 
 const SUB_SS_STEPS = [
-  {t:'Source Capture',sub:'What triggered this essay?',tip:'<strong>The rule:</strong> Start with a real moment — specific time, place, sensation. Not a theme. A scene.',ph:'The moment, observation, or book insight that sparked this…',field:'source'},
-  {t:'Title',sub:'Draft your working title.',tip:'<strong>Best titles:</strong> Promise a transformation or create a question the reader needs answered. Can edit later.',ph:'Working title…',field:'title'},
-  {t:'Cinematic Opening',sub:'Drop the reader into a scene.',tip:'<strong>Test:</strong> Can the reader picture where you are? What you heard, saw, felt? No preamble.',ph:'It was [time]. I was [place]. [Specific sensory detail]…',field:'opening'},
-  {t:'Expand the Story',sub:'Give context. What happened before and after.',tip:'<strong>Rule:</strong> Show, don\'t summarize. "I cried" is summary. "I sat in the parking lot for 20 minutes" is story.',ph:'The full context of what happened…',field:'story'},
-  {t:'Internal Conflict',sub:'What were you fighting with inside?',tip:'<strong>Name ugly emotions:</strong> guilt, shame, jealousy, fear. This is where readers see themselves.',ph:'What I was actually feeling (not what I wanted to feel)…',field:'conflict'},
-  {t:'The Realization',sub:'The moment something shifted.',tip:'<strong>Not generic:</strong> "I realized I needed to be kinder." Generic. "I realized I was angry at myself, not him." Specific.',ph:'The exact moment or thought that changed something…',field:'realization'},
-  {t:'Connect to Them',sub:'Shift from "me" to "you."',tip:'<strong>Pivot:</strong> "And if you\'re reading this, maybe you know this feeling…" Bridge your story to their life.',ph:'Bridge to reader…',field:'connect'},
-  {t:'Teach',sub:'Authority mode. Structure and examples.',tip:'<strong>State the principle.</strong> Give 2-3 concrete examples. This is where your P2 expertise lives.',ph:'The lesson or framework…',field:'teach'},
-  {t:'Actionable Part',sub:'Steps they can start today.',tip:'<strong>Test:</strong> Could someone DO something different today from this section alone?',ph:'Steps or framework they can use…',field:'action'},
-  {t:'Strong Ending + CTA',sub:'Loop back to opening or drop a truth.',tip:'<strong>Options:</strong> 1) Loop to opening scene. 2) One-line truth. 3) Reflective question. Then soft CTA.',ph:'Closing + CTA…',field:'ending'},
+  {t:'Source Capture', sub:'The phrase, moment, or book insight that sparked it.',
+   tip:'<strong>The rule:</strong> Start with a real moment — specific time, place, sensation. Not a theme. A scene.',
+   ph:'The moment, observation, or book insight that sparked this…', field:'source'},
+  {t:'Title', sub:'Best title: Identity + Curiosity.',
+   tip:'<strong>Formula:</strong> "What [experience] taught me about [insight]" or "[#] things about [topic]". Promise a transformation or create a question the reader needs answered.',
+   ph:'Working title…', field:'title'},
+  {t:'Cinematic Opening', sub:'Start like a movie. Time, place, sensation.',
+   tip:'<strong>Test:</strong> Drop the reader into a moment. Use time, place, sensation. The more specific, the more universal.',
+   ph:'It was [time]. I was [place]. [Specific sensory detail]…', field:'opening'},
+  {t:'Expand the Story', sub:'Add details, thoughts, feelings.',
+   tip:'<strong>Framework:</strong> External scene + Internal monologue + Sensory details.',
+   ph:'The full context of what happened…', field:'story'},
+  {t:'Internal Conflict', sub:'Name the ugly emotions. Say what they can\'t articulate.',
+   tip:'<strong>Name ugly emotions:</strong> guilt, shame, jealousy, fear. This is where readers see themselves.',
+   ph:'What I was actually feeling (not what I wanted to feel)…', field:'conflict'},
+  {t:'The Realization', sub:'What did this teach you?',
+   tip:'<strong>Not generic:</strong> Framework: "I used to think [old]. Then [experience]. Now I understand [new]."',
+   ph:'The exact moment or thought that changed something…', field:'realization'},
+  {t:'Connect to Them', sub:'Shift from "me" to "you."',
+   tip:'<strong>Pivot:</strong> "And if you\'re reading this, maybe you know this feeling…" Bridge your story to their life.',
+   ph:'Bridge to reader…', field:'connect'},
+  {t:'Teach', sub:'Authority mode. Structure and examples.',
+   tip:'<strong>State the principle.</strong> Give 2-3 concrete examples. This is where your P2 expertise lives.',
+   ph:'The lesson or framework…', field:'teach'},
+  {t:'Actionable Part', sub:'Steps they can start today.',
+   tip:'<strong>Test:</strong> Could someone DO something different today from this section alone?',
+   ph:'Steps or framework they can use…', field:'action'},
+  {t:'Strong Ending + CTA', sub:'Loop back to opening or drop a truth.',
+   tip:'<strong>Options:</strong> 1) Loop to opening scene. 2) One-line truth. 3) Reflective question. Then soft CTA.',
+   ph:'Closing + CTA…', field:'ending'},
 ];
 
 // ── SUBSTACK CONTENT TAB ─────────────────────────────────────────────────────
@@ -3083,20 +3428,84 @@ function renderSubStudioPanel() {
 }
 
 function renderSubHooks(el) {
+  const s = getState('sub');
+  if (!s.hooks) s.hooks = JSON.parse(JSON.stringify(SUB_HOOKS.map(h=>({...h}))));
+  const hooks = s.hooks;
   el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:800">Hook Library</div>
+      <button class="btn-primary" style="font-size:11px;padding:6px 14px" onclick="openAddHookModal()">＋ Add Hook</button>
+    </div>
     <div class="sub-hook-grid">
-      ${SUB_HOOKS.map(h=>`
+      ${hooks.map((h,i)=>`
         <div class="sub-hook-card">
-          <div class="sub-hook-type" style="color:${h.color}">${h.type}</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div class="sub-hook-type" style="color:${h.color}">${h.type}</div>
+            <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1"
+              onclick="deleteSubHook(${i})">×</button>
+          </div>
           <div class="sub-hook-template" onclick="navigator.clipboard.writeText(${JSON.stringify(h.template)});toast('Hook copied!')">${esc(h.template)}</div>
-          <div class="sub-hook-example">${esc(h.example)}</div>
-          <textarea class="script-textarea" rows="3" placeholder="Write your script based on this hook…"
-            style="margin-top:10px;font-size:12px"
-            oninput="autoResize(this)"
-            onchange="subSaveHookScript('${h.type}',this.value)"></textarea>
+          <div class="sub-hook-example" style="margin-bottom:10px">${esc(h.example)}</div>
+          <button class="btn-primary" style="width:100%;font-size:11px;padding:7px;background:var(--sub-color)"
+            onclick="useHookForDraft(${i})">✍️ Write essay with this hook</button>
         </div>`).join('')}
+    </div>
+    <!-- Add Hook Modal (inline) -->
+    <div id="add-hook-inline" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:16px">
+      <div style="font-size:12px;font-weight:800;margin-bottom:12px">Add New Hook</div>
+      <div class="script-section"><div class="script-label">Type / Name</div><input type="text" class="pm-input" id="new-hook-type" placeholder="e.g. Contrarian, Question, Number..."></div>
+      <div class="script-section"><div class="script-label">Template</div><input type="text" class="pm-input" id="new-hook-template" placeholder='"Everyone says [X]. But here\'s the truth…"'></div>
+      <div class="script-section"><div class="script-label">Example</div><input type="text" class="pm-input" id="new-hook-example" placeholder="A specific example for this hook..."></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-primary" onclick="saveNewHook()">Add Hook</button>
+        <button class="btn-secondary" onclick="document.getElementById('add-hook-inline').style.display='none'">Cancel</button>
+      </div>
     </div>`;
-  el.querySelectorAll('textarea').forEach(autoResize);
+}
+
+function openAddHookModal() {
+  document.getElementById('add-hook-inline').style.display = 'block';
+  document.getElementById('new-hook-type').value='';
+  document.getElementById('new-hook-template').value='';
+  document.getElementById('new-hook-example').value='';
+}
+
+function saveNewHook() {
+  const type     = document.getElementById('new-hook-type').value.trim();
+  const template = document.getElementById('new-hook-template').value.trim();
+  const example  = document.getElementById('new-hook-example').value.trim();
+  if (!type||!template) { toast('Type and template are required'); return; }
+  const s = getState('sub');
+  if (!s.hooks) s.hooks = JSON.parse(JSON.stringify(SUB_HOOKS.map(h=>({...h}))));
+  s.hooks.push({ type, template, example, color:'var(--sub-color)' });
+  persist('sub');
+  subStudioGo('hooks', null);
+  renderSubStudioPanel();
+  toast('Hook added!');
+}
+
+function deleteSubHook(i) {
+  if (!confirm('Delete this hook?')) return;
+  const s = getState('sub');
+  if (!s.hooks) return;
+  s.hooks.splice(i,1);
+  persist('sub');
+  renderSubStudioPanel();
+  toast('Hook deleted');
+}
+
+function useHookForDraft(i) {
+  const s = getState('sub');
+  const hooks = s.hooks || SUB_HOOKS;
+  const hook = hooks[i];
+  if (!hook) return;
+  // Pre-populate step 0 (source capture) with the hook template
+  _subDraft['source'] = hook.template;
+  saveSubDraft();
+  _subDraftStep = 0;
+  subStudioGo('draft', null);
+  renderSubStudioPanel();
+  toast('Hook loaded into draft!');
 }
 
 function subSaveHookScript(type, val) {
@@ -3110,12 +3519,15 @@ function renderSubDraftFramework(el) {
   let tracker = '<div class="sub-step-track">';
   SUB_SS_STEPS.forEach((step, i) => {
     if (i > 0) tracker += `<div class="sub-sconn${i <= _subDraftStep?' done':''}"></div>`;
-    tracker += `<div class="sub-sdot ${i===_subDraftStep?'on':i<_subDraftStep?'done':''}" onclick="subSaveStepField();_subDraftStep=${i};renderSubStudioPanel()" title="${step.t}">${i}</div>`;
+    tracker += `<div class="sub-sdot ${i===_subDraftStep?'on':i<_subDraftStep?'done':''}"
+      onclick="subSaveStepField();_subDraftStep=${i};renderSubStudioPanel()" title="${step.t}">${i}</div>`;
   });
   tracker += '</div>';
   const step = SUB_SS_STEPS[_subDraftStep];
   const s = getState('sub');
   const drafts = s.drafts || [];
+  const wordCount = Object.values(_subDraft).join(' ').split(/\s+/).filter(w=>w).length;
+
   el.innerHTML = `
     <div class="sub-split">
       <div>
@@ -3123,14 +3535,15 @@ function renderSubDraftFramework(el) {
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <div style="width:28px;height:28px;border-radius:50%;background:var(--sub-color);color:#000;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${_subDraftStep}</div>
           <div style="font-size:15px;font-weight:700">${step.t}</div>
+          <div style="font-size:10px;color:var(--muted);margin-left:auto">${wordCount} words</div>
         </div>
         <div style="font-size:12px;color:var(--muted2);margin-bottom:8px">${step.sub}</div>
         <div class="sub-ds-tip">${step.tip}</div>
         <textarea class="script-textarea" id="sub-ss-field" rows="5" placeholder="${step.ph}"
-          oninput="autoResize(this)"
+          oninput="autoResize(this);subSaveStepField()"
           style="font-size:13px;line-height:1.6"
         >${esc(_subDraft[step.field]||'')}</textarea>
-        <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap">
           ${_subDraftStep>0?`<button class="btn-secondary" onclick="subSaveStepField();_subDraftStep--;renderSubStudioPanel()">← Back</button>`:''}
           ${_subDraftStep<9?`<button class="btn-primary" onclick="subSaveStepField();_subDraftStep++;renderSubStudioPanel()">Next →</button>`:''}
           ${_subDraftStep===9?`<button class="btn-primary" style="background:var(--sub-color)" onclick="subSaveStepField();subSaveDraftComplete()">✓ Done — Save to Drafts</button>`:''}
@@ -3138,16 +3551,33 @@ function renderSubDraftFramework(el) {
       </div>
       <div class="sub-split-side">
         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--sub-color);margin-bottom:10px">📝 Saved Drafts</div>
-        ${drafts.length ? drafts.slice(0,10).map(d=>`
-          <div class="sub-draft-card" onclick="subViewDraft('${d.id}')">
-            <div class="sub-draft-title">${esc(d.fields?.title||d.fields?.source||'Untitled')}</div>
-            <div class="sub-draft-meta">${new Date(d.created).toLocaleDateString()}</div>
+        ${drafts.length ? drafts.slice(0,10).map((d,i)=>`
+          <div class="sub-draft-card">
+            <div class="sub-draft-title" onclick="subViewDraft('${d.id}')">${esc(d.fields?.title||d.fields?.source||'Untitled')}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="sub-draft-meta">${new Date(d.created).toLocaleDateString()}</div>
+              <div style="display:flex;gap:4px">
+                <button style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted2);cursor:pointer;font-size:10px;padding:2px 7px" onclick="editSubDraft('${d.id}')">✏️ Edit</button>
+                <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="subDeleteDraft('${d.id}')">×</button>
+              </div>
+            </div>
           </div>`).join('')
-          : `<div style="color:var(--muted);font-size:11px">No drafts yet. Complete the framework to save one.</div>`}
+          : `<div style="color:var(--muted);font-size:11px">No drafts yet.</div>`}
       </div>
     </div>`;
   const ta = document.getElementById('sub-ss-field');
-  if (ta) autoResize(ta);
+  if (ta) { autoResize(ta); ta.addEventListener('input', ()=>{ subSaveStepField(); }); }
+}
+
+function editSubDraft(id) {
+  const s = getState('sub');
+  const draft = (s.drafts||[]).find(d=>d.id===id);
+  if (!draft) return;
+  _subDraft = { ...draft.fields };
+  saveSubDraft();
+  _subDraftStep = 0;
+  renderSubStudioPanel();
+  toast('Draft loaded for editing');
 }
 
 function subSaveStepField() {
@@ -3212,18 +3642,51 @@ function subDraftToTopic(id) {
 
 function renderSubEssayPad(el) {
   const saved = localStorage.getItem('hub_sub_essay')||'';
+  const wordCount = saved.split(/\s+/).filter(w=>w).length;
   el.innerHTML = `
     <div style="background:var(--orange-dim);border:1px solid rgba(230,126,34,.2);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:12px;color:var(--muted2);line-height:1.7">
       <strong style="color:var(--sub-color)">Free Essay Writing</strong><br>
-      Write freely here. Your essay auto-saves every few seconds. When done, copy it into the Substack Draft framework to structure it.
+      Write freely here. Your essay auto-saves every few seconds. When done, save to drafts or copy into the framework.
     </div>
     <textarea class="sub-essay-area" id="sub-essay-pad" placeholder="Start writing your essay here… let it flow. Don't edit yet."
-      oninput="clearTimeout(window._subEssaySave);window._subEssaySave=setTimeout(()=>{localStorage.setItem('hub_sub_essay',this.value);document.getElementById('sub-essay-status').textContent='Saved at '+new Date().toLocaleTimeString()},1000)">${esc(saved)}</textarea>
-    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="sub-essay-status">${saved?'Loaded from auto-save':'Start writing…'}</div>
-    <div style="display:flex;gap:8px;margin-top:12px">
+      oninput="clearTimeout(window._subEssaySave);window._subEssaySave=setTimeout(()=>{
+        localStorage.setItem('hub_sub_essay',this.value);
+        const wc=this.value.split(/\\s+/).filter(w=>w).length;
+        document.getElementById('sub-essay-status').textContent='Saved at '+new Date().toLocaleTimeString()+' · '+wc+' words';
+      },1000)">${esc(saved)}</textarea>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px" id="sub-essay-status">${saved?`Auto-saved · ${wordCount} words`:'Start writing…'}</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
       <button class="btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('sub-essay-pad').value);toast('Copied!')">Copy All</button>
+      <button class="btn-primary" style="background:var(--sub-color)" onclick="saveEssayPadToDraft()">💾 Save to Drafts</button>
       <button class="btn-secondary" onclick="if(confirm('Clear the essay pad?')){localStorage.removeItem('hub_sub_essay');renderSubStudioPanel()}">Clear</button>
     </div>`;
+}
+
+function saveEssayPadToDraft() {
+  const text = document.getElementById('sub-essay-pad')?.value.trim();
+  if (!text) { toast('Nothing to save'); return; }
+  const firstLine = text.split('\n')[0].slice(0,80);
+  const s = getState('sub');
+  if (!s.drafts) s.drafts=[];
+  s.drafts.unshift({
+    id:'d'+Date.now(), type:'essay-pad',
+    fields:{ source:'Essay Pad', title:firstLine, opening:text.slice(0,300), teach:text },
+    created:new Date().toISOString()
+  });
+  persist('sub');
+  toast('✅ Saved to Drafts!');
+  subStudioGo('draft', null);
+  renderSubStudioPanel();
+}
+
+function setEssayStatus(status) {
+  const { account:acc, topicId } = essayModal;
+  const current = getStatus(acc, topicId);
+  const newStatus = current===status ? null : status;
+  setStatus(acc, topicId, newStatus);
+  renderEssayModalBody();
+  renderSubEssayGrid();
+  toast(newStatus ? `Marked as ${newStatus}` : 'Status cleared');
 }
 
 async function renderSubAIEssay(el) {
@@ -3281,29 +3744,79 @@ function subSaveAIEssayToDraft() {
 
 // ── SUBSTACK INSPIRATION TAB ─────────────────────────────────────────────────
 function renderSubInspo(el) {
+  const s = getState('sub');
+  if (!s.customInspo) s.customInspo=[];
+  const allInspo = [...SUB_INSPIRATIONS, ...s.customInspo];
+
   el.innerHTML = `
-    <div class="section-title" style="color:var(--sub-color)">💡 Creator Inspiration</div>
-    <div class="section-desc">Study their structure, not their content. Reverse-engineer what works. Then make it yours.</div>
-    ${SUB_INSPIRATIONS.map(i=>`
-      <div class="sub-inspo-card">
-        <div class="sub-inspo-name">${esc(i.name)}</div>
-        <div class="sub-inspo-handle">${esc(i.handle)}</div>
-        <div class="sub-inspo-desc">${esc(i.desc)}</div>
+    <div class="section-title" style="color:var(--sub-color)">🔥 Creator Inspiration</div>
+    <div class="section-desc">Study their structure, not their content. Reverse-engineer what works.</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <button class="btn-primary" style="background:var(--sub-color)" onclick="openAddInspoForm()">＋ Add Person</button>
+    </div>
+    ${allInspo.map((inspo,i)=>{
+      const isCustom = i >= SUB_INSPIRATIONS.length;
+      return `<div class="sub-inspo-card" style="position:relative">
+        ${isCustom?`<button style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="deleteInspo(${i-SUB_INSPIRATIONS.length})">×</button>`:''}
+        <div class="sub-inspo-name">${esc(inspo.name)}</div>
+        <div class="sub-inspo-handle">${esc(inspo.handle||'')}</div>
+        <div class="sub-inspo-desc">${esc(inspo.desc||'')}</div>
         <div class="sub-inspo-grid3">
-          <div class="sub-inspo-cell">
-            <div class="sub-inspo-cell-label" style="color:var(--green)">Learn</div>
-            <div class="sub-inspo-cell-text">${esc(i.learn)}</div>
-          </div>
-          <div class="sub-inspo-cell">
-            <div class="sub-inspo-cell-label" style="color:var(--sub-color)">Your Edge</div>
-            <div class="sub-inspo-cell-text">${esc(i.edge)}</div>
-          </div>
-          <div class="sub-inspo-cell">
-            <div class="sub-inspo-cell-label" style="color:var(--orange)">Action</div>
-            <div class="sub-inspo-cell-text">${esc(i.act)}</div>
-          </div>
+          <div class="sub-inspo-cell"><div class="sub-inspo-cell-label" style="color:var(--green)">Learn</div><div class="sub-inspo-cell-text">${esc(inspo.learn||'')}</div></div>
+          <div class="sub-inspo-cell"><div class="sub-inspo-cell-label" style="color:var(--sub-color)">Your Edge</div><div class="sub-inspo-cell-text">${esc(inspo.edge||inspo.diff||'')}</div></div>
+          <div class="sub-inspo-cell"><div class="sub-inspo-cell-label" style="color:var(--orange)">Action</div><div class="sub-inspo-cell-text">${esc(inspo.act||inspo.action||'')}</div></div>
         </div>
-      </div>`).join('')}`;
+      </div>`;
+    }).join('')}
+    <!-- Add person form -->
+    <div id="add-inspo-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:8px">
+      <div style="font-size:13px;font-weight:800;margin-bottom:14px">Add Inspiration Person</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="script-section"><div class="script-label">Name</div><input type="text" class="pm-input" id="new-inspo-name" placeholder="Creator name"></div>
+        <div class="script-section"><div class="script-label">Handle / Platform</div><input type="text" class="pm-input" id="new-inspo-handle" placeholder="@handle · Substack"></div>
+      </div>
+      <div class="script-section"><div class="script-label">Description</div><input type="text" class="pm-input" id="new-inspo-desc" placeholder="What they create..."></div>
+      <div class="script-section"><div class="script-label">What to Learn</div><input type="text" class="pm-input" id="new-inspo-learn" placeholder="Structure, style, approach..."></div>
+      <div class="script-section"><div class="script-label">Your Edge vs Them</div><input type="text" class="pm-input" id="new-inspo-edge" placeholder="What makes your angle different..."></div>
+      <div class="script-section"><div class="script-label">Action</div><input type="text" class="pm-input" id="new-inspo-act" placeholder="What to implement..."></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-primary" onclick="saveNewInspo()">Add</button>
+        <button class="btn-secondary" onclick="document.getElementById('add-inspo-form').style.display='none'">Cancel</button>
+      </div>
+    </div>`;
+}
+
+function openAddInspoForm() {
+  document.getElementById('add-inspo-form').style.display='block';
+  ['name','handle','desc','learn','edge','act'].forEach(f=>{ document.getElementById(`new-inspo-${f}`).value=''; });
+}
+
+function saveNewInspo() {
+  const name = document.getElementById('new-inspo-name').value.trim();
+  if (!name) { toast('Name required'); return; }
+  const s = getState('sub');
+  if (!s.customInspo) s.customInspo=[];
+  s.customInspo.push({
+    name, handle:document.getElementById('new-inspo-handle').value.trim(),
+    desc:document.getElementById('new-inspo-desc').value.trim(),
+    learn:document.getElementById('new-inspo-learn').value.trim(),
+    edge:document.getElementById('new-inspo-edge').value.trim(),
+    act:document.getElementById('new-inspo-act').value.trim()
+  });
+  persist('sub');
+  const el = document.getElementById('sub-inspiration');
+  if (el) { delete el.dataset.rendered; renderSubInspo(el); }
+  toast('Person added!');
+}
+
+function deleteInspo(i) {
+  if (!confirm('Delete this person?')) return;
+  const s = getState('sub');
+  s.customInspo.splice(i,1);
+  persist('sub');
+  const el = document.getElementById('sub-inspiration');
+  if (el) { delete el.dataset.rendered; renderSubInspo(el); }
+  toast('Deleted');
 }
 
 // ── SUBSTACK NOTES TAB ───────────────────────────────────────────────────────
@@ -3451,6 +3964,354 @@ function addSubQuote() {
   document.getElementById('sub-q-auth').value = '';
   renderQuotes(document.getElementById('sub-quotes'));
   toast('Quote added!');
+}
+
+// ─── SABRINA ENGLISH CONTENT TAB ────────────────────────────────────────────
+let _subContentTab = 'video'; // 'video' | 'essays'
+
+function renderSubContent(el) {
+  const pillars = getPillars('sub');
+  const topics  = getTopics('sub');
+  const videoTopics  = topics.filter(t => t.type === 'regular' || t.type === 'serie');
+  const essayTopics  = topics.filter(t => t.type === 'essay');
+
+  el.innerHTML = `
+    <div class="section-title" style="color:var(--sub-color)">✍️ Sabrina English — Content</div>
+    <div class="section-desc">Video scripts and essay drafts, organized by pillar.</div>
+    <!-- Sub-tabs -->
+    <div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px">
+      <button class="inner-tab sub ${_subContentTab==='video'?'active':''}"
+        onclick="_subContentTab='video';renderSubContent(document.getElementById('sub-content'))">📹 Video Content</button>
+      <button class="inner-tab sub ${_subContentTab==='essays'?'active':''}"
+        onclick="_subContentTab='essays';renderSubContent(document.getElementById('sub-content'))">✍️ Essays</button>
+    </div>
+    <div id="sub-content-inner"></div>`;
+
+  if (_subContentTab === 'video') renderSubVideoContent();
+  else renderSubEssayContent();
+}
+
+function renderSubVideoContent() {
+  const acc = 'sub';
+  const pillars = getPillars(acc);
+  const topics  = getTopics(acc).filter(t => t.type === 'regular' || t.type === 'serie');
+  const regular = topics.filter(t => t.type !== 'serie');
+  const series  = topics.filter(t => t.type === 'serie');
+  const el = document.getElementById('sub-content-inner');
+  if (!el) return;
+
+  const pillarGrid = pillars.map((p,i) => {
+    const count = regular.filter(t=>t.pillar===p.id).length;
+    const done  = regular.filter(t=>t.pillar===p.id&&getStatus(acc,t.id)==='finished').length;
+    const pct   = count ? Math.round(done/count*100) : 0;
+    return `<div class="pillar-card pc-${p.id}" onclick="setSubVideoFilter('${p.id}')">
+      <div class="pillar-num">${i+1}</div>
+      <div class="pillar-name" style="color:${p.color}">${p.name}</div>
+      <div class="pillar-count">${count} topics · ${done} done</div>
+      <div class="pillar-progress"><div class="pillar-progress-bar" style="width:${pct}%;background:${p.color}"></div></div>
+      <button class="pillar-add-btn" onclick="event.stopPropagation();openAddModal('sub','${p.id}')">＋</button>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="pillar-header" style="grid-template-columns:repeat(${pillars.length},1fr)">${pillarGrid}</div>
+    <div class="filters" id="filters-sub-video">
+      <button class="filter-btn active" onclick="setSubVideoFilter('all',this)">All</button>
+      ${pillars.map(p=>`<button class="filter-btn" onclick="setSubVideoFilter('${p.id}',this)">${p.name.split(' ')[0]}</button>`).join('')}
+      <div class="filter-sep"></div>
+      <button class="filter-btn" onclick="setSubVideoFilter('generate',this)">✨ Generate</button>
+      <button class="filter-btn" onclick="setSubVideoFilter('reviewed',this)">👁 Reviewed</button>
+      <button class="filter-btn" onclick="setSubVideoFilter('finished',this)">✅ Finished</button>
+      <div class="filter-sep"></div>
+      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-sub-video" placeholder="Search..." oninput="renderSubVideoGrid()"></div>
+    </div>
+    <div class="stats-bar" id="stats-sub-video"></div>
+    <div class="video-grid" id="grid-sub-video"></div>
+    <div id="series-wrap-sub">
+      <div class="series-divider" onclick="toggleSeries('sub')">
+        <div class="series-divider-line"></div>
+        <div class="series-divider-label">🎬 Series <span class="series-chevron" id="series-chev-sub">▼</span></div>
+        <div class="series-divider-line"></div>
+      </div>
+      <div class="series-body" id="series-body-sub">
+        <div class="video-grid" id="series-grid-sub"></div>
+        <button class="add-card-btn" style="margin-top:10px" onclick="openAddModal('sub',null,'serie')">＋ Add Series</button>
+      </div>
+    </div>`;
+
+  renderSubVideoGrid();
+  renderSeriesGrid('sub');
+}
+
+let _subVideoFilter = { pillar:'all', status:null, search:'' };
+
+function setSubVideoFilter(val, btn) {
+  if (['all','generate','reviewed','finished'].includes(val) || val.startsWith('p')) {
+    if (['generate','reviewed','finished'].includes(val)) _subVideoFilter.status = _subVideoFilter.status===val ? null : val;
+    else { _subVideoFilter.pillar = val; _subVideoFilter.status = null; }
+  }
+  const el = document.getElementById('filters-sub-video');
+  if (el && btn) { el.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+  renderSubVideoGrid();
+}
+
+function renderSubVideoGrid() {
+  const grid = document.getElementById('grid-sub-video');
+  if (!grid) return;
+  const acc = 'sub';
+  const search = document.getElementById('search-sub-video')?.value.toLowerCase()||'';
+  const topics = getTopics(acc).filter(t=>t.type!=='serie'&&t.type!=='essay').filter(t=>{
+    if (_subVideoFilter.pillar!=='all'&&t.pillar!==_subVideoFilter.pillar) return false;
+    if (_subVideoFilter.status&&getStatus(acc,t.id)!==_subVideoFilter.status) return false;
+    if (search&&!t.title.toLowerCase().includes(search)&&!t.sub?.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  const stats = document.getElementById('stats-sub-video');
+  if (stats) {
+    const all = getTopics(acc).filter(t=>t.type!=='serie'&&t.type!=='essay');
+    stats.innerHTML = `<div class="stat-item"><strong>${all.length}</strong>topics</div>
+      <div class="stat-item"><strong>${all.filter(t=>getStatus(acc,t.id)==='finished').length}</strong>finished</div>`;
+  }
+  grid.innerHTML = topics.map(t=>buildCard(acc,t)).join('') +
+    `<button class="add-card-btn" onclick="openAddModal('sub','p1')">＋ Add Video Topic</button>`;
+}
+
+function renderSubEssayContent() {
+  const acc = 'sub';
+  const pillars = getPillars(acc);
+  const topics  = getTopics(acc).filter(t=>t.type==='essay');
+  const el = document.getElementById('sub-content-inner');
+  if (!el) return;
+
+  const pillarGrid = pillars.map((p,i) => {
+    const count = topics.filter(t=>t.pillar===p.id).length;
+    const done  = topics.filter(t=>t.pillar===p.id&&getStatus(acc,t.id)==='finished').length;
+    const pct   = count ? Math.round(done/count*100) : 0;
+    return `<div class="pillar-card pc-${p.id}" onclick="setSubEssayFilter('${p.id}')">
+      <div class="pillar-num">${i+1}</div>
+      <div class="pillar-name" style="color:${p.color}">${p.name}</div>
+      <div class="pillar-count">${count} essays · ${done} done</div>
+      <div class="pillar-progress"><div class="pillar-progress-bar" style="width:${pct}%;background:${p.color}"></div></div>
+      <button class="pillar-add-btn" onclick="event.stopPropagation();openAddModal('sub','${p.id}','essay')">＋</button>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="pillar-header" style="grid-template-columns:repeat(${pillars.length},1fr)">${pillarGrid}</div>
+    <div class="filters" id="filters-sub-essay">
+      <button class="filter-btn active" onclick="setSubEssayFilter('all',this)">All</button>
+      ${pillars.map(p=>`<button class="filter-btn" onclick="setSubEssayFilter('${p.id}',this)">${p.name.split(' ')[0]}</button>`).join('')}
+      <div class="filter-sep"></div>
+      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-sub-essay" placeholder="Search..." oninput="renderSubEssayGrid()"></div>
+    </div>
+    <div class="video-grid" id="grid-sub-essay"></div>`;
+
+  renderSubEssayGrid();
+}
+
+let _subEssayFilter = { pillar:'all' };
+
+function setSubEssayFilter(val, btn) {
+  _subEssayFilter.pillar = val;
+  const el = document.getElementById('filters-sub-essay');
+  if (el && btn) { el.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+  renderSubEssayGrid();
+}
+
+function renderSubEssayGrid() {
+  const grid = document.getElementById('grid-sub-essay');
+  if (!grid) return;
+  const acc = 'sub';
+  const search = document.getElementById('search-sub-essay')?.value.toLowerCase()||'';
+  const topics = getTopics(acc).filter(t=>t.type==='essay').filter(t=>{
+    if (_subEssayFilter.pillar!=='all'&&t.pillar!==_subEssayFilter.pillar) return false;
+    if (search&&!t.title.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  grid.innerHTML = topics.map(t => {
+    const status = getStatus(acc,t.id);
+    const statusCls = status?`status-${status}`:'';
+    const pillar = getPillars(acc).find(p=>p.id===t.pillar);
+    return `<div class="video-card ${statusCls}" onclick="openEssayModal('${acc}',${t.id})">
+      <div class="card-top">
+        <div class="card-num">${t.id}</div>
+        <div class="card-badges">
+          <span class="badge" style="background:${pillar?.color||'#444'}20;color:${pillar?.color||'#999'}">${t.pillar.toUpperCase()}</span>
+          <span class="badge badge-fmt">Essay</span>
+        </div>
+      </div>
+      <div class="card-title">${esc(t.title)}</div>
+      <div class="card-sub">${esc(t.sub||'')}</div>
+    </div>`;
+  }).join('') + `<button class="add-card-btn" onclick="openAddModal('sub','p1','essay')">＋ Add Essay Topic</button>`;
+}
+
+// ─── SUBSTACK IDEAS TAB ──────────────────────────────────────────────────────
+function renderSubIdeas(el) {
+  const s = getState('sub');
+  if (!s.ideas) s.ideas = [];
+  const ideas = s.ideas;
+  const allSubjects = [...SUBJECTS, ...(s.customSubjects||[])];
+  const inspos = SUB_INSPIRATIONS;
+
+  el.innerHTML = `
+    <div class="section-title" style="color:var(--sub-color)">💡 Essay Ideas</div>
+    <div class="section-desc">Your idea bank. Generate from subjects, inspiration people, or trending topics. Add and delete freely.</div>
+
+    <!-- AI Generator -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+      <div style="font-size:12px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px">✨ Generate Ideas From</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;cursor:pointer;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px">
+          <input type="checkbox" id="gen-from-subjects" checked> 📚 Studied subjects
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;cursor:pointer;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px">
+          <input type="checkbox" id="gen-from-inspo" checked> 🔥 Inspiration people
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;cursor:pointer;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px">
+          <input type="checkbox" id="gen-from-trending"> 📈 Trending topics
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;cursor:pointer;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px">
+          <input type="checkbox" id="gen-from-unstudied"> 🌱 Unstudied subjects
+        </label>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div class="pm-row" style="flex:1;min-width:200px;margin:0">
+          <input type="number" class="pm-input" id="gen-ideas-count" value="5" min="1" max="20" style="width:80px"> ideas
+        </div>
+        <button class="ai-btn" id="gen-ideas-btn" onclick="generateSubIdeas()" style="flex:none;width:auto;padding:10px 20px">✨ Generate Ideas</button>
+      </div>
+      <div class="ai-output" id="gen-ideas-out" style="margin-top:12px"></div>
+    </div>
+
+    <!-- Add idea manually -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:200px">
+        <div class="script-label">Title</div>
+        <input type="text" class="pm-input" id="new-idea-title" placeholder="Essay idea title...">
+      </div>
+      <div style="width:120px">
+        <div class="script-label">Pillar</div>
+        <select class="pm-select" id="new-idea-pillar">
+          ${getPillars('sub').map(p=>`<option value="${p.id}">${p.id.toUpperCase()} — ${p.name.split(' ').slice(0,3).join(' ')}</option>`).join('')}
+        </select>
+      </div>
+      <button class="btn-primary" onclick="addSubIdea()">Add Idea</button>
+    </div>
+
+    <!-- Ideas list -->
+    <div id="ideas-list">
+      ${ideas.length ? ideas.slice().reverse().map((idea, ri) => {
+        const i = ideas.length - 1 - ri;
+        const pillar = getPillars('sub').find(p=>p.id===idea.pillar);
+        return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:8px;position:relative">
+          <button style="position:absolute;top:10px;right:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="deleteSubIdea(${i})">×</button>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="padding:2px 8px;border-radius:10px;font-size:9px;font-weight:800;background:${pillar?.color||'#444'}20;color:${pillar?.color||'#999'};flex-shrink:0;margin-top:2px">${idea.pillar?.toUpperCase()}</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700;margin-bottom:3px;padding-right:24px">${esc(idea.title)}</div>
+              ${idea.angle?`<div style="font-size:11px;color:var(--muted);font-style:italic">${esc(idea.angle)}</div>`:''}
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px">
+            <button class="action-btn" style="padding:5px 12px;font-size:10px;border-color:var(--sub-color);color:var(--sub-color)"
+              onclick="writeEssayFromIdea(${i})">✍️ Write Essay</button>
+          </div>
+        </div>`;
+      }).join('')
+      : `<div style="text-align:center;padding:40px;color:var(--muted)">No ideas yet. Generate some above or add one manually.</div>`}
+    </div>`;
+}
+
+async function generateSubIdeas() {
+  const btn = document.getElementById('gen-ideas-btn');
+  const out = document.getElementById('gen-ideas-out');
+  const count = parseInt(document.getElementById('gen-ideas-count').value)||5;
+  const fromSubjects  = document.getElementById('gen-from-subjects')?.checked;
+  const fromInspo     = document.getElementById('gen-from-inspo')?.checked;
+  const fromTrending  = document.getElementById('gen-from-trending')?.checked;
+  const fromUnstudied = document.getElementById('gen-from-unstudied')?.checked;
+
+  btn.disabled=true; btn.textContent='⏳ Generating...';
+  out.classList.add('visible'); out.textContent='';
+
+  const s = getState('sub');
+  const allSubjects = [...SUBJECTS, ...(s.customSubjects||[])];
+  const studiedSubjects = allSubjects.filter(subj=>{
+    const items = getSubjectItems(subj);
+    return items.some(i=>{ const k=subj.id+'-'+i.title.replace(/\s+/g,'-').substring(0,30); return s.completed&&s.completed[k]; });
+  }).map(s=>s.title);
+  const unstudiedSubjects = allSubjects.filter(s=>!studiedSubjects.includes(s.title)).map(s=>s.title);
+
+  let context = `You are generating Substack essay ideas for Sabrina McGehee — Brazilian woman married to American, raising bilingual twins, living between Brazil and the US. Her two pillars: P1 "Life Between Two Countries" and P2 "Learning in Public". Her voice: personal, warm, bilingual, honest.\n\n`;
+  if (fromSubjects && studiedSubjects.length) context += `Studied subjects to draw from: ${studiedSubjects.join(', ')}.\n`;
+  if (fromInspo) context += `Inspiration creators she follows: ${SUB_INSPIRATIONS.map(i=>i.name).join(', ')}.\n`;
+  if (fromTrending) context += `Consider trending topics: bilingual parenting, immigrant life, learning in public, personal finance for immigrants, French learning journeys.\n`;
+  if (fromUnstudied && unstudiedSubjects.length) context += `Unexplored subjects she could write about: ${unstudiedSubjects.slice(0,6).join(', ')}.\n`;
+
+  try {
+    const raw = await callAI(context,
+      `Generate exactly ${count} unique, specific Substack essay ideas for Sabrina. Each must be concrete — not generic. Mix P1 and P2 pillars.
+
+Return ONLY a JSON array:
+[
+  {"title":"Essay title","pillar":"p1 or p2","angle":"The specific angle or hook for this essay"}
+]`
+    );
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    const st = getState('sub');
+    if (!st.ideas) st.ideas=[];
+    parsed.forEach(idea=>st.ideas.push({...idea,id:'i'+Date.now()+Math.random()}));
+    persist('sub');
+    out.classList.remove('visible');
+    const el = document.getElementById('sub-ideas');
+    if (el) { delete el.dataset.rendered; renderSubIdeas(el); }
+    toast(`✨ ${parsed.length} ideas generated!`);
+  } catch(e) { out.textContent='Error: '+e.message; }
+  btn.disabled=false; btn.textContent='✨ Generate Ideas';
+}
+
+function addSubIdea() {
+  const title = document.getElementById('new-idea-title')?.value.trim();
+  if (!title) { toast('Please enter a title'); return; }
+  const pillar = document.getElementById('new-idea-pillar')?.value||'p1';
+  const s = getState('sub');
+  if (!s.ideas) s.ideas=[];
+  s.ideas.push({ id:'i'+Date.now(), title, pillar, angle:'' });
+  persist('sub');
+  document.getElementById('new-idea-title').value='';
+  const el = document.getElementById('sub-ideas');
+  if (el) { delete el.dataset.rendered; renderSubIdeas(el); }
+  toast('Idea added!');
+}
+
+function deleteSubIdea(i) {
+  if (!confirm('Delete this idea?')) return;
+  const s = getState('sub');
+  s.ideas.splice(i,1);
+  persist('sub');
+  const el = document.getElementById('sub-ideas');
+  if (el) { delete el.dataset.rendered; renderSubIdeas(el); }
+  toast('Deleted');
+}
+
+function writeEssayFromIdea(i) {
+  const s = getState('sub');
+  const idea = s.ideas[i];
+  if (!idea) return;
+  // Pre-populate the draft with the idea title and angle
+  _subDraft['source'] = idea.angle || idea.title;
+  _subDraft['title']  = idea.title;
+  saveSubDraft();
+  _subDraftStep = 0;
+  // Switch to Studio → Draft
+  switchInnerTab('sub','studio',null);
+  setTimeout(()=>{
+    subStudioGo('draft', null);
+    renderSubStudioPanel();
+    toast('Idea loaded into draft!');
+  }, 100);
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{

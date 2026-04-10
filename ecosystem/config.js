@@ -40,7 +40,7 @@ const ACCOUNTS = {
   fc:  { id:'fc',  label:'Fluency Connect', emoji:'🌱', color:'#1DB994', storage:'hub_fc_v1'  },
   sab: { id:'sab', label:'Sabrina',         emoji:'💜', color:'#9b59b6', storage:'hub_sab_v1' },
   mic: { id:'mic', label:'Michael',         emoji:'🎬', color:'#3498db', storage:'hub_mic_v1' },
-  sub: { id:'sub', label:'Substack',        emoji:'✍️', color:'#e67e22', storage:'hub_sub_v1' },
+  sub: { id:'sub', label:'Sabrina English',        emoji:'✍️', color:'#e67e22', storage:'hub_sub_v1' },
 };
 
 // ── PROXY & API ───────────────────────────────────────────────────────────────
