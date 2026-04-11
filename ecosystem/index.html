@@ -3650,11 +3650,70 @@ function editSubDraft(id) {
   const s = getState('sub');
   const draft = (s.drafts||[]).find(d=>d.id===id);
   if (!draft) return;
+  // Build concatenated essay text from all step fields
+  const fields = draft.fields || {};
+  const fullText = SUB_SS_STEPS.map(step =>
+    fields[step.field] ? `— ${step.t} —\n${fields[step.field]}` : ''
+  ).filter(Boolean).join('\n\n');
+
+  // Open edit modal
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay open';
+  modal.id = 'draft-edit-modal';
+  modal.innerHTML = `
+    <div class="modal-box" style="max-width:780px">
+      <div class="modal-header">
+        <div class="modal-title">${esc(fields.title||'Untitled Draft')}</div>
+        <div class="modal-sub">${new Date(draft.created).toLocaleDateString()} · <span id="draft-edit-wc">0</span> words</div>
+        <button class="modal-close" onclick="document.getElementById('draft-edit-modal').remove()">✕</button>
+      </div>
+      <div class="modal-body" style="padding:20px 22px;max-height:70vh">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Edit your full essay below. Changes save back to the draft when you click Save.</div>
+        <textarea id="draft-edit-area" style="width:100%;min-height:420px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:18px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);line-height:1.8;resize:vertical;outline:none;"
+          oninput="const wc=this.value.split(/\\s+/).filter(w=>w).length;document.getElementById('draft-edit-wc').textContent=wc"
+        >${esc(fullText)}</textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="saveDraftEditModal('${id}')">💾 Save Changes</button>
+        <button class="btn-secondary" onclick="loadDraftIntoFramework('${id}')">📋 Load into Framework</button>
+        <button class="btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('draft-edit-area').value);toast('Copied!')">Copy All</button>
+        <button class="btn-secondary" onclick="document.getElementById('draft-edit-modal').remove()">Cancel</button>
+      </div>
+    </div>`;
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
+  // Update word count on open
+  const wc = fullText.split(/\s+/).filter(w=>w).length;
+  document.getElementById('draft-edit-wc').textContent = wc;
+}
+
+function saveDraftEditModal(id) {
+  const text = document.getElementById('draft-edit-area')?.value||'';
+  const s = getState('sub');
+  const draft = (s.drafts||[]).find(d=>d.id===id);
+  if (!draft) return;
+  // Save the edited text into the 'teach' field (full essay body) and update title from first line
+  const firstLine = text.split('\n').find(l=>l.trim()&&!l.startsWith('—'))||draft.fields?.title||'';
+  draft.fields = { ...draft.fields, teach: text, _editedFull: text };
+  if (firstLine) draft.fields.title = firstLine.slice(0,80);
+  persist('sub');
+  document.getElementById('draft-edit-modal').remove();
+  const el = document.getElementById('sub-studio');
+  if (el) { delete el.dataset.rendered; renderStudio(el); }
+  toast('✅ Draft saved!');
+}
+
+function loadDraftIntoFramework(id) {
+  document.getElementById('draft-edit-modal').remove();
+  const s = getState('sub');
+  const draft = (s.drafts||[]).find(d=>d.id===id);
+  if (!draft) return;
   _subDraft = { ...draft.fields };
   saveSubDraft();
   _subDraftStep = 0;
+  subStudioGo('draft', null);
   renderSubStudioPanel();
-  toast('Draft loaded for editing');
+  toast('Draft loaded into framework');
 }
 
 function subSaveStepField() {
