@@ -710,8 +710,8 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
       <div class="modal-sub" id="essay-modal-sub">—</div>
       <button class="modal-close" onclick="closeEssayModal()">✕</button>
     </div>
-    <div class="modal-tabs" id="essay-modal-ver-tabs"></div>
-    <div class="modal-body" id="essay-modal-body"></div>
+    <div id="essay-modal-ver-tabs" style="display:none"></div>
+    <div class="modal-body" id="essay-modal-body" style="padding:0;max-height:75vh"></div>
     <div class="modal-actions">
       <button class="action-btn btn-generate" id="essay-btn-generate" onclick="setEssayStatus('generate')">✨ Generate</button>
       <button class="action-btn btn-reviewed" id="essay-btn-reviewed" onclick="setEssayStatus('reviewed')">👁 Reviewed</button>
@@ -1718,10 +1718,10 @@ function saveNewTopic() {
 }
 
 // ─── ESSAY MODAL (Sabrina English) ───────────────────────────────────────────
-let essayModal = { account:'sub', topicId:null, version:'attract' };
+let essayModal = { account:'sub', topicId:null };
 
 function openEssayModal(acc, topicId) {
-  essayModal = { account:acc, topicId, version:'attract' };
+  essayModal = { account:acc, topicId };
   const t = getTopics(acc).find(x=>x.id===topicId);
   document.getElementById('essay-modal-title').textContent = t.title;
   document.getElementById('essay-modal-sub').textContent   = t.sub||'';
@@ -1732,59 +1732,33 @@ function openEssayModal(acc, topicId) {
 function closeEssayModal() { document.getElementById('essay-modal').classList.remove('open'); }
 function closeEssayModalOutside(e) { if(e.target===document.getElementById('essay-modal')) closeEssayModal(); }
 
-const ESSAY_VERSION_FIELDS = {
-  attract:  [
-    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'The opening line that makes them stop scrolling...'},
-    {key:'story',  label:'Story',       cls:'l-stakes', rows:4, ph:'The personal moment — specific, cinematic, real...'},
-    {key:'lesson', label:'Lesson',      cls:'l-lesson', rows:3, ph:'What this taught you...'},
-    {key:'reader', label:'Bridge',      cls:'l-steps',  rows:2, ph:'Connect to reader — "maybe you know this feeling..."'},
-    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:1, ph:'Soft call to action...'}
-  ],
-  nurture:  [
-    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'A problem or question your reader has...'},
-    {key:'teach',  label:'Teach',       cls:'l-lesson', rows:5, ph:'The framework, steps, or insight — go deep...'},
-    {key:'example',label:'Example',     cls:'l-steps',  rows:3, ph:'Concrete example or proof...'},
-    {key:'action', label:'Action',      cls:'l-insight',rows:2, ph:'What they can do today...'},
-    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:1, ph:'Save / share / reply...'}
-  ],
-  position: [
-    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'Your unique credential or perspective...'},
-    {key:'exp',    label:'Experience',  cls:'l-exp',    rows:3, ph:'What you lived that gives you this authority...'},
-    {key:'obs',    label:'Observation', cls:'l-insight',rows:3, ph:'What you\'ve noticed that others miss...'},
-    {key:'insight',label:'Insight',     cls:'l-lesson', rows:2, ph:'The non-obvious conclusion...'},
-    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:1, ph:'Link / follow / subscribe...'}
-  ],
-  convert:  [
-    {key:'hook',   label:'Hook',        cls:'l-hook',   rows:2, ph:'The transformation or result...'},
-    {key:'problem',label:'Problem',     cls:'l-stakes', rows:3, ph:'The pain point you solve...'},
-    {key:'solution',label:'Solution',   cls:'l-lesson', rows:3, ph:'What you offer and why it works...'},
-    {key:'proof',  label:'Proof',       cls:'l-insight',rows:2, ph:'Evidence, results, testimonials...'},
-    {key:'cta',    label:'CTA',         cls:'l-cta',    rows:2, ph:'Direct CTA — subscribe, buy, join...'}
-  ]
-};
-
 function renderEssayModalBody() {
-  const { account:acc, topicId, version } = essayModal;
-  const fields = ESSAY_VERSION_FIELDS[version];
-  const tabs = document.getElementById('essay-modal-ver-tabs');
-  tabs.innerHTML = VERSIONS.map(v=>
-    `<button class="modal-tab ${v===version?'active':''}" onclick="switchEssayVersion('${v}',this)">${VERSION_LABELS[v]}</button>`
-  ).join('');
+  const { account:acc, topicId } = essayModal;
   const body = document.getElementById('essay-modal-body');
-  body.innerHTML = fields.map(fd=>`
-    <div class="script-section">
-      <div class="script-label">${fd.label}</div>
-      <textarea class="script-textarea ${fd.cls}" rows="${fd.rows}" placeholder="${fd.ph}"
-        oninput="autoResize(this);setScriptField('${acc}',${topicId},'${version}','essay','${fd.key}',this.value)"
-      >${esc(getScript(acc,topicId,version,'essay',fd.key))}</textarea>
-    </div>`).join('') + `
-    <div class="ai-box" style="margin-top:14px">
-      <div class="ai-box-title">✨ AI Essay Generator</div>
-      <button class="ai-btn" id="essay-ai-btn" onclick="aiGenerateEssayVersion()">Generate ${VERSION_LABELS[version]} Essay</button>
-      <div class="ai-output" id="essay-ai-out"></div>
+  const saved = getScript(acc, topicId, 'essay', 'essay', 'body');
+  const wordCount = saved.split(/\s+/).filter(w=>w).length;
+  // Hide version tabs — not needed for essays
+  const tabs = document.getElementById('essay-modal-ver-tabs');
+  if (tabs) tabs.style.display = 'none';
+  body.innerHTML = `
+    <div style="padding:0 22px 4px;display:flex;justify-content:flex-end">
+      <span style="font-size:10px;color:var(--muted)" id="essay-word-count">${wordCount} words</span>
+    </div>
+    <div style="padding:0 22px 16px">
+      <textarea class="sub-essay-area" id="essay-body-field" rows="20"
+        placeholder="Write your essay here… let it flow freely."
+        oninput="autoResize(this);updateEssayWordCount(this)"
+        style="min-height:380px;font-size:14px;line-height:1.8"
+      >${esc(saved)}</textarea>
+    </div>
+    <div style="padding:0 22px 16px">
+      <div class="ai-box">
+        <div class="ai-box-title">✨ AI Essay Generator</div>
+        <button class="ai-btn" id="essay-ai-btn" onclick="aiGenerateEssay()">Generate Essay Draft</button>
+        <div class="ai-output" id="essay-ai-out"></div>
+      </div>
     </div>`;
-  body.querySelectorAll('textarea').forEach(autoResize);
-  // Status buttons
+  setTimeout(()=>{ const ta=document.getElementById('essay-body-field'); if(ta) autoResize(ta); }, 0);
   const status = getStatus(acc, topicId);
   ['generate','reviewed','finished'].forEach(s=>{
     const btn = document.getElementById(`essay-btn-${s}`);
@@ -1792,35 +1766,93 @@ function renderEssayModalBody() {
   });
 }
 
-function switchEssayVersion(v, btn) {
-  essayModal.version = v;
-  document.querySelectorAll('#essay-modal-ver-tabs .modal-tab').forEach(t=>t.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderEssayModalBody();
+function updateEssayWordCount(ta) {
+  const wc = ta.value.split(/\s+/).filter(w=>w).length;
+  const el = document.getElementById('essay-word-count');
+  if (el) el.textContent = wc + ' words';
+  // Auto-save
+  clearTimeout(window._essaySaveTimer);
+  window._essaySaveTimer = setTimeout(()=>{
+    const { account:acc, topicId } = essayModal;
+    setScriptField(acc, topicId, 'essay', 'essay', 'body', ta.value);
+  }, 800);
 }
 
-async function aiGenerateEssayVersion() {
-  const { account:acc, topicId, version } = essayModal;
+async function aiGenerateEssay() {
+  const { account:acc, topicId } = essayModal;
   const t = getTopics(acc).find(x=>x.id===topicId);
   const btn = document.getElementById('essay-ai-btn');
   const out = document.getElementById('essay-ai-out');
-  btn.disabled=true; btn.textContent='⏳ Generating...';
+  const existing = document.getElementById('essay-body-field')?.value||'';
+  btn.disabled=true; btn.textContent='⏳ Generating…';
   out.classList.add('visible'); out.textContent='';
   try {
-    const fields = ESSAY_VERSION_FIELDS[version];
-    const existing = {};
-    fields.forEach(fd=>{ existing[fd.key]=getScript(acc,topicId,version,'essay',fd.key); });
-    const raw = await callAI(
-      `You are an essay writing coach for Sabrina McGehee, a Brazilian-American woman writing on Substack about life between two countries and learning in public. Write in her voice: personal, warm, bilingual (mix Portuguese naturally), honest.`,
-      `Generate a ${VERSION_LABELS[version]} essay outline for:\nTitle: "${t.title}"\nAngle: ${t.sub||''}\nExisting notes: ${JSON.stringify(existing)}\n\nReturn ONLY valid JSON with these exact keys:\n{${fields.map(f=>`"${f.key}":"${f.label} content"`).join(',')}}`
+    const result = await callAI(
+      `You are an essay writing coach for Sabrina McGehee, a Brazilian-American woman writing on Substack about life between two countries and learning in public. Write in her voice: personal, warm, honest, occasionally mixing Portuguese naturally. Write in English.`,
+      `Generate a full essay draft for:\nTitle: "${t.title}"\nAngle: ${t.sub||''}\nExisting notes: ${existing.slice(0,300)||'(none)'}\n\nWrite approximately 500-700 words. Use short paragraphs. Cinematic opening, personal story, lesson, connect to reader, soft CTA. Do NOT use headers or markdown — just flowing prose.`
     );
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-    Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,topicId,version,'essay',key,val));
-    renderEssayModalBody();
+    const ta = document.getElementById('essay-body-field');
+    if (ta) {
+      ta.value = result;
+      autoResize(ta);
+      updateEssayWordCount(ta);
+    }
     toast('✨ Essay generated!');
   } catch(e) { out.textContent='Error: '+e.message; }
-  btn.disabled=false; btn.textContent=`Generate ${VERSION_LABELS[essayModal.version]} Essay`;
+  btn.disabled=false; btn.textContent='Generate Essay Draft';
+}
+
+function deleteEssayTopic() {
+  const { account:acc, topicId } = essayModal;
+  if (!confirm('Delete this essay topic?')) return;
+  const s = getState(acc);
+  s.topics = s.topics.filter(t=>t.id!==topicId);
+  persist(acc);
+  closeEssayModal();
+  renderSubEssayGrid();
+  toast('Deleted');
+}
+
+async function publishEssayToVideoScripts() {
+  const { account:acc, topicId } = essayModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const btn = document.getElementById('essay-publish-btn');
+  btn.disabled=true; btn.textContent='⏳ Generating video scripts...';
+  try {
+    const essayContent = getScript(acc, topicId, 'essay', 'essay', 'body');
+    if (!essayContent.trim()) { toast('Write the essay first'); btn.disabled=false; btn.textContent='📹 Publish → Video Scripts'; return; }
+    const s = getState(acc);
+    let videoTopic = s.topics.find(x=>x.title===t.title&&x.type==='regular');
+    if (!videoTopic) {
+      videoTopic = { id:nextId(s.topics), pillar:t.pillar, type:'regular', title:t.title, sub:t.sub||'' };
+      s.topics.push(videoTopic);
+      persist(acc);
+    }
+    for (const v of VERSIONS) {
+      const raw = await generateScripts(acc, videoTopic, v, 'video',
+        { _essayContext: essayContent.slice(0,600) }, null);
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,videoTopic.id,v,'video',key,val));
+    }
+    setStatus(acc, videoTopic.id, 'generate');
+    persist(acc);
+    closeEssayModal();
+    _subContentTab = 'video';
+    renderSubContent(document.getElementById('sub-content'));
+    toast('✅ Video scripts generated! Check the Video tab.');
+  } catch(e) { toast('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='📹 Publish → Video Scripts';
+}
+
+function setEssayStatus(status) {
+  const { account:acc, topicId } = essayModal;
+  const current = getStatus(acc, topicId);
+  const newStatus = current===status ? null : status;
+  setStatus(acc, topicId, newStatus);
+  renderEssayModalBody();
+  renderSubEssayGrid();
+  toast(newStatus ? `Marked as ${newStatus}` : 'Status cleared');
 }
 
 function deleteEssayTopic() {
