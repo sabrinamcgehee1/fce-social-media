@@ -355,11 +355,31 @@ const DEFAULT_TOPICS_SUB = [
 ];
 
 // ── INSPIRATION CREATORS ────────────────────────────────────────────────────
+// Michael categories
 const CREATOR_CATEGORIES = [
   { id:'amBrazil',  label:'🇺🇸🇧🇷 Americans Living in Brazil',         query:'Americans living in Brazil TikTok 2025 trending creator' },
   { id:'teachEng',  label:'🏫 Americans Teaching English to Brazilians', query:'American teaching English to Brazilians TikTok 2025' },
   { id:'brLearn',   label:'📚 Brazilians Learning / Knowledge Pages',     query:'Brasileiros aprendendo conhecimento viral TikTok 2025' },
   { id:'tech',      label:'⚙️ Tech & Logic in Brazil',                   query:'tech lógica desenvolvimento pessoal TikTok Brasil 2025' }
+];
+
+// FC categories
+const FC_CREATOR_CATEGORIES = [
+  { id:'fcComp',    label:'🏫 Competitors',          query:'Fluency Academy Rhavi Carneiro Teacher Tiago Minha Professora Gringa inglês brasileiro TikTok Instagram 2025' },
+  { id:'fcField',   label:'🌐 English Teaching BR',  query:'professores inglês brasileiro viral TikTok Instagram 2025 crescimento' },
+  { id:'fcP1',      label:'⭐ P1 — False Beginner',  query:'inglês para falso iniciante bloqueio fala fluência TikTok 2025' },
+  { id:'fcP2',      label:'⭐ P2 — Real-Life Fluency',query:'inglês vida real conversação nativos frases TikTok 2025' },
+  { id:'fcP3',      label:'⭐ P3 — Pronúncia',       query:'pronúncia inglês sotaque confiança fala TikTok 2025' },
+  { id:'fcP4',      label:'⭐ P4 — Culture',         query:'cultura americana brasil intercultural casal bilíngue TikTok 2025' }
+];
+
+// Sabrina (video) categories
+const SAB_CREATOR_CATEGORIES = [
+  { id:'sabComp',   label:'👫 Similar Creators',     query:'Alex Jon Brad Mill Alexa Westover Emmietanner25 casal intercultural lifestyle TikTok Instagram 2025' },
+  { id:'sabField',  label:'🌐 Lifestyle Intercultural',query:'casal intercultural americano brasileiro lifestyle família TikTok 2025' },
+  { id:'sabP1',     label:'⭐ P1 — Nossa Vida',      query:'vida intercultural família bilíngue casal misto TikTok Instagram 2025' },
+  { id:'sabP2',     label:'⭐ P2 — Inglês Real',     query:'inglês vida real dicas práticas professora TikTok 2025' },
+  { id:'sabP3',     label:'⭐ P3 — Mulher Constrói', query:'mãe empreendedora rotina produtividade mulher TikTok 2025' }
 ];
 
 // ── SUBSTACK QUOTES (Inspiration tab) ──────────────────────────────────────

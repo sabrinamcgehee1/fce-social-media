@@ -498,6 +498,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <div class="tab-page" id="fc-formats"><!-- rendered by JS --></div>
     <div class="tab-page" id="fc-pillars"><!-- rendered by JS --></div>
     <div class="tab-page" id="fc-metrics"><!-- rendered by JS --></div>
+    <div class="tab-page" id="fc-inspiration"><!-- rendered by JS --></div>
     <div class="tab-page" id="fc-whatsapp"><!-- rendered by JS --></div>
   </div>
 
@@ -509,6 +510,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
     <div class="tab-page" id="sab-formats"><!-- rendered by JS --></div>
     <div class="tab-page" id="sab-pillars"><!-- rendered by JS --></div>
     <div class="tab-page" id="sab-metrics"><!-- rendered by JS --></div>
+    <div class="tab-page" id="sab-inspiration"><!-- rendered by JS --></div>
     <div class="tab-page" id="sab-master"><!-- rendered by JS --></div>
   </div>
 
@@ -735,7 +737,11 @@ let addModal  = { account:null, pillar:null };
 let importModal = { targetAccount:null, selected:[] };
 let calModal  = { date:null, postId:null };
 let calState  = { month: new Date().getMonth(), year: new Date().getFullYear(), filter:['fc','sab','mic','sub','rec','post'] };
-let inspoState = { mic:{ category:'amBrazil', data:{}, loading:false } };
+let inspoState = {
+  mic: { category:'amBrazil', data:{}, loading:false },
+  fc:  { category:'fcComp',  data:{}, loading:false },
+  sab: { category:'sabComp', data:{}, loading:false }
+};
 
 // Account states (lazy-loaded)
 const states = {};
@@ -807,12 +813,14 @@ function buildInnerTabs(acc) {
     fc:  [
       ['content','📱 Content'],
       ['generator','✨ Generator'],['formats','📖 Formats'],
-      ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],['whatsapp','💬 WhatsApp']
+      ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],
+      ['inspiration','🔥 Inspiration'],['whatsapp','💬 WhatsApp']
     ],
     sab: [
       ['content','📱 Content'],
       ['generator','✨ Generator'],['formats','📖 Formats'],
-      ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],['master','🏠 Master']
+      ['pillars','⭐ Pillars'],['metrics','📊 Metrics'],
+      ['inspiration','🔥 Inspiration'],['master','🏠 Master']
     ],
     mic: [
       ['content','📱 Content'],
@@ -862,7 +870,12 @@ function renderTabContent(acc, tabId, el) {
     metrics:     () => renderMetrics(acc, el),
     whatsapp:    () => renderWhatsApp(el),
     master:      () => renderMaster(el),
-    inspiration: () => acc==='sub' ? renderSubInspo(el) : renderMicInspo(el),
+    inspiration: () => {
+      if (acc==='sub') renderSubInspo(el);
+      else if (acc==='mic') renderMicInspo(el);
+      else if (acc==='fc')  renderAccInspo(el,'fc');
+      else if (acc==='sab') renderAccInspo(el,'sab');
+    },
     studio:      () => renderStudio(el),
     subjects:    () => renderSubjects(el),
     notes:       () => renderNotes(el),
@@ -2625,6 +2638,79 @@ function saveGCalClientId() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// FC & SABRINA INSPIRATION TAB (shared renderer)
+// ═══════════════════════════════════════════════════════════════════════════
+function renderAccInspo(el, acc) {
+  const cats = acc==='fc' ? FC_CREATOR_CATEGORIES : SAB_CREATOR_CATEGORIES;
+  const state = inspoState[acc];
+  const accentColor = acc==='fc' ? 'var(--fc-color)' : 'var(--sab-color)';
+
+  el.innerHTML = `
+    <div class="section-title" style="color:${accentColor}">🔥 Creator Inspiration</div>
+    <div class="section-desc">Top creators in your niche. Click Refresh to update with AI-powered search.</div>
+    <div class="category-tabs" id="cat-tabs-${acc}">
+      ${cats.map((c,i)=>`
+        <button class="cat-tab ${c.id===state.category?'active':''}"
+          onclick="selectAccCreatorCat('${acc}','${c.id}',this)">${c.label}</button>`).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div id="inspo-last-updated-${acc}" style="font-size:10px;color:var(--muted)">Not yet loaded</div>
+      <button class="refresh-btn" id="inspo-refresh-btn-${acc}" onclick="refreshAccInspo('${acc}')">🔄 Refresh</button>
+    </div>
+    <div class="inspo-grid" id="inspo-grid-${acc}">
+      <div class="inspo-empty">Click Refresh to load creator insights powered by AI.</div>
+    </div>`;
+}
+
+function selectAccCreatorCat(acc, catId, btn) {
+  inspoState[acc].category = catId;
+  document.querySelectorAll(`#cat-tabs-${acc} .cat-tab`).forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  displayAccInspoData(acc);
+}
+
+function displayAccInspoData(acc) {
+  const grid = document.getElementById(`inspo-grid-${acc}`);
+  if (!grid) return;
+  const cat  = inspoState[acc].category;
+  const data = inspoState[acc].data[cat];
+  if (!data||!data.length) {
+    grid.innerHTML = '<div class="inspo-empty">Click Refresh to load insights for this category.</div>';
+    return;
+  }
+  grid.innerHTML = data.map(c=>`
+    <div class="inspo-card">
+      <div class="inspo-card-header">
+        <div>
+          <div class="inspo-creator">${esc(c.name)}</div>
+          <div class="inspo-handle">${esc(c.handle||'')}</div>
+        </div>
+        <span class="inspo-followers">${esc(c.followers||'')}</span>
+      </div>
+      <div class="inspo-platform">${esc(c.platform||'')}</div>
+      <div class="inspo-style">${esc(c.style||'')}${c.success_factor?' — '+esc(c.success_factor):''}</div>
+      ${c.trend?`<div class="inspo-trend">🔥 Trending: ${esc(c.trend)}</div>`:''}
+    </div>`).join('');
+}
+
+async function refreshAccInspo(acc) {
+  const btn = document.getElementById(`inspo-refresh-btn-${acc}`);
+  const cats = acc==='fc' ? FC_CREATOR_CATEGORIES : SAB_CREATOR_CATEGORIES;
+  const cat  = inspoState[acc].category;
+  const catDef = cats.find(c=>c.id===cat);
+  if (!catDef||!btn) return;
+  btn.disabled=true; btn.textContent='⏳ Loading...';
+  try {
+    const data = await searchCreatorInspo(catDef);
+    inspoState[acc].data[cat] = data;
+    document.getElementById(`inspo-last-updated-${acc}`).textContent=`Updated: ${new Date().toLocaleTimeString()}`;
+    displayAccInspoData(acc);
+    toast('✅ Creator insights updated!');
+  } catch(e) { toast('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='🔄 Refresh';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MICHAEL INSPIRATION TAB
 // ═══════════════════════════════════════════════════════════════════════════
 function renderMicInspo(el) {
@@ -3892,15 +3978,37 @@ function renderSubInspo(el) {
     </div>
     ${allInspo.map((inspo,i)=>{
       const isCustom = i >= SUB_INSPIRATIONS.length;
+      const s2 = getState('sub');
+      const override = (s2.inspoOverrides||{})[i]||{};
+      inspo = { ...inspo, ...override };
       return `<div class="sub-inspo-card" style="position:relative">
         ${isCustom?`<button style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="deleteInspo(${i-SUB_INSPIRATIONS.length})">×</button>`:''}
         <div class="sub-inspo-name">${esc(inspo.name)}</div>
         <div class="sub-inspo-handle">${esc(inspo.handle||'')}</div>
         <div class="sub-inspo-desc">${esc(inspo.desc||'')}</div>
         <div class="sub-inspo-grid3">
-          <div class="sub-inspo-cell"><div class="sub-inspo-cell-label" style="color:var(--green)">Learn</div><div class="sub-inspo-cell-text">${esc(inspo.learn||'')}</div></div>
-          <div class="sub-inspo-cell"><div class="sub-inspo-cell-label" style="color:var(--sub-color)">Your Edge</div><div class="sub-inspo-cell-text">${esc(inspo.edge||inspo.diff||'')}</div></div>
-          <div class="sub-inspo-cell"><div class="sub-inspo-cell-label" style="color:var(--orange)">Action</div><div class="sub-inspo-cell-text">${esc(inspo.act||inspo.action||'')}</div></div>
+          <div class="sub-inspo-cell">
+            <div class="sub-inspo-cell-label" style="color:var(--green)">Learn</div>
+            <textarea class="script-textarea" rows="2" style="font-size:11px;margin-top:4px"
+              id="inspo-learn-${i}" onchange="saveInspoField(${i},'learn',this.value,'${isCustom?'custom':'builtin'}')"
+            >${esc(inspo.learn||'')}</textarea>
+          </div>
+          <div class="sub-inspo-cell">
+            <div class="sub-inspo-cell-label" style="color:var(--sub-color)">Your Edge</div>
+            <textarea class="script-textarea" rows="2" style="font-size:11px;margin-top:4px"
+              id="inspo-edge-${i}" onchange="saveInspoField(${i},'edge',this.value,'${isCustom?'custom':'builtin'}')"
+            >${esc(inspo.edge||inspo.diff||'')}</textarea>
+          </div>
+          <div class="sub-inspo-cell">
+            <div class="sub-inspo-cell-label" style="color:var(--orange)">Action</div>
+            <textarea class="script-textarea" rows="2" style="font-size:11px;margin-top:4px"
+              id="inspo-act-${i}" onchange="saveInspoField(${i},'act',this.value,'${isCustom?'custom':'builtin'}')"
+            >${esc(inspo.act||inspo.action||'')}</textarea>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px">
+          <button class="btn-secondary" style="font-size:10px;padding:4px 12px"
+            onclick="saveInspoRow(${i},'${isCustom?'custom':'builtin'}')">💾 Save</button>
         </div>
       </div>`;
     }).join('')}
@@ -3922,26 +4030,88 @@ function renderSubInspo(el) {
     </div>`;
 }
 
+function saveInspoField(i, field, val, type) {
+  // Just stores the value — actual persist happens on Save button
+  window._inspoPendingEdits = window._inspoPendingEdits||{};
+  if (!window._inspoPendingEdits[i]) window._inspoPendingEdits[i]={};
+  window._inspoPendingEdits[i][field]=val;
+}
+
+function saveInspoRow(i, type) {
+  const pending = (window._inspoPendingEdits||{})[i]||{};
+  const s = getState('sub');
+  const allInspo = [...SUB_INSPIRATIONS, ...(s.customInspo||[])];
+  if (type==='custom') {
+    const customIdx = i - SUB_INSPIRATIONS.length;
+    if (!s.customInspo||!s.customInspo[customIdx]) return;
+    Object.assign(s.customInspo[customIdx], pending);
+    persist('sub');
+  } else {
+    // For built-in inspirations, save overrides to state
+    if (!s.inspoOverrides) s.inspoOverrides={};
+    if (!s.inspoOverrides[i]) s.inspoOverrides[i]={};
+    Object.assign(s.inspoOverrides[i], pending);
+    persist('sub');
+  }
+  if (window._inspoPendingEdits) delete window._inspoPendingEdits[i];
+  toast('✅ Saved!');
+}
+
 function openAddInspoForm() {
   document.getElementById('add-inspo-form').style.display='block';
   ['name','handle','desc','learn','edge','act'].forEach(f=>{ document.getElementById(`new-inspo-${f}`).value=''; });
 }
 
-function saveNewInspo() {
+async function saveNewInspo() {
   const name = document.getElementById('new-inspo-name').value.trim();
   if (!name) { toast('Name required'); return; }
+  const handle = document.getElementById('new-inspo-handle').value.trim();
+  const desc   = document.getElementById('new-inspo-desc').value.trim();
+  const learnVal = document.getElementById('new-inspo-learn').value.trim();
+  const edgeVal  = document.getElementById('new-inspo-edge').value.trim();
+  const actVal   = document.getElementById('new-inspo-act').value.trim();
+
+  const btn = document.querySelector('#add-inspo-form button.btn-primary');
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Analyzing...'; }
+
+  let learn=learnVal, edge=edgeVal, act=actVal;
+
+  // If any of learn/edge/act are empty, use AI to fill them in
+  if (!learnVal || !edgeVal || !actVal) {
+    try {
+      const raw = await callAI(
+        `You analyze content creators for Sabrina McGehee — Brazilian-American woman on Substack writing about life between two countries and learning in public. Her two pillars: "Life Between Two Countries" and "Learning in Public".`,
+        `Analyze this creator and provide strategic insights for Sabrina:
+
+Creator: ${name}
+Handle/Platform: ${handle||'unknown'}
+Description: ${desc||'unknown'}
+
+Return ONLY valid JSON:
+{
+  "learn": "What specific content structure, style, or format technique Sabrina should learn from them (1-2 sentences)",
+  "edge": "What makes Sabrina's angle different or stronger than this creator (1-2 sentences)",
+  "act": "One specific actionable thing Sabrina should implement inspired by this creator (1 sentence)"
+}`
+      );
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      learn = learnVal || parsed.learn || '';
+      edge  = edgeVal  || parsed.edge  || '';
+      act   = actVal   || parsed.act   || '';
+    } catch(e) {
+      console.error('AI analyze error:', e);
+      // Continue with whatever was manually entered
+    }
+  }
+
   const s = getState('sub');
   if (!s.customInspo) s.customInspo=[];
-  s.customInspo.push({
-    name, handle:document.getElementById('new-inspo-handle').value.trim(),
-    desc:document.getElementById('new-inspo-desc').value.trim(),
-    learn:document.getElementById('new-inspo-learn').value.trim(),
-    edge:document.getElementById('new-inspo-edge').value.trim(),
-    act:document.getElementById('new-inspo-act').value.trim()
-  });
+  s.customInspo.push({ name, handle, desc, learn, edge, act });
   persist('sub');
   const el = document.getElementById('sub-inspiration');
   if (el) { delete el.dataset.rendered; renderSubInspo(el); }
+  if (btn) { btn.disabled=false; btn.textContent='Add'; }
   toast('Person added!');
 }
 
