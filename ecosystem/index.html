@@ -558,6 +558,18 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
       <div class="date-field"><div class="date-label">🎬 Recording Date</div><input type="date" class="date-inp" id="smod-date-rec" onchange="saveSeriesDate('rec',this.value)"></div>
       <div class="date-field"><div class="date-label">📢 Post Date</div><input type="date" class="date-inp" id="smod-date-post" onchange="saveSeriesDate('post',this.value)"></div>
     </div>
+    <div style="padding:10px 22px;border-top:1px solid var(--border);background:var(--bg3)">
+      <button style="background:none;border:none;color:var(--muted);font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;letter-spacing:.5px;text-transform:uppercase" onclick="toggleSeriesMetrics(this)">📊 Log Metrics ▼</button>
+      <div id="smod-metrics-area" style="display:none;margin-top:10px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          <div><div class="date-label">👁 Views</div><input type="number" class="date-inp" id="smod-views" placeholder="0" min="0"></div>
+          <div><div class="date-label">🔖 Saves</div><input type="number" class="date-inp" id="smod-saves" placeholder="0" min="0"></div>
+          <div><div class="date-label">↗ Shares</div><input type="number" class="date-inp" id="smod-shares" placeholder="0" min="0"></div>
+          <div><div class="date-label">💬 Coments.</div><input type="number" class="date-inp" id="smod-comments" placeholder="0" min="0"></div>
+        </div>
+        <button class="btn-primary" style="margin-top:10px;font-size:11px;padding:6px 14px" onclick="saveSeriesMetrics()">💾 Save Metrics</button>
+      </div>
+    </div>
     <div class="modal-actions">
       <button class="action-btn" onclick="addSeriesEpisode()" style="border-color:var(--green);color:var(--green)">＋ Add Episode</button>
       <button class="action-btn" onclick="deleteSeriesEpisode()" style="border-color:var(--red);color:var(--red)">🗑 Delete Episode</button>
@@ -1423,6 +1435,39 @@ function rebuildScriptFields() {
         oninput="autoResize(this);setScriptField('${acc}',${topicId},'${version}','${format}','${fd.key}',this.value)"
       >${esc(getScript(acc,topicId,version,format,fd.key))}</textarea>
     </div>`).join('');
+}
+
+function toggleSeriesMetrics(btn) {
+  const area = document.getElementById('smod-metrics-area');
+  const open = area.style.display === 'block';
+  area.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '📊 Log Metrics ▼' : '📊 Log Metrics ▲';
+}
+
+function saveSeriesMetrics() {
+  const { account:acc, topicId, ep } = seriesModal;
+  const t = getTopics(acc).find(x=>x.id===topicId);
+  const entry = {
+    id: 'm'+Date.now(),
+    post: `${t?.title||''} — Ep. ${ep}`,
+    version: 'convert',
+    pillar: t?.pillar||'',
+    date: new Date().toISOString().slice(0,10),
+    views: document.getElementById('smod-views').value,
+    saves: document.getElementById('smod-saves').value,
+    shares: document.getElementById('smod-shares').value,
+    comments: document.getElementById('smod-comments').value,
+    notes: `Series Ep. ${ep}`
+  };
+  const s = getState(acc);
+  if (!s.metrics) s.metrics=[];
+  s.metrics.push(entry);
+  persist(acc);
+  ['smod-views','smod-saves','smod-shares','smod-comments'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.value='';
+  });
+  toast('✅ Metrics logged!');
 }
 
 function toggleCardMetrics(btn) {
