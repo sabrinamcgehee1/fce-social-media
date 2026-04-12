@@ -373,6 +373,14 @@ const FC_CREATOR_CATEGORIES = [
   { id:'fcP4',      label:'⭐ P4 — Culture',         query:'cultura americana brasil intercultural casal bilíngue TikTok 2025' }
 ];
 
+// Sabrina English categories
+const SUB_CREATOR_CATEGORIES = [
+  { id:'subCurated', label:'⭐ Curated',              query:'Substack writers life between countries bilingual immigrant motherhood 2025' },
+  { id:'subInspo',   label:'🔥 Substack Creators',    query:'Substack newsletter growth learning in public personal essays 2025 trending' },
+  { id:'subP1',      label:'🌍 P1 — Life / Identity', query:'bilingual life immigrant identity motherhood cross-cultural Substack creators 2025' },
+  { id:'subP2',      label:'📚 P2 — Learning Public', query:'learning in public personal finance French language growth Substack 2025' }
+];
+
 // Sabrina (video) categories
 const SAB_CREATOR_CATEGORIES = [
   { id:'sabComp',   label:'👫 Similar Creators',     query:'Alex Jon Brad Mill Alexa Westover Emmietanner25 casal intercultural lifestyle TikTok Instagram 2025' },

@@ -740,7 +740,8 @@ let calState  = { month: new Date().getMonth(), year: new Date().getFullYear(), 
 let inspoState = {
   mic: { category:'amBrazil', data:{}, loading:false },
   fc:  { category:'fcComp',  data:{}, loading:false },
-  sab: { category:'sabComp', data:{}, loading:false }
+  sab: { category:'sabComp', data:{}, loading:false },
+  sub: { category:'subCurated', data:{}, loading:false }
 };
 
 // Account states (lazy-loaded)
@@ -1879,43 +1880,6 @@ function deleteEssayTopic() {
   toast('Deleted');
 }
 
-async function publishEssayToVideoScripts() {
-  const { account:acc, topicId } = essayModal;
-  const t = getTopics(acc).find(x=>x.id===topicId);
-  const btn = document.getElementById('essay-publish-btn');
-  btn.disabled=true; btn.textContent='⏳ Generating video scripts...';
-  try {
-    // Collect all essay content across versions
-    const essayContent = VERSIONS.map(v=>{
-      const fields = ESSAY_VERSION_FIELDS[v];
-      return fields.map(f=>getScript(acc,topicId,v,'essay',f.key)).filter(Boolean).join(' ');
-    }).filter(Boolean).join('\n');
-    // Add as video topic if not already there
-    const s = getState(acc);
-    let videoTopic = s.topics.find(x=>x.title===t.title&&x.type==='regular');
-    if (!videoTopic) {
-      videoTopic = { id:nextId(s.topics), pillar:t.pillar, type:'regular', title:t.title, sub:t.sub||'' };
-      s.topics.push(videoTopic);
-      persist(acc);
-    }
-    // Generate all 4 video versions
-    for (const v of VERSIONS) {
-      const raw = await generateScripts(acc, videoTopic, v, 'video',
-        { _essayContext: essayContent.slice(0,500) }, null);
-      const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
-      Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,videoTopic.id,v,'video',key,val));
-    }
-    setStatus(acc, videoTopic.id, 'generate');
-    persist(acc);
-    closeEssayModal();
-    _subContentTab = 'video';
-    renderSubContent(document.getElementById('sub-content'));
-    toast('✅ Video scripts generated! Check the Video tab.');
-  } catch(e) { toast('Error: '+e.message); }
-  btn.disabled=false; btn.textContent='📹 Publish → Video Scripts';
-}
-
 // ═══════════════════════════════════════════════════════════════════════════
 // IMPORT MODAL
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2641,9 +2605,13 @@ function saveGCalClientId() {
 // FC & SABRINA INSPIRATION TAB (shared renderer)
 // ═══════════════════════════════════════════════════════════════════════════
 function renderAccInspo(el, acc) {
-  const cats = acc==='fc' ? FC_CREATOR_CATEGORIES : SAB_CREATOR_CATEGORIES;
+  const cats = acc==='fc'  ? FC_CREATOR_CATEGORIES  :
+               acc==='sab' ? SAB_CREATOR_CATEGORIES  :
+                             SUB_CREATOR_CATEGORIES;
   const state = inspoState[acc];
-  const accentColor = acc==='fc' ? 'var(--fc-color)' : 'var(--sab-color)';
+  const accentColor = acc==='fc'  ? 'var(--fc-color)'  :
+                      acc==='sab' ? 'var(--sab-color)'  :
+                                    'var(--sub-color)';
 
   el.innerHTML = `
     <div class="section-title" style="color:${accentColor}">🔥 Creator Inspiration</div>
@@ -2695,7 +2663,9 @@ function displayAccInspoData(acc) {
 
 async function refreshAccInspo(acc) {
   const btn = document.getElementById(`inspo-refresh-btn-${acc}`);
-  const cats = acc==='fc' ? FC_CREATOR_CATEGORIES : SAB_CREATOR_CATEGORIES;
+  const cats = acc==='fc'  ? FC_CREATOR_CATEGORIES  :
+               acc==='sab' ? SAB_CREATOR_CATEGORIES  :
+                             SUB_CREATOR_CATEGORIES;
   const cat  = inspoState[acc].category;
   const catDef = cats.find(c=>c.id===cat);
   if (!catDef||!btn) return;
@@ -3721,6 +3691,7 @@ function renderSubDraftFramework(el) {
               <div class="sub-draft-meta">${new Date(d.created).toLocaleDateString()}</div>
               <div style="display:flex;gap:4px">
                 <button style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted2);cursor:pointer;font-size:10px;padding:2px 7px" onclick="editSubDraft('${d.id}')">✏️ Edit</button>
+                <button style="background:none;border:1px solid rgba(230,126,34,.4);border-radius:4px;color:var(--sub-color);cursor:pointer;font-size:10px;padding:2px 7px" onclick="publishDraftToEssayTab('${d.id}')">📝 To Essays</button>
                 <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px" onclick="subDeleteDraft('${d.id}')">×</button>
               </div>
             </div>
@@ -3800,6 +3771,30 @@ function loadDraftIntoFramework(id) {
   subStudioGo('draft', null);
   renderSubStudioPanel();
   toast('Draft loaded into framework');
+}
+
+function publishDraftToEssayTab(id) {
+  const s = getState('sub');
+  const draft = (s.drafts||[]).find(d=>d.id===id);
+  if (!draft) return;
+  const fields = draft.fields||{};
+  // Concatenate all step fields into one essay body
+  const body = SUB_SS_STEPS.map(step=>fields[step.field]||'').filter(Boolean).join('\n\n');
+  const title = fields.title || fields.source || 'Untitled';
+  // Create essay topic if it doesn't exist
+  let essay = s.topics.find(t=>t.title===title&&t.type==='essay');
+  if (!essay) {
+    essay = { id:nextId(s.topics), pillar:'p1', type:'essay', title, sub:fields.source||'' };
+    s.topics.push(essay);
+  }
+  // Save the concatenated body as the essay content
+  setScriptField('sub', essay.id, 'essay', 'essay', 'body', body);
+  persist('sub');
+  // Switch to essays tab
+  _subContentTab = 'essays';
+  const contentEl = document.getElementById('sub-content');
+  if (contentEl) { delete contentEl.dataset.rendered; renderSubContent(contentEl); }
+  toast('✅ Published to Essays tab!');
 }
 
 function subSaveStepField() {
@@ -3911,19 +3906,33 @@ function setEssayStatus(status) {
   toast(newStatus ? `Marked as ${newStatus}` : 'Status cleared');
 }
 
-async function renderSubAIEssay(el) {
+function renderSubAIEssay(el) {
   el.innerHTML = `
-    <div style="max-width:600px">
+    <div style="max-width:700px">
       <div style="font-size:13px;font-weight:800;margin-bottom:4px">✨ AI Essay Generator</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Paste a hook, topic title, or brief description. Claude will generate a full essay draft following your 10-step framework.</div>
-      <div class="script-section"><div class="script-label">Hook or Topic</div>
-        <textarea class="script-textarea" id="sub-ai-essay-input" rows="4" placeholder="e.g. 'What Having Twins Taught Me About Discipline' or 'I moved to America alone at 22 and fell in love with someone who couldn't say obrigada'"></textarea>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Enter a hook, topic, or idea. Claude generates a full essay draft — then edit it freely before saving.</div>
+      <div class="script-section">
+        <div class="script-label">Hook or Topic</div>
+        <textarea class="script-textarea" id="sub-ai-essay-input" rows="3"
+          placeholder="e.g. 'What Having Twins Taught Me About Discipline' or 'I moved to America alone at 22…'"></textarea>
       </div>
-      <button class="ai-btn" id="sub-ai-essay-btn" onclick="runSubAIEssay()">✨ Generate Essay</button>
-      <div class="ai-output" id="sub-ai-essay-out" style="margin-top:14px"></div>
-      <div id="sub-ai-essay-actions" style="display:none;margin-top:8px;gap:8px;display:none">
-        <button class="btn-primary" style="background:var(--sub-color)" onclick="subSaveAIEssayToDraft()">💾 Save to Drafts</button>
-        <button class="btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('sub-ai-essay-out').textContent);toast('Copied!')">Copy</button>
+      <button class="ai-btn" id="sub-ai-essay-btn" onclick="runSubAIEssay()" style="margin-bottom:16px">✨ Generate Essay</button>
+
+      <!-- Editable result area — hidden until generated -->
+      <div id="sub-ai-result-wrap" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="script-label" style="margin:0">Generated Essay — edit freely below</div>
+          <span id="sub-ai-wc" style="font-size:10px;color:var(--muted)">0 words</span>
+        </div>
+        <textarea class="sub-essay-area" id="sub-ai-essay-area" rows="20"
+          style="min-height:360px;font-size:14px;line-height:1.8"
+          oninput="const wc=this.value.split(/\\s+/).filter(w=>w).length;document.getElementById('sub-ai-wc').textContent=wc+' words'"
+          placeholder="Your generated essay will appear here…"></textarea>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn-primary" style="background:var(--sub-color)" onclick="subSaveAIEssayToDraft()">💾 Save to Drafts</button>
+          <button class="btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('sub-ai-essay-area').value);toast('Copied!')">Copy All</button>
+          <button class="btn-secondary" onclick="subSaveAIEssayToContent()">📝 Save to Essays Tab</button>
+        </div>
       </div>
     </div>`;
 }
@@ -3932,36 +3941,71 @@ async function runSubAIEssay() {
   const input = document.getElementById('sub-ai-essay-input')?.value.trim();
   if (!input) { toast('Enter a topic or hook first'); return; }
   const btn = document.getElementById('sub-ai-essay-btn');
-  const out = document.getElementById('sub-ai-essay-out');
   btn.disabled=true; btn.textContent='⏳ Generating…';
-  out.classList.add('visible'); out.textContent='';
   try {
     const result = await callAI(
-      `You are an essay coach for Sabrina McGehee, a Brazilian-American woman living between São Paulo and the US. She writes warm, honest, bilingual essays on Substack about life between two countries and learning in public. Write in her voice: personal, specific, emotionally honest, occasionally mixing Portuguese words naturally.`,
-      `Generate a full essay draft using this 10-step framework for this topic/hook:
+      `You are an essay writing coach for Sabrina McGehee, a Brazilian-American woman writing on Substack about life between two countries and learning in public. Write in her voice: personal, warm, honest, occasionally mixing Portuguese words naturally. Write in English.`,
+      `Generate a full essay draft for this topic/hook: "${input}"
 
-"${input}"
+Structure:
+1. Cinematic opening — specific scene with time, place, sensation
+2. Story expansion — what happened, show don't summarize
+3. Internal conflict — name the ugly emotion specifically
+4. The realization — the exact moment something shifted
+5. Connect to reader — "maybe you know this feeling…"
+6. Teach — the principle with 2-3 concrete examples
+7. Actionable steps — what they can do today
+8. Strong ending — loop back or one-line truth
+9. Soft Substack CTA
 
-Steps: 1) Cinematic opening — specific scene with time/place/sensation. 2) Story expansion — what happened, show don't summarize. 3) Internal conflict — name the ugly emotion specifically. 4) The realization — the exact moment something shifted. 5) Connect to reader — "maybe you know this feeling…" 6) Teach — the principle with 2-3 concrete examples. 7) Actionable steps — what they can do today. 8) Strong ending — loop back or one-line truth. 9) Substack CTA — soft, not salesy.
-
-Write the full essay draft, approximately 600-800 words. Use short paragraphs. Make it feel like a letter to a friend.`
+Write approximately 600-800 words. Short paragraphs. No headers or markdown — flowing prose like a letter to a friend.`
     );
-    out.textContent = result;
-    const actions = document.getElementById('sub-ai-essay-actions');
-    if (actions) actions.style.display = 'flex';
+    const area = document.getElementById('sub-ai-essay-area');
+    const wrap = document.getElementById('sub-ai-result-wrap');
+    if (area && wrap) {
+      area.value = result;
+      wrap.style.display = 'block';
+      autoResize(area);
+      const wc = result.split(/\s+/).filter(w=>w).length;
+      document.getElementById('sub-ai-wc').textContent = wc + ' words';
+    }
     toast('✨ Essay generated!');
-  } catch(e) { out.textContent = 'Error: '+e.message; }
+  } catch(e) { toast('Error: '+e.message); }
   btn.disabled=false; btn.textContent='✨ Generate Essay';
 }
 
 function subSaveAIEssayToDraft() {
-  const text = document.getElementById('sub-ai-essay-out')?.textContent;
-  if (!text) return;
+  const text = document.getElementById('sub-ai-essay-area')?.value.trim();
+  if (!text) { toast('Nothing to save'); return; }
+  const firstLine = text.split('\n').find(l=>l.trim())||'AI Essay Draft';
   const s = getState('sub');
   if (!s.drafts) s.drafts=[];
-  s.drafts.unshift({ id:'d'+Date.now(), type:'ai-essay', fields:{ source:'AI Generated', title:'AI Essay Draft', opening:text.slice(0,200), teach:text }, created:new Date().toISOString() });
+  s.drafts.unshift({
+    id:'d'+Date.now(), type:'ai-essay',
+    fields:{ source:'AI Generated', title:firstLine.slice(0,80), opening:text.slice(0,300), teach:text },
+    created:new Date().toISOString()
+  });
   persist('sub');
   toast('✅ Saved to Drafts!');
+}
+
+function subSaveAIEssayToContent() {
+  const text = document.getElementById('sub-ai-essay-area')?.value.trim();
+  if (!text) { toast('Nothing to save'); return; }
+  const firstLine = text.split('\n').find(l=>l.trim())||'AI Essay';
+  const title = firstLine.slice(0,80);
+  const s = getState('sub');
+  let essay = s.topics.find(t=>t.title===title&&t.type==='essay');
+  if (!essay) {
+    essay = { id:nextId(s.topics), pillar:'p1', type:'essay', title, sub:'AI Generated' };
+    s.topics.push(essay);
+  }
+  setScriptField('sub', essay.id, 'essay', 'essay', 'body', text);
+  persist('sub');
+  _subContentTab = 'essays';
+  const contentEl = document.getElementById('sub-content');
+  if (contentEl) { delete contentEl.dataset.rendered; renderSubContent(contentEl); }
+  toast('✅ Saved to Essays tab!');
 }
 
 // ── SUBSTACK INSPIRATION TAB ─────────────────────────────────────────────────
