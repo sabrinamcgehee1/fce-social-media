@@ -1845,12 +1845,16 @@ const SCRIPT_FIELDS = {
 // ═══════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════
+function safeLocalGet(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+  catch(e) { localStorage.removeItem(key); return fallback; }
+}
 let appState = {
   filterPillar:'all', filterType:null, filterStatus:null,
-  recorded: JSON.parse(localStorage.getItem('fc8_rec') || '{}'),
-  scripts: JSON.parse(localStorage.getItem('fc8_scripts') || '{}'),
-  prodCards: JSON.parse(localStorage.getItem('fc8_prod') || '{}'),
-  revised: JSON.parse(localStorage.getItem('fc8_revised') || '{}'),
+  recorded: safeLocalGet('fc8_rec', {}),
+  scripts: safeLocalGet('fc8_scripts', {}),
+  prodCards: safeLocalGet('fc8_prod', {}),
+  revised: safeLocalGet('fc8_revised', {}),
   modalTopic:null, modalVersion:'attract', modalFormat:'video',
   aiPanelOpen:false
 };

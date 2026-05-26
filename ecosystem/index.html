@@ -3467,8 +3467,8 @@ function importCSV(input) {
 // ── Shared state for studio ──────────────────────────────────────────────────
 let _subStudioPanel = 'essay'; // hooks | draft | essay | aiEssay
 let _subDraftStep = 0;
-let _subDraft = JSON.parse(localStorage.getItem('hub_sub_draft')||'{}');
-let _subNotes = JSON.parse(localStorage.getItem('hub_sub_notes')||'[]');
+let _subDraft = (()=>{ try{ return JSON.parse(localStorage.getItem('hub_sub_draft')||'{}'); } catch(e){ return {}; } })();
+let _subNotes = (()=>{ try{ return JSON.parse(localStorage.getItem('hub_sub_notes')||'[]'); } catch(e){ return []; } })();
 
 function saveSubDraft() { localStorage.setItem('hub_sub_draft', JSON.stringify(_subDraft)); }
 function saveSubNotes() { localStorage.setItem('hub_sub_notes', JSON.stringify(_subNotes)); }
@@ -4243,7 +4243,7 @@ const DEFAULT_SUB_QUOTES = [
   {text:'The only person you are destined to become is the person you decide to be.',author:'Emerson',theme:'growth'},
 ];
 
-let _subQuotes = JSON.parse(localStorage.getItem('hub_sub_quotes') || 'null') || JSON.parse(JSON.stringify(DEFAULT_SUB_QUOTES));
+let _subQuotes = (()=>{ try{ return JSON.parse(localStorage.getItem('hub_sub_quotes')||'null') || JSON.parse(JSON.stringify(DEFAULT_SUB_QUOTES)); } catch(e){ return JSON.parse(JSON.stringify(DEFAULT_SUB_QUOTES)); } })();
 let _subQuoteFilter = 'all';
 
 function saveSubQuotes() { localStorage.setItem('hub_sub_quotes', JSON.stringify(_subQuotes)); }
