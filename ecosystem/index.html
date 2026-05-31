@@ -754,6 +754,21 @@ function persist(acc) {
   saveAccountState(acc, states[acc]);
 }
 
+// Per-account debounced persist — avoids blocking localStorage on every keystroke
+const _persistTimers = {};
+function persistDebounced(acc) {
+  clearTimeout(_persistTimers[acc]);
+  _persistTimers[acc] = setTimeout(() => persist(acc), 500);
+}
+
+function debounce(fn, ms) {
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+}
+const setFilterDebounced       = debounce(setFilter, 250);
+const renderSubVideoGridDebounced = debounce(renderSubVideoGrid, 250);
+const renderSubEssayGridDebounced = debounce(renderSubEssayGrid, 250);
+
 // ── HELPERS ──────────────────────────────────────────────────────────────
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function toast(msg, dur=2000) {
@@ -762,10 +777,6 @@ function toast(msg, dur=2000) {
 }
 function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 function nextId(arr) { return arr.length ? Math.max(...arr.map(x=>x.id))+1 : 1; }
-function pillarColor(pillarId) {
-  const i = parseInt(pillarId.replace('p',''))-1;
-  return ['var(--fc-color)','var(--red)','var(--yellow)','var(--blue)'][i] || 'var(--muted)';
-}
 function pillarBadgeClass(pillarId) { return 'badge badge-'+pillarId; }
 function accountColor(acc) { return `var(--${acc}-color)`; }
 function getPillars(acc) { return PILLARS[acc] || []; }
@@ -777,7 +788,7 @@ function getScript(acc,tid,ver,fmt,field) {
 }
 function setScriptField(acc,tid,ver,fmt,field,val) {
   const s=getState(acc); if(!s.scripts) s.scripts={};
-  s.scripts[`${tid}_${ver}_${fmt}_${field}`]=val; persist(acc);
+  s.scripts[`${tid}_${ver}_${fmt}_${field}`]=val; persistDebounced(acc);
 }
 function getStatus(acc,tid) { return (getState(acc).rec||{})[tid]||null; }
 function setStatus(acc,tid,status) {
@@ -903,9 +914,21 @@ function renderContent(acc, el) {
   const series  = topics.filter(t=>t.type==='serie');
   const essays  = topics.filter(t=>t.type==='essay');
 
+  // Pre-compute per-pillar counts in one pass each to avoid O(pillars × topics) filter chains
+  const relevantForCount = acc === 'sub' ? [...regular, ...essays] : regular;
+  const pillarStats = {};
+  relevantForCount.forEach(t => {
+    if (!pillarStats[t.pillar]) pillarStats[t.pillar] = { count: 0, done: 0 };
+    pillarStats[t.pillar].count++;
+  });
+  topics.forEach(t => {
+    if (!pillarStats[t.pillar]) pillarStats[t.pillar] = { count: 0, done: 0 };
+    if (getStatus(acc, t.id) === 'finished') pillarStats[t.pillar].done++;
+  });
+
   const pillarGrid = pillars.map((p,i) => {
-    const count = (acc==='sub' ? [...regular,...essays] : regular).filter(t=>t.pillar===p.id).length;
-    const done  = topics.filter(t=>t.pillar===p.id && getStatus(acc,t.id)==='finished').length;
+    const count = pillarStats[p.id]?.count ?? 0;
+    const done  = pillarStats[p.id]?.done  ?? 0;
     const pct   = count ? Math.round(done/count*100) : 0;
     return `<div class="pillar-card pc-${p.id}" onclick="setFilter('${acc}','${p.id}')">
       <div class="pillar-num">${i+1}</div>
@@ -928,7 +951,7 @@ function renderContent(acc, el) {
         <button class="filter-btn" onclick="setFilter('${acc}','reviewed',this)">👁 Reviewed</button>
         <button class="filter-btn" onclick="setFilter('${acc}','finished',this)">✅ Finished</button>` : ''}
       <div class="filter-sep"></div>
-      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-${acc}" placeholder="Search..." oninput="setFilter('${acc}','search',null)"></div>
+      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-${acc}" placeholder="Search..." oninput="setFilterDebounced('${acc}','search',null)"></div>
     </div>
     <div class="stats-bar" id="stats-${acc}"></div>
     <div class="video-grid" id="grid-${acc}"></div>
@@ -1151,7 +1174,7 @@ function saveSeriesScript(epKey, format, field, val) {
   const s = getState(acc);
   if (!s.scripts) s.scripts={};
   s.scripts[`${topicId}_${epKey}_${format}_${field}`] = val;
-  persist(acc);
+  persistDebounced(acc);
 }
 
 function saveEpTitle(ep, val) {
@@ -1281,8 +1304,7 @@ async function aiGenerateSeriesEp() {
         null
       );
 
-      const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = safeParseJSON(clean);
+      const parsed = parseAIResponse(raw);
       Object.entries(parsed).forEach(([key,val]) => saveSeriesScript(epKey, format, key, val));
 
       log += `✅ Episode ${epNum} generated\n`;
@@ -1334,7 +1356,7 @@ function renderCardModalBody() {
             onchange="setScriptField('${acc}',${topicId},'essay','essay','body',this.value)">${esc(existing)}</textarea>
         </div>
         <div class="ai-box"><div class="ai-box-title">✨ AI Assist</div>
-          <button class="ai-btn" onclick="aiGenerateEssay(${topicId})">Generate Essay Outline</button>
+          <button class="ai-btn" onclick="aiGenerateEssayOutline(${topicId})">Generate Essay Outline</button>
           <div class="ai-output" id="ai-out-essay"></div>
         </div>`;
       return;
@@ -1393,27 +1415,45 @@ function buildAIFieldChecks() {
   const { account:acc, topicId, version, format } = cardModal;
   const box = document.getElementById('ai-field-checks');
   if (!box) return;
-  // Show target versions (all except the currently open one) + their formats
+  // Show ALL version+format combos; current one is checked by default and dimmed
   const targets = [];
   VERSIONS.forEach(v => {
-    if (v === version) return; // skip current — it's the source
     FORMATS.forEach(f => {
       const fieldDefs = FC_SCRIPT_FIELDS[v]?.[f] || [];
       if (!fieldDefs.length) return;
+      const isCurrent = v === version && f === format;
       const hasContent = fieldDefs.some(fd => !!getScript(acc,topicId,v,f,fd.key));
-      targets.push({ v, f, hasContent });
+      targets.push({ v, f, hasContent, isCurrent });
     });
   });
-  box.innerHTML = targets.map(({v, f, hasContent}) => {
+  box.innerHTML = targets.map(({v, f, hasContent, isCurrent}) => {
     const id = `aichk_${v}_${f}`;
-    return `<label style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+    const checked = isCurrent || !hasContent; // current always checked; empty combos pre-checked
+    return `<label id="ailbl_${v}_${f}" style="display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
       color:${hasContent?'var(--muted)':'var(--text)'};cursor:pointer;padding:3px 8px;
       background:var(--bg4);border:1px solid ${hasContent?'var(--border)':'rgba(29,185,148,.3)'};
-      border-radius:4px">
-      <input type="checkbox" id="${id}" ${hasContent?'':'checked'} style="cursor:pointer">
-      ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}${hasContent?' ✓':''}
+      border-radius:4px;${isCurrent?'opacity:0.45;':''}">
+      <input type="checkbox" id="${id}" ${checked?'checked':''} style="cursor:pointer">
+      ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}${hasContent?' ✓':''}${isCurrent?' <span style="font-size:9px;font-weight:600;color:var(--muted)">(current)</span>':''}
     </label>`;
   }).join('');
+}
+
+// Updates only the "(current)" indicator and dim state without rebuilding checkboxes
+function updateAIChecksCurrent() {
+  const { version, format } = cardModal;
+  document.querySelectorAll('[id^="ailbl_"]').forEach(lbl => {
+    const [, v, f] = lbl.id.split('_');
+    const isCurrent = v === version && f === format;
+    lbl.style.opacity = isCurrent ? '0.45' : '';
+    // Update the (current) span inside the label
+    let span = lbl.querySelector('span');
+    if (isCurrent && !span) {
+      lbl.insertAdjacentHTML('beforeend', ' <span style="font-size:9px;font-weight:600;color:var(--muted)">(current)</span>');
+    } else if (!isCurrent && span) {
+      span.remove();
+    }
+  });
 }
 
 function switchVersion(v, btn) {
@@ -1423,6 +1463,7 @@ function switchVersion(v, btn) {
   document.getElementById('script-fields').innerHTML = rebuildScriptFields();
   const genBtn = document.getElementById('ai-gen-btn');
   if (genBtn) genBtn.textContent = `Generate ${VERSION_LABELS[v]} ${FORMAT_LABELS[cardModal.format]||'scripts'}`;
+  updateAIChecksCurrent();
 }
 
 function switchFormat(f, btn) {
@@ -1430,6 +1471,7 @@ function switchFormat(f, btn) {
   document.querySelectorAll('#format-tabs .format-tab').forEach(t=>t.classList.remove('active'));
   if (btn) btn.classList.add('active');
   document.getElementById('script-fields').innerHTML = rebuildScriptFields();
+  updateAIChecksCurrent();
 }
 
 function rebuildScriptFields() {
@@ -1625,16 +1667,11 @@ async function aiGenerateScripts() {
   const sourceFields = getFieldDefs(acc, version, format);
   const sourceContent = {};
   sourceFields.forEach(fd => { sourceContent[fd.key] = getScript(acc,topicId,version,format,fd.key); });
-  Object.keys(sourceContent).forEach(k => {
-    if (typeof sourceContent[k] === 'string') {
-      sourceContent[k] = sourceContent[k].replace(/[\x00-\x1F\x7F]/g, ' ').trim();
-    }
-  });
+  Object.keys(sourceContent).forEach(k => { sourceContent[k] = sanitizeStr(sourceContent[k]); });
 
   // Collect checked targets (other versions/formats)
   const toGenerate = [];
   VERSIONS.forEach(v => {
-    if (v === version) return;
     FORMATS.forEach(f => {
       const chk = document.getElementById(`aichk_${v}_${f}`);
       if (chk && chk.checked) toGenerate.push({ v, f });
@@ -1655,14 +1692,9 @@ async function aiGenerateScripts() {
       const existing = {};
       const targetFields = getFieldDefs(acc, v, f);
       targetFields.forEach(fd => { existing[fd.key] = getScript(acc,topicId,v,f,fd.key); });
-      Object.keys(existing).forEach(k => {
-        if (typeof existing[k] === 'string') {
-          existing[k] = existing[k].replace(/[\x00-\x1F\x7F]/g, ' ').trim();
-        }
-      });
+      Object.keys(existing).forEach(k => { existing[k] = sanitizeStr(existing[k]); });
       const raw = await generateScripts(acc, t, v, f, { ...sourceContent, ...existing }, null);
-      const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = safeParseJSON(clean);
+      const parsed = parseAIResponse(raw);
       Object.entries(parsed).forEach(([key,val]) => setScriptField(acc,topicId,v,f,key,val));
       done++;
       log += `✅ ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}\n`;
@@ -1687,8 +1719,7 @@ async function aiGenerateAll() {
     try {
       out.textContent = `⏳ Generating ${VERSION_LABELS[v]}...`;
       const raw = await generateScripts(acc, t, v, 'video', {}, null);
-      const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = safeParseJSON(clean);
+      const parsed = parseAIResponse(raw);
       Object.entries(parsed).forEach(([key,val])=>{ setScriptField(acc,topicId,v,'video',key,val); });
       results += `✅ ${VERSION_LABELS[v]}\n`;
     } catch(e) { results += `❌ ${VERSION_LABELS[v]}: ${e.message}\n`; }
@@ -1697,7 +1728,7 @@ async function aiGenerateAll() {
   setStatus(acc, topicId, 'generate'); updateStatusButtons(acc, topicId); refreshGrid(acc);
 }
 
-async function aiGenerateEssay(topicId) {
+async function aiGenerateEssayOutline(topicId) {
   const acc = cardModal.account;
   const t = getTopics(acc).find(x=>x.id===topicId);
   const existing = getScript(acc,topicId,'essay','essay','body');
@@ -1826,17 +1857,6 @@ async function aiGenerateEssay() {
   btn.disabled=false; btn.textContent='Generate Essay Draft';
 }
 
-function deleteEssayTopic() {
-  const { account:acc, topicId } = essayModal;
-  if (!confirm('Delete this essay topic?')) return;
-  const s = getState(acc);
-  s.topics = s.topics.filter(t=>t.id!==topicId);
-  persist(acc);
-  closeEssayModal();
-  renderSubEssayGrid();
-  toast('Deleted');
-}
-
 async function publishEssayToVideoScripts() {
   const { account:acc, topicId } = essayModal;
   const t = getTopics(acc).find(x=>x.id===topicId);
@@ -1855,8 +1875,7 @@ async function publishEssayToVideoScripts() {
     for (const v of VERSIONS) {
       const raw = await generateScripts(acc, videoTopic, v, 'video',
         { _essayContext: essayContent.slice(0,600) }, null);
-      const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = safeParseJSON(clean);
+      const parsed = parseAIResponse(raw);
       Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,videoTopic.id,v,'video',key,val));
     }
     setStatus(acc, videoTopic.id, 'generate');
@@ -1867,16 +1886,6 @@ async function publishEssayToVideoScripts() {
     toast('✅ Video scripts generated! Check the Video tab.');
   } catch(e) { toast('Error: '+e.message); }
   btn.disabled=false; btn.textContent='📹 Publish → Video Scripts';
-}
-
-function setEssayStatus(status) {
-  const { account:acc, topicId } = essayModal;
-  const current = getStatus(acc, topicId);
-  const newStatus = current===status ? null : status;
-  setStatus(acc, topicId, newStatus);
-  renderEssayModalBody();
-  renderSubEssayGrid();
-  toast(newStatus ? `Marked as ${newStatus}` : 'Status cleared');
 }
 
 function deleteEssayTopic() {
@@ -2121,8 +2130,7 @@ async function runGenerator(acc) {
       const fieldDefs=FC_SCRIPT_FIELDS[v]?.[f]||FC_SCRIPT_FIELDS.attract.video;
       fieldDefs.forEach(fd=>{ existing[fd.key]=getScript(acc,topicId,v,f,fd.key); });
       const raw=await generateScripts(acc,t,v,f,existing,null);
-      const clean=raw.replace(/```json|```/g,'').trim();
-      const parsed=safeParseJSON(clean);
+      const parsed=parseAIResponse(raw);
       // Apply to storage
       Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,topicId,v,f,key,val));
       // Render result card with Apply button
@@ -2759,114 +2767,6 @@ async function refreshInspo() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SUBSTACK STUDIO TAB
-// ═══════════════════════════════════════════════════════════════════════════
-function renderStudio(el) {
-  const s = getState('sub');
-  const drafts = s.drafts||[];
-  el.innerHTML = `<div class="section-title">✍️ Writing Studio</div>
-    <div class="section-desc">Draft your Substack essays. Save drafts, then mark Done to generate video scripts from your essay.</div>
-    <div class="studio-layout">
-      <div class="studio-main">
-        <input type="text" class="studio-title-inp" id="studio-title" placeholder="Essay title..." value="${esc(s.currentTitle||'')}">
-        <textarea id="studio-essay" placeholder="Start writing your essay here… let it flow. Don't edit yet." oninput="studioAutoSave()">${esc(s.currentEssay||'')}</textarea>
-        <div class="studio-actions">
-          <button class="save-draft-btn" onclick="saveEssayDraft()">💾 Save Draft</button>
-          <button class="done-essay-btn" onclick="doneEssay()">✅ Done — Generate Videos</button>
-          <button class="btn-secondary" onclick="clearStudio()">🗑 Clear</button>
-        </div>
-        <div class="ai-output" id="studio-video-out" style="margin-top:14px"></div>
-      </div>
-      <div class="studio-sidebar">
-        <div class="pm-label" style="margin-bottom:8px">💾 Saved Drafts (${drafts.length})</div>
-        <div class="drafts-list" id="drafts-list">
-          ${drafts.length ? drafts.slice().reverse().map(d=>`
-            <div class="draft-item" onclick="loadDraft(${d.id})">
-              <div class="draft-title">${esc(d.title||'Untitled')}</div>
-              <div class="draft-date">${d.date||''}</div>
-            </div>`).join('') : '<div style="color:var(--muted);font-size:11px">No drafts yet.</div>'}
-        </div>
-        <div class="pm-label" style="margin-bottom:8px">📝 Quick Note</div>
-        <textarea class="notes-area" style="min-height:120px" placeholder="Quick idea or note..." id="studio-note" onchange="saveStudioNote(this.value)">${esc(s.studioNote||'')}</textarea>
-      </div>
-    </div>`;
-}
-
-let studioSaveTimer;
-function studioAutoSave() {
-  clearTimeout(studioSaveTimer);
-  studioSaveTimer = setTimeout(()=>{
-    const s=getState('sub');
-    s.currentEssay=document.getElementById('studio-essay')?.value||'';
-    s.currentTitle=document.getElementById('studio-title')?.value||'';
-    persist('sub');
-  }, 1000);
-}
-
-function saveEssayDraft() {
-  const s=getState('sub');
-  const title=document.getElementById('studio-title')?.value||'Untitled';
-  const essay=document.getElementById('studio-essay')?.value||'';
-  if (!s.drafts) s.drafts=[];
-  s.drafts.push({ id:Date.now(), title, content:essay, date:new Date().toLocaleDateString() });
-  persist('sub');
-  refreshTab('sub','studio');
-  toast('💾 Draft saved!');
-}
-
-function loadDraft(id) {
-  const s=getState('sub');
-  const draft=(s.drafts||[]).find(d=>d.id===id);
-  if (!draft) return;
-  const titleEl=document.getElementById('studio-title');
-  const essayEl=document.getElementById('studio-essay');
-  if(titleEl) titleEl.value=draft.title||'';
-  if(essayEl) essayEl.value=draft.content||'';
-  s.currentTitle=draft.title; s.currentEssay=draft.content; persist('sub');
-  toast('Draft loaded');
-}
-
-function clearStudio() {
-  if (!confirm('Clear current essay?')) return;
-  const s=getState('sub'); s.currentEssay=''; s.currentTitle=''; persist('sub');
-  const t=document.getElementById('studio-title'); const e=document.getElementById('studio-essay');
-  if(t) t.value=''; if(e) e.value='';
-}
-
-function saveStudioNote(val) {
-  const s=getState('sub'); s.studioNote=val; persist('sub');
-}
-
-async function doneEssay() {
-  const title=document.getElementById('studio-title')?.value||'Untitled';
-  const essay=document.getElementById('studio-essay')?.value||'';
-  if (!essay.trim()) { toast('Essay is empty'); return; }
-  const out=document.getElementById('studio-video-out');
-  out.classList.add('visible'); out.textContent='⏳ Generating video scripts from your essay...';
-  try {
-    const videos = await generateVideoFromEssay(title, essay);
-    if (!videos.length) { out.textContent='No videos generated. Try adding more content to your essay.'; return; }
-    // Add to Sabrina's video content
-    const s=getState('sab');
-    let added=0;
-    videos.forEach(v=>{
-      s.topics.push({ id:nextId(s.topics), pillar:v.pillar||'p1', type:'regular', title:v.title, sub:v.hook||'' });
-      // Pre-fill script fields
-      const tid=s.topics[s.topics.length-1].id;
-      if(!s.scripts) s.scripts={};
-      s.scripts[`${tid}_attract_video_hook`]=v.hook||'';
-      s.scripts[`${tid}_attract_video_value`]=v.value||'';
-      s.scripts[`${tid}_attract_video_cta`]=v.cta||'';
-      added++;
-    });
-    persist('sab');
-    refreshGrid('sab');
-    out.textContent=`✅ ${added} video idea${added!==1?'s':''} added to Sabrina's content pipeline!\n\n${videos.map(v=>`• ${v.title}`).join('\n')}`;
-    toast(`✅ ${added} videos added to Sabrina!`);
-  } catch(e) { out.textContent='Error: '+e.message; }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // SUBSTACK SUBJECTS
 // ═══════════════════════════════════════════════════════════════════════════
 function renderSubjects(el) {
@@ -3175,19 +3075,6 @@ function openAddSyllabusResource(subjId) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SUBSTACK NOTES
-// ═══════════════════════════════════════════════════════════════════════════
-function renderNotes(el) {
-  const s = getState('sub');
-  el.innerHTML = `<div class="section-title">📓 Notes</div>
-    <div class="section-desc">Your personal writing notes and ideas. Auto-saves.</div>
-    <textarea class="notes-area" style="min-height:60vh" placeholder="Write your notes here..." oninput="saveSubstackNotes(this.value)">${esc(s.notes||'')}</textarea>`;
-}
-function saveSubstackNotes(val) {
-  const s=getState('sub'); s.notes=val; persist('sub');
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // SHARED CALENDAR
 // ═══════════════════════════════════════════════════════════════════════════
 function renderCalendar() {
@@ -3480,7 +3367,11 @@ let _subDraftStep = 0;
 let _subDraft = (()=>{ try{ return JSON.parse(localStorage.getItem('hub_sub_draft')||'{}'); } catch(e){ return {}; } })();
 let _subNotes = (()=>{ try{ return JSON.parse(localStorage.getItem('hub_sub_notes')||'[]'); } catch(e){ return []; } })();
 
-function saveSubDraft() { localStorage.setItem('hub_sub_draft', JSON.stringify(_subDraft)); }
+let _subDraftSaveTimer;
+function saveSubDraft() {
+  clearTimeout(_subDraftSaveTimer);
+  _subDraftSaveTimer = setTimeout(() => localStorage.setItem('hub_sub_draft', JSON.stringify(_subDraft)), 500);
+}
 function saveSubNotes() { localStorage.setItem('hub_sub_notes', JSON.stringify(_subNotes)); }
 
 const SUB_INSPIRATIONS = [
@@ -3587,7 +3478,7 @@ function renderSubHooks(el) {
             <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1"
               onclick="deleteSubHook(${i})">×</button>
           </div>
-          <div class="sub-hook-template" onclick="navigator.clipboard.writeText(${JSON.stringify(h.template)});toast('Hook copied!')">${esc(h.template)}</div>
+          <div class="sub-hook-template" onclick="navigator.clipboard.writeText(getState('sub').hooks[${i}].template);toast('Hook copied!')">${esc(h.template)}</div>
           <div class="sub-hook-example" style="margin-bottom:10px">${esc(h.example)}</div>
           <button class="btn-primary" style="width:100%;font-size:11px;padding:7px;background:var(--sub-color)"
             onclick="useHookForDraft(${i})">✍️ Write essay with this hook</button>
@@ -3710,7 +3601,7 @@ function renderSubDraftFramework(el) {
       </div>
     </div>`;
   const ta = document.getElementById('sub-ss-field');
-  if (ta) { autoResize(ta); ta.addEventListener('input', ()=>{ subSaveStepField(); }); }
+  if (ta) { autoResize(ta); }
 }
 
 function editSubDraft(id) {
@@ -4148,8 +4039,7 @@ Return ONLY valid JSON:
   "act": "One specific actionable thing Sabrina should implement inspired by this creator (1 sentence)"
 }`
       );
-      const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = safeParseJSON(clean);
+      const parsed = parseAIResponse(raw);
       learn = learnVal || parsed.learn || '';
       edge  = edgeVal  || parsed.edge  || '';
       act   = actVal   || parsed.act   || '';
@@ -4293,7 +4183,7 @@ function renderQuotes(el) {
     ${filtered.length ? filtered.map(q => {
       const realIdx = _subQuotes.indexOf(q);
       return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;cursor:pointer"
-        onclick="navigator.clipboard.writeText('"'+${JSON.stringify(q.text)}+'" — '+${JSON.stringify(q.author)});toast('Copied!')">
+        onclick="navigator.clipboard.writeText('&quot;'+_subQuotes[${realIdx}].text+'&quot; — '+_subQuotes[${realIdx}].author);toast('Copied!')">
         <div style="font-size:16px;font-style:italic;line-height:1.5;margin-bottom:4px;color:var(--text)">"${esc(q.text)}"</div>
         <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">— ${esc(q.author)}
           <span style="font-size:9px;padding:2px 7px;border-radius:5px;background:var(--bg3);color:var(--muted2);margin-left:6px">${q.theme}</span>
@@ -4383,7 +4273,7 @@ function renderSubVideoContent() {
       <button class="filter-btn" onclick="setSubVideoFilter('reviewed',this)">👁 Reviewed</button>
       <button class="filter-btn" onclick="setSubVideoFilter('finished',this)">✅ Finished</button>
       <div class="filter-sep"></div>
-      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-sub-video" placeholder="Search..." oninput="renderSubVideoGrid()"></div>
+      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-sub-video" placeholder="Search..." oninput="renderSubVideoGridDebounced()"></div>
     </div>
     <div class="stats-bar" id="stats-sub-video"></div>
     <div class="video-grid" id="grid-sub-video"></div>
@@ -4462,7 +4352,7 @@ function renderSubEssayContent() {
       <button class="filter-btn active" onclick="setSubEssayFilter('all',this)">All</button>
       ${pillars.map(p=>`<button class="filter-btn" onclick="setSubEssayFilter('${p.id}',this)">${p.name.split(' ')[0]}</button>`).join('')}
       <div class="filter-sep"></div>
-      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-sub-essay" placeholder="Search..." oninput="renderSubEssayGrid()"></div>
+      <div class="search-wrap"><span>🔍</span><input type="text" class="search-inp" id="search-sub-essay" placeholder="Search..." oninput="renderSubEssayGridDebounced()"></div>
     </div>
     <div class="video-grid" id="grid-sub-essay"></div>`;
 
@@ -4618,8 +4508,7 @@ Return ONLY a JSON array:
   {"title":"Essay title","pillar":"p1 or p2","angle":"The specific angle or hook for this essay"}
 ]`
     );
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const parsed = safeParseJSON(clean);
+    const parsed = parseAIResponse(raw);
     const st = getState('sub');
     if (!st.ideas) st.ideas=[];
     parsed.forEach(idea=>st.ideas.push({...idea,id:'i'+Date.now()+Math.random()}));

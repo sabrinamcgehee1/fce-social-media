@@ -80,6 +80,16 @@ function safeParseJSON(clean) {
   }
 }
 
+// Strip markdown fences and parse Claude's JSON response
+function parseAIResponse(raw) {
+  return safeParseJSON(raw.replace(/```json|```/g, '').trim());
+}
+
+// Strip control characters from a string value (prevents JSON.stringify breakage)
+function sanitizeStr(v) {
+  return typeof v === 'string' ? v.replace(/[\x00-\x1F\x7F]/g, ' ').trim() : v;
+}
+
 // Test connection to proxy
 async function testConnection() {
   try {
@@ -124,12 +134,12 @@ CRITICAL: Your response must be valid JSON. Never use double quotes inside strin
 
   const safeScripts = Object.fromEntries(
     Object.entries(existingScripts || {}).map(([k, v]) =>
-      [k, typeof v === 'string' ? v.replace(/[\x00-\x1F\x7F]/g, ' ').trim() : v]
+      [k, sanitizeStr(v)]
     )
   );
 
-  const userPrompt = `Topic: "${topic.title}"
-Subtitle: "${topic.sub}"
+  const userPrompt = `Topic: "${sanitizeStr(topic.title)}"
+Subtitle: "${sanitizeStr(topic.sub)}"
 Account: ${accountLabel}
 Pillar: ${pillarName}
 Version (goal): ${VERSION_LABELS[version] || version}
@@ -152,7 +162,7 @@ async function generateVideoFromEssay(essayTitle, essayContent) {
 Given a Substack essay, generate video scripts for Instagram Reels.
 Respond ONLY with a valid JSON array — no markdown, no backticks.`;
 
-  const userPrompt = `Essay Title: "${essayTitle}"
+  const userPrompt = `Essay Title: "${sanitizeStr(essayTitle)}"
 Essay Content:
 ${essayContent.slice(0, 2000)}
 
@@ -170,8 +180,7 @@ Return a JSON array with this structure:
 
   const raw = await callAI(systemPrompt, userPrompt, null);
   try {
-    const clean = raw.replace(/```json|```/g, '').trim();
-    return safeParseJSON(clean);
+    return parseAIResponse(raw);
   } catch(e) {
     console.error('[API] generateVideoFromEssay parse error:', e);
     return [];
@@ -208,8 +217,7 @@ Return ONLY a JSON array:
 
   const raw = await callAI(systemPrompt, userPrompt, null);
   try {
-    const clean = raw.replace(/```json|```/g, '').trim();
-    return safeParseJSON(clean);
+    return parseAIResponse(raw);
   } catch(e) {
     console.error('[API] searchCreatorInspo parse error:', e);
     return [];
@@ -375,8 +383,8 @@ async function createCalendarEvent(eventData) {
     if (!date) continue;
     const d = new Date(date + 'T10:00:00');
     const event = {
-      summary:     `${type} | ${accountLabel} | ${eventData.title}`,
-      description: eventData.description || '',
+      summary:     `${type} | ${accountLabel} | ${sanitizeStr(eventData.title)}`,
+      description: sanitizeStr(eventData.description || ''),
       start: { dateTime: d.toISOString(), timeZone: 'America/Sao_Paulo' },
       end:   { dateTime: new Date(d.getTime() + 60*60*1000).toISOString(), timeZone: 'America/Sao_Paulo' },
       attendees: [{ email: COMPANY_EMAIL }],
