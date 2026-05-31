@@ -1282,7 +1282,7 @@ async function aiGenerateSeriesEp() {
       );
 
       const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
+      const parsed = safeParseJSON(clean);
       Object.entries(parsed).forEach(([key,val]) => saveSeriesScript(epKey, format, key, val));
 
       log += `✅ Episode ${epNum} generated\n`;
@@ -1625,6 +1625,11 @@ async function aiGenerateScripts() {
   const sourceFields = getFieldDefs(acc, version, format);
   const sourceContent = {};
   sourceFields.forEach(fd => { sourceContent[fd.key] = getScript(acc,topicId,version,format,fd.key); });
+  Object.keys(sourceContent).forEach(k => {
+    if (typeof sourceContent[k] === 'string') {
+      sourceContent[k] = sourceContent[k].replace(/[\x00-\x1F\x7F]/g, ' ').trim();
+    }
+  });
 
   // Collect checked targets (other versions/formats)
   const toGenerate = [];
@@ -1650,9 +1655,14 @@ async function aiGenerateScripts() {
       const existing = {};
       const targetFields = getFieldDefs(acc, v, f);
       targetFields.forEach(fd => { existing[fd.key] = getScript(acc,topicId,v,f,fd.key); });
+      Object.keys(existing).forEach(k => {
+        if (typeof existing[k] === 'string') {
+          existing[k] = existing[k].replace(/[\x00-\x1F\x7F]/g, ' ').trim();
+        }
+      });
       const raw = await generateScripts(acc, t, v, f, { ...sourceContent, ...existing }, null);
       const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
+      const parsed = safeParseJSON(clean);
       Object.entries(parsed).forEach(([key,val]) => setScriptField(acc,topicId,v,f,key,val));
       done++;
       log += `✅ ${VERSION_LABELS[v]} · ${FORMAT_LABELS[f]}\n`;
@@ -1678,7 +1688,7 @@ async function aiGenerateAll() {
       out.textContent = `⏳ Generating ${VERSION_LABELS[v]}...`;
       const raw = await generateScripts(acc, t, v, 'video', {}, null);
       const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
+      const parsed = safeParseJSON(clean);
       Object.entries(parsed).forEach(([key,val])=>{ setScriptField(acc,topicId,v,'video',key,val); });
       results += `✅ ${VERSION_LABELS[v]}\n`;
     } catch(e) { results += `❌ ${VERSION_LABELS[v]}: ${e.message}\n`; }
@@ -1846,7 +1856,7 @@ async function publishEssayToVideoScripts() {
       const raw = await generateScripts(acc, videoTopic, v, 'video',
         { _essayContext: essayContent.slice(0,600) }, null);
       const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
+      const parsed = safeParseJSON(clean);
       Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,videoTopic.id,v,'video',key,val));
     }
     setStatus(acc, videoTopic.id, 'generate');
@@ -2112,7 +2122,7 @@ async function runGenerator(acc) {
       fieldDefs.forEach(fd=>{ existing[fd.key]=getScript(acc,topicId,v,f,fd.key); });
       const raw=await generateScripts(acc,t,v,f,existing,null);
       const clean=raw.replace(/```json|```/g,'').trim();
-      const parsed=JSON.parse(clean);
+      const parsed=safeParseJSON(clean);
       // Apply to storage
       Object.entries(parsed).forEach(([key,val])=>setScriptField(acc,topicId,v,f,key,val));
       // Render result card with Apply button
@@ -4139,7 +4149,7 @@ Return ONLY valid JSON:
 }`
       );
       const clean = raw.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
+      const parsed = safeParseJSON(clean);
       learn = learnVal || parsed.learn || '';
       edge  = edgeVal  || parsed.edge  || '';
       act   = actVal   || parsed.act   || '';
@@ -4609,7 +4619,7 @@ Return ONLY a JSON array:
 ]`
     );
     const clean = raw.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
+    const parsed = safeParseJSON(clean);
     const st = getState('sub');
     if (!st.ideas) st.ideas=[];
     parsed.forEach(idea=>st.ideas.push({...idea,id:'i'+Date.now()+Math.random()}));

@@ -67,6 +67,19 @@ async function callAI(systemPrompt, userPrompt, onChunk) {
   }
 }
 
+// Safely parse JSON from Claude responses, attempting to repair unescaped quotes on failure
+function safeParseJSON(clean) {
+  try {
+    return JSON.parse(clean);
+  } catch(e) {
+    const repaired = clean.replace(
+      /"([^"]*)"(\s*:\s*)"((?:[^"\\]|\\.)*)"/g,
+      (match, key, colon, val) => `"${key}"${colon}"${val.replace(/"/g, '\\"')}"`
+    );
+    return JSON.parse(repaired);
+  }
+}
+
 // Test connection to proxy
 async function testConnection() {
   try {
@@ -82,16 +95,38 @@ async function generateScripts(account, topic, version, format, existingScripts,
   const pillarName = PILLARS[account]?.find(p => p.id === topic.pillar)?.name || topic.pillar;
   const accountLabel = ACCOUNTS[account]?.label || account;
 
-  const systemPrompt = `You are a social media content strategist for ${accountLabel}, a Brazilian-American English learning brand. 
+  const systemPrompt = `You are a social media content strategist for ${accountLabel}, a Brazilian-American English learning brand.
 You write in the same voice as the account: warm, authentic, story-driven, bilingual (mix Portuguese and English naturally).
 Generate concise, punchy scripts that fit the specified format.
-Respond ONLY with a JSON object — no markdown, no backticks, no preamble.`;
+Respond ONLY with a JSON object — no markdown, no backticks, no preamble.
+CRITICAL: Your response must be valid JSON. Never use double quotes inside string values. Use single quotes or guillemets (« ») instead if you need to quote something within a value.`;
 
-  const fieldDefs = (account === 'fc' ? FC_SCRIPT_FIELDS : 
-                     (version === 'convert' ? { video: CONVERT_SCRIPT_FIELDS.video } : 
-                      { video: PILLAR_SCRIPT_FIELDS.video }))[version]?.[format] || PILLAR_SCRIPT_FIELDS.video;
+  let fieldDefs;
+  if (account === 'fc') {
+    fieldDefs = FC_SCRIPT_FIELDS[version]?.[format];
+  } else if (format === 'carousel') {
+    fieldDefs = SAB_MIC_CAROUSEL_FIELDS;
+  } else if (format === 'story') {
+    fieldDefs = SAB_MIC_STORY_FIELDS;
+  } else {
+    // video: version-specific lookup (PILLAR_SCRIPT_FIELDS === FC_SCRIPT_FIELDS)
+    fieldDefs = PILLAR_SCRIPT_FIELDS?.[version]?.[format]
+             || CONVERT_SCRIPT_FIELDS[format];
+  }
+
+  console.log('[generateScripts] fieldDefs:', fieldDefs, 'account:', account, 'version:', version, 'format:', format);
+
+  if (!Array.isArray(fieldDefs) || fieldDefs.length === 0) {
+    throw new Error(`No field definitions found for account="${account}" version="${version}" format="${format}". Check config.js.`);
+  }
 
   const fieldList = fieldDefs.map(f => `"${f.key}": "${f.label} — ${f.ph.slice(0,60)}"`).join(',\n');
+
+  const safeScripts = Object.fromEntries(
+    Object.entries(existingScripts || {}).map(([k, v]) =>
+      [k, typeof v === 'string' ? v.replace(/[\x00-\x1F\x7F]/g, ' ').trim() : v]
+    )
+  );
 
   const userPrompt = `Topic: "${topic.title}"
 Subtitle: "${topic.sub}"
@@ -101,7 +136,7 @@ Version (goal): ${VERSION_LABELS[version] || version}
 Format: ${FORMAT_LABELS[format] || format}
 
 Existing content (use as context if available):
-${JSON.stringify(existingScripts || {}, null, 2)}
+${JSON.stringify(safeScripts, null, 2)}
 
 Generate fresh scripts for ALL fields below. Return ONLY valid JSON with these exact keys:
 {
@@ -136,7 +171,7 @@ Return a JSON array with this structure:
   const raw = await callAI(systemPrompt, userPrompt, null);
   try {
     const clean = raw.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
+    return safeParseJSON(clean);
   } catch(e) {
     console.error('[API] generateVideoFromEssay parse error:', e);
     return [];
@@ -174,7 +209,7 @@ Return ONLY a JSON array:
   const raw = await callAI(systemPrompt, userPrompt, null);
   try {
     const clean = raw.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
+    return safeParseJSON(clean);
   } catch(e) {
     console.error('[API] searchCreatorInspo parse error:', e);
     return [];
