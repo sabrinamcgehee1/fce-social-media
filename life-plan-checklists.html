@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Plan — Michael</title>
+<style>
+  :root{
+    --ink:#16202b; --ink-soft:#46566a;
+    --paper:#f3efe6; --paper-2:#eae3d6; --line:#c9bfae;
+    --slate:#1f3247; --slate-2:#2c4863; --slate-line:#3c5a78;
+    --accent:#d2622b; --accent-deep:#a8481c;
+    --done:#5d7a52; --done-bg:#e4e7d7;
+    --warn:#9a6b1e; --warn-bg:#f1e6cf;
+    --radius:3px;
+    --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Inter","Helvetica Neue",Arial,system-ui,sans-serif;
+  }
+  @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important;scroll-behavior:auto!important;} }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;scroll-behavior:smooth;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent-deep);}
+
+  /* ===== HEADER ===== */
+  header.masthead{background:linear-gradient(180deg,var(--slate),var(--slate-2));color:#eaf1f7;padding:26px 22px 20px;border-bottom:3px solid var(--accent);position:relative;overflow:hidden;}
+  header.masthead::before{content:"";position:absolute;inset:0;opacity:.13;pointer-events:none;background-image:linear-gradient(var(--slate-line) 1px,transparent 1px),linear-gradient(90deg,var(--slate-line) 1px,transparent 1px);background-size:26px 26px;}
+  .masthead-inner{max-width:980px;margin:0 auto;position:relative;}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#9fc1dd;margin:0 0 8px;}
+  h1.title{font-family:var(--mono);font-weight:600;font-size:clamp(24px,5vw,40px);letter-spacing:-.01em;margin:0;line-height:1.05;}
+  h1.title .lead{color:var(--accent);}
+  .subtitle{margin:10px 0 0;color:#c4d6e6;max-width:60ch;font-size:14.5px;}
+  .progress-wrap{max-width:980px;margin:14px auto 0;position:relative;}
+  .progress-line{display:flex;align-items:center;gap:12px;}
+  .progress-track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;}
+  .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#e8894f);transition:width .5s ease;}
+  .progress-num{font-family:var(--mono);font-size:12.5px;color:#cfe0ee;white-space:nowrap;}
+
+  /* ===== NAV (collapsible) ===== */
+  nav.tabs{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 8px 18px -16px rgba(20,32,43,.6);}
+  .tabs-inner{max-width:980px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding:0 12px;scrollbar-width:thin;max-height:64px;transition:max-height .25s ease,opacity .2s ease,padding .25s ease;}
+  .tabs-inner::-webkit-scrollbar{height:6px;}
+  .tabs-inner::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;}
+  .tab{appearance:none;border:0;background:transparent;cursor:pointer;font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;color:var(--ink-soft);padding:14px 13px 12px;white-space:nowrap;border-bottom:3px solid transparent;display:flex;align-items:center;gap:8px;transition:color .15s,border-color .15s;}
+  .tab:hover{color:var(--ink);}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);}
+  .tab .tnum{color:var(--accent);font-size:11px;}
+  .tab .tcount{font-size:10.5px;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:1px 7px;}
+  .tab[aria-selected="true"] .tcount{background:#fff;}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:2px;}
+
+  /* compact bar shown only when collapsed */
+  .nav-compact{display:none;max-width:980px;margin:0 auto;width:100%;align-items:center;gap:10px;padding:10px 16px;background:transparent;border:0;cursor:pointer;text-align:left;font-family:var(--mono);}
+  .nc-num{color:var(--accent);font-size:11px;}
+  .nc-active{font-size:13.5px;color:var(--ink);font-weight:600;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .nc-mini{flex:1;height:6px;border-radius:99px;background:var(--paper-2);overflow:hidden;min-width:40px;}
+  .nc-mini i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#e8894f);transition:width .4s ease;}
+  .nc-count{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+  .nc-chev{font-size:13px;color:var(--ink-soft);transition:transform .2s ease;}
+  .nav-compact:focus-visible{outline:2px solid var(--accent);outline-offset:-3px;border-radius:2px;}
+
+  /* collapsed state: hide full strip, show compact */
+  nav.tabs.collapsed .tabs-inner{max-height:0;opacity:0;padding-top:0;padding-bottom:0;pointer-events:none;overflow:hidden;}
+  nav.tabs.collapsed .nav-compact{display:flex;}
+  /* when collapsed AND manually opened: reveal strip as a dropdown over content */
+  nav.tabs.collapsed.open .tabs-inner{max-height:64px;opacity:1;pointer-events:auto;border-top:1px solid var(--line);}
+  nav.tabs.collapsed.open .nc-chev{transform:rotate(180deg);}
+
+  /* ===== PANELS ===== */
+  main{max-width:980px;margin:0 auto;padding:26px 22px 90px;}
+  .panel{display:none;animation:fade .25s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .panel-head{margin:0 0 4px;}
+  .panel-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent-deep);margin:0 0 6px;}
+  .panel-title{font-size:clamp(22px,4vw,30px);font-weight:700;letter-spacing:-.02em;margin:0;}
+  .panel-intro{color:var(--ink-soft);max-width:66ch;margin:10px 0 0;font-size:15px;}
+  .panel-meta{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 26px;}
+  .chip{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);padding:5px 10px;border-radius:99px;}
+  .chip b{color:var(--ink);font-weight:600;}
+  .truth{border-left:3px solid var(--warn);background:var(--warn-bg);padding:13px 15px;border-radius:0 var(--radius) var(--radius) 0;margin:0 0 26px;font-size:14px;color:#5c4a28;}
+  .truth b{color:var(--warn);}
+
+  .group{margin:0 0 30px;}
+  .group-head{display:flex;align-items:baseline;gap:10px;margin:0 0 4px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+  .group-id{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600;}
+  .group-name{font-size:16.5px;font-weight:700;letter-spacing:-.01em;margin:0;}
+  .group-note{font-size:13px;color:var(--ink-soft);margin:6px 0 14px;max-width:64ch;}
+
+  ul.items{list-style:none;margin:0;padding:0;}
+  li.item{display:flex;gap:12px;align-items:flex-start;padding:11px 12px;border-radius:var(--radius);border:1px solid transparent;transition:background .12s ease;}
+  li.item + li.item{border-top:1px solid var(--line);}
+  li.item:hover{background:var(--paper-2);}
+  .box{flex:0 0 auto;margin-top:1px;width:20px;height:20px;border-radius:4px;border:2px solid var(--ink-soft);background:#fff;cursor:pointer;display:grid;place-items:center;transition:all .12s ease;}
+  .box:hover{border-color:var(--accent);}
+  .box svg{width:13px;height:13px;opacity:0;transform:scale(.5);transition:.12s ease;}
+  .item-body{flex:1;min-width:0;}
+  .item-text{font-size:15px;line-height:1.45;}
+  .item-text .fill{color:var(--accent-deep);font-weight:600;border-bottom:1px dashed var(--accent);}
+  .item-sub{font-size:13px;color:var(--ink-soft);margin-top:3px;}
+  .item-sub a{word-break:break-word;}
+  .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:99px;margin-left:8px;vertical-align:middle;border:1px solid var(--line);color:var(--ink-soft);background:#fff;}
+  .tag.crit{color:var(--accent-deep);border-color:var(--accent);background:#fbe9df;}
+  .tag.first{color:#36506b;border-color:#9fb6cb;background:#e6eef5;}
+  .tag.care{color:#6a5a8a;border-color:#b3a6cc;background:#ece6f3;}
+
+  li.item.done{background:var(--done-bg);}
+  li.item.done .box{background:var(--done);border-color:var(--done);}
+  li.item.done .box svg{opacity:1;transform:none;}
+  li.item.done .item-text{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:rgba(93,122,82,.6);}
+  li.item.done .item-sub{opacity:.7;}
+
+  footer.note{max-width:980px;margin:0 auto;padding:0 22px 40px;color:var(--ink-soft);font-size:12.5px;}
+  .reset{appearance:none;background:transparent;border:1px solid var(--line);color:var(--ink-soft);font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:99px;cursor:pointer;}
+  .reset:hover{border-color:var(--accent);color:var(--accent-deep);}
+  .saved-pill{font-family:var(--mono);font-size:11px;color:var(--done);opacity:0;transition:opacity .3s;}
+  .saved-pill.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="eyebrow">Field Manual · One Percent a Day</p>
+    <h1 class="title"><span class="lead">The Plan.</span> Built to be checked off, not just read.</h1>
+    <p class="subtitle">Individual, do-it-once actions — ordered by what comes first. Recurring habits are left to you; these are the moves that change the board.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-line">
+      <div class="progress-track"><div class="progress-fill" id="globalFill"></div></div>
+      <span class="progress-num" id="globalNum">0 / 0 done</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="Life categories">
+  <button class="nav-compact" id="navCompact" aria-label="Show all tabs">
+    <span class="nc-num" id="ncNum">01</span>
+    <span class="nc-active" id="ncActive">Finance</span>
+    <span class="nc-mini"><i id="ncMiniFill"></i></span>
+    <span class="nc-count" id="ncCount">0/0</span>
+    <span class="nc-chev">▾</span>
+  </button>
+  <div class="tabs-inner" id="tabsInner" role="tablist"></div>
+</nav>
+
+<main id="panels"></main>
+
+<footer class="note">
+  Your check marks save automatically in this browser. For them to stick, open this from a saved copy (not a preview) and use the same browser each time — works on your phone too.
+  &nbsp; <button class="reset" id="resetBtn">Reset all check marks</button>
+  &nbsp; <span class="saved-pill" id="savedPill">saved ✓</span>
+</footer>
+
+<script>
+const DATA = [
+  /* ============================================================ 00 BRAZIL */
+  {
+    id:"brazil", num:"00", name:"Before US (Brazil)",
+    kicker:"The next 2–3 weeks · the only ticking clock",
+    intro:"Everything else in this plan is a marathon. This tab is a sprint — the things that are far easier, or only possible, while you're still in Brazil with your in-laws covering costs and your wife beside you. Clear this tab before the plane.",
+    chips:["Window: ~2–3 weeks","Goal: land already ahead","Leverage: free rent + groceries now"],
+    truth:"<b>This is the cheapest your life will be for a while.</b> In-laws cover rent and groceries here; in Houston you absorb ~$4,869/mo against one starting wage. Anything you can buy, decide, set up, or learn now — while your only job is preparing — is money and stress you don't spend later.",
+    groups:[
+      {id:"A",name:"Decisions that block everything else",note:"These gate other tasks. Make the call now so the rest can move.",items:[
+        {t:"Research the second specialization and pick a direction — game dev vs cybersecurity vs cloud — then message me your lean so the Education tab gets built around it",sub:"You said you'd report back before the move. Spend one focused evening on WGU's BSCS specialization tracks + entry-level Houston job postings for each. Decision rule: which has the most junior-friendly listings you could realistically hit in 18–24 months.",tag:"first"},
+        {t:"Get in writing what the Owens Corning role pays and what the employer health plan costs per paycheck, before you accept anything",sub:"Your whole budget swings on this. USAA doesn't sell health insurance, so the employer plan (or ACA) is the only option. Get the real monthly premium, not an estimate.",tag:"crit"},
+        {t:"Settle the {{wife's 10-bag excess baggage}} question — who pays, and whether shipping a box is cheaper",sub:"Flagged as unresolved in your moving budget. Excess-bag fees can rival a flight; a shipped box of non-urgent items is sometimes half the price. Decide before you pack.",tag:"crit"},
+        {t:"Lock the car plan: confirm used (~{{$15k}}, $3,500 down) and pre-check the monthly payment that means at your credit tier",sub:"At ~720 credit, run the numbers on an ~$11,500 loan so the ~$280/mo budget line is real. A 10-minute credit-union pre-approval call now beats dealer financing on arrival."},
+      ]},
+      {id:"B",name:"Set up once, benefit forever",note:"Accounts, cuts, and groundwork that are miserable to do mid-move.",items:[
+        {t:"Cancel the two subscriptions already flagged to cut: Meta Verified ({{$16.11}}) and the redundant Google Drive plan ({{$10.91}})",sub:"~$27/mo ≈ $324/yr. Do it now; you won't miss it, and it shrinks the Houston monthly nut immediately."},
+        {t:"Create the FCE TikTok account and reserve the handle (matching IG/YouTube)",sub:"IG + YouTube are live; TikTok still needs creating. Claim the name now even if you don't post yet — handles get squatted and setup is free brain-space while you have it."},
+        {t:"Open or confirm a US-accessible high-yield savings account you can fund the day you land",sub:"So the emergency fund has a home from day one. Pick one with no minimum and easy mobile access; have logins working before the move."},
+        {t:"Pull and back up every document the family needs in the US",sub:"Birth certificates (yours, wife's, twins'), marriage certificate, twins' vaccination records, your Social Security card, any apostilled/translated Brazilian docs. One labeled folder + one cloud backup.",tag:"crit"},
+        {t:"Scan anything you're NOT bringing but might need later",sub:"Receipts, warranties, the in-law loan paperwork, tax docs. A 20-minute scanning session now saves a frantic WhatsApp later."},
+      ]},
+      {id:"C",name:"Use the people who are right here",note:"Your wife and in-laws share a house with you now. They won't soon.",items:[
+        {t:"Sit down with your wife and write the one-page \"first 90 days in Houston\" agreement: who does what, what FCE income continues, the non-negotiables",sub:"You arrive first; she follows ~2 weeks later. Align now, together and calm, so the hard talks don't happen over a bad phone line at 11pm."},
+        {t:"Confirm the timing and method of the {{$1,750}} repayment from your in-laws so it lands before moving costs hit",sub:"It's part of your liquid cushion for the move. Nail down the date in person."},
+        {t:"Record a short \"goodbye Brazil / here's what I'm about to attempt\" video as the first piece of your coding-journey content",sub:"You wanted to document the journey but didn't know where to start. The start is this moment, on camera. Don't edit it well — just bank it."},
+      ]},
+      {id:"D",name:"Get your head right for the grind",note:"Arrive with the focus systems already installed, not as a resolution.",items:[
+        {t:"Install browser-level content filtering on every device while you have calm time to configure it properly",sub:"You said the issue is browser websites, not social apps, and a dumbphone won't work — so the lever is filtering you set up once. Do it now so it's just \"how the devices are\" before stress spikes in Houston. (More detail in the Wisdom/Focus tab.)"},
+        {t:"Block out {{45 min}} this week to read one short book on focus/habits and pull 3 rules you'll actually keep",sub:"Suggested: \"Atomic Habits\" (Clear) or \"Deep Work\" (Newport). You don't need ten ideas — you need three you'll keep."},
+        {t:"Pre-load the \"instead-of\" list: 2–3 things to reach for in the first 30 seconds of free time besides the phone",sub:"You named the exact failure point. Decide the replacement now (scripture app, a saved article, a language lesson) so the answer exists before the urge does."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 01 FINANCE */
+  {
+    id:"finance", num:"01", name:"Finance",
+    kicker:"Priority #1 · the plan rests on this",
+    intro:"Your own numbers tell the real story, so this tab starts where the math is hardest — closing the monthly gap — and only then moves to debt, safety net, and building. Order matters here more than anywhere: don't invest a dollar while the engine is still losing oil.",
+    chips:["Liquid: ~$10.5k","Debt: ~$17.8k","Target: break-even, then build"],
+    truth:"<b>Straight talk: the projected budget loses money every month at the start.</b> Roughly −$1,012/mo on the starting wage, about −$512 even with plasma, reaching near break-even only after the 6-month promotion <i>and</i> plasma. Not a reason to panic — the reason this tab is #1. The first job isn't saving or investing. It's making the monthly number stop bleeding. Everything below is in that order on purpose.",
+    groups:[
+      {id:"A",name:"Stop the bleed (first, in order)",note:"Until the monthly gap is closed or shrinking, nothing else in finance matters.",items:[
+        {t:"Build a single one-page \"real Houston budget\" from the numbers we have, with the deficit in red at the bottom",sub:"You have the inputs (rent, car, insurance, groceries, the ~$4,869 total). Put them in one view you check weekly — I can generate this as a sheet whenever you want.",tag:"first"},
+        {t:"Lock the supplemental income before arrival: find the nearest {{plasma center}} to Pearland/your target area and confirm eligibility + new-donor pay",sub:"Your budget treats plasma as required income, not optional. New-donor promos are often several hundred dollars the first month. Know the address and rate before you land.",tag:"crit"},
+        {t:"Line up the {{1–2 high-paying FCE classes}} you'll teach the first weeks, with set rates and times",sub:"You want to phase teaching out — but not yet. A few premium classes early is the gap between −$1,012 and survivable while the OC paycheck and promotion catch up. Book them now while you have the students."},
+        {t:"Add the verified health-insurance premium as a real budget line (don't leave the $500 estimate floating)",sub:"Cross-listed with the Brazil tab because it's that important. A $250 vs $650 premium is your entire plasma income."},
+      ]},
+      {id:"B",name:"Kill the debt in the right order",note:"~$17.8k total. Attack interest, not balance size. Decide once, then automate.",items:[
+        {t:"Write all four debts with their interest rates side by side, then commit to one payoff order",sub:"CC (~$3,713), Upstart (~$5,253), student loans (~$8,563), Costco (~$266, likely cleared). Avalanche (highest rate first) saves the most money; snowball (smallest balance first) builds momentum. Pick one and stop second-guessing.",tag:"first"},
+        {t:"Clear the smallest balance entirely as your first \"win\" once cash flow allows",sub:"Costco card if not already gone, then the CC. A zeroed account is a real unlock — and one fewer minimum freeing up monthly room."},
+        {t:"Automate every minimum payment the day your US checking is active",sub:"A late mark is the fastest way to wreck the 720 you're trying to grow to 800+. Set-and-forget the minimums; pay extra manually on the target debt."},
+        {t:"Call Upstart once to confirm there's no prepayment penalty before throwing extra at it",sub:"A 5-minute call. If there's no penalty, it's a clean target for extra payments."},
+      ]},
+      {id:"C",name:"Build the floor (safety before growth)",note:"A house and investments come after you can survive a bad month.",items:[
+        {t:"Set the first savings milestone at a {{$1,000 starter buffer}} — separate account, before any 3-month fund",sub:"A small buffer stops the next flat tire from becoming new card debt. Reachable fast, and it changes how every other decision feels."},
+        {t:"Define your real 3-month emergency number (3 × monthly budget) and write it down as the target",sub:"At ~$4,869/mo that's roughly $14,600. Big — but now it's a named number, not a vague worry. This is the floor before a house."},
+        {t:"Open the separate \"sinking fund\" account for trips/big purchases so they never raid the emergency fund",sub:"One account named for fun, one named for fire. Keeping them apart is what keeps the emergency fund available for emergencies."},
+      ]},
+      {id:"D",name:"The twins' accounts + family contributions",note:"The $1,000 seed lands July 4. Set the machinery once, then let it run.",items:[
+        {t:"Confirm how monthly contributions are made and set the smallest auto-contribution you can sustain (even $10)",sub:"You learned monthly contributions are allowed. The amount matters less than starting — 17 years of compounding does the heavy lifting."},
+        {t:"Create the one shared link / blurb for relatives who want to chip in",sub:"You want to ask family for small contributions. Make it one tap for them — a saved message + link you paste into the family chat — or it won't happen."},
+      ]},
+      {id:"E",name:"Learn to grow it (you + your wife)",note:"Last on purpose. Investing on a leaking budget is building on sand.",items:[
+        {t:"Block out {{2–3 hours over two weeks}} to read one plain-English investing book before opening any brokerage",sub:"Suggested: \"The Simple Path to Wealth\" (Collins) or \"I Will Teach You to Be Rich\" (Sethi). Your wife wants into finance — read it together; that's free accountability and a shared project."},
+        {t:"Write a one-paragraph \"investing rules\" statement together: index vs active, risk comfort, how hands-on",sub:"You're open to both and want to decide after looking. The book + this paragraph is the deciding step. Most who learn the trade-offs land on low-cost index funds for the core, with \"active\" as a small play-money slice."},
+        {t:"Open one low-cost brokerage account and make a single small first contribution — only after the $1,000 buffer exists",sub:"The first $20 in is the hardest. Once the account exists and is funded once, monthly investing becomes a habit you run yourself."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 02 WORK/FCE */
+  {
+    id:"work", num:"02", name:"Work / FCE",
+    kicker:"Priority #2 · turn your time into assets that earn without you",
+    intro:"Right now FCE income = your hours in a classroom. The whole point is to swap that for things that sell while you sleep: the course that already exists, a content engine, and the app. This tab is about building the machine, not running it daily.",
+    chips:["Course: built, not selling","App: MVP in progress","Goal: phase out teaching"],
+    truth:"<b>You already have the hard part — a finished course sitting on Hotmart.</b> The bottleneck isn't building more, it's that nothing is driving people to it. So the early wins here are marketing and funnels, not new product. Resist the urge to rebuild the course; make the one you have actually sell.",
+    groups:[
+      {id:"A",name:"Make the course you already have sell",note:"It exists and it's good. The job is the funnel, not the product.",items:[
+        {t:"Audit your Hotmart course listing as a cold buyer would and fix the 3 weakest things first",sub:"Usually: the title/promise, the thumbnail, and the first screen of the sales page. Don't touch the lessons yet.",tag:"first"},
+        {t:"Write the course's single clearest outcome in one sentence, then rewrite the sales page around it",sub:"\"Speak confident business English in 90 days\" beats \"English course.\" One promise, repeated."},
+        {t:"Create one free e-book as the lead magnet that funnels into the paid course — outline once, draft once",sub:"You already planned free e-books. Make the first one a direct on-ramp: it solves one small problem and ends pointing at the course."},
+        {t:"Set up the email capture so the free e-book collects addresses (ties to the FCE website lead form)",sub:"A list you own beats an algorithm you rent. Even a free tier (Mailchimp/Brevo) is enough to start."},
+        {t:"Pick the ONE platform to drive course sales first and commit to it for 90 days",sub:"IG, YouTube, or TikTok — one. Spreading across three from day one is how nothing gets traction."},
+      ]},
+      {id:"B",name:"Build the content engine (a system, not a scramble)",note:"So you're never staring at a blank camera deciding what to film.",items:[
+        {t:"Define 3–5 repeatable content \"buckets\" for FCE (e.g., common mistakes, quick wins, student questions, behind-the-scenes)",sub:"Buckets remove the daily \"what do I post?\" decision. You just pick a bucket and go."},
+        {t:"Batch-film the first {{10}} short videos in one sitting",sub:"One setup, one outfit, ten videos. Batching is the difference between a content habit and a content chore."},
+        {t:"Write the one-time content workflow doc (film → edit → caption → schedule → post) so posting is a checklist",sub:"When the steps live on paper, you can do them tired. When they live in your head, you skip them."},
+        {t:"Set up TikTok and post the first batch (account creation is in the Brazil tab)",sub:"Repurpose the same shorts across IG Reels / YouTube Shorts / TikTok. One film session, three platforms."},
+        {t:"Build a simple content calendar in Notion (you already live there)",sub:"A board with Draft → Filmed → Scheduled → Posted. Visible pipeline = consistent posting."},
+      ]},
+      {id:"C",name:"Ship the app (FC Flashcards) — your way",note:"You chose to slow down and understand each phase. Good. Here's that, structured.",items:[
+        {t:"Write the exact remaining MVP scope in one list so \"done\" is defined",sub:"Without a definition of done, an MVP expands forever. List the must-haves; everything else is v2.",tag:"first"},
+        {t:"Do the focused review pass of each phase you've already built, noting what you DON'T fully understand",sub:"This is the step you said you want. Read your own code phase by phase; every \"I'm not sure why this works\" becomes a note. Then we close those gaps together — that's how you stop being someone Claude codes for and become the developer."},
+        {t:"Integrate the AI feature as the next milestone — but only after the review pass",sub:"You said AI is the next step. Doing the review first means you'll actually understand the integration instead of pasting it in."},
+        {t:"Get the MVP into TestFlight / internal testing with {{5}} real users (your students)",sub:"Real users find the bugs you can't see. Your FCE students are the perfect first testers."},
+        {t:"Decide the app's single monetization model before launch (free / freemium / paid)",sub:"It shapes the build. Freemium (core free, AI features paid) fits a flashcard app well, but decide now, not after."},
+      ]},
+      {id:"D",name:"The partnership + winding down teaching",note:"Run the July 14 follow-up on your terms; plan your exit from the classroom.",items:[
+        {t:"Prep for the July 14 partnership follow-up: write a one-page \"what we offer / what we need\" before the call",sub:"The partnership = FCE classes with the company sponsoring or organizing student groups. Walk in knowing your rates, capacity, and the one thing you need from them.",tag:"first"},
+        {t:"List the few high-paying classes you'll keep short-term and write the date you intend to stop each",sub:"Phasing out only happens if it's scheduled. An end date turns \"someday\" into a plan."},
+        {t:"Write the \"graceful handoff\" message template for transitioning students off your direct classes",sub:"Point them to the course or a partner. A warm exit keeps referrals and reviews flowing."},
+      ]},
+      {id:"E",name:"Document the journey (the start you couldn't find)",note:"You said you don't know where to begin. Begin here.",items:[
+        {t:"Define the one narrative of your coding content in a sentence: \"English teacher → developer, building in public\"",sub:"A clear story is what makes people follow. Yours is unusually good — a teacher and dad rebuilding into tech."},
+        {t:"Post the Brazil \"before\" video as episode 1",sub:"You'll have recorded it in the Brazil tab. Posting it is the whole hurdle — after one, the rest is easier."},
+        {t:"Pre-write the first {{4}} post topics so the habit has a runway",sub:"e.g., \"why I'm switching careers,\" \"my study stack,\" \"what I built this week,\" \"a bug that humbled me.\" Honest beats polished."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 03 EDUCATION */
+  {
+    id:"education", num:"03", name:"Education",
+    kicker:"Priority · the degree is the credential, skill is the goal",
+    intro:"Two tracks run in parallel: clear the Sophia/Study.com transfers so you can start WGU clean, and actually build developer skill so the degree is backed by ability. Your Notion plan is the source of truth for the transfer list — this tab sequences it and adds the skill-building you can't transfer in.",
+    chips:["WGU start target: Dec 2027","Transfers: finish before start","Sophia cap: 2 active courses"],
+    truth:"<b>A transferred credit is not a learned skill.</b> Sophia/Study.com get you the cheap credits and the diploma faster — take them. But they won't make you employable on their own. The skill-building group below is the part that actually gets you hired; don't let the credit-grinding crowd it out.",
+    groups:[
+      {id:"A",name:"Lock the transfer plan (one-time setup)",note:"Your Notion page already has the courses; this turns it into an ordered, verified plan.",items:[
+        {t:"Open your Notion \"WGU BSCS (Sophia & Study.com Optimized)\" page and mark every course Done / In progress / Not started in one view",sub:"You can't sequence what you can't see. One status column makes the whole plan legible.",tag:"first"},
+        {t:"From that, write the single ordered list of REMAINING transfer courses, respecting Sophia's 2-active-course cap",sub:"Never leave a Sophia slot idle. Two moving at all times until the list is clear."},
+        {t:"Re-verify each remaining course's ACE ID still maps to its WGU equivalent on WGU's transfer pathway tool",sub:"Your own page warns equivalencies change without notice. A 30-minute re-check now beats a wasted course later.",tag:"crit"},
+        {t:"Set the finish-by date for ALL transfers (must land before any WGU start date), working back from Dec 2027",sub:"Your page is explicit: don't set a WGU start date until every transfer course is done. Back-plan from December."},
+      ]},
+      {id:"B",name:"Knock out transfers in the smart order",note:"Sequence for momentum and to de-risk the parts you're rusty on.",items:[
+        {t:"Pair every heavy course with a \"breather\" so neither Sophia slot stalls (e.g., HLTH1010 alongside a technical one)",sub:"Your notes already flag the light courses. Use them to keep both slots productive without burning out."},
+        {t:"Front-load the math/stats courses (MATH1040, STAT1001) — they make the CS material less painful",sub:"You said math/algorithms are your weak spot. Doing the math earlier pays off across everything after."},
+        {t:"For each Study.com CS course (Java 115, DB 204, 311), take the first exam attempt as a diagnostic",sub:"You're rusty by your own account. A diagnostic attempt shows exactly what to review before the real attempt."},
+        {t:"On any Sophia writing course (ENG1001, COMM1002), submit the first touchstone immediately",sub:"Your own notes flag the grading queue as the bottleneck. Submitting early keeps the queue from becoming your deadline."},
+      ]},
+      {id:"C",name:"Build real skill (the part that gets you hired)",note:"Transfers ≠ ability. This is the track employers actually test.",items:[
+        {t:"Finish the Udemy Full Stack Bootcamp — list the remaining sections and treat the final project as the real finish line",sub:"A half-finished course teaches half a skill. Name what's left so it's a checklist, not a vibe."},
+        {t:"Pick ONE language to get genuinely solid in first — JavaScript — before spreading across JS/Python/C#",sub:"JS covers your HTML/CSS strength and your app's React Native. Depth in one beats shallow in three for a first dev job.",tag:"first"},
+        {t:"Build one small portfolio project end-to-end that is NOT a tutorial",sub:"Tutorials prove you can follow; a from-scratch project proves you can build. Even something tiny and real (a tool you'd use) counts."},
+        {t:"Do one focused unit on algorithms + data structures — the gap you named",sub:"You said you know \"a tiny bit\" of algorithms. One structured pass (a free course or \"Grokking Algorithms\" — very readable) closes the most common interview gap."},
+      ]},
+      {id:"D",name:"Specialization (after your Brazil-tab research)",note:"Once you've reported your lean, this locks it into the queue.",items:[
+        {t:"Lock the second specialization (cyber vs cloud; game dev if time) and write the one-line reason",sub:"Decision over perfection. You can adjust later, but pick a direction so studying has a target."},
+        {t:"Map the 2–3 entry-level skills/certs that specialization needs",sub:"Cyber → CompTIA Security+. Cloud → AWS Cloud Practitioner / Azure Fundamentals. Game dev → Unity + C#. Know the on-ramp before you walk it."},
+        {t:"Add one specialization course or cert to the queue, scheduled after the bootcamp",sub:"One at a time. Bootcamp finishes, specialization begins — not both at once."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 04 FAMILY */
+  {
+    id:"family", num:"04", name:"Family",
+    kicker:"The foundation everything else is for",
+    intro:"This is the why behind the whole document. It splits into three jobs: be a better husband, raise the twins well and bilingual, and set up their schooling and your family memories without breaking the budget.",
+    chips:["Twins: bilingual → polyglot","Fun money: <$100/mo","Marriage: the keystone"],
+    truth:"<b>The relationship is load-bearing — protect it first.</b> Your wife is leaving her family and country to follow you into a hard, lean first year. Every work and money goal here fails if home isn't steady. The husband group goes first for a reason.",
+    groups:[
+      {id:"A",name:"Be a better husband (do this first)",note:"You named remembering dates and communication. Here's the system for both.",items:[
+        {t:"Put every important date in your shared calendar now, with advance reminders — anniversary, both birthdays, the day you met",sub:"\"Remembering\" is a system, not a personality trait. Set 2-week and 2-day reminders so you're never caught off guard again.",tag:"first"},
+        {t:"Save the traditional anniversary-gift-by-year list and pre-decide the next 3 years' themes",sub:"You're at ~6 years. The traditional run: 1 paper · 2 cotton · 3 leather · 4 fruit/flowers · 5 wood · 6 candy/sweets (your \"chocolate\" memory was right; iron is the alt) · 7 wool/copper · 8 bronze · 9 pottery · 10 tin · 15 crystal · 20 china · 25 silver · 50 gold · 60 diamond. Pick themes for years 6–8 now."},
+        {t:"Block out {{60 min}} to read one marriage-communication book and pull 3 habits",sub:"Suggested: \"The Seven Principles for Making Marriage Work\" (Gottman) — practical and research-backed. Three habits, not thirty."},
+        {t:"Decide the format of one weekly \"state of us\" check-in and tell your wife the plan",sub:"15 minutes, same time weekly: what's working, what's heavy, what's next. You set it up; it runs itself after."},
+        {t:"Plan one no-budget gesture for her in the first hard month after the move",sub:"She'll be newly arrived, far from family, in a strange city. A planned small kindness then is worth more than an expensive one later."},
+      ]},
+      {id:"B",name:"Raise the twins smart + bilingual",note:"They're ~1 — the language window is open now. Set the rules before habits form.",items:[
+        {t:"Write your family language rule so it's consistent from now (e.g., Portuguese at home / English outside, or one-parent-one-language)",sub:"Consistency is what makes kids fluent in two languages instead of half in each. Decide the rule and both of you hold it.",tag:"first"},
+        {t:"Get the first {{10}} bilingual / dual-language picture books (cheap via your book source)",sub:"A home full of books in both languages does quiet work every day. Start the shelf now."},
+        {t:"Block out {{45 min}} to read one evidence-based book on raising critical thinkers",sub:"Suggested: \"The Whole-Brain Child\" (Siegel & Bryson) — short, practical, age-appropriate for what's coming."},
+        {t:"Write your and your wife's shared 5-bullet discipline philosophy",sub:"You said you have no model for this and grew up with brothers only. A short agreed philosophy (firm + warm, consistent, no shaming) keeps you both on the same page and out of overboard/too-soft swings."},
+        {t:"Decide the screen-time rule for the twins now, before it's a fight",sub:"It ties straight to your own focus goals — and it's far easier to set at age 1 than age 4."},
+      ]},
+      {id:"C",name:"Schooling (open path — options laid out)",note:"You're open; this maps the Houston landscape so you can choose well.",items:[
+        {t:"Research the Houston-area school options and rank your top {{5}} across public, charter/magnet, and private — by location relative to where you'll live",sub:"Houston has strong magnet and STEM charters worth knowing about. I can pull a ranked starter list for your zip once you've picked an area."},
+        {t:"For any private school you like, find its financial-aid/scholarship page and note deadlines",sub:"Most private schools offer need-based aid; many deadlines are early. Knowing them removes \"we can't afford it\" as an automatic no."},
+        {t:"Check Texas school-choice / charter lottery timelines so you don't miss application windows",sub:"Charter spots often go by lottery with fixed windows. Missing one costs a year."},
+        {t:"Open a dedicated education-savings line (529) and make the first small contribution when cash flow allows",sub:"Ties to Finance — small and early beats large and late, thanks to compounding and tax advantages."},
+      ]},
+      {id:"D",name:"Make memories on a budget (<$100/mo)",note:"Fun money excludes gas — a Galveston day only counts food + treats.",items:[
+        {t:"Build the running list of free/cheap Houston family outings (parks, library story-time, free museum days, Galveston beach)",sub:"I can assemble a Houston-specific list once you're set on an area. Gas doesn't count — just the ice cream."},
+        {t:"Pick the first {{3}} outings and rough-plan them",sub:"Three on the calendar means \"we never do anything\" never becomes the story of this season."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 05 FAITH */
+  {
+    id:"faith", num:"05", name:"Faith",
+    kicker:"Reconnect + a 2-year reading plan, in your order",
+    intro:"Two parts: the one-time setup that gets you plugged back into a congregation, and your scripture reading goal turned into realistic daily blocks. I kept your exact reading order and applied the \"block out X over Y weeks\" framing you asked for.",
+    chips:["Goal: 2 years","Your order kept","Setup once, read daily"],
+    truth:"<b>Honest note on your order: you put the Old Testament first, and it's by far the longest (~1,189 chapters).</b> Read strictly in sequence, it'll take most of the first year alone. That's fine — I kept your order — but it means the hardest stretch is the start. Knowing that up front is how you push through the Leviticus middle instead of quitting there.",
+    groups:[
+      {id:"A",name:"Reconnect (one-time setup)",note:"Small actions that put you back on a congregation's radar.",items:[
+        {t:"Find the ward that covers your Houston-area address (meetinghouse locator) and note the meeting time",sub:"Do this once you've picked an area. One search, and you know where to show up that first Sunday.",tag:"first"},
+        {t:"Message the ward / elders quorum to let them know you're moving in",sub:"Being on their radar before you arrive means a warm welcome instead of a cold start. Removes the \"walking in alone\" friction."},
+        {t:"Pick your personal prayer anchor — a fixed time and place",sub:"One decision (e.g., kneeling by the bed first thing) beats a daily reminder. The anchor makes it automatic."},
+        {t:"Decide the family-prayer moment that fits the household and tell your wife the plan",sub:"e.g., before dinner. Pick the slot that already exists in your day so it survives a hard week."},
+      ]},
+      {id:"B",name:"The 2-year reading plan (your order, blocked out)",note:"~104 weeks total. These blocks fit it with buffer to spare.",items:[
+        {t:"Choose the single daily reading slot you'll protect — this is your \"1% a day\"",sub:"Same time every day (morning, lunch, or before bed). Tie it to something you already do so it sticks.",tag:"first"},
+        {t:"Block out ~{{25–30 min/day}} over ~{{43 weeks}} for the Old Testament at ~{{4 chapters/day}}",sub:"The big one, front-loaded by your order. ~1,189 chapters. A study guide or the Gospel Library's reading helps make the dense parts navigable."},
+        {t:"Block out ~{{20 min/day}} over ~{{12 weeks}} for the New Testament at ~{{3 chapters/day}}",sub:"~260 chapters. After the OT, this will feel like a sprint downhill."},
+        {t:"Block out ~{{20 min/day}} over ~{{11 weeks}} for the Book of Mormon at ~{{3 chapters/day}}",sub:"~239 chapters."},
+        {t:"Block out ~{{15 min/day}} over ~{{10 weeks}} for the Doctrine & Covenants at ~{{2 sections/day}}",sub:"138 sections."},
+        {t:"Block out ~{{10 min/day}} over ~{{2 weeks}} for the Pearl of Great Price",sub:"The short one — a quick, meaningful stretch."},
+        {t:"Block out ~{{15 min/day}} over ~{{10 weeks}} for \"Jesus the Christ\" (Talmage) at ~{{10 pages/day}}",sub:"~700 pages. Denser than scripture prose, so the page pace is gentler."},
+        {t:"Set up the Gospel Library app with this plan so progress tracks itself",sub:"Built-in reading plans and a progress bar remove the \"where was I?\" friction that kills streaks."},
+      ]},
+      {id:"C",name:"Make it stick",note:"One rule that protects the whole 2-year effort.",items:[
+        {t:"Decide your \"if I miss a day\" rule in advance: resume, don't double up",sub:"Trying to read 8 chapters to \"catch up\" is how people quit. One miss is one miss — just continue the next day."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 06 FOCUS */
+  {
+    id:"focus", num:"06", name:"Wisdom / Focus",
+    kicker:"Priority · win back your attention, then fill it",
+    intro:"You called this the biggest thing. So this tab is built as systems, not willpower — set the environment once so focus is the default, replace the reflexes you named, handle the hard part with real support, and then pour the freed-up time into the learning you actually want.",
+    chips:["Lever: friction, not willpower","Self-directed","Free resources only"],
+    truth:"<b>Willpower is the worst tool for this and you already know it — that's why you asked for systems.</b> Every item here is designed so the right choice is the easy one and the wrong choice takes effort. You're not trying to be stronger than the urge in the moment; you're making the moment harder to reach in the first place.",
+    groups:[
+      {id:"A",name:"Set the environment once",note:"Configure it on a calm day so focus is just \"how the devices are.\"",items:[
+        {t:"Install DNS- + browser-level content filtering on every device and the router, with the bypass password held by your wife — set once, not managed daily",sub:"This is the one light touch for her: she enters a password once; you don't see it. That's \"looped in, not on her plate.\" Tools that fit: Canopy, Covenant Eyes, or a filtered DNS service at the router level. Since you said the issue is browser sites, router/DNS filtering is the highest-leverage move.",tag:"first"},
+        {t:"Turn on app/site time limits and grayscale mode on your phone",sub:"A gray screen is dramatically less rewarding to grab. Time limits add a speed bump on the apps that pull you."},
+        {t:"Remove the 3 apps/sites you reach for most from the home screen",sub:"One extra tap of friction kills most impulse opens. Bury them in a folder on the last screen."},
+        {t:"Create the physical \"phone parking spot\" away from your bed and your desk",sub:"Out of arm's reach is out of mind. A charger across the room does more than any app."},
+      ]},
+      {id:"B",name:"Replace the reflex",note:"You named it exactly: the first 30 seconds of free time. Pre-decide the swap.",items:[
+        {t:"Build your \"instead-of\" shortlist and put it where the phone used to be",sub:"Scripture app, a saved book, a French lesson, a 5-minute walk. The replacement has to exist before the urge — decide it now."},
+        {t:"Keep a physical book or e-reader in the spots you used to scroll",sub:"Extend your bathroom rule everywhere: bring the book, not the phone. The object present is the object used."},
+        {t:"Pick ONE keystone replacement habit to start — not five",sub:"e.g., 10 pages of reading whenever you'd have scrolled. One swap done consistently beats five attempted and dropped."},
+      ]},
+      {id:"C",name:"The hard part — a system, not shame",note:"You've been open about this and asked for help. Here's a real, free structure.",items:[
+        {t:"Use the free, faith-aligned support that costs nothing: the Church's Addiction Recovery Program (ARP)",sub:"You said a therapist isn't affordable right now. ARP is free, confidential, and built exactly for this; many find the group accountability far more effective than going it alone. Find the nearest meeting or the online option once you're settled.",tag:"care"},
+        {t:"Read one practical, non-graphic book on breaking the cycle and pull a relapse-prevention plan from it",sub:"Focus on the mechanics of habit and triggers (e.g., \"Atomic Habits\" applied here, or a recovery-specific workbook). The goal is a written plan, not more reading.",tag:"care"},
+        {t:"Write your own short \"trigger → plan\" sheet: the 3 situations where it usually happens and the pre-decided action for each",sub:"Naming the predictable moments (late night, alone, bored, a specific feeling) and deciding the response in advance is what turns a vague resolve into an actual defense.",tag:"care"},
+        {t:"Set the accountability loop on your terms: route the filtering report to yourself or a trusted friend — not as a burden on your wife",sub:"You want this self-directed. A weekly report to your own inbox, or to a friend who's just a quiet check, keeps it independent while still being real accountability."},
+      ]},
+      {id:"D",name:"Dial gaming way down",note:"Your call was to tone it down hard, maybe pause. Make it physical.",items:[
+        {t:"Decide the gaming rule for this season: fully paused, or boxed to {{one window on off-days only}}",sub:"You said it needs to come WAY down. Whichever you pick, write it down so it's a rule, not a nightly negotiation."},
+        {t:"Uninstall the one online game that pulls the most time and put the console out of easy reach",sub:"You can reinstall later — friction is the point. The game that's a 30-second tap away is the one that eats the evening."},
+      ]},
+      {id:"E",name:"Feed the mind you're freeing up",note:"The whole point of winning back the time — pour it here. Start with ONE.",items:[
+        {t:"Build your \"wisdom\" reading queue, ordered, and pick ONE to start",sub:"Your interests: philosophy, math/physics, basic engineering, strategy (war/chess), English. Starters: philosophy → \"Sophie's World\" (Gaarder) or \"Meditations\" (Aurelius); strategy → \"The Art of War\" (Sun Tzu) + a chess fundamentals book like \"Logical Chess\" (Chernev). One at a time.",tag:"first"},
+        {t:"Choose your first language to actively learn — French or Spanish — and set up one free tool",sub:"You said both, eventually. Pick one to start (Spanish is more useful in Houston/Texas) so you actually progress instead of dabbling in two."},
+        {t:"Block out {{20 min/day}} over {{the first month}} for the single chosen learning track",sub:"Prove the new routine on one thing before adding more. A month of consistency earns the right to expand."},
+      ]},
+    ]
+  },
+
+  /* ============================================================ 07 SCHEDULING */
+  {
+    id:"schedule", num:"07", name:"Scheduling",
+    kicker:"The container that makes all of the above possible",
+    intro:"You can't run eight tabs of goals without a structure to hang them on. This builds two repeatable templates — one for your days off (where the real progress lives) and one for workdays (where any progress is a bonus) — and loads them into the Notion + Calendar system you already use.",
+    chips:["Rotation: 3-on/3-off/4-on/4-off","Off-days carry the load","Workdays = bonus"],
+    truth:"<b>Your shift pattern is the constraint everything bends around, so design for it honestly.</b> Twelve-hour rotating shifts will wreck your energy if you pretend otherwise. Plan to do real work on off-days and protect sleep on workdays. A plan that assumes you'll grind after a 12-hour shift is a plan that makes you feel like a failure by week two.",
+    groups:[
+      {id:"A",name:"Build the two templates (one-time design)",note:"Design them once; reuse them every rotation.",items:[
+        {t:"Map your real rotation onto a calendar for the next {{2 months}} so you can SEE which days are off",sub:"The 3-3-4-4 pattern is genuinely hard to track in your head. Seeing it laid out is what makes planning possible.",tag:"first"},
+        {t:"Design your OFF-DAY template: the 2–3 priority blocks that carry your real progress",sub:"e.g., a deep-work block (app or study), a family block, and a focus/reading block. This is where 80% of your goals actually move."},
+        {t:"Design your WORK-DAY template: the realistic minimum",sub:"One tiny \"bonus\" slot — an audiobook/podcast on the commute, 10 pages before bed. Anything more is a gift, not an expectation."},
+        {t:"Set your sleep anchor first and build everything else around it",sub:"On rotating 12s, sleep is the foundation, not the leftover. Decide the non-negotiable sleep window per shift type before scheduling anything else.",tag:"crit"},
+      ]},
+      {id:"B",name:"Load the system you already use",note:"You run Notion + Google Calendar + a morning briefing. Plug the plan in.",items:[
+        {t:"Put both templates into Google Calendar as recurring blocks tied to your off / on days",sub:"You already organize to-dos as all-day events — extend that. The calendar should know which day type it is."},
+        {t:"Move the top {{3}} priorities from each tab of this plan into Notion as your current focus",sub:"The checklist should drive the calendar. Three live priorities at a time keeps it from becoming an overwhelming wall."},
+        {t:"Set your morning-briefing workflow to surface 1–3 actions based on whether it's an on- or off-day",sub:"You already have the Notion + Calendar + Claude briefing. Make it shift-aware so each morning hands you the right-sized list."},
+      ]},
+      {id:"C",name:"Protect it",note:"Defenses for the days the shift tries to eat everything.",items:[
+        {t:"Pick the ONE priority that gets the first off-day block before anything else, and guard it",sub:"Whatever's most urgent that season (finance, app, study) gets the freshest block. Everything else fills in around it."},
+        {t:"Decide your \"the shift ate my day\" fallback: the single 5-minute action that still counts as 1%",sub:"On the worst days, one tiny action (read a page, send one application, review one flashcard) keeps the streak and the identity alive."},
+        {t:"Set a {{15-min}} weekly review to reset the coming week's blocks",sub:"Sunday or whatever fits the rotation. One small reset keeps the whole system from drifting."},
+      ]},
+    ]
+  },
+];
+
+/* ===================== RENDER ===================== */
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+const STORE_KEY = "michael_lifeplan_v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch(e){ state = {}; }
+function save(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    const p=document.getElementById("savedPill"); p.classList.add("show");
+    clearTimeout(window.__st); window.__st=setTimeout(()=>p.classList.remove("show"),1100);
+  }catch(e){}
+}
+function renderText(t){ return t.replace(/\{\{(.*?)\}\}/g,'<span class="fill">$1</span>'); }
+
+const tabsInner=document.getElementById("tabsInner");
+const panelsEl=document.getElementById("panels");
+let activeId=DATA[0].id;
+
+DATA.forEach((tab,i)=>{
+  let total=0; tab.groups.forEach(g=>total+=g.items.length);
+
+  const btn=document.createElement("button");
+  btn.className="tab"; btn.setAttribute("role","tab");
+  btn.setAttribute("aria-selected", i===0?"true":"false");
+  btn.id="tab-"+tab.id;
+  btn.innerHTML=`<span class="tnum">${tab.num}</span> ${tab.name} <span class="tcount" id="count-${tab.id}">0/${total}</span>`;
+  btn.addEventListener("click",()=>selectTab(tab.id));
+  tabsInner.appendChild(btn);
+
+  const panel=document.createElement("section");
+  panel.className="panel"+(i===0?" active":"");
+  panel.id="panel-"+tab.id; panel.setAttribute("role","tabpanel");
+  let html=`
+    <div class="panel-head">
+      <p class="panel-kicker">${tab.kicker}</p>
+      <h2 class="panel-title">${tab.name}</h2>
+      <p class="panel-intro">${tab.intro}</p>
+    </div>
+    <div class="panel-meta">${(tab.chips||[]).map(c=>`<span class="chip">${c}</span>`).join("")}</div>
+    ${tab.truth?`<div class="truth">${tab.truth}</div>`:""}`;
+  tab.groups.forEach(g=>{
+    html+=`<div class="group"><div class="group-head"><span class="group-id">${g.id}</span><h3 class="group-name">${g.name}</h3></div>${g.note?`<p class="group-note">${g.note}</p>`:""}<ul class="items">`;
+    g.items.forEach((it,idx)=>{
+      const key=`${tab.id}.${g.id}.${idx}`; const done=!!state[key];
+      const tagHtml = it.tag==="crit"?`<span class="tag crit">critical</span>`
+                    : it.tag==="first"?`<span class="tag first">do first</span>`
+                    : it.tag==="care"?`<span class="tag care">be gentle</span>`:"";
+      html+=`<li class="item${done?" done":""}" data-key="${key}">
+        <div class="box" role="checkbox" tabindex="0" aria-checked="${done}">${CHECK_SVG}</div>
+        <div class="item-body"><div class="item-text">${renderText(it.t)}${tagHtml}</div>${it.sub?`<div class="item-sub">${renderText(it.sub)}</div>`:""}</div></li>`;
+    });
+    html+=`</ul></div>`;
+  });
+  panel.innerHTML=html;
+  panelsEl.appendChild(panel);
+});
+
+function selectTab(id){
+  activeId=id;
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.id===("tab-"+id)?"true":"false"));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===("panel-"+id)));
+  const at=document.getElementById("tab-"+id);
+  if(at) at.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+  nav.classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
+  updateCompact();
+}
+
+function toggle(li){
+  const key=li.dataset.key; state[key]=!state[key];
+  li.classList.toggle("done",state[key]);
+  li.querySelector(".box").setAttribute("aria-checked",state[key]?"true":"false");
+  save(); updateCounts();
+}
+panelsEl.addEventListener("click",e=>{const b=e.target.closest(".box");if(b)toggle(b.closest(".item"));});
+panelsEl.addEventListener("keydown",e=>{
+  if((e.key===" "||e.key==="Enter")&&e.target.classList.contains("box")){e.preventDefault();toggle(e.target.closest(".item"));}
+});
+
+function updateCounts(){
+  let gT=0,gD=0;
+  DATA.forEach(tab=>{
+    let t=0,d=0;
+    tab.groups.forEach(g=>g.items.forEach((it,idx)=>{t++;gT++;if(state[`${tab.id}.${g.id}.${idx}`]){d++;gD++;}}));
+    const c=document.getElementById("count-"+tab.id); if(c)c.textContent=`${d}/${t}`;
+  });
+  document.getElementById("globalNum").textContent=`${gD} / ${gT} done`;
+  document.getElementById("globalFill").style.width=gT?(gD/gT*100)+"%":"0%";
+  updateCompact();
+}
+function updateCompact(){
+  const tab=DATA.find(t=>t.id===activeId); if(!tab)return;
+  let t=0,d=0; tab.groups.forEach(g=>g.items.forEach((it,idx)=>{t++;if(state[`${tab.id}.${g.id}.${idx}`])d++;}));
+  document.getElementById("ncNum").textContent=tab.num;
+  document.getElementById("ncActive").textContent=tab.name;
+  document.getElementById("ncCount").textContent=`${d}/${t}`;
+  document.getElementById("ncMiniFill").style.width=t?(d/t*100)+"%":"0%";
+}
+
+/* ===== collapsing nav ===== */
+const nav=document.getElementById("tabs");
+const navCompact=document.getElementById("navCompact");
+const COLLAPSE_AT=150;
+function onScroll(){
+  if(window.scrollY>COLLAPSE_AT){ nav.classList.add("collapsed"); }
+  else { nav.classList.remove("collapsed","open"); }
+}
+navCompact.addEventListener("click",()=>nav.classList.toggle("open"));
+window.addEventListener("scroll",onScroll,{passive:true});
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(!confirm("Clear every check mark across all tabs? This can't be undone.")) return;
+  state={}; save();
+  document.querySelectorAll("li.item.done").forEach(li=>{li.classList.remove("done");li.querySelector(".box").setAttribute("aria-checked","false");});
+  updateCounts();
+});
+
+updateCounts(); updateCompact(); onScroll();
+</script>
+</body>
+</html>
